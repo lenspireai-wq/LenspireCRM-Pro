@@ -29,7 +29,7 @@ const WEB_MANIFEST = JSON.stringify({
 });
 const WEB_SERVICE_WORKER = `
 const CACHE = 'lenspirecrm-web-${WEB_RENDERER_VERSION}';
-const CORE = ['/app','/desktop-style.css','/desktop-app.js','/web-bridge.js','/desktop-chart.js','/desktop-xlsx.js','/login-studio-camera-v2.png','/manifest.webmanifest','/icons/icon-192.png','/icons/icon-512.png'];
+const CORE = ['/app','/desktop-style.css?v=${WEB_RENDERER_VERSION}','/desktop-app.js?v=${WEB_RENDERER_VERSION}','/web-bridge.js?v=${WEB_RENDERER_VERSION}','/desktop-chart.js?v=${WEB_RENDERER_VERSION}','/desktop-xlsx.js?v=${WEB_RENDERER_VERSION}','/login-studio-camera-v2.png','/manifest.webmanifest','/icons/icon-192.png','/icons/icon-512.png'];
 self.addEventListener('install', event => event.waitUntil((async () => {
   const cache = await caches.open(CACHE);
   await Promise.allSettled(CORE.map(url => cache.add(new Request(url, { cache:'reload' }))));
@@ -47,14 +47,14 @@ self.addEventListener('fetch', event => {
     event.respondWith(fetch(event.request).catch(() => caches.match('/app')));
     return;
   }
-  event.respondWith(caches.match(event.request, { ignoreSearch:true }).then(cached => cached || fetch(event.request)));
+  event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request)));
 });`;
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     if (request.method === 'GET') {
-      if (url.pathname === '/') return Response.redirect(new URL('/app', url), 302);
+      if (url.pathname === '/' && !url.hostname.startsWith('portal.')) return Response.redirect(new URL('/app', url), 302);
       if (url.pathname === '/mobile') return Response.redirect(new URL('/app', url), 302);
       if (url.pathname === '/app' || url.pathname === '/app/') return new Response(DESKTOP_HTML, { headers:headers('text/html; charset=utf-8','no-store') });
       if (url.pathname === '/desktop-style.css') return new Response(DESKTOP_CSS, { headers:headers('text/css; charset=utf-8') });

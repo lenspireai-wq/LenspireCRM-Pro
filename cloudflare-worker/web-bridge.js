@@ -194,6 +194,7 @@
       case 'create-client-portal-link': return api('/api/client-portal/link',body(value));
       case 'get-client-portal-access': return api(`/api/client-portal/link?bookingId=${encodeURIComponent(value)}`);
       case 'revoke-client-portal-access': return api('/api/client-portal/link',{method:'DELETE',body:JSON.stringify({bookingId:value})});
+      case 'portal-invite': return api('/api/portal/invite',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(value)});
       case 'list-users': {const result=await api('/api/users');return Array.isArray(result)?result:(result.users||[]);}
       case 'list-post-production-users': {const result=await api('/api/users'),users=Array.isArray(result)?result:(result.users||[]);return users.filter(user=>user.active!==false&&['Post Production','Editor'].includes(user.role));}
       case 'create-user': return api('/api/users',body(value?.user));
@@ -242,5 +243,5 @@
     removeListener:(channel,callback)=>listeners.get(channel)?.delete(callback),
     clipboard:{writeText:text=>navigator.clipboard.writeText(String(text||''))}
   };
-  if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+  if ('serviceWorker' in navigator) window.addEventListener('load', async () => {try{const registration=await navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'});await registration.update();}catch{}});
 })();

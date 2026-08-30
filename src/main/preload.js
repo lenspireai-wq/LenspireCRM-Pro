@@ -51,6 +51,7 @@ const allowedChannels = new Set([
   'create-client-portal-link',
   'get-client-portal-access',
   'revoke-client-portal-access',
+  'portal-invite',
   'add-payment',
   'update-payment',
   'delete-payment',

@@ -7,6 +7,7 @@ const readBase64 = relative => fs.readFileSync(path.join(root, relative)).toStri
 const version = String(Date.now());
 const html = read('src/renderer/index.html')
   .replace('<title>LenspireCRM · Studio Workspace</title>', '<title>LenspireCRM · Studio Workspace</title>\n  <meta name="theme-color" content="#0b1220">\n  <meta name="application-name" content="LenspireCRM">\n  <meta name="apple-mobile-web-app-capable" content="yes">\n  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">\n  <link rel="manifest" href="/manifest.webmanifest">\n  <link rel="icon" href="/icons/icon-192.png">\n  <link rel="apple-touch-icon" href="/icons/icon-192.png">')
+  .replace('</head>', '<script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistration().then(registration=>registration?.update()).catch(()=>{});}</script>\n</head>')
   .replace('href="style.css"', `href="/desktop-style.css?v=${version}"`)
   .replace('<script src="../../node_modules/chart.js/dist/chart.umd.js"></script>', `<script src="/desktop-chart.js?v=${version}"></script>\n  <script src="/desktop-xlsx.js?v=${version}"></script>\n  <script src="/web-bridge.js?v=${version}"></script>`)
   .replace('<script src="app.js"></script>', `<script src="/desktop-app.js?v=${version}"></script>`);

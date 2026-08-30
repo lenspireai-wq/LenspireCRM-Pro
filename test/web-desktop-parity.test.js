@@ -30,6 +30,8 @@ test('browser bridge covers every allowlisted Windows action', () => {
 
 test('web worker wrapper leaves the existing cloud API intact', () => {
   const worker = read('cloudflare-worker/index.js');
+  const bridge = read('cloudflare-worker/web-bridge.js');
+  const builder = read('scripts/build-web-renderer.js');
   assert.match(worker, /return apiWorker\.fetch\(request, env, ctx\)/);
   assert.match(worker, /url\.pathname === '\/app'/);
   assert.match(worker, /url\.pathname === '\/login-studio-camera-v2\.png'/);
@@ -38,6 +40,11 @@ test('web worker wrapper leaves the existing cloud API intact', () => {
   assert.match(worker, /url\.pathname === '\/manifest\.webmanifest'/);
   assert.match(worker, /url\.pathname === '\/sw\.js'/);
   assert.match(worker, /lenspirecrm-web-/);
+  assert.doesNotMatch(worker, /ignoreSearch:true/);
+  assert.match(worker, /desktop-app\.js\?v=\$\{WEB_RENDERER_VERSION\}/);
+  assert.match(bridge, /updateViaCache:'none'/);
+  assert.match(bridge, /registration\.update\(\)/);
+  assert.match(builder, /getRegistration\(\)\.then\(registration=>registration\?\.update\(\)\)/);
   assert.match(worker, /url\.pathname\.startsWith\('\/api\/'\)/);
   assert.equal(/main = "\.\/index\.js"/.test(read('cloudflare-worker/wrangler.toml')), true);
 });
@@ -56,11 +63,13 @@ test('web renderer includes mobile navigation and responsive touch layout', () =
 
 test('sidebar navigation delegates clicks across renderer refreshes', () => {
   const app = read('src/renderer/app.js');
-  assert.match(app, /const navigation=\$\('nav'\)/);
-  assert.match(app, /navigation\.onclick=event=>/);
-  assert.match(app, /event\.target\.closest\('\.nav-item'\)/);
+  assert.match(app, /function bindPersistentSidebarNavigation\(\)/);
+  assert.match(app, /document\._lenspireSidebarNavigationBound/);
+  assert.match(app, /document\.addEventListener\('click',event=>[\s\S]*?\},true\);/);
+  assert.match(app, /event\.target\.closest\?\.\('\.nav-item'\)/);
   assert.match(app, /state\.view=item\.dataset\.view/);
   assert.match(app, /closeMobileSidebar\(\);shell\(\)/);
+  assert.match(app, /operationsMenuToggle:'operationsOpen'/);
 });
 
 test('web Sales mutations preserve the confirmed-lead workflow', () => {
@@ -81,6 +90,11 @@ test('Sales lead actions remain usable on mobile screens', () => {
   assert.match(css, /\.filtered-leads-panel \.lead-toolbar/);
   assert.match(css, /\.filtered-leads-panel table\{min-width:1180px\}/);
   assert.match(css, /\.filtered-leads-panel \.lead-actions a/);
+});
+
+test('lead activity actions resolve their surrounding composer', () => {
+  const app = read('src/renderer/app.js');
+  assert.match(app, /event\.currentTarget\.closest\?\.\('#leadActivityForm'\)\|\|event\.currentTarget/);
 });
 
 test('Operations parity keeps confirmed bookings visible and orders TBD events last', () => {
@@ -113,4 +127,6 @@ test('Operations event updates validate crew and remain usable on mobile', () =>
   assert.match(css, /\.calendar-scroll>\.calendar-grid\{min-width:700px\}/);
   assert.match(css, /\.crew-picker-menu\{width:min\(290px,calc\(100vw - 48px\)\)/);
   assert.match(css, /\.slot-event-filter\{width:100%;height:42px\}/);
+  assert.match(worker, /const startTime = String\([\s\S]*?\)\.trim\(\) \|\| null/);
+  assert.match(worker, /const endTime = String\([\s\S]*?\)\.trim\(\) \|\| null/);
 });

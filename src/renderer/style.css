@@ -348,7 +348,10 @@ linear-gradient(145deg,#17103a 0%,#0d1028 48%,#081724 100%)}.login-visual::befor
   .welcome .btn,.filter-bar .btn{flex:1 1 auto}
   .kpi-grid,.dashboard-grid,.customer-grid,.production-grid,.accounts-grid,.backup-grid{grid-template-columns:1fr}
   .form-grid,.booking-grid,.event-section-grid,.assignment-section .event-section-grid{grid-template-columns:1fr}
-  .form-grid .full,.booking-grid .full,.event-section-grid .full,.assignment-section .event-section-grid .full{grid-column:1}
+   .form-grid .full,.booking-grid .full,.event-section-grid .full,.assignment-section .event-section-grid .full{grid-column:1}
+   .gallery-link-row{flex-direction:column;gap:10px;align-items:stretch}
+   .gallery-link-row label{flex:1}
+   #addGalleryLink{width:100%;flex:1}
   .content h2{font-size:21px}
 }
 

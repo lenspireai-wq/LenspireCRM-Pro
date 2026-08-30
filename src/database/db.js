@@ -150,6 +150,8 @@ db.exec(`
     video_status TEXT NOT NULL DEFAULT 'Not Started',
     delivery_status TEXT NOT NULL DEFAULT 'Pending',
     due_date TEXT,
+    event_segment TEXT NOT NULL DEFAULT 'Wedding',
+    source_event_id INTEGER,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (booking_id) REFERENCES bookings(id),
     FOREIGN KEY (customer_id) REFERENCES customers(id)
@@ -227,7 +229,9 @@ for (const [col, def] of [
   ['client_feedback_status', 'TEXT'],
   ['client_feedback_message', 'TEXT'],
   ['client_feedback_at', 'TEXT'],
-  ['notes', 'TEXT']
+  ['notes', 'TEXT'],
+  ['event_segment', "TEXT NOT NULL DEFAULT 'Wedding'"],
+  ['source_event_id', 'INTEGER']
 ]) {
   if (!productionColumns.has(col)) db.exec("ALTER TABLE production_jobs ADD COLUMN " + col + " " + def);
 }
@@ -814,7 +818,12 @@ async function backupDatabase(destination) {
 function validateDatabaseBackup(filePath) {
   const candidate = new Database(filePath, { readonly: true, fileMustExist: true });
   try {
-    const tables = candidate.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all().map(row => row.name);
+    let tables;
+    try {
+      tables = candidate.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all().map(row => row.name);
+    } catch {
+      throw new Error('The backup database is not a valid LenspireCRM workspace.');
+    }
     for (const required of ['leads', 'users']) if (!tables.includes(required)) throw new Error('The backup database is not a valid LenspireCRM workspace.');
     const integrity = candidate.pragma('integrity_check', { simple: true });
     if (integrity !== 'ok') throw new Error('The backup database failed its integrity check.');
@@ -941,7 +950,7 @@ function getAccountsData() {
            l.assigned_to AS salesperson, l.mobile AS leadMobile,
            COALESCE(SUM(CASE WHEN p.status = 'Paid' AND p.payment_type != 'Refund' THEN p.amount ELSE 0 END), 0) AS totalPaid,
            COALESCE(SUM(CASE WHEN p.status = 'Paid' AND p.payment_type = 'Refund' THEN p.amount ELSE 0 END), 0) AS totalRefunded,
-           COALESCE(SUM(CASE WHEN p.status = 'Pending' THEN p.amount ELSE 0 END), 0) AS pendingAmount,
+            MAX(0, COALESCE(b.quoted_amount, 0) - COALESCE(SUM(CASE WHEN p.status = 'Paid' AND p.payment_type != 'Refund' THEN p.amount ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN p.status = 'Paid' AND p.payment_type = 'Refund' THEN p.amount ELSE 0 END), 0)) AS pendingAmount,
            COUNT(p.id) AS paymentCount,
            MIN(CASE WHEN p.status = 'Pending' THEN p.due_date END) AS nextDueDate
     FROM bookings b
@@ -966,10 +975,11 @@ function deletePayment(paymentId) {
 
 function getBookingPaymentsSummary() {
   return db.prepare(`
-    SELECT b.id AS bookingId, b.booking_code, b.event_type, b.event_date, b.quoted_amount,
+    SELECT b.id AS bookingId, b.booking_code AS bookingCode, b.event_type, b.event_date, b.quoted_amount,
            c.name AS clientName, c.phone AS clientPhone,
            COALESCE(SUM(CASE WHEN p.status='Paid' AND p.payment_type!='Refund' THEN p.amount ELSE 0 END), 0) AS totalPaid,
            COALESCE(SUM(CASE WHEN p.status='Paid' AND p.payment_type='Refund' THEN p.amount ELSE 0 END), 0) AS totalRefunded,
+            MAX(0, COALESCE(b.quoted_amount, 0) - COALESCE(SUM(CASE WHEN p.status='Paid' AND p.payment_type!='Refund' THEN p.amount ELSE 0 END), 0) + COALESCE(SUM(CASE WHEN p.status='Paid' AND p.payment_type='Refund' THEN p.amount ELSE 0 END), 0)) AS pendingAmount,
            COUNT(p.id) AS paymentCount,
            MIN(CASE WHEN p.status='Pending' THEN p.due_date END) AS nextDueDate,
            MIN(CASE WHEN p.status='Overdue' THEN p.due_date END) AS overdueDate,
