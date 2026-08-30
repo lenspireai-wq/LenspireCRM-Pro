@@ -1,0 +1,20 @@
+name = "lenspirecrm-api"
+main = "./index.js"
+compatibility_date = "2026-08-29"
+account_id = "0700e083fb08e80ea8f648fa238e8636"
+
+[[hyperdrive]]
+binding = "CRM_DB"
+id = "e7fa4cf3502649b599aa82e6d08e6836"
+
+[[r2_buckets]]
+binding = "STUDIO_ASSETS"
+bucket_name = "lenspirecrm-studio-assets"
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+# Production bindings and secrets stay in Cloudflare. Before the first
+# command-line deployment, add the existing CRM_DB binding and all current
+# Worker secrets through Cloudflare/Wrangler; never store secret values here.

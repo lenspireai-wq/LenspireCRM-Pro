@@ -1,0 +1,72 @@
+{
+    "scripts": {
+        "build:web": "node scripts/build-web-renderer.js",
+        "migrate:backups": "node scripts/migrate-legacy-backups.js",
+        "archive:sensitive": "node scripts/archive-sensitive-files.js",
+        "verify:dr": "node scripts/verify-disaster-recovery.js",
+        "migrate:cloud": "node scripts/run-cloud-migrations.js",
+        "smoke:production": "node scripts/smoke-production.js",
+        "release:check": "node scripts/release-production.js --check-only",
+        "release:local-check": "node scripts/release-production.js --local-only",
+        "release:production": "node scripts/release-production.js",
+        "check": "node --check src/main/main.js && node --check src/main/preload.js && node --check src/main/cloud-api.js && node --check src/main/import-mappers.js && node --check src/main/backup-crypto.js && node --check src/database/db.js && node --check src/renderer/app.js",
+        "test": "node --test test/*.test.js",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder --win",
+        "start": "electron ."
+    },
+    "description": "Sales Lead Tracker Pro CRM",
+    "version": "1.0.21",
+    "productName": "LenspireCRM Pro",
+    "author": "Lenspire",
+    "name": "lenspirecrm-pro",
+    "main": "src/main/main.js",
+    "devDependencies": {
+        "electron": "^43.4.0",
+        "electron-builder": "^26.15.3"
+    },
+    "dependencies": {
+        "better-sqlite3": "^13.0.3",
+        "chart.js": "^4.5.1",
+        "xlsx": "file:vendor/xlsx-0.20.3.tgz"
+    },
+    "build": {
+        "nsis": {
+            "createDesktopShortcut": "always",
+            "shortcutName": "LenspireCRM Pro",
+            "oneClick": false,
+            "createStartMenuShortcut": true,
+            "allowToChangeInstallationDirectory": true,
+            "deleteAppDataOnUninstall": false
+        },
+        "appId": "com.lenspire.crmpro",
+        "copyright": "Copyright © 2026 LenspireCRM",
+        "electronDist": "node_modules/electron/dist",
+        "files": [
+            "src/**/*",
+            "!src/**/*.db",
+            "!src/**/*.db-*",
+            "!src/**/*.bak",
+            "!src/**/*.backup*",
+            "package.json"
+        ],
+        "directories": {
+            "buildResources": "build",
+            "output": "dist"
+        },
+        "artifactName": "Ankit_Studios ${version}.${ext}",
+        "npmRebuild": false,
+        "win": {
+            "icon": "build/icon.ico",
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ]
+        },
+        "productName": "LenspireCRM Pro"
+    }
+}

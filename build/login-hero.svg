@@ -1,0 +1,296 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <defs>
+    <!-- Background gradient -->
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#1a1040"/>
+      <stop offset="50%" stop-color="#0d0a20"/>
+      <stop offset="100%" stop-color="#060410"/>
+    </radialGradient>
+    <!-- Golden light glow -->
+    <radialGradient id="glow1" cx="50%" cy="35%" r="35%">
+      <stop offset="0%" stop-color="#d4a04080"/>
+      <stop offset="40%" stop-color="#c0803040"/>
+      <stop offset="100%" stop-color="#00000000"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="30%" cy="25%" r="25%">
+      <stop offset="0%" stop-color="#e8b84d50"/>
+      <stop offset="100%" stop-color="#00000000"/>
+    </radialGradient>
+    <radialGradient id="glow3" cx="70%" cy="30%" r="20%">
+      <stop offset="0%" stop-color="#f0c86040"/>
+      <stop offset="100%" stop-color="#00000000"/>
+    </radialGradient>
+    <!-- Bokeh filter -->
+    <filter id="bokeh">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <filter id="bokeh-lg">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+    <filter id="glow-filter">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <!-- Petal gradient -->
+    <linearGradient id="petal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0d0a0"/>
+      <stop offset="100%" stop-color="#d4a060"/>
+    </linearGradient>
+    <linearGradient id="petal2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8c890"/>
+      <stop offset="100%" stop-color="#c89858"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep dark background -->
+  <rect width="800" height="1000" fill="url(#bg)"/>
+
+  <!-- Ambient light layers -->
+  <rect width="800" height="1000" fill="url(#glow1)"/>
+  <rect width="800" height="1000" fill="url(#glow2)"/>
+  <rect width="800" height="1000" fill="url(#glow3)"/>
+
+  <!-- Far bokeh lights (large, very blurred) -->
+  <g filter="url(#bokeh-lg)" opacity="0.35">
+    <circle cx="120" cy="180" r="18" fill="#f0c860"/>
+    <circle cx="680" cy="150" r="22" fill="#e8b040"/>
+    <circle cx="250" cy="120" r="14" fill="#d4a040"/>
+    <circle cx="550" cy="200" r="16" fill="#f0d878"/>
+    <circle cx="400" cy="100" r="20" fill="#e8c050"/>
+    <circle cx="150" cy="280" r="12" fill="#d4a848"/>
+    <circle cx="650" cy="260" r="15" fill="#f0c050"/>
+    <circle cx="350" cy="160" r="10" fill="#e0b848"/>
+  </g>
+
+  <!-- Mid bokeh lights -->
+  <g filter="url(#bokeh)" opacity="0.5">
+    <circle cx="100" cy="350" r="8" fill="#f0d060"/>
+    <circle cx="700" cy="320" r="10" fill="#e8c050"/>
+    <circle cx="200" cy="400" r="6" fill="#d4a848"/>
+    <circle cx="600" cy="380" r="7" fill="#f0c860"/>
+    <circle cx="320" cy="340" r="5" fill="#e0b848"/>
+    <circle cx="480" cy="360" r="9" fill="#f0d878"/>
+    <circle cx="160" cy="440" r="6" fill="#d4a040"/>
+    <circle cx="640" cy="420" r="8" fill="#e8b040"/>
+    <circle cx="380" cy="300" r="5" fill="#f0c050"/>
+    <circle cx="520" cy="280" r="7" fill="#d4b050"/>
+  </g>
+
+  <!-- Small sparkles / fairy lights -->
+  <g opacity="0.7">
+    <circle cx="130" cy="220" r="2" fill="#fff8e0"/>
+    <circle cx="670" cy="190" r="2.5" fill="#fff0c0"/>
+    <circle cx="280" cy="170" r="1.8" fill="#ffe8a0"/>
+    <circle cx="520" cy="230" r="2" fill="#fff0d0"/>
+    <circle cx="400" cy="150" r="1.5" fill="#ffe090"/>
+    <circle cx="180" cy="310" r="2" fill="#fff8e0"/>
+    <circle cx="620" cy="290" r="1.8" fill="#ffe8b0"/>
+    <circle cx="350" cy="250" r="2.2" fill="#fff0c0"/>
+    <circle cx="450" cy="190" r="1.5" fill="#ffe0a0"/>
+    <circle cx="300" cy="210" r="2" fill="#fff8e8"/>
+    <circle cx="500" cy="170" r="1.8" fill="#ffe8a8"/>
+    <circle cx="220" cy="260" r="1.5" fill="#fff0d0"/>
+    <circle cx="580" cy="240" r="2" fill="#ffe0b0"/>
+  </g>
+
+  <!-- Hanging floral garland (top) -->
+  <g opacity="0.6">
+    <!-- Vine/stem curves -->
+    <path d="M0,80 Q100,60 200,90 Q300,55 400,75 Q500,50 600,85 Q700,60 800,80" fill="none" stroke="#2a4a30" stroke-width="2" opacity="0.5"/>
+    <path d="M0,95 Q120,70 240,100 Q360,65 480,90 Q600,60 720,95 L800,85" fill="none" stroke="#1e3825" stroke-width="1.5" opacity="0.4"/>
+
+    <!-- Flowers along the garland -->
+    <!-- Flower 1 -->
+    <g transform="translate(150,78)" opacity="0.7">
+      <ellipse cx="0" cy="-4" rx="6" ry="4" fill="#f0d0a0" transform="rotate(-30)"/>
+      <ellipse cx="3" cy="-2" rx="6" ry="4" fill="#e8c090" transform="rotate(15)"/>
+      <ellipse cx="-3" cy="-2" rx="6" ry="4" fill="#e0b888" transform="rotate(-60)"/>
+      <ellipse cx="0" cy="2" rx="5" ry="3.5" fill="#d4a878" transform="rotate(40)"/>
+      <circle cx="0" cy="0" r="2.5" fill="#c89050"/>
+    </g>
+    <!-- Flower 2 -->
+    <g transform="translate(350,65)" opacity="0.65">
+      <ellipse cx="0" cy="-5" rx="7" ry="4.5" fill="#f0d8b0" transform="rotate(-20)"/>
+      <ellipse cx="4" cy="-2" rx="6" ry="4" fill="#e8c898" transform="rotate(25)"/>
+      <ellipse cx="-4" cy="-2" rx="6" ry="4" fill="#e0c090" transform="rotate(-55)"/>
+      <ellipse cx="0" cy="3" rx="5.5" ry="3.5" fill="#d4b080" transform="rotate(50)"/>
+      <circle cx="0" cy="0" r="3" fill="#c89858"/>
+    </g>
+    <!-- Flower 3 -->
+    <g transform="translate(550,72)" opacity="0.6">
+      <ellipse cx="0" cy="-4" rx="5.5" ry="3.5" fill="#ecd0a0" transform="rotate(-25)"/>
+      <ellipse cx="3" cy="-1" rx="5" ry="3.5" fill="#e0c090" transform="rotate(20)"/>
+      <ellipse cx="-3" cy="-1" rx="5" ry="3.5" fill="#d8b888" transform="rotate(-50)"/>
+      <circle cx="0" cy="0" r="2.5" fill="#c09050"/>
+    </g>
+    <!-- Small buds -->
+    <circle cx="80" cy="85" r="3" fill="#d4a870" opacity="0.5"/>
+    <circle cx="250" cy="80" r="2.5" fill="#c89860" opacity="0.45"/>
+    <circle cx="450" cy="78" r="3" fill="#d4a068" opacity="0.5"/>
+    <circle cx="650" cy="82" r="2.5" fill="#c89058" opacity="0.45"/>
+  </g>
+
+  <!-- Hanging fairy light strings -->
+  <g opacity="0.4" stroke="#d4a04060" stroke-width="0.8" fill="none">
+    <path d="M100,0 Q105,120 95,250"/>
+    <path d="M250,0 Q245,100 255,220"/>
+    <path d="M400,0 Q405,130 395,280"/>
+    <path d="M550,0 Q545,110 555,240"/>
+    <path d="M700,0 Q705,95 695,210"/>
+  </g>
+  <!-- Light bulbs on strings -->
+  <g filter="url(#bokeh)" opacity="0.55">
+    <circle cx="98" cy="120" r="4" fill="#f0d860"/>
+    <circle cx="96" cy="200" r="3.5" fill="#e8c850"/>
+    <circle cx="252" cy="100" r="3.5" fill="#f0d058"/>
+    <circle cx="254" cy="180" r="4" fill="#e8c048"/>
+    <circle cx="402" cy="130" r="4" fill="#f0d868"/>
+    <circle cx="398" cy="220" r="3.5" fill="#e8c858"/>
+    <circle cx="548" cy="110" r="3.5" fill="#f0d060"/>
+    <circle cx="552" cy="190" r="4" fill="#e8c050"/>
+    <circle cx="702" cy="95" r="3.5" fill="#f0d860"/>
+    <circle cx="698" cy="170" r="4" fill="#e8c850"/>
+  </g>
+
+  <!-- Couple silhouette (center) -->
+  <g transform="translate(400,420)">
+    <!-- Soft glow behind couple -->
+    <ellipse cx="0" cy="0" rx="120" ry="160" fill="#d4a04018" filter="url(#glow-filter)"/>
+
+    <!-- Groom silhouette -->
+    <g transform="translate(-28,0)">
+      <!-- Head -->
+      <ellipse cx="0" cy="-120" rx="18" ry="22" fill="#0a0818"/>
+      <!-- Hair -->
+      <ellipse cx="0" cy="-128" rx="16" ry="12" fill="#0c0a1c"/>
+      <!-- Neck -->
+      <rect x="-5" y="-100" width="10" height="12" fill="#0a0818" rx="3"/>
+      <!-- Shoulders + torso -->
+      <path d="M-30,-88 Q-35,-85 -38,-70 L-38,20 Q-38,30 -30,35 L30,35 Q38,30 38,20 L38,-70 Q35,-85 30,-88 Z" fill="#0a0818"/>
+      <!-- Suit jacket lapels -->
+      <path d="M-8,-88 L-20,-50 L-8,-45 Z" fill="#0e0c20" opacity="0.5"/>
+      <path d="M8,-88 L20,-50 L8,-45 Z" fill="#0e0c20" opacity="0.5"/>
+      <!-- Bow tie -->
+      <path d="M-6,-86 L0,-82 L6,-86 L0,-90 Z" fill="#1a1430"/>
+      <!-- Left arm (reaching to bride) -->
+      <path d="M-38,-70 Q-55,-50 -50,-20 Q-48,-5 -42,10" fill="#0a0818" stroke="#0a0818" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <!-- Right arm -->
+      <path d="M38,-70 Q50,-55 52,-30 Q53,-15 48,5" fill="none" stroke="#0a0818" stroke-width="12" stroke-linecap="round"/>
+      <!-- Legs -->
+      <rect x="-22" y="35" width="18" height="80" fill="#0a0818" rx="4"/>
+      <rect x="4" y="35" width="18" height="80" fill="#0a0818" rx="4"/>
+      <!-- Shoes -->
+      <ellipse cx="-13" cy="118" rx="12" ry="5" fill="#080614"/>
+      <ellipse cx="13" cy="118" rx="12" ry="5" fill="#080614"/>
+    </g>
+
+    <!-- Bride silhouette -->
+    <g transform="translate(28,0)">
+      <!-- Head -->
+      <ellipse cx="0" cy="-125" rx="16" ry="20" fill="#0a0818"/>
+      <!-- Hair (longer, flowing) -->
+      <path d="M-16,-130 Q-20,-140 -14,-150 Q0,-158 14,-150 Q20,-140 16,-130 Q18,-115 20,-95 Q18,-80 12,-70" fill="#0c0a1c" stroke="#0c0a1c" stroke-width="3"/>
+      <!-- Veil hint -->
+      <path d="M-10,-148 Q-25,-140 -30,-110 Q-32,-90 -28,-70" fill="none" stroke="#ffffff08" stroke-width="1.5"/>
+      <!-- Neck -->
+      <rect x="-4" y="-106" width="8" height="10" fill="#0a0818" rx="3"/>
+      <!-- Shoulders + bodice -->
+      <path d="M-25,-96 Q-30,-93 -32,-80 L-30,-30 Q-28,-20 -20,-15 L20,-15 Q28,-20 30,-30 L32,-80 Q30,-93 25,-96 Z" fill="#0a0818"/>
+      <!-- Necklace highlight -->
+      <path d="M-12,-95 Q0,-90 12,-95" fill="none" stroke="#d4a04030" stroke-width="1"/>
+      <!-- Left arm (held by groom) -->
+      <path d="M-32,-80 Q-48,-60 -45,-30 Q-44,-15 -40,0" fill="none" stroke="#0a0818" stroke-width="11" stroke-linecap="round"/>
+      <!-- Right arm -->
+      <path d="M32,-80 Q42,-65 44,-45 Q45,-30 42,-15" fill="none" stroke="#0a0818" stroke-width="11" stroke-linecap="round"/>
+      <!-- Dress (A-line flowing gown) -->
+      <path d="M-20,-15 Q-30,10 -50,60 Q-65,100 -75,155 Q-70,160 -60,162 L60,162 Q70,160 75,155 Q65,100 50,60 Q30,10 20,-15 Z" fill="#0a0818"/>
+      <!-- Dress texture/folds -->
+      <path d="M-35,40 Q-40,80 -55,130" fill="none" stroke="#100e22" stroke-width="0.8" opacity="0.4"/>
+      <path d="M-15,30 Q-25,70 -40,120" fill="none" stroke="#100e22" stroke-width="0.8" opacity="0.3"/>
+      <path d="M15,30 Q25,70 40,120" fill="none" stroke="#100e22" stroke-width="0.8" opacity="0.3"/>
+      <path d="M35,40 Q40,80 55,130" fill="none" stroke="#100e22" stroke-width="0.8" opacity="0.4"/>
+      <!-- Bouquet (held at waist) -->
+      <g transform="translate(-38,-10)">
+        <ellipse cx="0" cy="-8" rx="14" ry="12" fill="#1a1230"/>
+        <circle cx="-5" cy="-10" r="4" fill="#2a1a40" opacity="0.6"/>
+        <circle cx="5" cy="-8" r="3.5" fill="#241838" opacity="0.5"/>
+        <circle cx="0" cy="-14" r="3" fill="#2e1e48" opacity="0.5"/>
+        <circle cx="-8" cy="-6" r="2.5" fill="#221635" opacity="0.4"/>
+        <circle cx="7" cy="-12" r="2.8" fill="#281c3e" opacity="0.45"/>
+        <!-- Greenery -->
+        <path d="M-12,-5 Q-16,-10 -14,-16" fill="none" stroke="#1a2a20" stroke-width="1.5" opacity="0.5"/>
+        <path d="M10,-3 Q14,-8 12,-14" fill="none" stroke="#1a2a20" stroke-width="1.5" opacity="0.5"/>
+      </g>
+    </g>
+
+    <!-- Joined hands (where they meet) -->
+    <path d="M-42,10 Q-38,5 -30,0 Q-20,8 -15,5" fill="none" stroke="#0a0818" stroke-width="10" stroke-linecap="round"/>
+    <path d="M42,10 Q38,5 30,0 Q20,8 15,5" fill="none" stroke="#0a0818" stroke-width="10" stroke-linecap="round"/>
+  </g>
+
+  <!-- Rose petals falling -->
+  <g opacity="0.5">
+    <!-- Petal 1 -->
+    <g transform="translate(180,350) rotate(25)">
+      <ellipse cx="0" cy="0" rx="8" ry="5" fill="url(#petal)" opacity="0.6"/>
+    </g>
+    <!-- Petal 2 -->
+    <g transform="translate(620,380) rotate(-15)">
+      <ellipse cx="0" cy="0" rx="7" ry="4.5" fill="url(#petal2)" opacity="0.5"/>
+    </g>
+    <!-- Petal 3 -->
+    <g transform="translate(250,500) rotate(40)">
+      <ellipse cx="0" cy="0" rx="6" ry="4" fill="url(#petal)" opacity="0.45"/>
+    </g>
+    <!-- Petal 4 -->
+    <g transform="translate(560,450) rotate(-30)">
+      <ellipse cx="0" cy="0" rx="7" ry="4" fill="url(#petal2)" opacity="0.4"/>
+    </g>
+    <!-- Petal 5 -->
+    <g transform="translate(320,550) rotate(55)">
+      <ellipse cx="0" cy="0" rx="5" ry="3.5" fill="url(#petal)" opacity="0.35"/>
+    </g>
+    <!-- Petal 6 -->
+    <g transform="translate(480,520) rotate(-45)">
+      <ellipse cx="0" cy="0" rx="6" ry="3.5" fill="url(#petal2)" opacity="0.4"/>
+    </g>
+    <!-- Petal 7 -->
+    <g transform="translate(150,480) rotate(10)">
+      <ellipse cx="0" cy="0" rx="5" ry="3" fill="url(#petal)" opacity="0.3"/>
+    </g>
+    <g transform="translate(650,500) rotate(-20)">
+      <ellipse cx="0" cy="0" rx="5.5" ry="3.5" fill="url(#petal2)" opacity="0.35"/>
+    </g>
+  </g>
+
+  <!-- Ground reflection / floor -->
+  <rect x="0" y="580" width="800" height="420" fill="#060410" opacity="0.6"/>
+  <ellipse cx="400" cy="600" rx="200" ry="15" fill="#d4a04008" filter="url(#bokeh-lg)"/>
+
+  <!-- Bottom ambient bokeh (floor reflections) -->
+  <g filter="url(#bokeh-lg)" opacity="0.15">
+    <circle cx="200" cy="700" r="25" fill="#d4a040"/>
+    <circle cx="600" cy="720" r="20" fill="#c89038"/>
+    <circle cx="400" cy="680" r="18" fill="#e0b048"/>
+    <circle cx="300" cy="750" r="15" fill="#d4a848"/>
+    <circle cx="500" cy="740" r="22" fill="#c89840"/>
+  </g>
+
+  <!-- Subtle film grain overlay -->
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/>
+    <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+    <feBlend in="SourceGraphic" in2="gray" mode="multiply"/>
+  </filter>
+  <rect width="800" height="1000" fill="transparent" filter="url(#grain)" opacity="0.03"/>
+
+  <!-- Warm vignette -->
+  <radialGradient id="vignette" cx="50%" cy="45%" r="60%">
+    <stop offset="0%" stop-color="#00000000"/>
+    <stop offset="70%" stop-color="#00000020"/>
+    <stop offset="100%" stop-color="#00000060"/>
+  </radialGradient>
+  <rect width="800" height="1000" fill="url(#vignette)"/>
+</svg>
