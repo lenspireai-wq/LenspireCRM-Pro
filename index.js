@@ -6503,10 +6503,10 @@ const bulkEventsMatch = pathname.match(/^\/api\/events\/bulk$/i);
       if (!Array.isArray(eventIds) || !eventIds.length) return json({ error: "eventIds array is required" }, 400);
       const updates = [];
       if (body.slotted !== undefined) updates.push(`slotted=${body.slotted}`);
-      for (const field in body) { if (!['eventIds','slotted'].includes(field) && body[field] !== undefined) updates.push(`${field}=${body[field]}`); }
       if (!updates.length) return json({ ok: true, updated: 0 });
       const setClause = updates.join(", ");
-      await sql.unsafe(`update calendar_events set ${setClause} where id in (${eventIds.map(() => "?").join(",")}) and organization_id = ${org2}`, eventIds);
+      const placeholders = eventIds.map(() => "?").join(",");
+      await sql.unsafe(`update calendar_events set ${setClause} where id in (${placeholders}) and organization_id = ?`, [...eventIds, org2]);
       return json({ ok: true, updated: eventIds.length });
     }
     const eventMatch = pathname.match(/^\/api\/events(?:\/([0-9a-f-]{36}))?$/i);
