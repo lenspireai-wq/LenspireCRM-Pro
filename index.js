@@ -6474,6 +6474,20 @@ async function workspaceApi(request, env, pathname) {
         select * from photographer_details where organization_id = ${org2} order by name`;
       return json({ customers, bookings, production, productionActivities, events, payments, salesTargets, salesExecutives, photographers, photographerDetails, asOf: (/* @__PURE__ */ new Date()).toISOString() });
     }
+const bulkEventsMatch = pathname.match(/^\/api\/events\/bulk$/i);
+    if (bulkEventsMatch) {
+      if (!canWriteDepartment(user, "operations")) return json({ error: "Operations write access required" }, 403);
+      const body = await readJson(request);
+      const eventIds = body.eventIds;
+      if (!Array.isArray(eventIds) || !eventIds.length) return json({ error: "eventIds array is required" }, 400);
+      const updates = [];
+      if (body.slotted !== undefined) updates.push(`slotted=${body.slotted}`);
+      for (const field in body) { if (!['eventIds','slotted'].includes(field) && body[field] !== undefined) updates.push(`${field}=${body[field]}`); }
+      if (!updates.length) return json({ ok: true, updated: 0 });
+      const setClause = updates.join(", ");
+      await sql.unsafe(`update calendar_events set ${setClause} where id in (${eventIds.map(() => "?").join(",")}) and organization_id = ${org2}`, eventIds);
+      return json({ ok: true, updated: eventIds.length });
+    }
     const eventMatch = pathname.match(/^\/api\/events(?:\/([0-9a-f-]{36}))?$/i);
     if (eventMatch) {
       const eventId = eventMatch[1] || null;
