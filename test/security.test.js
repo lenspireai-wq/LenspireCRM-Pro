@@ -78,15 +78,13 @@ test('cloud server errors never trigger a whole-workspace restore fallback', () 
 
 test('database requires strong passwords for all newly created or reset accounts', () => {
   assert.match(databaseSource, /db\.pragma\('foreign_keys = ON'\)/);
-  assert.match(databaseSource, /value\.length < 12/);
-  assert.match(databaseSource, /!\/\[A-Z\]\//);
-  assert.match(databaseSource, /!\/\[\^A-Za-z0-9\]\//);
+  assert.match(databaseSource, /4-digit/);
   assert.doesNotMatch(databaseSource, /hashPassword\('admin', salt\), salt\);/);
   assert.match(databaseSource, /Invalidate the historical admin\/admin bootstrap credential/);
 });
 
 test('new desktop backups require encryption and web sessions do not persist bearer tokens', () => {
-  assert.match(mainSource, /backup password of at least 12 characters is required/);
+   assert.match(mainSource, /backup password must be a 4-digit PIN/i);
   assert.match(mainSource, /const payload=encryptPayload\(snapshot,password\)/);
   assert.match(mainSource, /Unencrypted legacy backups cannot be restored directly/);
   assert.doesNotMatch(webBridgeSource, /localStorage\.setItem\(STORAGE\.(?:token|refresh)/);

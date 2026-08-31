@@ -12,7 +12,7 @@ function deriveKey(password, salt) {
 }
 
 function encryptPayload(payload, password) {
-  if (typeof password !== 'string' || password.length < 12) throw new Error('Backup password must be at least 12 characters.');
+  if (typeof password !== 'string' || (!/^\d{4}$/.test(password) && (password.length < 12 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password) || !/[^A-Za-z0-9]/.test(password)))) throw new Error('Backup password must be a 4-digit PIN or a 12+ character complex password.');
   const salt = crypto.randomBytes(SALT_LENGTH);
   const key = deriveKey(password, salt);
   const iv = crypto.randomBytes(IV_LENGTH);

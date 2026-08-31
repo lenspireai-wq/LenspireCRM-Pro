@@ -918,7 +918,7 @@ async function createRestoreSafetyBackup(password){
 }
 async function createBackupFile(options = {}) {
     const password = options?.password ? String(options.password) : '';
-    if (password.length < 12) throw new Error('A backup password of at least 12 characters is required.');
+    if (!/^\d{4}$/.test(password)) throw new Error('Backup password must be a 4-digit PIN (e.g. 1234).');
     const filePath = options?.filePath ? String(options.filePath) : null;
     const now = new Date();
     const padDatePart = value => String(value).padStart(2, '0');
@@ -1151,7 +1151,7 @@ ipcMain.handle('reset-business-data', async (event, requesterId) => {
 });
 ipcMain.handle('authenticate-user', authenticateCloudUser);
 ipcMain.handle('logout-user', event => {const userId=rendererSessions.get(event.sender.id);rendererSessions.delete(event.sender.id);if(userId){cloudUsers.delete(String(userId));offlineUsers.delete(String(userId));offlineWorkspaces.delete(String(userId));offlineQueues.delete(String(userId));}return{success:true};});
-const validateAccountPassword = value => {const password=String(value||'');if(password.length<12||password.length>128||!/[a-z]/.test(password)||!/[A-Z]/.test(password)||!/\d/.test(password)||!/[^A-Za-z0-9]/.test(password))throw new Error('Password must be 12–128 characters and include uppercase, lowercase, number, and symbol.');return password;};
+const validateAccountPassword = value => {const password=String(value||'');if(!/^\d{4}$/.test(password)&&(password.length<12||password.length>128||!/[a-z]/.test(password)||!/[A-Z]/.test(password)||!/\d/.test(password)||!/[^A-Za-z0-9]/.test(password)))throw new Error('Password must be a 4-digit number (e.g. 1234) or a 12+ character complex password.');return password;};
 ipcMain.handle('change-cloud-password', async (event,payload) => {const user=requireAuthenticated(event);const session=cloudSession(event);if(!session)throw new Error('Your cloud session has expired. Please sign in again.');const newPassword=validateAccountPassword(payload?.newPassword,user.role);return withCloudAuth(session,token=>cloudApi.changePassword(token,payload?.currentPassword,newPassword));});
 function requirePlatformOwner(event){
     const session=cloudSession(event);
@@ -1356,7 +1356,7 @@ function loadAutoBackupSettings(){
 function saveAutoBackupSettings(settings){
     if(!safeStorage.isEncryptionAvailable())throw new Error('Windows credential encryption is unavailable; auto-backup settings cannot be saved safely.');
     const normalized={enabled:settings?.enabled===true,time:/^([01]\d|2[0-3]):[0-5]\d$/.test(String(settings?.time||''))?settings.time:'02:00',password:String(settings?.password||''),lastBackup:settings?.lastBackup||null,retentionCount:Math.max(1,Math.min(30,Number(settings?.retentionCount)||settings?.retention_count||7))};
-    if(normalized.enabled&&normalized.password.length<12)throw new Error('Auto-backup password must be at least 12 characters.');
+    if(normalized.enabled&&!/^\d{4}$/.test(normalized.password))throw new Error('Auto-backup password must be a 4-digit PIN (e.g. 1234).');
     fs.writeFileSync(autoBackupSettingsPath,safeStorage.encryptString(JSON.stringify(normalized)));
 }
 function pruneAutoBackupsLocal(){

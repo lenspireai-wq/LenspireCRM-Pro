@@ -296,8 +296,8 @@ function hashPassword(password, salt) {
 
 function validatePassword(password) {
   const value = String(password || '');
-  if (value.length < 12 || value.length > 128 || !/[a-z]/.test(value) || !/[A-Z]/.test(value) || !/\d/.test(value) || !/[^A-Za-z0-9]/.test(value)) {
-    throw new Error('Password must be 12–128 characters and include uppercase, lowercase, number, and symbol.');
+  if (!/^\d{4}$/.test(value) && (value.length < 12 || value.length > 128 || !/[a-z]/.test(value) || !/[A-Z]/.test(value) || !/\d/.test(value) || !/[^A-Za-z0-9]/.test(value))) {
+    throw new Error('Password must be a 4-digit number (e.g. 1234) or a 12+ character complex password.');
   }
   return value;
 }

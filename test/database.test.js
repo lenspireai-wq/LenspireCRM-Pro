@@ -13,7 +13,7 @@ process.env.LENSPIRE_DB_PATH = DB_PATH;
 
 const db = require('../src/database/db.js');
 
-const PASS = 'Str0ng!Backup#Passphrase-2026';
+const PASS = '1234';
 
 function closeDb() {
   try {
@@ -62,7 +62,7 @@ test('resetUserPassword then authenticateUser round-trips credentials', () => {
 });
 
 test('authenticateUser rejects a wrong password', () => {
-  const bad = db.authenticateUser('admin', 'Wrong!Password#99');
+  const bad = db.authenticateUser('admin', '9999');
   assert.equal(bad.success, false);
   assert.match(bad.message, /Incorrect username or password/);
 });
@@ -297,7 +297,7 @@ test('user management enforces roles, activation, and password policy', () => {
   const created = db.createUser(1, { username: 'sales1', displayName: 'Sales One', role: 'Sales', password: PASS });
   assert.ok(created.find(u => u.username === 'sales1'));
 
-  assert.throws(() => db.createUser(1, { username: 'weak', displayName: 'Weak', role: 'Sales', password: 'short' }), /Password must be 12/);
+  assert.throws(() => db.createUser(1, { username: 'weak', displayName: 'Weak', role: 'Sales', password: 'short' }), /Password must be a 4-digit/);
   assert.throws(() => db.createUser(1, { username: 'badname!', displayName: 'Bad', role: 'Sales', password: PASS }), /Username must be 3/);
   assert.throws(() => db.createUser(1, { username: 'badrole', displayName: 'Bad', role: 'Owner', password: PASS }), /Select a valid role/);
 
@@ -311,17 +311,17 @@ test('user management enforces roles, activation, and password policy', () => {
   db.setUserActive(1, target.id, true);
   assert.equal(db.authenticateUser('sales1', PASS).success, true);
 
-  db.resetUserPassword(1, target.id, 'New!Str0ng#Reset99');
-  assert.equal(db.authenticateUser('sales1', 'New!Str0ng#Reset99').success, true);
+  db.resetUserPassword(1, target.id, '5678');
+  assert.equal(db.authenticateUser('sales1', '5678').success, true);
   assert.equal(db.authenticateUser('sales1', PASS).success, false);
 
   assert.throws(() => db.createUser(1, { username: 'sales1', displayName: 'Dup', role: 'Sales', password: PASS }), /already in use/);
 });
 
 test('changeOwnPassword requires the current password', () => {
-  assert.throws(() => db.changeOwnPassword(1, 'WrongOld#12', 'New!Str0ng#Change2026'), /Current password is incorrect/);
-  assert.doesNotThrow(() => db.changeOwnPassword(1, PASS, 'New!Str0ng#Change2026'));
-  assert.equal(db.authenticateUser('admin', 'New!Str0ng#Change2026').success, true);
+  assert.throws(() => db.changeOwnPassword(1, '9999', '5678'), /Current password is incorrect/);
+  assert.doesNotThrow(() => db.changeOwnPassword(1, PASS, '5678'));
+  assert.equal(db.authenticateUser('admin', '5678').success, true);
 });
 
 test('resetBusinessData wipes business data but preserves users', () => {

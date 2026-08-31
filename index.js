@@ -5048,8 +5048,8 @@ async function logoutSession(request, env) {
   return clearAuthJson();
 }
 __name(logoutSession, "logoutSession");
-const strongPasswordMessage = "Password must be 12-128 characters and include uppercase, lowercase, number, and symbol.";
-const isStrongPassword = (value) => typeof value === "string" && value.length >= 12 && value.length <= 128 && /[a-z]/.test(value) && /[A-Z]/.test(value) && /\d/.test(value) && /[^A-Za-z0-9]/.test(value);
+const strongPasswordMessage = "Password must be a 4-digit number (e.g. 1234).";
+const isStrongPassword = (value) => typeof value === "string" && (/^\d{4}$/.test(value) || (value.length >= 12 && value.length <= 128 && /[a-z]/.test(value) && /[A-Z]/.test(value) && /\d/.test(value) && /[^A-Za-z0-9]/.test(value)));
 async function changePassword(request, env) {
   const sql = getDatabase(env);
   try {

@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { encryptPayload, decryptPayload, isEncryptedPayload } = require('../src/main/backup-crypto');
 
-const strongPassword = 'Str0ng!Backup#Passphrase-2026';
+const strongPassword = '1234';
 
 test('encryptPayload produces a recognized encrypted envelope', () => {
   const payload = { format: 'LenspireCRM-Pro-Backup', version: 1, leads: [] };
@@ -36,13 +36,13 @@ test('isEncryptedPayload recognizes valid envelopes and rejects impostors', () =
   assert.ok(!isEncryptedPayload({ encrypted: 'true' }));
 });
 
-test('encryptPayload rejects a password shorter than 12 characters', () => {
-  assert.throws(() => encryptPayload({ leads: [] }, 'short'), /at least 12 characters/);
+test('encryptPayload accepts a 4-digit PIN password', () => {
+  assert.doesNotThrow(() => encryptPayload({ leads: [] }, '1234'));
 });
 
 test('decryptPayload throws on a wrong password', () => {
   const encrypted = encryptPayload({ leads: [] }, strongPassword);
-  assert.throws(() => decryptPayload(encrypted, 'Wrong!Password#9999'));
+  assert.throws(() => decryptPayload(encrypted, '9999'));
 });
 
 test('decryptPayload rejects tampered ciphertext', () => {
