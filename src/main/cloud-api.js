@@ -215,7 +215,16 @@ const portalSetupPassword = (inviteToken, password) => request('/api/portal/setu
 const portalInvite = (token, bookingId, { name, email, phone }) => request('/api/portal/invite', authorized(token, jsonBody({ bookingId, name, email, phone })));
 const convertLead = (token, id, options) => request(`/api/leads/${encodeURIComponent(id)}/convert`, authorized(token, jsonBody(options || {})));
 const createBackup = token => request('/api/backup', authorized(token, { timeoutMs: 120000 }));
+const createEncryptedBackup = (token, password) => request('/api/backup?password=' + encodeURIComponent(password), authorized(token, { timeoutMs: 120000 }));
 const restoreBackup = (token, backup) => request('/api/backup/restore', authorized(token, { ...jsonBody(backup), timeoutMs: 120000 }));
+const restoreEncryptedBackup = (token, encryptedBackup, password) => request('/api/backup/restore?password=' + encodeURIComponent(password), authorized(token, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(encryptedBackup), timeoutMs: 120000 }));
+// Auto-backup endpoints
+const listAutoBackups = token => request('/api/backup/auto/list', authorized(token));
+const getLatestAutoBackup = token => request('/api/backup/auto/latest', authorized(token, { timeoutMs: 120000 }));
+const triggerAutoBackup = token => request('/api/backup/auto/trigger', authorized(token, jsonBody({}), { timeoutMs: 120000 }));
+const deleteAutoBackup = (token, backupId) => request('/api/backup/auto/' + encodeURIComponent(backupId), authorized(token, { method: 'DELETE' }));
+const getAutoBackupConfig = token => request('/api/backup/auto/config', authorized(token));
+const setAutoBackupConfig = (token, config) => request('/api/backup/auto/config', authorized(token, jsonBody(config)));
 // Older cloud deployments expose the non-lead tables through backup/restore
 // but do not yet have every granular mutation endpoint. For those versions,
 // update the server snapshot while preserving all unrelated records.
@@ -283,4 +292,4 @@ const uploadDriveFile = (token, { leadId, name, mimeType, buffer }) => {
 };
 const listDriveFiles = (token, leadId) => request('/api/drive/files?leadId=' + encodeURIComponent(leadId || ''), authorized(token));
 const deleteDriveFile = (token, fileId) => request('/api/drive/files/' + encodeURIComponent(fileId), authorized(token, { method: 'DELETE' }));
-module.exports = { API_BASE_URL, login, refresh, changePassword, listUsers, createUser, setUserDepartmentAccess, setUserRole, setUserActive, resetUserPassword, listPlatformOrganizations, createPlatformOrganization, setPlatformOrganizationStatus, updatePlatformOrganizationSubscription, updatePlatformOrganizationBranding, uploadPlatformOrganizationLogo, listLeads, importLeads, createLead, updateLead, deleteLead, resetBusinessData, selectCloudWorkspace, getWorkspace, saveSalesTarget, saveEvent, deleteEvent, savePhotographer, deletePhotographer, updateProduction, addPayment, updatePayment, deletePayment, createClientPortalLink, getClientPortalAccess, revokeClientPortalAccess, portalLogin, portalSetupPassword, portalInvite, convertLead, createBackup, restoreBackup, mutateWorkspace, listLeadActivities, importLeadActivities, createLeadActivity, updateLeadAttachment, googleConnect, uploadDriveFile, listDriveFiles, deleteDriveFile };
+module.exports = { API_BASE_URL, login, refresh, changePassword, listUsers, createUser, setUserDepartmentAccess, setUserRole, setUserActive, resetUserPassword, listPlatformOrganizations, createPlatformOrganization, setPlatformOrganizationStatus, updatePlatformOrganizationSubscription, updatePlatformOrganizationBranding, uploadPlatformOrganizationLogo, listLeads, importLeads, createLead, updateLead, deleteLead, resetBusinessData, selectCloudWorkspace, getWorkspace, saveSalesTarget, saveEvent, deleteEvent, savePhotographer, deletePhotographer, updateProduction, addPayment, updatePayment, deletePayment, createClientPortalLink, getClientPortalAccess, revokeClientPortalAccess, portalLogin, portalSetupPassword, portalInvite, convertLead, createBackup, createEncryptedBackup, restoreBackup, restoreEncryptedBackup, mutateWorkspace, listLeadActivities, importLeadActivities, createLeadActivity, updateLeadAttachment, googleConnect, uploadDriveFile, listDriveFiles, deleteDriveFile, listAutoBackups, getLatestAutoBackup, triggerAutoBackup, deleteAutoBackup, getAutoBackupConfig, setAutoBackupConfig };

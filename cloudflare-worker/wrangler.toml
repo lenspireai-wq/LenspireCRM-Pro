@@ -23,13 +23,21 @@ head_sampling_rate = 1
 # When unset at deploy, the Worker derives a fallback from the request host.
 PORTAL_DOMAIN = "portal.lenspireai.com"
 
+# CRON trigger for automatic daily backups.
+# Runs at 02:00 UTC every day. Override in the dashboard if needed.
+[triggers]
+crons = ["0 2 * * *"]
+
 # Route the client portal subdomain to this Worker. Portal visitors access
 # https://portal.lenspireai.com/<studio-slug>/<client-slug>#<secure-token>
 # while the same Worker also serves the CRM web app and API on crm.lenspireai.com.
 [[routes]]
-pattern = "portal.lenspireai.com/*"
-script = "lenspirecrm-api"
+  pattern = "portal.lenspireai.com/*"
+  script = "lenspirecrm-api"
 
 # Production bindings and secrets stay in Cloudflare. Before the first
 # command-line deployment, add the existing CRM_DB binding and all current
 # Worker secrets through Cloudflare/Wrangler; never store secret values here.
+#
+# BACKUP_ENCRYPTION_KEY — 32-char secret used to encrypt auto-backup blobs at
+# rest in the database. Set with: npx wrangler secret put BACKUP_ENCRYPTION_KEY

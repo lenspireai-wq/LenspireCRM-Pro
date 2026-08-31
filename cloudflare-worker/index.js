@@ -68,5 +68,8 @@ export default {
       if (url.pathname === '/icons/icon-192.png' || url.pathname === '/icons/icon-512.png' || url.pathname === '/favicon.ico') return new Response(decodeBase64(APP_ICON_PNG), { headers:headers('image/png') });
     }
     return apiWorker.fetch(request, env, ctx);
+  },
+  async scheduled(controller, env, ctx) {
+    return apiWorker.scheduled(controller, env, ctx);
   }
 };

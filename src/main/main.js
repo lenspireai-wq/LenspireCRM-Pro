@@ -1333,6 +1333,7 @@ ipcMain.handle('open-quotation-attachment', async (event, attachment) => {
     return { action: 'viewed', source: 'cloud' };
 });
 
+const autoBackupDirPath = path.join(app.getPath('userData'), 'auto-backups');
 const autoBackupSettingsPath = path.join(app.getPath('userData'), 'autobackup-settings.bin');
 const legacyAutoBackupSettingsPath = path.join(app.getPath('userData'), 'autobackup-settings.json');
 function loadAutoBackupSettings(){
@@ -1342,20 +1343,60 @@ function loadAutoBackupSettings(){
         saveAutoBackupSettings(legacy);
         fs.rmSync(legacyAutoBackupSettingsPath,{force:true});
         return legacy;
-    }catch{return{enabled:false,time:'02:00',password:'',lastBackup:null};}
+    }catch{return{enabled:false,time:'02:00',password:'',lastBackup:null,retentionCount:7};}
 }
 function saveAutoBackupSettings(settings){
     if(!safeStorage.isEncryptionAvailable())throw new Error('Windows credential encryption is unavailable; auto-backup settings cannot be saved safely.');
-    const normalized={enabled:settings?.enabled===true,time:/^([01]\d|2[0-3]):[0-5]\d$/.test(String(settings?.time||''))?settings.time:'02:00',password:String(settings?.password||''),lastBackup:settings?.lastBackup||null};
+    const normalized={enabled:settings?.enabled===true,time:/^([01]\d|2[0-3]):[0-5]\d$/.test(String(settings?.time||''))?settings.time:'02:00',password:String(settings?.password||''),lastBackup:settings?.lastBackup||null,retentionCount:Math.max(1,Math.min(30,Number(settings?.retentionCount)||settings?.retention_count||7))};
     if(normalized.enabled&&normalized.password.length<12)throw new Error('Auto-backup password must be at least 12 characters.');
     fs.writeFileSync(autoBackupSettingsPath,safeStorage.encryptString(JSON.stringify(normalized)));
 }
-async function runAutoBackup(){const settings=loadAutoBackupSettings();if(!settings.enabled||!settings.password)return;const autoBackupDir=path.join('C:\\LenspireCRM-Pro\\Backup\\Auto Backup');fs.mkdirSync(autoBackupDir,{recursive:true});const now=new Date();const datePart=now.toISOString().slice(0,10).replace(/-/g,'');const filePath=path.join(autoBackupDir,`AutoBackup-${datePart}.lenspirebackup`);try{const result=await createBackupFile({password:settings.password,filePath});if(result.canceled)return;saveAutoBackupSettings({...settings,lastBackup:now.toISOString()});const wins=BrowserWindow.getAllWindows();for(const win of wins){if(!win.isDestroyed())win.webContents.send('show-toast','Auto backup completed successfully');}}catch(error){console.error('Auto backup failed:',error);const wins=BrowserWindow.getAllWindows();for(const win of wins){if(!win.isDestroyed())win.webContents.send('show-toast','Auto backup failed: '+(error.message||'Unknown error'));}}}
-function startAutoBackupScheduler(){if(autoBackupTimer)clearInterval(autoBackupTimer);autoBackupTimer=setInterval(()=>{const settings=loadAutoBackupSettings();if(!settings.enabled||!settings.time||!settings.password)return;const now=new Date();const currentTime=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;if(currentTime===settings.time){const lastBackup=settings.lastBackup?new Date(settings.lastBackup):null;const today=new Date().toISOString().slice(0,10);const lastBackupDate=lastBackup?lastBackup.toISOString().slice(0,10):null;if(lastBackupDate!==today){runAutoBackup();}}},60000);}
+function pruneAutoBackupsLocal(){
+    if(!fs.existsSync(autoBackupDirPath))return;
+    const settings=loadAutoBackupSettings();
+    const retention=settings.retentionCount||7;
+    const files=fs.readdirSync(autoBackupDirPath).filter(f=>f.endsWith('.lenspirebackup')).map(f=>({name:f,path:path.join(autoBackupDirPath,f),mtime:fs.statSync(path.join(autoBackupDirPath,f)).mtimeMs})).sort((a,b)=>b.mtime-a.mtime);
+    for(const stale of files.slice(retention)){fs.rmSync(stale.path,{force:true});const keyFile=stale.path+'.key';fs.rmSync(keyFile,{force:true});}
+}
+async function runAutoBackup(){
+    const settings=loadAutoBackupSettings();
+    if(!settings.enabled||!settings.password)return;
+    const session=cloudSession({sender:{id:0}});
+    if(session){
+        try{
+            await withCloudAuth(session,token=>cloudApi.triggerAutoBackup(token));
+            const latest=await withCloudAuth(session,token=>cloudApi.getLatestAutoBackup(token));
+            if(latest?.backup){saveAutoBackupSettings({...settings,lastBackup:new Date().toISOString()});const wins=BrowserWindow.getAllWindows();for(const win of wins){if(!win.isDestroyed())win.webContents.send('show-toast','Auto backup completed successfully (cloud)');}return;}
+        }catch(error){
+            if(!isCloudUnavailable(error))console.error('Cloud auto-backup failed:',error.message||error);
+        }
+    }
+    fs.mkdirSync(autoBackupDirPath,{recursive:true});
+    const now=new Date();
+    const datePart=now.toISOString().slice(0,10).replace(/-/g,'');
+    const filePath=path.join(autoBackupDirPath,`AutoBackup-${datePart}.lenspirebackup`);
+    try{
+        const result=await createBackupFile({password:settings.password,filePath});
+        if(result.canceled)return;
+        pruneAutoBackupsLocal();
+        saveAutoBackupSettings({...settings,lastBackup:now.toISOString()});
+        const wins=BrowserWindow.getAllWindows();
+        for(const win of wins){if(!win.isDestroyed())win.webContents.send('show-toast','Auto backup completed successfully');}
+    }catch(error){
+        console.error('Auto backup failed:',error);
+        const wins=BrowserWindow.getAllWindows();
+        for(const win of wins){if(!win.isDestroyed())win.webContents.send('show-toast','Auto backup failed: '+(error.message||'Unknown error'));}
+    }
+}
+function startAutoBackupScheduler(){
+    if(autoBackupTimer)clearInterval(autoBackupTimer);
+    autoBackupTimer=setInterval(()=>{const settings=loadAutoBackupSettings();if(!settings.enabled||!settings.time||!settings.password)return;const now=new Date();const currentTime=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;if(currentTime===settings.time){const lastBackup=settings.lastBackup?new Date(settings.lastBackup):null;const today=new Date().toISOString().slice(0,10);const lastBackupDate=lastBackup?lastBackup.toISOString().slice(0,10):null;if(lastBackupDate!==today){runAutoBackup();}}},60000);
+}
 let autoBackupTimer=null;
-ipcMain.handle('get-autobackup-settings',async()=>loadAutoBackupSettings());
+ipcMain.handle('get-autobackup-settings',async()=>{requireAdministrator(event);return loadAutoBackupSettings();});
 ipcMain.handle('set-autobackup-settings',async(event,settings)=>{requireAdministrator(event);saveAutoBackupSettings(settings);startAutoBackupScheduler();return loadAutoBackupSettings();});
 ipcMain.handle('run-autobackup',async(event)=>{requireAdministrator(event);await runAutoBackup();return{success:true};});
+ipcMain.handle('auto-backup-list',async(event)=>{requireAdministrator(event);const localFiles=fs.existsSync(autoBackupDirPath)?fs.readdirSync(autoBackupDirPath).filter(f=>f.endsWith('.lenspirebackup')).map(f=>({id:f,name:f,type:'local',createdAt:new Date(fs.statSync(path.join(autoBackupDirPath,f)).mtimeMs).toISOString(),size:fs.statSync(path.join(autoBackupDirPath,f)).size})):[];const cloudBackups=[];const session=cloudSession(event);if(session){try{const result=await withCloudAuth(session,token=>cloudApi.listAutoBackups(token));result?.backups?.forEach(b=>cloudBackups.push({...b,type:'cloud'}));}catch(error){if(!isCloudUnavailable(error))throw error;}}return{local:localFiles,cloud:cloudBackups};});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();

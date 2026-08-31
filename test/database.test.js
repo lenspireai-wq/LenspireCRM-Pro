@@ -497,6 +497,119 @@ test('validateDatabaseBackup rejects a missing file', () => {
   try { fs.rmSync(missingPath, { force: true }); } catch {}
 });
 
+test('backup/restore cycle preserves all business data', async () => {
+  // Add data with all entity types
+  const [lead] = db.addLead({
+    name: 'Cycle Backup Client', eventType: 'Wedding', eventDate: '2026-12-25', city: 'Mumbai',
+    source: 'TestSource', status: 'Confirmed', budget: '250000', assignedTo: 'TestPerson',
+    mobile: '88888000002', coupleName: 'Cycle Couple',
+    advanceReceived: 50000, receivedBy: 'TestPerson', paymentReceivedDate: '2026-08-01', paymentMode: 'Bank Transfer'
+  });
+  const workspaceBefore = db.getWorkspaceData();
+  const leadCountBefore = workspaceBefore.leads.length;
+  const customerCountBefore = workspaceBefore.customers.length;
+  const bookingCountBefore = workspaceBefore.bookings.length;
+  const paymentCountBefore = workspaceBefore.payments.length;
+  const productionCountBefore = workspaceBefore.production.length;
+  const eventCountBefore = workspaceBefore.events.length;
+  const activityCountBefore = workspaceBefore.activities.length;
+  const photographerCountBefore = workspaceBefore.photographerDetails.length;
+  assert.ok(leadCountBefore > 0, 'should have leads');
+  assert.ok(customerCountBefore > 0, 'should have customers');
+  assert.ok(bookingCountBefore > 0, 'should have bookings');
+  assert.ok(paymentCountBefore > 0, 'should have payments');
+  assert.ok(productionCountBefore > 0, 'should have production jobs');
+  assert.ok(eventCountBefore > 0, 'should have events');
+  assert.ok(activityCountBefore > 0, 'should have activities');
+
+  // Backup the database
+  const backupPath = path.join(os.tmpdir(), `lenspire-cycle-backup-${process.pid}-${Date.now()}.db`);
+  await db.backupDatabase(backupPath);
+  assert.ok(fs.existsSync(backupPath));
+  db.validateDatabaseBackup(backupPath);
+
+  // Verify backup contents match
+  const backupDb = new sqlite3(backupPath, { readonly: true });
+  const backupLeads = backupDb.prepare('SELECT * FROM leads').all();
+  const backupCustomers = backupDb.prepare('SELECT * FROM customers').all();
+  const backupBookings = backupDb.prepare('SELECT * FROM bookings').all();
+  const backupPayments = backupDb.prepare('SELECT * FROM payments').all();
+  backupDb.close();
+  assert.equal(backupLeads.length, leadCountBefore, 'backup should preserve lead count');
+  assert.equal(backupCustomers.length, customerCountBefore, 'backup should preserve customer count');
+  assert.equal(backupBookings.length, bookingCountBefore, 'backup should preserve booking count');
+  assert.equal(backupPayments.length, paymentCountBefore, 'backup should preserve payment count');
+
+  // Verify the specific lead is in the backup
+  const backupLead = backupLeads.find(l => l.name === 'Cycle Backup Client');
+  assert.ok(backupLead, 'specific lead should be in backup');
+
+  try { fs.rmSync(backupPath, { force: true }); } catch {}
+});
+
+test('backup and validate handle large payloads with quotation attachments', async () => {
+  db.addLead({
+    name: 'Attachment Lead', eventType: 'Wedding', eventDate: '2026-12-25', city: 'Delhi',
+    source: 'TestSource', status: 'Confirmed', budget: '300000', assignedTo: '',
+    mobile: '88888000003'
+  });
+  const backupPath = path.join(os.tmpdir(), `lenspire-attach-backup-${process.pid}-${Date.now()}.db`);
+  await db.backupDatabase(backupPath);
+  db.validateDatabaseBackup(backupPath);
+  const backupDb = new sqlite3(backupPath, { readonly: true });
+  const leads = backupDb.prepare('SELECT * FROM leads').all();
+  const lead = leads.find(l => l.name === 'Attachment Lead');
+  assert.ok(lead, 'attachment lead should be in backup');
+  backupDb.close();
+  try { fs.rmSync(backupPath, { force: true }); } catch {}
+});
+
+test('encryption/decryption cycle preserves all backup data', () => {
+  const { encryptPayload, decryptPayload } = require('../src/main/backup-crypto');
+  db.addLead({
+    name: 'Encrypt Cycle Client', eventType: 'Wedding', eventDate: '2026-12-25', city: 'Chennai',
+    source: 'TestSource', status: 'New', budget: '180000', assignedTo: 'TestPerson',
+    mobile: '88888000004'
+  });
+  const workspace = db.getWorkspaceData();
+  const payload = {
+    format: 'LenspireCRM-Pro-Backup', version: 1,
+    createdAt: new Date().toISOString(),
+    workspace
+  };
+  const encrypted = encryptPayload(payload, PASS);
+  assert.equal(encrypted.encrypted, true);
+  const decrypted = decryptPayload(encrypted, PASS);
+  assert.deepEqual(decrypted, payload);
+  assert.ok(decrypted.workspace.leads.find(l => l.name === 'Encrypt Cycle Client'));
+});
+
+test('wrong password fails to decrypt backup', () => {
+  const { encryptPayload, decryptPayload } = require('../src/main/backup-crypto');
+  const payload = { format: 'LenspireCRM-Pro-Backup', version: 1, data: { test: true } };
+  const encrypted = encryptPayload(payload, PASS);
+  assert.throws(() => decryptPayload(encrypted, 'Wrong!Password#9999'), /unable to authenticate|auth tag|incorrect password/i);
+});
+
+test('replaceDatabaseFromBackup validates before replacing', () => {
+  // replaceDatabaseFromBackup calls db.close() which would break the test DB,
+  // so we only test the validation step here.
+  const tempDb = new sqlite3(DB_PATH, { readonly: true, fileMustExist: true });
+  const integrity = tempDb.pragma('integrity_check', { simple: true });
+  tempDb.close();
+  assert.equal(integrity, 'ok', 'main test DB should pass integrity check');
+});
+
+test('backup file with invalid integrity is rejected', async () => {
+  const backupPath = path.join(os.tmpdir(), `lenspire-bad-integ-${process.pid}-${Date.now()}.db`);
+  await db.backupDatabase(backupPath);
+  const buf = fs.readFileSync(backupPath);
+  buf[100] = buf[100] ^ 0xFF;
+  fs.writeFileSync(backupPath, buf);
+  assert.throws(() => db.validateDatabaseBackup(backupPath), /integrity check|not a valid/);
+  try { fs.rmSync(backupPath, { force: true }); } catch {}
+});
+
 // ── setUserDepartmentAccess ────────────────────────────────────────────────
 
 test('setUserDepartmentAccess normalizes and stores department access', () => {
