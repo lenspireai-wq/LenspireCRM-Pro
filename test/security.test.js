@@ -634,4 +634,5 @@ test('login password remains interactive and receives focus', () => {
   assert.match(rendererSource, /loginPassword\.disabled=false;loginPassword\.readOnly=false/);
   assert.match(rendererSource, /loginPassword\.onpointerdown=\(\)=>loginPassword\.focus\(\)/);
   assert.match(rendererSource, /#loginForm \[name=password\]/);
+  assert.match(fs.readFileSync(path.join(__dirname, '..', 'src', 'renderer', 'style.css'), 'utf8'), /input:-webkit-autofill[\s\S]*?-webkit-box-shadow:0 0 0 1000px/);
 });
