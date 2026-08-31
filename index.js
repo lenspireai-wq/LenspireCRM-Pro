@@ -4976,7 +4976,7 @@ async function login(request, env) {
           passwordUpgradeRequired,
           departmentAccess: normalizeDepartmentAccess(user.department_access, user.role)
         },
-        organization: {
+         organization: {
           name: organization?.name || "Studio",
           logoUrl: profile?.logo_url || null,
           contactPhone: profile?.contact_phone || null,
@@ -4984,7 +4984,8 @@ async function login(request, env) {
           contactEmail: profile?.contact_email || null,
           studioAddress: profile?.studio_address || null,
           documentHeader: profile?.document_header || null,
-          documentFooter: profile?.document_footer || null
+          documentFooter: profile?.document_footer || null,
+          studioSlug: profile?.studio_slug || null
         }
       };
       return authJson(responseBody, 200, accessToken, refreshToken);
@@ -6828,9 +6829,15 @@ async function platformOrganizationsApi(request, env, pathname) {
       if (logoUrl && !/^https:\/\/[^\s]+$/i.test(logoUrl)) return json({ error: "Logo URL must begin with https://" }, 400);
       if (logoUrl.length > 500 || contactPhone.length > 40 || whatsappNumber.length > 40 || contactEmail.length > 254 || studioAddress.length > 1000 || documentHeader.length > 1000 || documentFooter.length > 2000) return json({ error: "One or more branding fields are too long." }, 400);
       if (contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) return json({ error: "Enter a valid contact email address." }, 400);
-      const [updated] = await sql`update organization_profiles set logo_url=${logoUrl || null},contact_phone=${contactPhone || null},whatsapp_number=${whatsappNumber || null},contact_email=${contactEmail || null},studio_address=${studioAddress || null},document_header=${documentHeader || null},document_footer=${documentFooter || null},updated_at=now() where organization_id=${brandingMatch[1]} returning organization_id,studio_name,logo_url,contact_phone,whatsapp_number,contact_email,studio_address,document_header,document_footer`;
+      const studioSlug = String(body?.studioSlug || body?.studio_slug || "").trim();
+      if (studioSlug && !/^[a-z0-9][a-z0-9-]{1,63}[a-z0-9]$|^[a-z0-9]{2,64}$/.test(studioSlug)) return json({ error: "Studio URL slug must be 2–64 characters: lowercase letters, numbers, and hyphens only." }, 400);
+      if (studioSlug) {
+        const [conflict] = await sql`select 1 from organization_profiles where studio_slug=${studioSlug} and organization_id!=${brandingMatch[1]} limit 1`;
+        if (conflict) return json({ error: "This studio URL slug is already taken. Choose another." }, 409);
+      }
+      const [updated] = await sql`update organization_profiles set logo_url=${logoUrl || null},contact_phone=${contactPhone || null},whatsapp_number=${whatsappNumber || null},contact_email=${contactEmail || null},studio_address=${studioAddress || null},document_header=${documentHeader || null},document_footer=${documentFooter || null},studio_slug=${studioSlug || null},updated_at=now() where organization_id=${brandingMatch[1]} returning organization_id,studio_name,logo_url,contact_phone,whatsapp_number,contact_email,studio_address,document_header,document_footer,studio_slug`;
       if (!updated) return json({ error: "Studio workspace not found." }, 404);
-      return json({ organization: { organizationId: updated.organization_id, studioName: updated.studio_name, logoUrl: updated.logo_url, contactPhone: updated.contact_phone, whatsappNumber: updated.whatsapp_number, contactEmail: updated.contact_email, studioAddress: updated.studio_address, documentHeader: updated.document_header, documentFooter: updated.document_footer } });
+      return json({ organization: { organizationId: updated.organization_id, studioName: updated.studio_name, logoUrl: updated.logo_url, contactPhone: updated.contact_phone, whatsappNumber: updated.whatsapp_number, contactEmail: updated.contact_email, studioAddress: updated.studio_address, documentHeader: updated.document_header, documentFooter: updated.document_footer, studioSlug: updated.studio_slug } });
     }
     const logoMatch = pathname.match(/^\/api\/platform\/organizations\/([0-9a-f-]{36})\/logo$/i);
     if (request.method === "POST" && logoMatch) {

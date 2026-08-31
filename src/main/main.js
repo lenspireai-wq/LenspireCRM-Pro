@@ -1176,7 +1176,7 @@ ipcMain.handle('update-platform-organization-subscription', async (event,payload
 });
 ipcMain.handle('update-platform-organization-branding', async (event,payload) => {
     const session=requirePlatformOwner(event);
-    return withCloudAuth(session,token=>cloudApi.updatePlatformOrganizationBranding(token,payload?.organizationId,{logoUrl:payload?.logoUrl,contactPhone:payload?.contactPhone,whatsappNumber:payload?.whatsappNumber,contactEmail:payload?.contactEmail,studioAddress:payload?.studioAddress,documentHeader:payload?.documentHeader,documentFooter:payload?.documentFooter}));
+    return withCloudAuth(session,token=>cloudApi.updatePlatformOrganizationBranding(token,payload?.organizationId,{logoUrl:payload?.logoUrl,contactPhone:payload?.contactPhone,whatsappNumber:payload?.whatsappNumber,contactEmail:payload?.contactEmail,studioAddress:payload?.studioAddress,documentHeader:payload?.documentHeader,documentFooter:payload?.documentFooter,studioSlug:payload?.studioSlug}));
 });
 ipcMain.handle('upload-platform-organization-logo', async (event,payload) => {
     const session=requirePlatformOwner(event);

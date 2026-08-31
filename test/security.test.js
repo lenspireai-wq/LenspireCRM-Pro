@@ -373,6 +373,17 @@ test('auto-backup data is encrypted at rest when BACKUP_ENCRYPTION_KEY is config
   assert.doesNotMatch(workerSource, /createAutoBackup\(sql, org, \{\}\)/);
 });
 
+test('studio slug validation enforces safe characters and collision detection', () => {
+  assert.match(workerSource, /studio_slug/);
+  assert.match(workerSource, /\/^\[a-z0-9\]\[a-z0-9-\]\{1,63\}\[a-z0-9\]\$|\^\[a-z0-9\]\{2,64\}\$\//);
+  assert.match(workerSource, /select 1 from organization_profiles where studio_slug=\$\{studioSlug\} and organization_id!=\$\{brandingMatch\[1\]\}/);
+  assert.match(workerSource, /This studio URL slug is already taken/);
+  assert.match(workerSource, /Studio URL slug must be 2.{0,2}64 characters/);
+  assert.match(rendererSource, /update-platform-organization-branding.*studioSlug/);
+  assert.match(rendererSource, /portalUrlPreview/);
+  assert.match(mainSource, /studioSlug:payload\?\.studioSlug/);
+});
+
 test('sales targets send a normalized YYYY-MM month to the cloud', () => {
   assert.match(cloudApiSource, /target\.targetMonth \|\| target\.target_month \|\| target\.month/);
   assert.match(cloudApiSource, /targetMonth,/);
