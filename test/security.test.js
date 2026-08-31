@@ -123,7 +123,7 @@ test('refresh sessions rotate atomically, remain tenant-bound, and are cleaned u
 });
 
 test('production schema changes run only through the versioned owner migration route', () => {
-  assert.match(workerSource, /const CLOUD_SCHEMA_VERSION = 2/);
+  assert.match(workerSource, /const CLOUD_SCHEMA_VERSION = 3/);
   assert.match(workerSource, /pg_advisory_xact_lock\(hashtext\('lenspirecrm:cloud-schema-migrations'\)\)/);
   assert.match(workerSource, /create table if not exists schema_migrations/);
   assert.match(workerSource, /pathname === "\/api\/platform\/migrations"/);
