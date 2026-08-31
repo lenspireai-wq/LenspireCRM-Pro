@@ -33,7 +33,7 @@ crons = ["0 2 * * *"]
 # while the same Worker also serves the CRM web app and API on crm.lenspireai.com.
 [[routes]]
   pattern = "portal.lenspireai.com/*"
-  script = "lenspirecrm-api"
+  zone_name = "lenspireai.com"
 
 # Production bindings and secrets stay in Cloudflare. Before the first
 # command-line deployment, add the existing CRM_DB binding and all current
