@@ -437,12 +437,9 @@ const stageBadge = job => {
 const statusPill = s => \`<span class="status \${esc(String(s || '').replace(/[^A-Za-z ]/g, ''))}">\${esc(s || '\\u2014')}</span>\`;
 
 // State
-let token = '';
-let refreshToken = '';
-let user = null;
-localStorage.removeItem('lp_token');
-localStorage.removeItem('lp_refresh');
-localStorage.removeItem('lp_user');
+let token = localStorage.getItem('lp_token') || '';
+let refreshToken = localStorage.getItem('lp_refresh') || '';
+let user = (() => { try { return JSON.parse(localStorage.getItem('lp_user') || 'null'); } catch { return null; } })();
 let state = {
   view: 'Dashboard', leads: [], activities: [], customers: [], bookings: [], production: [],
   events: [], payments: [], salesTargets: [], salesExecutives: [], photographers: [], photographerDetails: [],
@@ -484,7 +481,12 @@ async function tryRefresh() {
   try {
     const res = await fetch(API + '/api/auth/refresh', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-lenspire-web':'1' }, body: '{}' });
     const data = await res.json();
-    if (res.ok) return true;
+    if (res.ok) {
+      token = data.accessToken || '';
+      localStorage.setItem('lp_token', token);
+      if (!user) { const me = await fetch(API + '/api/auth/me', { headers: { 'Content-Type': 'application/json' } }).then(r => r.json()); if (me.user) { user = { ...me.user, organizationName: me.organization?.name || '', organizationBranding: me.organization || {} }; localStorage.setItem('lp_user', JSON.stringify(user)); } }
+      return true;
+    }
   } catch {}
   logout();
   return false;
@@ -529,7 +531,12 @@ function loginScreen(message = '') {
       if (data.accessToken) {
         const username = $('#loginForm [name=username]').value.trim();
         if ($('#loginForm [name=remember]').checked) localStorage.setItem('lp_remembered_user', username); else localStorage.removeItem('lp_remembered_user');
+        token = data.accessToken || '';
+        refreshToken = data.refreshToken || '';
+        localStorage.setItem('lp_token', token);
+        localStorage.setItem('lp_refresh', refreshToken);
         user = { ...data.user, organizationName: data.organization?.name || data.user?.organization_name, organizationBranding: data.organization || {} };
+        localStorage.setItem('lp_user', JSON.stringify(user));
         await loadWorkspace();
         shell();
       } else {
@@ -1666,8 +1673,9 @@ function openLeadProfile(lead) {
   window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; const button = $('#installAppBtn'); if (button) button.hidden = false; });
   window.addEventListener('online', () => { const pill = $('#connectionPill'); if (pill) { pill.className = 'connection-pill online'; pill.textContent = 'Cloud online'; } });
   window.addEventListener('offline', () => { const pill = $('#connectionPill'); if (pill) { pill.className = 'connection-pill offline'; pill.textContent = 'Offline'; } });
-  if (!token || !user) { loginScreen(); return; }
-  try { await loadWorkspace(); } catch { state.leads = []; }
+  if (!token && !refreshToken && !user) { loginScreen(); return; }
+  if (!token || !user) { const refreshed = await tryRefresh(); if (!refreshed) return; }
+  await loadWorkspace();
   shell();
 })();
 `;
@@ -5048,6 +5056,19 @@ async function logoutSession(request, env) {
   return clearAuthJson();
 }
 __name(logoutSession, "logoutSession");
+async function getCurrentUser(request, env) {
+  const sql = getDatabase(env);
+  try {
+    const user = await requireUser(request, env, sql);
+    if (!user) return json({ error: "Authentication required" }, 401);
+    const [profile] = await sql`select logo_url, name from organization_profiles where organization_id=${user.organization_id} limit 1`;
+    const [org] = await sql`select name from organizations where id=${user.organization_id} limit 1`;
+    return json({ user: { id: user.id, organizationId: user.organization_id, username: user.username, displayName: user.display_name, role: user.role, passwordUpgradeRequired: Boolean(user.password_upgrade_required), departmentAccess: user.department_access }, organization: { name: org?.name || profile?.name || "Studio", logoUrl: profile?.logo_url || null } });
+  } finally {
+    await closeDatabase(sql);
+  }
+}
+__name(getCurrentUser, "getCurrentUser");
 const strongPasswordMessage = "Password must be a 4-digit number (e.g. 1234).";
 const isStrongPassword = (value) => typeof value === "string" && (/^\d{4}$/.test(value) || (value.length >= 12 && value.length <= 128 && /[a-z]/.test(value) && /[A-Z]/.test(value) && /\d/.test(value) && /[^A-Za-z0-9]/.test(value)));
 async function changePassword(request, env) {
@@ -7172,6 +7193,7 @@ var index_default = {
       }
       if (request.method === "POST" && url.pathname === "/api/auth/refresh") return refreshSession(request, env);
       if (request.method === "POST" && url.pathname === "/api/auth/logout") return logoutSession(request, env);
+      if (request.method === "GET" && url.pathname === "/api/auth/me") return getCurrentUser(request, env);
       if (request.method === "POST" && url.pathname === "/api/auth/change-password") return changePassword(request, env);
       if (request.method === "GET" && url.pathname === "/api/google/connect") return googleConnect(request, env);
       if (request.method === "GET" && url.pathname === "/api/google/callback") return googleCallback(request, env);
