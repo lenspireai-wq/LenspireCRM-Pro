@@ -6205,8 +6205,9 @@ async function ensureCloudSchema(sql) {
     email text not null, password_hash text not null, password_salt text not null, password_iterations integer not null default 100000,
     name text, phone text, status text not null default 'active',
     last_login timestamptz, created_at timestamptz not null default now(), updated_at timestamptz not null default now(),
-    unique (organization_id, booking_id), unique (organization_id, lower(email))
+    unique (organization_id, booking_id)
   )`;
+  await sql`create unique index if not exists client_portal_users_org_email_key on client_portal_users (organization_id, lower(email))`;
   await sql`create index if not exists client_portal_users_booking on client_portal_users (organization_id, booking_id)`;
   await sql`alter table production_jobs drop constraint if exists production_jobs_booking_id_key`;
   await sql`alter table production_jobs add column if not exists source_event_id uuid references calendar_events(id) on delete cascade`;

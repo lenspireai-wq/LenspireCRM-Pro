@@ -130,6 +130,8 @@ test('production schema changes run only through the versioned owner migration r
   assert.match(workerSource, /url\.pathname === "\/platform-migrations"/);
   assert.match(workerSource, /SchemaMigrationRequiredError/);
   assert.match(workerSource, /code: "schema_migration_required"/);
+  assert.doesNotMatch(workerSource, /unique \(organization_id, lower\(email\)\)/);
+  assert.match(workerSource, /create unique index if not exists client_portal_users_org_email_key on client_portal_users \(organization_id, lower\(email\)\)/);
   const readiness = workerSource.match(/async function ensureCloudSchemaReady[\s\S]*?\n\}/)?.[0] || '';
   assert.doesNotMatch(readiness, /ensureCloudSchema\(sql\)/);
 });
