@@ -842,26 +842,32 @@ function galleryView(el){
   const galleryJobs=jobs.filter(job=>productionWorkflow(job).galleryLinks?.length>0);
   const activeFilter=state.galleryFilter||'All';
   const option=(value,label)=>`<option value="${value}" ${value===activeFilter?'selected':''}>${esc(label)}</option>`;
+  const needsClientApproval=job=>{const tasks=activeProductionTasks(job).filter(item=>productionTaskNeedsClientApproval(item));return tasks.some(item=>item.status==='Approved')&&!tasks.every(item=>item.status==='Client Approved'||!productionTaskNeedsClientApproval(item));};
   const row=job=>{
     const workflow=productionWorkflow(job);
     const links=workflow.galleryLinks||[];
-    const approvedTasks=activeProductionTasks(job).filter(item=>productionTaskNeedsClientApproval(item)&&['Client Approved','Sent to Client','Approved'].includes(item.status));
-    const totalTasks=activeProductionTasks(job).filter(item=>productionTaskNeedsClientApproval(item)).length;
+    const approvalTasks=activeProductionTasks(job).filter(item=>productionTaskNeedsClientApproval(item));
+    const approvedTasks=approvalTasks.filter(item=>['Approved','Client Approved','Sent to Client'].includes(item.status));
+    const sentToClient=approvalTasks.filter(item=>item.status==='Sent to Client');
+    const clientApproved=approvalTasks.filter(item=>item.status==='Client Approved');
     const status=productionOverallStatus(job);
+    const actions=[];
+    if(sentToClient.length){actions.push(`<button type="button" class="btn primary small" data-gallery-approve="${job.id}" title="Mark selected deliverables as Client Approved">✓ Mark Approved</button>`);}
+    if(approvedTasks.length && approvedTasks.some(item=>item.status==='Approved')){actions.push(`<button type="button" class="btn ghost small" data-gallery-send="${job.id}" title="Send deliverables to client for approval">↗ Send to Client</button>`);}
     return `<tr data-gallery-job="${job.id}">
       <td><b>${esc(job.eventType||job.event_type||'—')}</b><small>${esc(productionCoupleName(job))}</small></td>
       <td>${esc(job.customerName||'—')}</td>
       <td>${job.eventDate?dateFmt(job.eventDate):'—'}</td>
       <td><div class="gallery-link-list">${links.map(link=>`<a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer" class="gallery-link" title="${esc(link.label)}">📷 ${esc(link.label||'Gallery')}</a>`).join('')||'<span class="muted">No gallery links</span>'}</div></td>
-      <td><span class="gallery-approval">${approvedTasks.length}/${totalTasks} approved</span></td>
-      <td><span class="status ${status==='Ready for Delivery'||status==='Delivered'?'delivered':'pending'}">${esc(status)}</span></td>
-      <td><div class="accounts-table-actions">${links.length?`<a href="${esc(links[0].url)}" target="_blank" rel="noopener noreferrer" class="edit">Open</a>`:''}</div></td>
+      <td><span class="gallery-approval">${clientApproved.length}/${approvalTasks.length} approved</span></td>
+      <td><span class="status ${status==='Ready for Delivery'||status==='Delivered'?'delivered':status==='Client Approval'?'pending':'pending'}">${esc(status)}</span></td>
+      <td><div class="accounts-table-actions">${links.length?`<a href="${esc(links[0].url)}" target="_blank" rel="noopener noreferrer" class="edit">Open</a>`:''}${actions.join('')}</div></td>
     </tr>`;
   };
   el.innerHTML=`<div class="accounts-view gallery-view">
     <div class="filter-bar">
       <label><span>Filter: &nbsp;</span>
-        <select data-gallery-filter="approval">${option('All','All Gallery Links')}${option('approved','Approved Only')}${option('pending','Pending Approval')}${option('needs','Needs Client Approval')}</select>
+        <select data-gallery-filter="approval">${option('All','All Gallery Links')}${option('approved','Approved Only')}${option('needs','Needs Client Approval')}${option('sent','Sent to Client')}</select>
       </label>
       <span class="spacer"></span>
       <button class="btn ghost small" id="openAllGalleries">↗ Open All</button>
@@ -871,15 +877,17 @@ function galleryView(el){
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>Event</th><th>Client</th><th>Date</th><th>Gallery Links</th><th>Deliverables Approved</th><th>Status</th><th>Action</th></tr>
+            <tr><th>Event</th><th>Client</th><th>Date</th><th>Gallery Links</th><th>Client Approved</th><th>Status</th><th>Action</th></tr>
           </thead>
-          <tbody>${galleryJobs.filter(job=>activeFilter==='All'||(activeFilter==='approved'&&productionOverallStatus(job)==='Ready for Delivery')||(activeFilter==='pending'&&productionOverallStatus(job)!=='Ready for Delivery')).map(row).join('')||'<tr><td colspan="7" class="empty">No gallery links found for this filter.</td></tr>'}</tbody>
+          <tbody>${galleryJobs.filter(job=>activeFilter==='All'||(activeFilter==='approved'&&productionOverallStatus(job)==='Ready for Delivery')||(activeFilter==='needs'&&needsClientApproval(job))||(activeFilter==='sent'&&activeProductionTasks(job).some(item=>item.status==='Sent to Client'))).map(row).join('')||'<tr><td colspan="7" class="empty">No gallery links found for this filter.</td></tr>'}</tbody>
         </table>
       </div>
     </section>
   </div>`;
   const filter=el.querySelector('[data-gallery-filter]');if(filter){filter.onchange=()=>{state.galleryFilter=filter.value;renderView();};}
   el.querySelectorAll('tr[data-gallery-job]').forEach(row=>{row.onclick=e=>{e.stopPropagation();};row.querySelectorAll('a.gallery-link').forEach(link=>link.onclick=e=>{e.stopPropagation();});});
+  el.querySelectorAll('[data-gallery-send]').forEach(btn=>{btn.onclick=e=>{e.stopPropagation();const job=state.production.find(j=>sameId(j.id,btn.dataset.gallerySend));if(job){const workflow=productionWorkflow(job);const task=activeProductionTasks(job).find(item=>productionTaskNeedsClientApproval(item)&&item.status==='Approved');if(task){openProductionModal(job,workflow,()=>{reviewProductionTask(job,workflow,workflow.deliverables.indexOf(task),'send-client',()=>{});});}};};});
+  el.querySelectorAll('[data-gallery-approve]').forEach(btn=>{btn.onclick=e=>{e.stopPropagation();const job=state.production.find(j=>sameId(j.id,btn.dataset.galleryApprove));if(job){const workflow=productionWorkflow(job);const tasks=activeProductionTasks(job).filter(item=>productionTaskNeedsClientApproval(item)&&item.status==='Sent to Client');tasks.forEach(task=>{reviewProductionTask(job,workflow,workflow.deliverables.indexOf(task),'client-approved',()=>{});});}};});
   const openBtn=$('#openAllGalleries');if(openBtn){openBtn.onclick=()=>{let opened=0;galleryJobs.forEach(job=>{const link=productionWorkflow(job).galleryLinks?.[0];if(link){window.open(link.url,'_blank');opened++;}});if(opened)toast(opened+' gallery'+(opened===1?'':'s')+' opened');};}
 }
 
