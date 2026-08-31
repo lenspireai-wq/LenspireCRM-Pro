@@ -945,21 +945,27 @@ async function createBackupFile(options = {}) {
 }
 ipcMain.handle('create-crm-backup', async (event, options = {}) => {
     requireAdministrator(event);
-    return createBackupFile(options);
+    event.sender.send('backup-progress', { phase:'backup', message:'Starting encrypted backup…', percent:20 });
+    const result = await createBackupFile(options);
+    event.sender.send('backup-progress', { phase:'backup', message:'Backup completed', percent:100 });
+    return result;
 });
 ipcMain.handle('restore-crm-backup', async (event) => {
     requireAdministrator(event);
     const session = cloudSession(event);
+    event.sender.send('backup-progress', { phase:'restore', message:'Select a backup file…', percent:10 });
     const selected = await dialog.showOpenDialog({
         title: 'Restore LenspireCRM Pro', properties: ['openFile'],
         filters: [{ name: 'LenspireCRM Backup', extensions: ['lenspirebackup'] }]
     });
     if (selected.canceled || !selected.filePaths[0]) return { canceled: true };
+    event.sender.send('backup-progress', { phase:'restore', message:'Reading backup file…', percent:30 });
     const raw = JSON.parse(fs.readFileSync(selected.filePaths[0], 'utf8'));
     if (!isEncryptedPayload(raw)) throw new Error('Unencrypted legacy backups cannot be restored directly. Re-encrypt this file with the migration utility first.');
     let payload = raw;
     let restorePassword = '';
     if (isEncryptedPayload(raw)) {
+      event.sender.send('backup-progress', { phase:'restore', message:'Decrypting backup…', percent:50 });
       const requestId = crypto.randomUUID();
       event.sender.send('request-backup-password', { requestId });
       const password = await new Promise((resolve, reject) => {
@@ -988,6 +994,7 @@ ipcMain.handle('restore-crm-backup', async (event) => {
     const summary=await dialog.showMessageBox(BrowserWindow.fromWebContents(event.sender),{type:'warning',buttons:['Cancel Restore','Create Safety Backup & Restore'],defaultId:0,cancelId:0,title:'Confirm Backup Restore',message:'The current workspace will be replaced.',detail:`Backup contents:\n${backupSummaryText(payload)}\n\nA safety backup of the current workspace will be created automatically before this restore.`});
     if(summary.response!==1)return{canceled:true};
     const safetyBackupPath=await createRestoreSafetyBackup(restorePassword);
+    event.sender.send('backup-progress', { phase:'restore', message:'Restoring to cloud…', percent:80 });
     if(session){
         if(payload?.kind==='lenspirecrm-cloud-backup'){
             const collections=['leads','customers','bookings','production','events','payments','activities','salesTargets','photographers'];
@@ -1000,6 +1007,7 @@ ipcMain.handle('restore-crm-backup', async (event) => {
             try{
                 await withCloudAuth(session,token=>cloudApi.restoreBackup(token,restorable));
                 restoreQuotationAttachments(payload.attachments);
+                event.sender.send('backup-progress', { phase:'restore', message:'Restore complete', percent:100 });
                 return{canceled:false,fileName:path.basename(selected.filePaths[0]),cloud:true,workspace:await cloudWorkspace(event)};
             }catch(error){
                 if([404,405,500].includes(error.status))throw new Error(`This Cloud server cannot perform a complete restore, so no data was changed. Your automatic safety backup is saved at ${safetyBackupPath}. Please update the Cloud server before restoring this backup.`);

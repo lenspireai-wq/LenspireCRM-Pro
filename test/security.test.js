@@ -361,6 +361,16 @@ test('cloud restore preserves login accounts and refuses an incomplete compatibi
   assert.match(mainSource, /This Cloud server cannot perform a complete restore, so no data was changed/);
 });
 
+test('auto-backup data is encrypted at rest when BACKUP_ENCRYPTION_KEY is configured', () => {
+  assert.match(workerSource, /backupAtRestEncrypt/);
+  assert.match(workerSource, /backupAtRestDecrypt/);
+  assert.match(workerSource, /__encryptedBackup/);
+  assert.match(workerSource, /BACKUP_ENCRYPTION_KEY.*\?.*backupAtRestEncrypt/);
+  assert.match(workerSource, /createAutoBackup\(sql, org, options = \{\}, env\)/);
+  assert.match(workerSource, /backupAtRestDecrypt\(latest\.backupData, env\.BACKUP_ENCRYPTION_KEY\)/);
+  assert.doesNotMatch(workerSource, /createAutoBackup\(sql, org, \{\}\)/);
+});
+
 test('sales targets send a normalized YYYY-MM month to the cloud', () => {
   assert.match(cloudApiSource, /target\.targetMonth \|\| target\.target_month \|\| target\.month/);
   assert.match(cloudApiSource, /targetMonth,/);

@@ -7,6 +7,11 @@ window.electronAPI.on('request-backup-password', async (_err, data) => {
   const password = await showRestorePasswordModal();
   ipcRenderer.send('backup-password-response', { requestId, password: password || null });
 });
+window.electronAPI.on('backup-progress', (_err, info) => {
+  const data = info || {};
+  const btn = data.phase === 'restore' ? $('#restoreBackup') : $('#createBackup');
+  if (btn) { btn.disabled = data.percent < 100; btn.textContent = data.message; }
+});
 
 const navItems = [
   ['Team Management','♙'], ['Settings','⚙'], ['Backup & Restore','◫']
