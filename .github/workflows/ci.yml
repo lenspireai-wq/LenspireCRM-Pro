@@ -10,10 +10,10 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -23,6 +23,9 @@ jobs:
 
       - name: Syntax check
         run: npm run check
+
+      - name: Build web renderer
+        run: npm run build:web
 
       - name: Test suite
         run: npm test
