@@ -19,7 +19,7 @@ const navItems = [
 const salesNavItems = [['Dashboard','Sales Dashboard','⌂'],['Lead Management','Lead Management','♙'],['Sales Reports','Reports & Analytics','⌁']];
 const operationsNavItems = [['Operations Dashboard','Operations Dashboard','⌂'],['Shoot Calendar','Shoot Calendar','□'],['Slotting Sheet','Upcoming Event','▦'],['Completed Events','Completed Events','✓'],['Photographers Details','Photographers Details','♙']];
 const accountsNavItems = [['Payment Dashboard','Payment Dashboard','₹'],['Receivables','Receivables · Dues','₹'],['Client Ledger','Client Account Ledger','▤'],['Reports & Analytics','Reports & Analytics','⌁']];
-const postProductionNavItems = [['Production Dashboard','Production Dashboard','◈'],['Edit Queue','Edit Queue','◧'],['Ongoing Jobs','Ongoing Jobs','◷'],['Deliveries','Deliveries','▣'],['Work Assigned','Work Assigned','▧'],['Production Reports','Production Reports','⌁']];
+const postProductionNavItems = [['Production Dashboard','Production Dashboard','◈'],['Edit Queue','Edit Queue','◧'],['Ongoing Jobs','Ongoing Jobs','◷'],['Deliveries','Deliveries','▣'],['Gallery','Gallery','📷'],['Work Assigned','Work Assigned','▧'],['Production Reports','Production Reports','⌁']];
 
 const demoLeads = [];
 
@@ -39,7 +39,7 @@ const sameId = (left,right) => String(left ?? '') === String(right ?? '');
 const dateFmt = value => value && value !== '-' ? new Date(value).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—';
 function time12Parts(value){const raw=String(value||'').trim(),twelve=raw.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);if(twelve)return{hour:String(Math.min(12,Math.max(1,Number(twelve[1])))).padStart(2,'0'),minute:twelve[2],period:twelve[3].toUpperCase()};const twentyFour=raw.match(/^(\d{1,2}):(\d{2})/);if(!twentyFour)return{hour:'',minute:'00',period:'AM'};const hour24=Math.min(23,Math.max(0,Number(twentyFour[1])));return{hour:String(hour24%12||12).padStart(2,'0'),minute:twentyFour[2],period:hour24>=12?'PM':'AM'};}
 function time12Fmt(value){if(!value)return'';const parts=time12Parts(value);return parts.hour?`${parts.hour}:${parts.minute} ${parts.period}`:'';}
-const departmentViews={sales:['Dashboard','Lead Management','Customers','Sales Reports'],operations:['Operations Dashboard','Shoot Calendar','Slotting Sheet','Completed Events','Photographers Details'],accounts:['Payment Dashboard','Receivables','Client Ledger','Reports & Analytics'],postProduction:['Production Dashboard','Edit Queue','Ongoing Jobs','Deliveries','Work Assigned','Production Reports']};
+const departmentViews={sales:['Dashboard','Lead Management','Customers','Sales Reports'],operations:['Operations Dashboard','Shoot Calendar','Slotting Sheet','Completed Events','Photographers Details'],accounts:['Payment Dashboard','Receivables','Client Ledger','Reports & Analytics'],postProduction:['Production Dashboard','Edit Queue','Ongoing Jobs','Deliveries','Gallery','Work Assigned','Production Reports']};
 function userAccess(){if(state.user?.role==='Administrator')return{sales:'full',operations:'full',accounts:'full',postProduction:'full'};let access=state.user?.departmentAccess||{};while(typeof access==='string'){try{access=JSON.parse(access);}catch{access={};break;}}return{sales:'none',operations:'none',accounts:'none',postProduction:'none',...(access&&typeof access==='object'?access:{})};}
 function currentDepartment(){return Object.entries(departmentViews).find(([,views])=>views.includes(state.view))?.[0]||null;}
 function departmentPermission(){const department=currentDepartment();return department?userAccess()[department]||'none':'full';}
@@ -111,7 +111,7 @@ function shell() {
   bindShell(); renderView();
 }
 
-function subtitle(){ return ({'Studio Management':'LenspireCRM owner controls for independent studio workspaces',Dashboard:'Your studio at a glance','Lead Management':'Track every inquiry from first call to booking','Sales Reports':'Lead sources, pipeline and sales performance','Operations Dashboard':'Your operations at a glance','Shoot Calendar':'Plan shoots, meetings and team schedules',Customers:'Manage client relationships and complete history','Payment Dashboard':'Collections, dues and receivables at a glance','Payment Register':'Every payment across the studio','Receivables':'Per-booking dues and follow-ups','Client Ledger':'Every client account, payment and balance in one place','Reports & Analytics':'Monthly collections, targets and payment breakdown','Production Dashboard':'Production pipeline at a glance','Edit Queue':'Editing, album design and client approval','Ongoing Jobs':'Track every active editor assignment','Deliveries':'Ready and delivered jobs','Production Reports':'Turnaround, workload and delivery analytics'}[state.view] || `${workspaceName()} workspace`); }
+function subtitle(){ return ({'Studio Management':'LenspireCRM owner controls for independent studio workspaces',Dashboard:'Your studio at a glance','Lead Management':'Track every inquiry from first call to booking','Sales Reports':'Lead sources, pipeline and sales performance','Operations Dashboard':'Your operations at a glance','Shoot Calendar':'Plan shoots, meetings and team schedules',Customers:'Manage client relationships and complete history','Payment Dashboard':'Collections, dues and receivables at a glance','Payment Register':'Every payment across the studio','Receivables':'Per-booking dues and follow-ups','Client Ledger':'Every client account, payment and balance in one place','Reports & Analytics':'Monthly collections, targets and payment breakdown','Production Dashboard':'Production pipeline at a glance','Edit Queue':'Editing, album design and client approval','Ongoing Jobs':'Track every active editor assignment',  'Deliveries':'Ready and delivered jobs','Gallery':'View studio galleries, links and approval status','Production Reports':'Turnaround, workload and delivery analytics'}[state.view] || `${workspaceName()} workspace`); }
 
 function notificationStorageKey(suffix='items'){return `lenspire-notifications-${suffix}-${state.user?.id||'guest'}`;}
 function readNotificationStore(key,fallback){try{const value=JSON.parse(localStorage.getItem(key)||'');return value&&typeof value==='object'?value:fallback;}catch{return fallback;}}
@@ -236,6 +236,7 @@ function renderView(){ destroyCharts(); const content=$('#content');content.clas
   else if(state.view==='Edit Queue') productionEditQueue(content);
   else if(state.view==='Ongoing Jobs') productionOngoingJobsView(content);
   else if(state.view==='Deliveries') productionDeliveriesView(content);
+  else if(state.view==='Gallery') galleryView(content);
   else if(state.view==='Production Reports') productionReportsView(content);
   else if(state.view==='Work Assigned') workAssignedView(content);
   else if(state.view==='Slotting Sheet') {slottingSheetView(content);content.querySelector('.welcome h2').textContent='Upcoming Event';content.querySelector('.panel-head h3').textContent='Upcoming Events';}
@@ -835,6 +836,53 @@ function productionReportsView(el){
   const exportBtn=$('#exportProdReportBtn');if(exportBtn)exportBtn.onclick=()=>exportProduction(jobs);
 }
 async function exportProduction(jobs){if(!jobs||!jobs.length){toast('No production jobs to export');return;}try{const result=await ipcRenderer.invoke('export-production-file',jobs);if(result.canceled)return;toast(result.exported+' production jobs exported to '+result.fileName);}catch(err){toast(err.message||'Could not export production');}}
+
+function galleryView(el){
+  const jobs=state.production||[];
+  const galleryJobs=jobs.filter(job=>productionWorkflow(job).galleryLinks?.length>0);
+  const activeFilter=state.galleryFilter||'All';
+  const option=(value,label)=>`<option value="${value}" ${value===activeFilter?'selected':''}>${esc(label)}</option>`;
+  const row=job=>{
+    const workflow=productionWorkflow(job);
+    const links=workflow.galleryLinks||[];
+    const approvedTasks=activeProductionTasks(job).filter(item=>productionTaskNeedsClientApproval(item)&&['Client Approved','Sent to Client','Approved'].includes(item.status));
+    const totalTasks=activeProductionTasks(job).filter(item=>productionTaskNeedsClientApproval(item)).length;
+    const status=productionOverallStatus(job);
+    return `<tr data-gallery-job="${job.id}">
+      <td><b>${esc(job.eventType||job.event_type||'—')}</b><small>${esc(productionCoupleName(job))}</small></td>
+      <td>${esc(job.customerName||'—')}</td>
+      <td>${job.eventDate?dateFmt(job.eventDate):'—'}</td>
+      <td><div class="gallery-link-list">${links.map(link=>`<a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer" class="gallery-link" title="${esc(link.label)}">📷 ${esc(link.label||'Gallery')}</a>`).join('')||'<span class="muted">No gallery links</span>'}</div></td>
+      <td><span class="gallery-approval">${approvedTasks.length}/${totalTasks} approved</span></td>
+      <td><span class="status ${status==='Ready for Delivery'||status==='Delivered'?'delivered':'pending'}">${esc(status)}</span></td>
+      <td><div class="accounts-table-actions">${links.length?`<a href="${esc(links[0].url)}" target="_blank" rel="noopener noreferrer" class="edit">Open</a>`:''}</div></td>
+    </tr>`;
+  };
+  el.innerHTML=`<div class="accounts-view gallery-view">
+    <div class="filter-bar">
+      <label><span>Filter: &nbsp;</span>
+        <select data-gallery-filter="approval">${option('All','All Gallery Links')}${option('approved','Approved Only')}${option('pending','Pending Approval')}${option('needs','Needs Client Approval')}</select>
+      </label>
+      <span class="spacer"></span>
+      <button class="btn ghost small" id="openAllGalleries">↗ Open All</button>
+    </div>
+    <section class="panel filtered-leads-panel">
+      <div class="panel-head"><div><h3>Studio Gallery</h3><p>${galleryJobs.length} production jobs with gallery links</p></div></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Event</th><th>Client</th><th>Date</th><th>Gallery Links</th><th>Deliverables Approved</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody>${galleryJobs.filter(job=>activeFilter==='All'||(activeFilter==='approved'&&productionOverallStatus(job)==='Ready for Delivery')||(activeFilter==='pending'&&productionOverallStatus(job)!=='Ready for Delivery')).map(row).join('')||'<tr><td colspan="7" class="empty">No gallery links found for this filter.</td></tr>'}</tbody>
+        </table>
+      </div>
+    </section>
+  </div>`;
+  const filter=el.querySelector('[data-gallery-filter]');if(filter){filter.onchange=()=>{state.galleryFilter=filter.value;renderView();};}
+  el.querySelectorAll('tr[data-gallery-job]').forEach(row=>{row.onclick=e=>{e.stopPropagation();};row.querySelectorAll('a.gallery-link').forEach(link=>link.onclick=e=>{e.stopPropagation();});});
+  const openBtn=$('#openAllGalleries');if(openBtn){openBtn.onclick=()=>{let opened=0;galleryJobs.forEach(job=>{const link=productionWorkflow(job).galleryLinks?.[0];if(link){window.open(link.url,'_blank');opened++;}});if(opened)toast(opened+' gallery'+(opened===1?'':'s')+' opened');};}
+}
+
 
 async function convertSelectedLead(leadId){if(!confirm('Convert this lead into a customer and create booking, production, calendar and advance-payment records?'))return;try{const result=await ipcRenderer.invoke('convert-lead',{leadId,options:{performedBy:state.user.displayName}});applyWorkspace(result.workspace);state.selected=state.leads.find(l=>sameId(l.id,leadId));shell();toast(`Customer ${result.converted.customerCode} created`);}catch(error){toast(error.message);}}
 async function changeProductionStage(select){try{const workspace=await ipcRenderer.invoke('update-production-stage',{jobId:select.dataset.job,stage:select.value});applyWorkspace(workspace);renderView();toast('Production stage updated');}catch(error){toast(error.message);}}
