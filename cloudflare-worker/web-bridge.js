@@ -23,7 +23,7 @@
   function errorFrom(data, status) { const error = new Error(data?.error || `Cloud service returned HTTP ${status}`); error.status = status; error.diagnostic = data?.diagnostic; return error; }
   function saveSession() { if (currentUser) { sessionStorage.setItem(STORAGE.session, JSON.stringify(currentUser)); sessionStorage.setItem(STORAGE.authSource, 'cloud'); } else { sessionStorage.removeItem(STORAGE.session); } }
   async function refreshSession() {
-    const response = await fetch('/api/auth/refresh', { method:'POST', headers:{'content-type':'application/json','x-lenspire-web':'1'}, body:'{}' });
+    const response = await fetch('/api/auth/refresh', { method:'POST', headers:{'content-type':'application/json','x-lenspire-web':'1'}, body:'{}', credentials:'include' });
     const result = await response.json().catch(() => ({}));
     return response.ok;
   }
@@ -31,7 +31,7 @@
     const headers = new Headers(options.headers || {});
     if (!(options.body instanceof FormData) && options.body != null && !headers.has('content-type')) headers.set('content-type','application/json');
     if (!['GET','HEAD'].includes(String(options.method||'GET').toUpperCase())) headers.set('x-lenspire-web','1');
-    const response = await fetch(path, { ...options, headers });
+    const response = await fetch(path, { ...options, headers, credentials:'include' });
     const contentType = response.headers.get('content-type') || '';
     const result = contentType.includes('application/json') ? await response.json().catch(() => ({})) : await response.text();
     if (response.status === 401 && !retried && await refreshSession()) return api(path, options, true);
@@ -101,7 +101,7 @@
       return { success:true, user:currentUser, migration:{ imported:0, activitiesImported:0, deferred:true, synced:0 } };
     } catch (error) { return { success:false, message:error.message || 'Unable to sign in to LenspireCRM Cloud.' }; }
   }
-  async function logout() { await fetch('/api/auth/logout',{method:'POST',headers:{'x-lenspire-web':'1'}}).catch(()=>{});currentUser=null;saveSession();leadMap=new Map();sessionStorage.removeItem(STORAGE.leadMap);sessionStorage.removeItem('lenspire-session');return{success:true}; }
+  async function logout() { await fetch('/api/auth/logout',{method:'POST',headers:{'x-lenspire-web':'1'},credentials:'include'}).catch(()=>{});currentUser=null;saveSession();leadMap=new Map();sessionStorage.removeItem(STORAGE.leadMap);sessionStorage.removeItem('lenspire-session');return{success:true}; }
 
   function chooseFile({accept='', multiple=false}={}) {
     return new Promise(resolve => {
@@ -186,6 +186,7 @@
       case 'save-sales-target': return mutateThenWorkspace('/api/sales-targets',body(value));
       case 'save-calendar-event': {const synthetic=String(value?.eventId||'').startsWith('awaiting-booking-'),id=synthetic?'':value?.eventId;return mutateThenWorkspace(id?`/api/events/${encodeURIComponent(id)}`:'/api/events',id?put(value?.event):body(value?.event));}
       case 'delete-calendar-event': return mutateThenWorkspace(`/api/events/${encodeURIComponent(value)}`,{method:'DELETE'});
+      case 'mark-events-slotted': {const eventIds=Array.isArray(value)?value:(value?.eventIds||[]);if(!eventIds.length)return workspace();await api('/api/events/bulk',body({eventIds,slotted:1}));return workspace();}
       case 'save-photographer-detail': return mutateThenWorkspace(value?.detailId?`/api/photographers/${encodeURIComponent(value.detailId)}`:'/api/photographers',value?.detailId?put(value.detail):body(value.detail));
       case 'delete-photographer-detail': return mutateThenWorkspace(`/api/photographers/${encodeURIComponent(value)}`,{method:'DELETE'});
       case 'get-accounts-data': {const data=await workspace();return{bookings:data.bookings,payments:data.payments};}
