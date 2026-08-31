@@ -298,6 +298,7 @@ test('user management enforces roles, activation, and password policy', () => {
   assert.ok(created.find(u => u.username === 'sales1'));
 
   assert.throws(() => db.createUser(1, { username: 'weak', displayName: 'Weak', role: 'Sales', password: 'short' }), /Password must be a 4-digit/);
+  assert.throws(() => db.createUser(1, { username: 'oldpolicy', displayName: 'Old Policy', role: 'Sales', password: 'ComplexPass1!' }), /Password must be a 4-digit/);
   assert.throws(() => db.createUser(1, { username: 'badname!', displayName: 'Bad', role: 'Sales', password: PASS }), /Username must be 3/);
   assert.throws(() => db.createUser(1, { username: 'badrole', displayName: 'Bad', role: 'Owner', password: PASS }), /Select a valid role/);
 

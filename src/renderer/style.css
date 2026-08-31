@@ -357,6 +357,18 @@ body[data-theme=light] .login-input input:-webkit-autofill,body[data-theme=light
   .content h2{font-size:21px}
 }
 
+/* Mobile Sales KPIs: four compact pipeline cards, then Total Sales on its own row. */
+@media(max-width:600px){
+  .sales-kpi-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .sales-kpi-grid .kpi{min-height:78px;padding:7px 3px;gap:4px;align-items:center;flex-direction:column;text-align:center;border-radius:8px}
+  .sales-kpi-grid .kpi-icon{width:24px;height:24px;flex-basis:24px;border-radius:6px;font-size:12px}
+  .sales-kpi-grid .kpi span{font-size:7px;line-height:1.15;white-space:normal}
+  .sales-kpi-grid .kpi strong{margin:2px 0 0;font-size:12px;line-height:1.1;white-space:nowrap}
+  .sales-kpi-grid .kpi small,.sales-kpi-grid .kpi>button{display:none}
+  .sales-kpi-grid .kpi:nth-child(5){grid-column:1/-1;min-height:52px;padding:7px 10px;gap:9px;align-items:center;flex-direction:row;text-align:left}
+  .sales-kpi-grid .kpi:nth-child(5) strong{font-size:14px}
+}
+
 /* Sales parity on touch screens: keep every Windows action reachable. */
 @media(max-width:900px){
   .filtered-leads-panel>.panel-head{align-items:stretch;flex-direction:column;gap:12px}

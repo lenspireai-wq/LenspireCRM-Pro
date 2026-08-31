@@ -1417,7 +1417,7 @@ function openUserModal() {
     <form id="userForm" class="form-grid" style="padding:20px">
       <label>Display Name<input name="displayName" required placeholder="Full name" minlength="2"></label>
       <label>Username<input name="username" required pattern="[A-Za-z0-9._-]{3,30}" placeholder="e.g. priya.sharma"></label>
-      <label>Password<input name="password" type="password" required minlength="8" placeholder="Min 8 characters"></label>
+      <label>Password<input name="password" type="password" required inputmode="numeric" pattern="\d{4}" minlength="4" maxlength="4" placeholder="4-digit PIN (e.g. 1234)"></label>
       <label>Role<select name="role">\${['Sales','Management','Accounts','Post Production','Sales Executive','Photographer','Cinematographer'].map(r => opt(r, 'Sales')).join('')}</select></label>
       <div class="modal-actions" style="grid-column:1/-1"><button type="button" class="btn ghost" id="cancelModal">Cancel</button><button type="submit" class="btn primary">Create User</button></div>
     </form>
@@ -5070,7 +5070,7 @@ async function getCurrentUser(request, env) {
 }
 __name(getCurrentUser, "getCurrentUser");
 const strongPasswordMessage = "Password must be a 4-digit number (e.g. 1234).";
-const isStrongPassword = (value) => typeof value === "string" && (/^\d{4}$/.test(value) || (value.length >= 12 && value.length <= 128 && /[a-z]/.test(value) && /[A-Z]/.test(value) && /\d/.test(value) && /[^A-Za-z0-9]/.test(value)));
+const isStrongPassword = (value) => typeof value === "string" && /^\d{4}$/.test(value);
 async function changePassword(request, env) {
   const sql = getDatabase(env);
   try {
