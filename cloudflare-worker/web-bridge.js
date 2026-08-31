@@ -4,7 +4,8 @@
 
   const STORAGE = {
     token: 'lp_token', refresh: 'lp_refresh', user: 'lp_user',
-    leadMap: 'lenspire-web-lead-map', autoBackup: 'lenspire-web-autobackup'
+    leadMap: 'lenspire-web-lead-map', autoBackup: 'lenspire-web-autobackup',
+    session: 'lp_session', authSource: 'lp_source'
   };
   const listeners = new Map();
   const selectedFiles = new Map();
@@ -13,14 +14,14 @@
   localStorage.removeItem(STORAGE.token);
   localStorage.removeItem(STORAGE.refresh);
   localStorage.removeItem(STORAGE.user);
-  let currentUser = null;
+  let currentUser = (() => { try { return JSON.parse(sessionStorage.getItem(STORAGE.session) || 'null'); } catch { return null; } })();
   let leadMap = new Map(Object.entries(readJson(sessionStorage.getItem(STORAGE.leadMap), {})));
   let nextLeadId = -1;
 
   function readJson(value, fallback) { try { return JSON.parse(value) ?? fallback; } catch { return fallback; } }
   function emit(channel, ...args) { for (const callback of listeners.get(channel) || []) callback(null, ...args); }
   function errorFrom(data, status) { const error = new Error(data?.error || `Cloud service returned HTTP ${status}`); error.status = status; error.diagnostic = data?.diagnostic; return error; }
-  function saveSession() {}
+  function saveSession() { if (currentUser) { sessionStorage.setItem(STORAGE.session, JSON.stringify(currentUser)); sessionStorage.setItem(STORAGE.authSource, 'cloud'); } else { sessionStorage.removeItem(STORAGE.session); } }
   async function refreshSession() {
     const response = await fetch('/api/auth/refresh', { method:'POST', headers:{'content-type':'application/json','x-lenspire-web':'1'}, body:'{}' });
     const result = await response.json().catch(() => ({}));
@@ -37,8 +38,10 @@
     if (!response.ok) {
       if (response.status === 401) {
         currentUser = null;
+        saveSession();
         leadMap = new Map();
         sessionStorage.removeItem(STORAGE.leadMap);
+        sessionStorage.removeItem('lenspire-session');
       }
       throw errorFrom(result, response.status);
     }
@@ -98,7 +101,7 @@
       return { success:true, user:currentUser, migration:{ imported:0, activitiesImported:0, deferred:true, synced:0 } };
     } catch (error) { return { success:false, message:error.message || 'Unable to sign in to LenspireCRM Cloud.' }; }
   }
-  async function logout() { await fetch('/api/auth/logout',{method:'POST',headers:{'x-lenspire-web':'1'}}).catch(()=>{});currentUser=null;leadMap=new Map();saveSession();sessionStorage.removeItem(STORAGE.leadMap);return{success:true}; }
+  async function logout() { await fetch('/api/auth/logout',{method:'POST',headers:{'x-lenspire-web':'1'}}).catch(()=>{});currentUser=null;saveSession();leadMap=new Map();sessionStorage.removeItem(STORAGE.leadMap);sessionStorage.removeItem('lenspire-session');return{success:true}; }
 
   function chooseFile({accept='', multiple=false}={}) {
     return new Promise(resolve => {
