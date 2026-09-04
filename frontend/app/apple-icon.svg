@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <rect width="180" height="180" rx="34" fill="#7367f0"/>
+  <text x="90" y="120" font-size="100" font-weight="700" text-anchor="middle" fill="#ffffff" font-family="-apple-system, Segoe UI, Roboto, sans-serif">L</text>
+  <circle cx="135" cy="50" r="14" fill="#ffe17a"/>
+</svg>
