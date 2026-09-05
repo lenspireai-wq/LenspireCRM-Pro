@@ -28,6 +28,7 @@ if (!isDev) {
 
 const nextConfig = {
   reactStrictMode: true,
+  skipTrailingSlashRedirect: true,
   output: "standalone",
   outputFileTracingRoot: process.cwd(),
   allowedDevOrigins: ["127.0.0.1"],
