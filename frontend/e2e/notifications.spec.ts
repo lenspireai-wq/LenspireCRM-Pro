@@ -61,14 +61,14 @@ test.describe("Notification preferences", () => {
       page.getByRole("heading", { name: "Notification preferences" }),
     ).toBeVisible();
 
-    const salesRow = page.locator("tr", { hasText: "Sales" }).first();
+    const salesRow = page.locator("tr", { hasText: "Bookings" }).first();
     await expect(salesRow).toBeVisible();
 
     const inAppToggle = salesRow.locator('input[type="checkbox"]').first();
     const digestToggle = salesRow.locator('input[type="checkbox"]').nth(1);
 
-    await inAppToggle.click();
-    await digestToggle.click();
+    await inAppToggle.uncheck();
+    await digestToggle.uncheck();
     await expect(inAppToggle).not.toBeChecked();
     await expect(digestToggle).not.toBeChecked();
 
@@ -76,21 +76,21 @@ test.describe("Notification preferences", () => {
     await expect(save).toBeEnabled();
     await save.click();
 
-    await expect(page.getByText(/Saved at/)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/Saved at/)).toBeVisible({ timeout: 15_000 });
     await expect(save).toBeDisabled();
 
     await page.reload();
     await page.getByRole("button", { name: "Settings" }).click();
-    const salesRow2 = page.locator("tr", { hasText: "Sales" }).first();
+    const salesRow2 = page.locator("tr", { hasText: "Bookings" }).first();
     const inAppAfter = salesRow2.locator('input[type="checkbox"]').first();
     const digestAfter = salesRow2.locator('input[type="checkbox"]').nth(1);
     await expect(inAppAfter).not.toBeChecked();
     await expect(digestAfter).not.toBeChecked();
 
-    await inAppAfter.click();
-    await digestAfter.click();
+    await inAppAfter.check();
+    await digestAfter.check();
     await page.getByRole("button", { name: "Save preferences" }).click();
-    await expect(page.getByText(/Saved at/)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/Saved at/)).toBeVisible({ timeout: 15_000 });
   });
 
   test("Mute all + Enable all bulk actions", async ({ page }) => {

@@ -33,13 +33,13 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: `node -e "fetch('${WEB_URL}').then(()=>process.exit(0)).catch(()=>process.exit(1))"`,
+      command: "npm run dev -- --hostname 127.0.0.1",
       url: WEB_URL,
       timeout: 30_000,
       reuseExistingServer: true,
     },
     {
-      command: `node -e "fetch('${API_URL}/api/health/').then(()=>process.exit(0)).catch(()=>process.exit(1))"`,
+      command: "node ./scripts/run-backend-for-e2e.mjs",
       url: `${API_URL}/api/health/`,
       timeout: 30_000,
       reuseExistingServer: true,

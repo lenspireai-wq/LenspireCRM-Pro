@@ -35,9 +35,11 @@ test.describe("Backups workspace", () => {
         .getByRole("heading", { name: "Backups" }),
     ).toBeVisible();
 
-    const before = await page.locator(".auditTable tbody tr").count();
+    const rows = page.locator(".auditTable tbody tr");
+    await expect(page.getByText("No backups yet.")).toBeVisible();
+    const before = await rows.count();
     await page.getByRole("button", { name: /Create backup now/i }).click();
-    await expect(page.locator(".auditTable tbody tr")).toHaveCount(before + 1, {
+    await expect(rows).toHaveCount(before + 1, {
       timeout: 15_000,
     });
   });

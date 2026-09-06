@@ -9,8 +9,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "api:codegen": "node ./scripts/openapi-codegen.mjs",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e": "node ./scripts/playwright-local.mjs test",
+    "test:e2e:ui": "node ./scripts/playwright-local.mjs test --ui"
   },
   "dependencies": {
     "@sentry/nextjs": "^9.47.1",

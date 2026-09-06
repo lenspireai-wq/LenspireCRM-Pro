@@ -44,7 +44,12 @@ if os.getenv("POSTGRES_DB"):
         "USER": os.getenv("POSTGRES_USER", "postgres"), "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
         "HOST": os.getenv("POSTGRES_HOST", "localhost"), "PORT": os.getenv("POSTGRES_PORT", "5432")}}
 else:
-    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.getenv("SQLITE_NAME") or BASE_DIR / "db.sqlite3",
+        }
+    }
 
 AUTH_USER_MODEL = "users.User"
 AUTH_PASSWORD_VALIDATORS = [
@@ -58,9 +63,11 @@ TIME_ZONE = os.getenv("TIME_ZONE", "Asia/Kolkata")
 USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 CLIENT_PORTAL_BASE_URL = os.getenv("CLIENT_PORTAL_BASE_URL", "http://127.0.0.1:3000")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+BACKUP_ROOT = Path(os.getenv("BACKUP_ROOT") or BASE_DIR / "backups")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {

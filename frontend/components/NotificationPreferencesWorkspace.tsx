@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys } from "@/lib/query";
 
@@ -39,7 +39,7 @@ export default function NotificationPreferencesWorkspace() {
   const [draft, setDraft] = useState<Preference[]>([]);
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const baselineRef = useRef<Preference[]>([]);
+  const [baseline, setBaseline] = useState<Preference[]>([]);
 
   useEffect(() => {
     if (preferencesQuery.data) {
@@ -56,7 +56,7 @@ export default function NotificationPreferencesWorkspace() {
         }
       }
       setDraft(merged);
-      baselineRef.current = merged.map((entry) => ({ ...entry }));
+      setBaseline(merged.map((entry) => ({ ...entry })));
     }
   }, [preferencesQuery.data]);
 
@@ -76,7 +76,7 @@ export default function NotificationPreferencesWorkspace() {
       setSavedAt(new Date().toLocaleTimeString());
       if (result?.results) {
         setDraft(result.results);
-        baselineRef.current = result.results.map((entry) => ({ ...entry }));
+        setBaseline(result.results.map((entry) => ({ ...entry })));
       }
     } catch (e: any) {
       setError(e.response?.data?.detail || e.message || "Could not save preferences");
@@ -92,7 +92,7 @@ export default function NotificationPreferencesWorkspace() {
     setDraft((current) => current.map((entry) => ({ ...entry, enabled: true })));
   };
 
-  const isDirty = isDirtyDiff(baselineRef.current, draft);
+  const isDirty = isDirtyDiff(baseline, draft);
 
   return (
     <section className="workspace notificationsWorkspace" aria-label="Notification preferences">
