@@ -331,6 +331,7 @@ textarea {
   -webkit-appearance: none;
   appearance: none;
 }
+<<<<<<< HEAD
 .loginInput input:-webkit-autofill,
 .loginInput input:-webkit-autofill:hover,
 .loginInput input:-webkit-autofill:focus,
@@ -368,6 +369,70 @@ input:-webkit-autofill:active {
   background: var(--panel, #101b2a) !important;
   outline: none !important;
   border-color: transparent !important;
+=======
+.loginInput i {
+  color: #8493a9;
+  font-size: var(--font-lg);
+  font-style: normal;
+}
+.loginInput input {
+  min-width: 0;
+  flex: 1;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #f3f6fb;
+  font-weight: 700;
+  font-size: var(--font-base);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.loginInput input:-webkit-autofill,
+.loginInput input:-webkit-autofill:hover,
+.loginInput input:-webkit-autofill:focus,
+.loginInput input:-webkit-autofill:active {
+  -webkit-text-fill-color: #f3f6fb !important;
+  caret-color: #f3f6fb !important;
+  -webkit-box-shadow: 0 0 0 1000px #132335 inset !important;
+  box-shadow: 0 0 0 1000px #132335 inset !important;
+  -webkit-transition: background-color 9999s ease-out 0s;
+  transition: background-color 9999s ease-out 0s;
+  background-color: #132335 !important;
+  background: #132335 !important;
+  outline: none !important;
+  border-color: transparent !important;
+  -webkit-border-radius: var(--radius-lg) !important;
+  border-radius: var(--radius-lg) !important;
+}
+.login .loginPasswordField input:-webkit-autofill,
+.login .loginPasswordField input:-webkit-autofill:hover,
+.login .loginPasswordField input:-webkit-autofill:focus,
+.login .loginPasswordField input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+}
+:root[data-theme="dark"] .login .loginPasswordField input:-webkit-autofill,
+:root[data-theme="dark"] .login .loginPasswordField input:-webkit-autofill:hover,
+:root[data-theme="dark"] .login .loginPasswordField input:-webkit-autofill:focus,
+:root[data-theme="dark"] .login .loginPasswordField input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #f3f6fb !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--panel, #101b2a) inset !important;
+  box-shadow: 0 0 0 1000px var(--panel, #101b2a) inset !important;
+  -webkit-transition: background-color 9999s ease-out 0s;
+  transition: background-color 9999s ease-out 0s;
+  background-color: var(--panel, #101b2a) !important;
+  background: var(--panel, #101b2a) !important;
+  outline: none !important;
+  border-color: transparent !important;
+>>>>>>> ab5fcff (fix: override dark-mode autofill strip on login password field)
 }
 .loginInput input::placeholder {
   color: #65748b;
