@@ -348,10 +348,17 @@ textarea {
   -webkit-border-radius: var(--radius-lg) !important;
   border-radius: var(--radius-lg) !important;
 }
-.loginPasswordField input:-webkit-autofill,
-.loginPasswordField input:-webkit-autofill:hover,
-.loginPasswordField input:-webkit-autofill:focus,
-.loginPasswordField input:-webkit-autofill:active {
+.login .loginPasswordField input:-webkit-autofill,
+.login .loginPasswordField input:-webkit-autofill:hover,
+.login .loginPasswordField input:-webkit-autofill:focus,
+.login .loginPasswordField input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+}
+:root[data-theme="dark"] .login .loginPasswordField input:-webkit-autofill,
+:root[data-theme="dark"] .login .loginPasswordField input:-webkit-autofill:hover,
+:root[data-theme="dark"] .login .loginPasswordField input:-webkit-autofill:focus,
+:root[data-theme="dark"] .login .loginPasswordField input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
   box-shadow: 0 0 0 1000px transparent inset !important;
 }
