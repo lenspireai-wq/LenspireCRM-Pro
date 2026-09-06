@@ -398,7 +398,7 @@ export default function Home() {
         </button>
         <div className="workspaceChrome">
           <div><h1>{section === "Sales" ? "Sales Dashboard" : section}</h1><span>Your studio at a glance</span></div>
-          <div className="chromeActions"><kbd>Find&nbsp;&nbsp;Ctrl F</kbd><label><span>⌕</span><input aria-label="Find in this module" placeholder="Find in this module..." /></label><NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button aria-label="Refresh">↻</button></div>
+          <div className="chromeActions"><kbd>Find&nbsp;&nbsp;Ctrl F</kbd><label><span>⌕</span><input aria-label="Find in this module" placeholder="Find in this module..." /></label><NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
         </div>
         {readOnly && (
           <div className="readOnlyNotice">
