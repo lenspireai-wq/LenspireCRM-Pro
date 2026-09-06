@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import { queryClient, queryKeys } from "@/lib/query";
+import HeaderSearch from "@/components/HeaderSearch";
 import SalesWorkspace from "@/components/SalesWorkspace";
-import OperationsWorkspace from "@/components/OperationsWorkspace";
+import OperationsWorkspace, { type View as OperationsView } from "@/components/OperationsWorkspace";
 import AccountsWorkspace from "@/components/AccountsWorkspace";
 import ProductionWorkspace from "@/components/ProductionWorkspace";
 import OwnerPortal from "@/components/OwnerPortal";
@@ -17,7 +18,7 @@ import AuditWorkspace from "@/components/AuditWorkspace";
 import BackupWorkspace from "@/components/BackupWorkspace";
 import ShortcutsWorkspace from "@/components/ShortcutsWorkspace";
 import RateLimitWorkspace from "@/components/RateLimitWorkspace";
-import AdministrationWorkspace from "@/components/AdministrationWorkspace";
+import AdminConsoleWorkspace from "@/components/AdminConsoleWorkspace";
 import SettingsWorkspace from "@/components/SettingsWorkspace";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -38,7 +39,6 @@ const sections = [
   "Production",
   "Billing",
   "Reports",
-  "Audit",
   "Backups",
   "Rate limits",
   "Shortcuts",
@@ -48,7 +48,7 @@ const sections = [
 type Section = (typeof sections)[number];
 const sectionIcons: Record<Section, string> = {
   Dashboard: "⌂", Sales: "◎", Kanban: "▦", Operations: "◇", Calendar: "□",
-  Accounts: "₹", Production: "▷", Billing: "▤", Reports: "↗", Audit: "✓",
+  Accounts: "₹", Production: "▷", Billing: "▤", Reports: "↗",
   Backups: "↻", "Rate limits": "◴", Shortcuts: "⌘", Settings: "⚙", Admin: "♙",
 };
 const navigationGroups: Array<{ label: string; icon: string; items: Section[] }> = [
@@ -56,7 +56,7 @@ const navigationGroups: Array<{ label: string; icon: string; items: Section[] }>
   { label: "Operations", icon: "◇", items: ["Operations"] },
   { label: "Accounts", icon: "₹", items: ["Accounts"] },
   { label: "Post Production", icon: "▷", items: ["Production"] },
-  { label: "Administration", icon: "♙", items: ["Admin", "Audit"] },
+  { label: "Admin Console", icon: "♙", items: ["Admin"] },
   { label: "Settings", icon: "⚙", items: ["Settings"] },
 ];
 const sectionDepartments: Partial<Record<Section, Department>> = {
@@ -69,7 +69,6 @@ const sectionDepartments: Partial<Record<Section, Department>> = {
   Production: "production",
   Billing: "accounts",
   Reports: "sales",
-  Audit: "production",
   Settings: "sales",
 };
 function Login({
@@ -110,6 +109,7 @@ function Login({
   };
   return (
     <main className="login">
+      <ThemeToggle className="loginThemeToggle" />
       <section className="loginHero" aria-label="LenspireCRM introduction">
         <img
           className="loginWordmark"
@@ -174,7 +174,7 @@ function Login({
             Username
             <div className="loginInput loginUsernameField">
               <i>♟</i>
-              <input name="username" defaultValue="admin" autoFocus required autoComplete="off" spellCheck="false" />
+              <input name="username" defaultValue="sandeepj" autoFocus required autoComplete="off" spellCheck="false" />
             </div>
           </label>
           <label>
@@ -248,8 +248,18 @@ export default function Home() {
     [startNewLead, setStartNewLead] = useState(false),
     [sidebarHidden, setSidebarHidden] = useState(false),
     [openNavGroup, setOpenNavGroup] = useState<string | null>(null),
+    [section, setSection] = useState<Section>("Sales"),
+    [months, setMonths] = useState(6),
+    [targetOpen, setTargetOpen] = useState(false),
+    [salesView, setSalesView] = useState<"Dashboard" | "Lead Management">("Dashboard"),
+    [operationsView, setOperationsView] = useState<OperationsView>("Dashboard"),
+    [accountsView, setAccountsView] = useState<string>("Payment Dashboard"),
     [isFullscreen, setIsFullscreen] = useState(false),
-    [section, setSection] = useState<Section>("Sales");
+    [workspaceChromeHeight, setWorkspaceChromeHeight] = useState(68);
+  const dashboardChromeRef = useRef<HTMLDivElement>(null);
+  const today = new Date();
+  const referenceDate = today.toISOString().split("T")[0];
+  const monthLabel = today.toLocaleDateString("en-US", { month: "long", year: "numeric" });
   useEffect(() => {
     setOwnerPortalMode(sessionStorage.getItem("lenspire-owner-portal") === "1");
     setSidebarHidden(window.matchMedia("(max-width: 900px)").matches);
@@ -262,6 +272,9 @@ export default function Home() {
     setMounted(true);
   }, []);
   useEffect(() => {
+    setTargetOpen(false);
+  }, [section]);
+  useEffect(() => {
     const syncFullscreen = () => setIsFullscreen(Boolean(document.fullscreenElement));
     document.addEventListener("fullscreenchange", syncFullscreen);
     syncFullscreen();
@@ -271,6 +284,24 @@ export default function Home() {
     if (document.fullscreenElement) await document.exitFullscreen();
     else await document.documentElement.requestFullscreen();
   };
+  useEffect(() => {
+    if (section !== "Sales") setSalesView("Dashboard");
+  }, [section]);
+  useEffect(() => {
+    if (section !== "Operations") setOperationsView("Dashboard");
+  }, [section]);
+  useEffect(() => {
+    if (section !== "Accounts") setAccountsView("Payment Dashboard");
+  }, [section]);
+  useEffect(() => {
+    if ((section !== "Dashboard" && section !== "Sales" && !(section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details")) && !(section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics"))) || !dashboardChromeRef.current) return;
+    const chrome = dashboardChromeRef.current;
+    const updateHeight = () => setWorkspaceChromeHeight(chrome.getBoundingClientRect().height);
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(chrome);
+    return () => observer.disconnect();
+  }, [mounted, section, salesView, operationsView, accountsView]);
   useEffect(() => {
     if (!mounted || !auth.access) return;
     api
@@ -290,7 +321,7 @@ export default function Home() {
     }
   }, [mounted, auth.access, auth.user]);
   const visibleSections = sections.filter((item) => {
-    if (item === "Admin" || item === "Audit")
+    if (item === "Admin")
       return isAdministrator(auth.user);
     return canAccess(auth.user, sectionDepartments[item]!);
   });
@@ -365,13 +396,17 @@ export default function Home() {
             })}
           </div>
           <div className="navUtility" aria-label="Additional navigation">
-            {visibleSections.filter((item) => !["Dashboard", "Sales", "Kanban", "Operations", "Calendar", "Accounts", "Production", "Billing", "Reports", "Audit", "Backups", "Shortcuts", "Rate limits", "Settings", "Admin"].includes(item)).map((item) => (
+            {visibleSections.filter((item) => !["Dashboard", "Sales", "Kanban", "Operations", "Calendar", "Accounts", "Production", "Billing", "Reports", "Backups", "Shortcuts", "Rate limits", "Settings", "Admin"].includes(item)).map((item) => (
               <button className={item === section ? "active" : ""} aria-current={item === section ? "page" : undefined} onClick={() => { setStartNewLead(false); setSection(item); if (window.matchMedia("(max-width: 900px)").matches) setSidebarHidden(true); }} key={item}>
                 <span className="navIcon" aria-hidden="true">{sectionIcons[item]}</span><span>{item === "Dashboard" ? "Main Dashboard" : item}</span>
               </button>
             ))}
           </div>
         </nav>
+        <div className="studioSidebarNote" aria-hidden="true">
+          <span>More<br />Love Stories<br />Ahead</span>
+          <small>Capture · Plan · Deliver · Grow</small>
+        </div>
         <div className="profile">
           <span className="profileAvatar">
             {isAdministrator(auth.user) ? (
@@ -384,7 +419,10 @@ export default function Home() {
           <button className="profilePower" aria-label="Sign out" onClick={auth.logout}>◯</button>
         </div>
       </aside>
-      <main>
+      <main
+        className={section === "Dashboard" ? "mainDashboard" : section === "Sales" ? "mainSalesDashboard" : section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details") ? "mainOperationsDashboard" : section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics") ? "mainAccountsSticky" : undefined}
+        style={section === "Dashboard" || section === "Sales" || (section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details")) || (section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics")) ? { "--workspace-chrome-height": `${workspaceChromeHeight}px` } as CSSProperties : undefined}
+      >
         <button
           type="button"
           className="sidebarToggle"
@@ -396,9 +434,86 @@ export default function Home() {
         >
           {sidebarHidden ? "☰" : "‹"}
         </button>
-        <div className="workspaceChrome">
-          <div><h1>{section === "Sales" ? "Sales Dashboard" : section}</h1><span>Your studio at a glance</span></div>
-          <div className="chromeActions"><kbd>Find&nbsp;&nbsp;Ctrl F</kbd><label><span>⌕</span><input aria-label="Find in this module" placeholder="Find in this module..." /></label><NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
+        <div ref={dashboardChromeRef} className={`workspaceChrome${section === "Dashboard" ? " dashboardChrome" : ""}${section === "Sales" ? " salesChrome" : ""}`}>
+          {section === "Dashboard" ? (
+            <>
+              <div className="dashHeader">
+                <div>
+                  <h1>Hello, {(auth.user?.display_name || auth.user?.username || "there").split(" ")[0]}</h1>
+                  <p>Here’s what’s happening at your studio today.</p>
+                  <small>{referenceDate} · {monthLabel}</small>
+                </div>
+              </div>
+              <label className="dashSelect">
+                Window
+                <select value={months} onChange={(e) => setMonths(Number(e.target.value))}>
+                  <option value={3}>3 months</option>
+                  <option value={6}>6 months</option>
+                  <option value={12}>12 months</option>
+                </select>
+              </label>
+            </>
+          ) : section === "Sales" ? (
+            <>
+              <div className="salesHeader">
+                <div>
+                  <h1>{salesView === "Dashboard" ? "Sales Dashboard" : "Lead Management"}</h1>
+                  <p>{salesView === "Dashboard" ? "Your studio at a glance" : "Track every inquiry from first call to booking"}</p>
+                </div>
+                <button className="secondary" onClick={() => setTargetOpen(true)}>
+                  ◎ Set Target
+                </button>
+              </div>
+            </>
+          ) : section === "Operations" ? (
+            <>
+              <div className="sectionHeader">
+                <div>
+                  <h1>{operationsView}</h1>
+                  <p>Plan shoots, assign your crew, and track every event.</p>
+                </div>
+              </div>
+            </>
+          ) : section === "Accounts" ? (
+            <>
+              <div className="sectionHeader">
+                <div>
+                  <h1>{accountsView}</h1>
+                  <p>Collections, dues, and client balances.</p>
+                </div>
+              </div>
+            </>
+          ) : section === "Production" ? (
+            <>
+              <div className="sectionHeader">
+                <div>
+                  <h1>Post Production</h1>
+                  <p>Review, edit, and deliver your studio’s work.</p>
+                </div>
+              </div>
+            </>
+          ) : section === "Admin" ? (
+            <>
+              <div className="sectionHeader">
+                <div>
+                  <h1>Admin Console</h1>
+                  <p>Manage users, permissions, and system settings.</p>
+                </div>
+              </div>
+            </>
+          ) : section === "Settings" ? (
+            <>
+              <div className="sectionHeader">
+                <div>
+                  <h1>Settings</h1>
+                  <p>Configure notifications, backups, and rate limits.</p>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div><h1>{section}</h1><span>Your studio at a glance</span></div>
+          )}
+          <div className="chromeActions">{!(section === "Sales" && salesView === "Lead Management") && <HeaderSearch onNavigate={setSection} />}<NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
         </div>
         {readOnly && (
           <div className="readOnlyNotice">
@@ -407,11 +522,11 @@ export default function Home() {
         )}
         {section === "Dashboard" ? (
           <ErrorBoundary label="Dashboard">
-            <DashboardWorkspace />
+            <DashboardWorkspace months={months} onMonthsChange={setMonths} />
           </ErrorBoundary>
         ) : section === "Sales" ? (
           <ErrorBoundary label="Sales">
-            <SalesWorkspace startNewLead={startNewLead} />
+            <SalesWorkspace startNewLead={startNewLead} targetOpen={targetOpen} setTargetOpen={setTargetOpen} view={salesView} setView={setSalesView} />
           </ErrorBoundary>
         ) : section === "Kanban" ? (
           <ErrorBoundary label="Kanban">
@@ -419,7 +534,7 @@ export default function Home() {
           </ErrorBoundary>
         ) : section === "Operations" ? (
           <ErrorBoundary label="Operations">
-            <OperationsWorkspace readOnly={readOnly} />
+            <OperationsWorkspace readOnly={readOnly} view={operationsView} setView={setOperationsView} />
           </ErrorBoundary>
         ) : section === "Calendar" ? (
           <ErrorBoundary label="Calendar">
@@ -429,6 +544,8 @@ export default function Home() {
           <ErrorBoundary label="Accounts">
             <AccountsWorkspace
               readOnly={readOnly}
+              view={accountsView}
+              setView={setAccountsView}
               onAddLead={() => {
                 if (!canWrite(auth.user, "sales")) return;
                 setStartNewLead(true);
@@ -448,10 +565,6 @@ export default function Home() {
           <ErrorBoundary label="Reports">
             <ReportsWorkspace />
           </ErrorBoundary>
-        ) : section === "Audit" ? (
-          <ErrorBoundary label="Audit">
-            <AuditWorkspace currentUser={auth.user} />
-          </ErrorBoundary>
         ) : section === "Backups" ? (
           <ErrorBoundary label="Backups">
             <BackupWorkspace />
@@ -469,8 +582,8 @@ export default function Home() {
             <SettingsWorkspace currentUser={auth.user!} />
           </ErrorBoundary>
         ) : auth.user ? (
-          <ErrorBoundary label="Admin">
-            <AdministrationWorkspace currentUser={auth.user} />
+          <ErrorBoundary label="Admin Console">
+            <AdminConsoleWorkspace currentUser={auth.user} />
           </ErrorBoundary>
         ) : null}
       </main>

@@ -17,10 +17,10 @@ type Notification = {
 type Summary = { unread: number; latest: Notification[] };
 
 const LEVEL_COLORS: Record<string, string> = {
-  info: "#0ea5e9",
-  success: "#22c55e",
-  warning: "#f59e0b",
-  error: "#ef4444",
+  info: "var(--info)",
+  success: "var(--success)",
+  warning: "var(--warning)",
+  error: "var(--danger)",
 };
 
 const formatRelative = (value: string) => {
@@ -107,7 +107,7 @@ export function NotificationBell() {
             {items.length === 0 ? <li className="notifEmpty">You&apos;re all caught up.</li> : null}
             {items.map((notification) => (
               <li key={notification.id} className={notification.is_read ? "read" : "unread"}>
-                <div className="notifDot" style={{ background: LEVEL_COLORS[notification.level] || "#64748b" }} />
+                <div className="notifDot" style={{ background: LEVEL_COLORS[notification.level] || "var(--muted)" }} />
                 <div className="notifBody">
                   <strong>{notification.title}</strong>
                   {notification.body ? <p>{notification.body}</p> : null}

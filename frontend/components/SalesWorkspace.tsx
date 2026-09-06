@@ -111,8 +111,16 @@ const dateTime = (value: any) =>
 
 export default function SalesWorkspace({
   startNewLead = false,
+  targetOpen = false,
+  setTargetOpen,
+  view = "Dashboard",
+  setView,
 }: {
   startNewLead?: boolean;
+  targetOpen?: boolean;
+  setTargetOpen?: (value: boolean) => void;
+  view?: "Dashboard" | "Lead Management";
+  setView?: (value: "Dashboard" | "Lead Management") => void;
 }) {
   const leadsQuery = useApiQuery<{ results: Lead[] } | Lead[]>(
       queryKeys.leads(),
@@ -150,8 +158,8 @@ export default function SalesWorkspace({
       (await (url ? api.put(url, payload) : api.post("/leads/", payload))).data,
   });
   const [targets, setTargets] = useState<SalesTarget[]>([]),
-    [targetOpen, setTargetOpen] = useState(false),
     [importOpen, setImportOpen] = useState(false);
+  const targetSetOpen = setTargetOpen ?? (() => {});
   const targetsQuery = useApiQuery<{ results: SalesTarget[] } | SalesTarget[]>(
     queryKeys.salesTargets(),
     "/sales-targets/",
@@ -166,10 +174,9 @@ export default function SalesWorkspace({
     }
   }, [targetsQuery.data]);
   const fileInput = useRef<HTMLInputElement>(null);
-  const [view, setView] = useState<"Dashboard" | "Lead Management">(
-      "Dashboard",
-    ),
-    [query, setQuery] = useState(""),
+  const currentView = view;
+  const setViewSafe = setView ?? (() => {});
+  const [query, setQuery] = useState(""),
     [status, setStatus] = useState("All"),
     [priority, setPriority] = useState("All"),
     [source, setSource] = useState("All"),
@@ -353,46 +360,19 @@ export default function SalesWorkspace({
       <small>{sub}</small>
     </button>
   );
-  if (view === "Dashboard")
+  if (currentView === "Dashboard")
     return (
       <div className="salesPage">
-        <div className="salesTop">
-          <div>
-            <small>SALES &amp; MARKETING</small>
-            <h1>Sales Dashboard</h1>
-            <p>Your studio at a glance</p>
-            {!canEdit && (
-              <p>
-                {user
-                  ? "Your account has no Sales edit access. Ask an administrator to enable it."
-                  : "Loading your Sales permissions…"}
-              </p>
-            )}
-          </div>
-          {canEdit && (
-            <div className="salesActions">
-              <button
-                className="secondary"
-                onClick={() => setImportOpen(true)}
-                aria-label="Open the lead import wizard"
-              >
-                ⇪ Import leads
-              </button>
-              <button className="secondary" onClick={() => setTargetOpen(true)}>
-                ◎ Set Target
-              </button>
-            </div>
-          )}
-        </div>
-        <nav className="operationsTabs" aria-label="Sales views">
-          <button className="active" onClick={() => setView("Dashboard")}>
-            Sales Dashboard
-          </button>
-          <button onClick={() => setView("Lead Management")}>
-            Lead Management
-          </button>
-        </nav>
-        <div className="salesKpis">
+        <div className="salesDashboardSticky">
+          <nav className="operationsTabs" aria-label="Sales views">
+            <button className="active" onClick={() => setViewSafe("Dashboard")}>
+              Sales Dashboard
+            </button>
+            <button onClick={() => setViewSafe("Lead Management")}>
+              Lead Management
+            </button>
+          </nav>
+          <div className="salesKpis">
           {[
             ["Total Leads", leads.length, "Live pipeline", "blue", "All"],
             [
@@ -436,7 +416,7 @@ export default function SalesWorkspace({
               className={`salesKpi ${kind}`}
               onClick={() => {
                 setStatus(String(filter));
-                setView("Lead Management");
+                setViewSafe("Lead Management");
               }}
             >
               <span>{label}</span>
@@ -444,6 +424,7 @@ export default function SalesWorkspace({
               <small>{sub}</small>
             </button>
           ))}
+          </div>
         </div>
         <div className="salesDashboardGrid">
           <section className="salesPanel leadListPanel">
@@ -456,7 +437,7 @@ export default function SalesWorkspace({
                 className="iconOnlyAction viewAction"
                 title="View all leads"
                 aria-label="View all leads"
-                onClick={() => setView("Lead Management")}
+                onClick={() => setViewSafe("Lead Management")}
               >
                 ◉
               </button>
@@ -573,9 +554,9 @@ export default function SalesWorkspace({
         {targetOpen && (
           <TargetModal
             month={month}
-            onClose={() => setTargetOpen(false)}
+            onClose={() => targetSetOpen(false)}
             onSaved={async () => {
-              setTargetOpen(false);
+              targetSetOpen(false);
               const { data } = await api.get("/sales-targets/");
               setTargets(data.results || data);
               notify("Sales target saved");
@@ -618,20 +599,14 @@ export default function SalesWorkspace({
     );
   return (
     <div className="salesPage">
-      <div className="salesTop">
-        <div>
-          <small>SALES PIPELINE</small>
-          <h1>Lead Management</h1>
-          <p>Track every inquiry from first call to booking</p>
-        </div>
-      </div>
-      <nav className="operationsTabs" aria-label="Sales views">
-        <button onClick={() => setView("Dashboard")}>Sales Dashboard</button>
-        <button className="active" onClick={() => setView("Lead Management")}>
-          Lead Management
-        </button>
-      </nav>
-      <div className="reminderGrid">
+      <div className="leadManagementSticky">
+        <nav className="operationsTabs" aria-label="Sales views">
+          <button onClick={() => setViewSafe("Dashboard")}>Sales Dashboard</button>
+          <button className="active" onClick={() => setViewSafe("Lead Management")}>
+            Lead Management
+          </button>
+        </nav>
+        <div className="reminderGrid">
         {card(
           "Overdue",
           buckets.overdue.length,
@@ -713,6 +688,7 @@ export default function SalesWorkspace({
           </b>
           <small>Open lead form</small>
         </button>
+        </div>
       </div>
       <section className="salesPanel">
         <div className="leadToolbar">
@@ -968,12 +944,18 @@ function LeadTable({
           {leads.map((l) => (
             <tr key={l.id} onClick={() => onOpen(l)}>
               <td>{date(l.created_at)}</td>
-              <td>
+              <td title={l.client_name || l.name}>
                 <b>{l.client_name || l.name}</b>
               </td>
-              <td>{l.assigned_to || "Unassigned"}</td>
-              <td>{l.couple_name || l.name || "—"}</td>
-              <td>{l.client_mobile || l.mobile || "—"}</td>
+              <td title={l.assigned_to || "Unassigned"}>
+                {l.assigned_to || "Unassigned"}
+              </td>
+              <td title={l.couple_name || l.name || "—"}>
+                {l.couple_name || l.name || "—"}
+              </td>
+              <td title={l.client_mobile || l.mobile || "—"}>
+                {l.client_mobile || l.mobile || "—"}
+              </td>
               <td>{l.event_type}</td>
               <td>{date(l.event_date)}</td>
               <td>{l.source || "Other"}</td>
@@ -1613,4 +1595,3 @@ function LeadDetail({
     </div>
   );
 }
-

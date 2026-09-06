@@ -20,11 +20,11 @@ type Lead = {
 };
 
 const COLUMNS: { key: string; label: string; color: string }[] = [
-  { key: "New", label: "New", color: "#0ea5e9" },
-  { key: "Follow-up", label: "Follow-up", color: "#f59e0b" },
-  { key: "Confirmed", label: "Confirmed", color: "#22c55e" },
-  { key: "Booked", label: "Booked", color: "#7367f0" },
-  { key: "Lost", label: "Lost", color: "#ef4444" },
+  { key: "New", label: "New", color: "var(--info)" },
+  { key: "Follow-up", label: "Follow-up", color: "var(--warning)" },
+  { key: "Confirmed", label: "Confirmed", color: "var(--success)" },
+  { key: "Booked", label: "Booked", color: "var(--brand)" },
+  { key: "Lost", label: "Lost", color: "var(--danger)" },
 ];
 
 const formatINR = (value: Lead["total_closing"]) => {
@@ -35,7 +35,7 @@ const formatINR = (value: Lead["total_closing"]) => {
 
 const formatDate = (value?: string | null) => (value ? new Date(value).toLocaleDateString("en-IN", { month: "short", day: "2-digit" }) : null);
 
-const priorityTone: Record<string, string> = { High: "#ef4444", Medium: "#f59e0b", Low: "#22c55e" };
+const priorityTone: Record<string, string> = { High: "var(--danger)", Medium: "var(--warning)", Low: "var(--success)" };
 
 export default function LeadsKanban() {
   const [search, setSearch] = useState("");
@@ -158,7 +158,7 @@ export default function LeadsKanban() {
                         {followup ? <span>↻ {followup}</span> : null}
                         {value ? <span>{value}</span> : null}
                         {lead.priority ? (
-                          <span className="kanbanPriority" style={{ color: priorityTone[lead.priority] || "#94a3b8" }}>
+                          <span className="kanbanPriority" style={{ color: priorityTone[lead.priority] || "var(--muted)" }}>
                             {lead.priority}
                           </span>
                         ) : null}

@@ -55,3 +55,16 @@ export function uniqById<T extends { id: number }>(items: T[]): T[] {
   }
   return out;
 }
+
+export async function fetchAllPages<T>(path: string, signal?: AbortSignal): Promise<Page<T>> {
+  const results: T[] = [];
+  // Request subsequent pages from the same API path, retaining all filters.
+  // Do not send authentication to an absolute `next` URL from the response.
+  for (let page = 1; ; page += 1) {
+    const { data } = await api.get(path, { params: { page, page_size: 500 }, signal });
+    if (Array.isArray(data)) return { count: data.length, results: data, next: null, previous: null };
+    results.push(...(data.results ?? []));
+    if (!data.next) return { count: results.length, results, next: null, previous: null };
+    if (!data.results?.length) throw new Error("The API returned an empty page with more results pending.");
+  }
+}

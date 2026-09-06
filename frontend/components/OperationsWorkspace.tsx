@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
-import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
+import { useApiMutation, useApiQuery, useApiCollectionQuery, queryKeys, queryClient } from "@/lib/query";
 import CalendarWorkspace from "@/components/CalendarWorkspace";
 
-type View =
+export type View =
   | "Dashboard"
   | "Calendar"
   | "Upcoming Events"
@@ -71,6 +71,12 @@ const crewMessageValue = (value: any) =>
     .split("; ")
     .map((item) => item.replace(/ · /g, " "))
     .join(" + ");
+const crewDisplayValue = (value: any) =>
+  String(value || "")
+    .replace(/\+?(?:91[\s()-]*)?[6-9](?:[\s()-]*\d){9}\b/g, "")
+    .replace(/\s*[·|,-]\s*$/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
 function eventMessage(event: Row) {
   const eventDate = event.start_date
     ? new Date(`${event.start_date}T00:00:00`)
@@ -147,19 +153,28 @@ Aarzoo Singh - 9307846897 - https://wa.me/9307846897
 
 export default function OperationsWorkspace({
   readOnly = false,
+  view = "Dashboard",
+  setView,
 }: {
   readOnly?: boolean;
+  view?: View;
+  setView?: (value: View) => void;
 }) {
-  const [view, setView] = useState<View>("Dashboard");
+  const setViewSafe = setView ?? (() => {});
   const [photographers, setPhotographers] = useState<Row[]>([]);
   const [eventDraft, setEventDraft] = useState<Row | null>(null);
   const [crewDraft, setCrewDraft] = useState<Row | null>(null);
   const [messageEvent, setMessageEvent] = useState<Row | null>(null);
   const [error, setError] = useState("");
   const [month, setMonth] = useState(() => new Date());
-  const eventsQuery = useApiQuery<{ results: Row[] } | Row[]>(
+  const [importing, setImporting] = useState(false);
+  const [dashboardControlsHeight, setDashboardControlsHeight] = useState(96);
+  const dashboardControlsRef = useRef<HTMLDivElement>(null);
+  const eventFileInputRef = useState<HTMLInputElement | null>(null)[0];
+  const photographerFileInputRef = useState<HTMLInputElement | null>(null)[0];
+  const eventsQuery = useApiCollectionQuery<Row>(
     queryKeys.events(),
-    "/events/?page_size=500&ordering=start_date",
+    "/events/?ordering=start_date,start_time,id",
   );
   const crewQuery = useApiQuery<{ results: Row[] } | Row[]>(
     ["photographers"],
@@ -179,6 +194,15 @@ export default function OperationsWorkspace({
       );
     }
   }, [crewQuery.data]);
+  useEffect(() => {
+    if ((view !== "Dashboard" && view !== "Photographers Details") || !dashboardControlsRef.current) return;
+    const controls = dashboardControlsRef.current;
+    const updateHeight = () => setDashboardControlsHeight(controls.getBoundingClientRect().height);
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(controls);
+    return () => observer.disconnect();
+  }, [view, eventsQuery.isPending]);
   const events: Row[] = Array.isArray(eventsQuery.data)
     ? eventsQuery.data
     : eventsQuery.data?.results || [];
@@ -265,60 +289,162 @@ export default function OperationsWorkspace({
     setError("");
     setEventDraft({ ...copy });
   };
+  const exportEvents = async () => {
+    try {
+      const response = await api.get("/events/export/", { responseType: "blob" });
+      const url = URL.createObjectURL(response.data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `events-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (err: any) {
+      setError(err.response?.data?.detail || "Could not export events.");
+    }
+  };
+  const importEvents = async (file?: File) => {
+    if (!file) return;
+    setImporting(true);
+    setError("");
+    const form = new FormData();
+    form.append("file", file);
+    try {
+      await api.post("/events/import/", form, { headers: { "Content-Type": "multipart/form-data" } });
+      await invalidateEvents();
+    } catch (err: any) {
+      setError(err.response?.data?.detail || JSON.stringify(err.response?.data || "Could not import events."));
+    } finally {
+      setImporting(false);
+    }
+  };
+  const exportPhotographers = async () => {
+    try {
+      const response = await api.get("/photographers/export/", { responseType: "blob" });
+      const url = URL.createObjectURL(response.data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `photographers-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (err: any) {
+      setError(err.response?.data?.detail || "Could not export photographers.");
+    }
+  };
+  const importPhotographers = async (file?: File) => {
+    if (!file) return;
+    setImporting(true);
+    setError("");
+    const form = new FormData();
+    form.append("file", file);
+    try {
+      await api.post("/photographers/import/", form, { headers: { "Content-Type": "multipart/form-data" } });
+      await loadCrew();
+    } catch (err: any) {
+      setError(err.response?.data?.detail || JSON.stringify(err.response?.data || "Could not import photographers."));
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  if (view !== "Photographers Details" && eventsQuery.isPending) {
+    return <div className="operationsWorkspace" role="status">Loading events…</div>;
+  }
+  if (view !== "Photographers Details" && eventsQuery.isError) {
+    return <div className="operationsWorkspace" role="alert">Could not load events. <button onClick={() => eventsQuery.refetch()}>Retry</button></div>;
+  }
 
   return (
-    <div className="operationsWorkspace">
-      <header>
-        <div>
-          <small>OPERATIONS</small>
-          <h1>{view}</h1>
-          <p>Plan shoots, assign your crew, and track every event.</p>
-        </div>
+    <div
+      className={`operationsWorkspace${view === "Dashboard" ? " operationsDashboardView" : view === "Photographers Details" ? " photographersDetailsView" : ""}`}
+      style={view === "Dashboard" || view === "Photographers Details" ? { "--operations-controls-height": `${dashboardControlsHeight}px` } as CSSProperties : undefined}
+    >
+      <div ref={dashboardControlsRef} className="operationsDashboardControls">
         <div className="operationsActions">
-          {view !== "Photographers Details" && view !== "Completed Events" && (
-            <>
-              {!readOnly && (
-                <button
-                  className="primary"
-                  onClick={() => setEventDraft({ ...blankEvent })}
-                >
-                  ＋ Add Event
-                </button>
-              )}
-            </>
-          )}
-          {view === "Photographers Details" && !readOnly && (
-            <button
-              className="primary"
-              onClick={() => setCrewDraft({ ...blankPhotographer })}
-            >
-              ＋ Add Photographer
+        {(view === "Upcoming Events" || view === "Completed Events") && (
+          <>
+            <button type="button" onClick={exportEvents} title="Export events to Excel">
+              Export
             </button>
-          )}
+            <label className="fileLabel" title="Import events from Excel">
+              Import
+              <input
+                type="file"
+                accept=".xlsx,.xls"
+                className="hiddenInput"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) importEvents(file);
+                  event.target.value = "";
+                }}
+              />
+            </label>
+          </>
+        )}
+        {view === "Photographers Details" && (
+          <>
+            <button type="button" onClick={exportPhotographers} title="Export photographers to Excel">
+              Export
+            </button>
+            <label className="fileLabel" title="Import photographers from Excel">
+              Import
+              <input
+                type="file"
+                accept=".xlsx,.xls"
+                className="hiddenInput"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) importPhotographers(file);
+                  event.target.value = "";
+                }}
+              />
+            </label>
+            {!readOnly && (
+              <button
+                className="primary"
+                onClick={() => setCrewDraft({ ...blankPhotographer })}
+              >
+                ＋ Add Photographer
+              </button>
+            )}
+          </>
+        )}
+        {view !== "Photographers Details" && view !== "Completed Events" && (
+          <>
+            {!readOnly && (
+              <button
+                className="primary"
+                onClick={() => setEventDraft({ ...blankEvent })}
+              >
+                ＋ Add Event
+              </button>
+            )}
+          </>
+        )}
         </div>
-      </header>
-      <nav className="operationsTabs">
-        {views.map((item) => (
-          <button
-            key={item}
-            className={view === item ? "active" : ""}
-            onClick={() => setView(item)}
-          >
-            {item}
-          </button>
-        ))}
-      </nav>
+        <nav className="operationsTabs">
+          {views.map((item) => (
+            <button
+              key={item}
+              className={view === item ? "active" : ""}
+              onClick={() => setViewSafe(item)}
+            >
+              {item}
+            </button>
+          ))}
+        </nav>
+      </div>
       {view === "Dashboard" && (
         <Dashboard
           events={events}
           photographers={photographers}
-          open={() => setView("Upcoming Events")}
+          open={() => setViewSafe("Upcoming Events")}
         />
       )}
       {view === "Calendar" && <CalendarWorkspace />}
       {view === "Upcoming Events" && (
         <EventTable
           events={upcoming}
+          fitColumns
           edit={readOnly ? undefined : setEventDraft}
           onMessage={setMessageEvent}
           onDuplicate={readOnly ? undefined : duplicateEvent}
@@ -330,6 +456,7 @@ export default function OperationsWorkspace({
       {view === "Completed Events" && (
         <EventTable
           events={completed}
+          fitColumns
           edit={readOnly ? undefined : setEventDraft}
           onMessage={setMessageEvent}
           onDuplicate={readOnly ? undefined : duplicateEvent}
@@ -442,6 +569,7 @@ function EventTable({
   onMessage,
   onDuplicate,
   compact = false,
+  fitColumns = false,
 }: {
   events: Row[];
   edit?: (row: Row) => void;
@@ -449,7 +577,9 @@ function EventTable({
   onMessage?: (row: Row) => void;
   onDuplicate?: (row: Row) => void;
   compact?: boolean;
+  fitColumns?: boolean;
 }) {
+  const labels = ["Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
   const crew = (value: any) => {
     const assignments = String(value || "")
       .split(/\s*;\s*/)
@@ -463,6 +593,7 @@ function EventTable({
       <div className={`crewAssignments ${multipleNames ? "multipleCrew" : ""}`}>
         {assignments.map((assignment) => {
           const marker = assignment.toUpperCase();
+          const displayAssignment = crewDisplayValue(assignment) || assignment;
           const colorClass =
             marker === "NA"
               ? "crewNA"
@@ -475,7 +606,7 @@ function EventTable({
                     : "crewAssigned";
           return (
             <span className={colorClass} key={assignment}>
-              {assignment}
+              {displayAssignment}
             </span>
           );
         })}
@@ -518,6 +649,8 @@ function EventTable({
                     row.bts,
                   ]
                     .filter(Boolean)
+                    .map(crewDisplayValue)
+                    .filter(Boolean)
                     .join(" · ") || "—"}
                 </td>
                 <td>
@@ -531,27 +664,11 @@ function EventTable({
       </div>
     );
   return (
-    <div className="table upcomingEventsTableWrap">
+    <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns" : ""}`}>
       <table className="upcomingEventsTable">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Client Name</th>
-            <th>Handled By</th>
-            <th>Couple Name</th>
-            <th>Contact No.</th>
-            <th>Event</th>
-            <th>Photo</th>
-            <th>Video</th>
-            <th>Candid</th>
-            <th>Cinematic</th>
-            <th>Drone</th>
-            <th>Assistant</th>
-            <th>BTS</th>
-            <th>Venue</th>
-            <th>Time</th>
-            <th>Notes</th>
-            <th>Action</th>
+            {labels.map((label) => <th key={label} scope="col">{label}</th>)}
           </tr>
         </thead>
         <tbody>
@@ -572,9 +689,13 @@ function EventTable({
               <td>{crew(row.drone)}</td>
               <td>{crew(row.assistant)}</td>
               <td>{crew(row.bts)}</td>
-              <td>{row.city || "—"}</td>
+              <td title={row.city || "—"}>
+                {row.city || "—"}
+              </td>
               <td>{row.start_time?.slice(0, 5) || "—"}</td>
-              <td className="eventNotes">{row.notes || "—"}</td>
+              <td className="eventNotes" title={row.notes || "—"}>
+                {row.notes || "—"}
+              </td>
               <td>
                 <div className="eventRowActions">
                   <button
@@ -698,8 +819,8 @@ function CrewTable({
   remove?: (id: any) => void;
 }) {
   return (
-    <section className="panel">
-      <div className="table">
+    <section className="panel photographerTablePanel">
+      <div className="table photographerTableWrap">
         <table>
           <thead>
             <tr>

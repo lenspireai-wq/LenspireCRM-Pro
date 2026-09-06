@@ -462,10 +462,8 @@ export default function AdminWorkspace({
                       <small>@{activity.target_username}</small>
                     )}
                   </td>
-                  <td>
-                    <span className="adminAuditAction">{activity.action}</span>
-                  </td>
-                  <td>{activity.description}</td>
+                   <td>{activity.action}</td>
+                  <td title={activity.description}>{activity.description}</td>
                   <td>{activity.performed_by}</td>
                 </tr>
               ))}

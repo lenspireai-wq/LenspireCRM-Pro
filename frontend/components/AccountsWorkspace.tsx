@@ -104,10 +104,15 @@ function plan(total: number, received: number, entries: Row[]) {
 export default function AccountsWorkspace({
   onAddLead,
   readOnly = false,
+  view = "Payment Dashboard",
+  setView,
 }: {
   onAddLead: () => void;
   readOnly?: boolean;
+  view?: string;
+  setView?: (value: string) => void;
 }) {
+  const setViewSafe = setView ?? (() => {});
   const customersQuery = useApiQuery<{ results: Row[] } | Row[]>(
     queryKeys.customers(),
     "/customers/?page_size=500",
@@ -157,8 +162,7 @@ export default function AccountsWorkspace({
   const deletePaymentMutation = useApiMutation<{ id: number }, unknown, Error>({
     mutationFn: async ({ id }) => (await api.delete(`/payments/${id}/`)).data,
   });
-  const [view, setView] = useState(views[0]),
-    [query, setQuery] = useState("");
+  const [query, setQuery] = useState("");
   const [draft, setDraft] = useState<Row | null>(null),
     [ledgerId, setLedgerId] = useState<number | null>(null);
   const [receiptPayment, setReceiptPayment] = useState<Row | null>(null);
@@ -628,24 +632,94 @@ export default function AccountsWorkspace({
   );
   return (
     <div className="accountsWorkspace">
-      <header className="salesTop">
-        <div>
-          <small>ACCOUNTS</small>
-          <h1>{view}</h1>
-          <p>Collections, dues, and client balances.</p>
+      {(view === "Payment Dashboard" || view === "Receivables" || view === "Client Ledger" || view === "Reports & Analytics") ? (
+        <div className="accountsViewSticky">
+          <nav className="operationsTabs">
+            {views.map((item) => (
+              <button
+                key={item}
+                className={view === item ? "active" : ""}
+                onClick={() => setViewSafe(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </nav>
+          {view === "Reports & Analytics" ? (
+            <label className="accountReportMonth">
+              Report month
+              <input
+                type="month"
+                value={month}
+                onChange={(e) => setMonth(e.target.value)}
+              />
+            </label>
+          ) : view !== "Payment Dashboard" ? <div className="receivablesTools">
+            <input
+              className="accountSearch"
+              aria-label="Search client accounts"
+              placeholder="Search client, couple, or booking…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            {view === "Receivables" && <select
+              aria-label="Filter receivables ageing"
+              value={ageingFilter}
+              onChange={(event) => setAgeingFilter(event.target.value)}
+            >
+              <option>All</option>
+              <option>Due Soon</option>
+              <option>Overdue 1–30 Days</option>
+              <option>Overdue 31–60 Days</option>
+              <option>Overdue 60+ Days</option>
+              <option>Scheduled Later</option>
+              <option>Not Scheduled</option>
+            </select>}
+            {view === "Receivables" && <button
+              type="button"
+              className="iconOnlyAction exportAction"
+              title="Export receivables ageing"
+              aria-label="Export receivables ageing"
+              onClick={exportAgeing}
+            >
+              ⇩
+            </button>}
+          </div> : null}
+          {view === "Payment Dashboard" ? metrics([
+            ["Collected", money(sum(paid))],
+            ["Refunded", money(sum(payments.filter((p) => p.status === "Paid" && p.payment_type === "Refund")))],
+            ["Receivable", money(accounts.reduce((n, a) => n + a.balance, 0))],
+            ["Advance", money(sum(paid.filter((p) => p.payment_type === "Advance")))],
+          ]) : view === "Receivables" ? metrics([
+            ["Due Soon", money(ageingAmount("Due Soon"))],
+            ["Overdue 1–30", money(ageingAmount("Overdue 1–30 Days"))],
+            ["Overdue 31–60", money(ageingAmount("Overdue 31–60 Days"))],
+            ["Overdue 60+", money(ageingAmount("Overdue 60+ Days"))],
+          ]) : view === "Client Ledger" ? metrics([
+            ["Client Accounts", shown.length],
+            ["Total Closing", money(shown.reduce((n, a) => n + a.total, 0))],
+            ["Total Received", money(shown.reduce((n, a) => n + a.received, 0))],
+            ["Total Balance", money(shown.reduce((n, a) => n + a.balance, 0))],
+          ]) : metrics([
+            ["Collected", money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type !== "Refund")))],
+            ["Refunded", money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type === "Refund")))],
+            ["Pending", money(sum(reportPayments.filter((p) => p.status !== "Paid")))],
+            ["Payments", reportPayments.length],
+          ])}
         </div>
-      </header>
-      <nav className="operationsTabs">
-        {views.map((item) => (
-          <button
-            key={item}
-            className={view === item ? "active" : ""}
-            onClick={() => setView(item)}
-          >
-            {item}
-          </button>
-        ))}
-      </nav>
+      ) : (
+        <nav className="operationsTabs">
+          {views.map((item) => (
+            <button
+              key={item}
+              className={view === item ? "active" : ""}
+              onClick={() => setViewSafe(item)}
+            >
+              {item}
+            </button>
+          ))}
+        </nav>
+      )}
       {error && !draft && (
         <p role="status" className="formError">
           {error}
@@ -664,24 +738,6 @@ export default function AccountsWorkspace({
       )}
       {view === "Payment Dashboard" && (
         <>
-          {metrics([
-            ["Collected", money(sum(paid))],
-            [
-              "Refunded",
-              money(
-                sum(
-                  payments.filter(
-                    (p) => p.status === "Paid" && p.payment_type === "Refund",
-                  ),
-                ),
-              ),
-            ],
-            ["Receivable", money(accounts.reduce((n, a) => n + a.balance, 0))],
-            [
-              "Advance",
-              money(sum(paid.filter((p) => p.payment_type === "Advance"))),
-            ],
-          ])}
           <section className="panel">
             <div className="panelHead">
               <h2>Recent Payments</h2>
@@ -689,7 +745,7 @@ export default function AccountsWorkspace({
                 className="iconOnlyAction viewAction"
                 title="View all payments"
                 aria-label="View all payments"
-                onClick={() => setView("Collections")}
+                onClick={() => setViewSafe("Collections")}
               >
                 ◉
               </button>
@@ -775,61 +831,6 @@ export default function AccountsWorkspace({
       )}
       {(view === "Receivables" || view === "Client Ledger") && (
         <>
-          <div className="receivablesTools">
-            <input
-              className="accountSearch"
-              aria-label="Search client accounts"
-              placeholder="Search client, couple, or booking…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            {view === "Receivables" && (
-              <>
-                <select
-                  aria-label="Filter receivables ageing"
-                  value={ageingFilter}
-                  onChange={(event) => setAgeingFilter(event.target.value)}
-                >
-                  <option>All</option>
-                  <option>Due Soon</option>
-                  <option>Overdue 1–30 Days</option>
-                  <option>Overdue 31–60 Days</option>
-                  <option>Overdue 60+ Days</option>
-                  <option>Scheduled Later</option>
-                  <option>Not Scheduled</option>
-                </select>
-                <button
-                  type="button"
-                  className="iconOnlyAction exportAction"
-                  title="Export receivables ageing"
-                  aria-label="Export receivables ageing"
-                  onClick={exportAgeing}
-                >
-                  ⇩
-                </button>
-              </>
-            )}
-          </div>
-          {view === "Receivables" &&
-            metrics([
-              ["Due Soon", money(ageingAmount("Due Soon"))],
-              ["Overdue 1–30", money(ageingAmount("Overdue 1–30 Days"))],
-              ["Overdue 31–60", money(ageingAmount("Overdue 31–60 Days"))],
-              ["Overdue 60+", money(ageingAmount("Overdue 60+ Days"))],
-            ])}
-          {view === "Client Ledger" &&
-            metrics([
-              ["Client Accounts", shown.length],
-              ["Total Closing", money(shown.reduce((n, a) => n + a.total, 0))],
-              [
-                "Total Received",
-                money(shown.reduce((n, a) => n + a.received, 0)),
-              ],
-              [
-                "Total Balance",
-                money(shown.reduce((n, a) => n + a.balance, 0)),
-              ],
-            ])}
           <section className="panel table">
             <table
               className={`accountsScheduleTable ${
@@ -1031,41 +1032,6 @@ export default function AccountsWorkspace({
       )}
       {view === "Reports & Analytics" && (
         <>
-          <label className="accountReportMonth">
-            Report month
-            <input
-              type="month"
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-            />
-          </label>
-          {metrics([
-            [
-              "Collected",
-              money(
-                sum(
-                  reportPayments.filter(
-                    (p) => p.status === "Paid" && p.payment_type !== "Refund",
-                  ),
-                ),
-              ),
-            ],
-            [
-              "Refunded",
-              money(
-                sum(
-                  reportPayments.filter(
-                    (p) => p.status === "Paid" && p.payment_type === "Refund",
-                  ),
-                ),
-              ),
-            ],
-            [
-              "Pending",
-              money(sum(reportPayments.filter((p) => p.status !== "Paid"))),
-            ],
-            ["Payments", reportPayments.length],
-          ])}
           <div className="accountColumns">
             {breakdown(
               "By Payment Mode",
@@ -1367,12 +1333,14 @@ export default function AccountsWorkspace({
                     {ledgerEntries.map((entry) => (
                       <tr key={entry.id}>
                         <td>{date(entry.date)}</td>
-                        <td>
+                        <td title={entry.description}>
                           <b>{entry.description}</b>
                         </td>
                         <td>{entry.type}</td>
                         <td>{entry.mode}</td>
-                        <td>{entry.receivedBy || "—"}</td>
+                        <td title={entry.receivedBy || "—"}>
+                          {entry.receivedBy || "—"}
+                        </td>
                         <td className="ledgerDebit">
                           {entry.debit ? money(entry.debit) : "—"}
                         </td>

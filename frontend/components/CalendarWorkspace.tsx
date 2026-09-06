@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { useApiMutation, useApiQuery, queryKeys } from "@/lib/query";
+import { useApiMutation, useApiCollectionQuery, queryKeys } from "@/lib/query";
 import { api } from "@/lib/api";
 
 type CalendarEvent = {
@@ -22,11 +22,11 @@ type CalendarEvent = {
 type ViewMode = "day" | "week" | "month";
 
 const STATUS_COLORS: Record<string, string> = {
-  Scheduled: "#0ea5e9",
-  Confirmed: "#22c55e",
-  Completed: "#7367f0",
-  Cancelled: "#ef4444",
-  "In Progress": "#f59e0b",
+  Scheduled: "var(--info)",
+  Confirmed: "var(--success)",
+  Completed: "var(--brand)",
+  Cancelled: "var(--danger)",
+  "In Progress": "var(--warning)",
 };
 
 const EVENT_TYPES = ["Wedding", "Pre-Wedding", "Engagement", "Reception", "Other"];
@@ -96,9 +96,9 @@ export default function CalendarWorkspace() {
     return { from: isoDate(gridStart), to: isoDate(gridEnd) };
   }, [view, cursor]);
 
-  const { data, isLoading, refetch } = useApiQuery<{ results: CalendarEvent[] }>(
+  const { data, isLoading, isError, refetch } = useApiCollectionQuery<CalendarEvent>(
     queryKeys.events(range),
-    `/events/?start_date__gte=${range.from}&start_date__lte=${range.to}&ordering=start_date,start_time&page_size=200`,
+    `/events/?start_date__gte=${range.from}&start_date__lte=${range.to}&ordering=start_date,start_time,id`,
   );
 
   const events = useMemo(() => data?.results || [], [data?.results]);
@@ -176,6 +176,7 @@ export default function CalendarWorkspace() {
       </div>
 
       {isLoading ? <p>Loading events…</p> : null}
+      {isError ? <p role="alert">Could not load events. <button onClick={() => refetch()}>Retry</button></p> : null}
 
       <div className={`calGrid calGrid${view.charAt(0).toUpperCase() + view.slice(1)}`}>
         {view !== "day" ? (
@@ -219,7 +220,7 @@ export default function CalendarWorkspace() {
                       draggable
                       onDragStart={(e) => e.dataTransfer.setData("text/plain", String(event.id))}
                       onClick={(e) => { e.stopPropagation(); setSelectedEvent(event); }}
-                      style={{ borderLeft: `3px solid ${STATUS_COLORS[event.status] || "#64748b"}` }}
+                      style={{ borderLeft: `3px solid ${STATUS_COLORS[event.status] || "var(--muted)"}` }}
                     >
                       <strong>{formatTime(event.start_time)}</strong>
                       <span>{event.client_name || event.title}</span>
@@ -282,7 +283,7 @@ const EventDetail = ({ event, onClose, onEdit }: { event: CalendarEvent; onClose
         <p><strong>Time:</strong> {formatTime(event.start_time)} – {formatTime(event.end_time)}</p>
         <p><strong>City:</strong> {event.city || "—"}</p>
         <p><strong>Handled by:</strong> {event.handled_by || "—"}</p>
-        <p><strong>Status:</strong> <span className="billStatus" style={{ background: STATUS_COLORS[event.status] || "#64748b" }}>{event.status}</span></p>
+        <p><strong>Status:</strong> <span className="billStatus" style={{ background: STATUS_COLORS[event.status] || "var(--muted)" }}>{event.status}</span></p>
         {event.notes ? <p><strong>Notes:</strong> {event.notes}</p> : null}
         <div className="billActions">
           <button className="billBtn" onClick={onClose}>Close</button>
