@@ -1,0 +1,35 @@
+name: Deploy to Hostinger VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 187.52.122.113
+          username: root
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            set -e
+            if [ ! -d /opt/lenspirecrm ]; then
+              git clone https://github.com/lenspireai-wq/LenspireCRM-Pro.git /opt/lenspirecrm
+            else
+              cd /opt/lenspirecrm
+              git fetch origin
+              git reset --hard origin/main
+            fi
+            cd /opt/lenspirecrm
+            docker compose -f docker-compose.hostinger.yml pull
+            docker compose -f docker-compose.hostinger.yml build
+            docker compose -f docker-compose.hostinger.yml run --rm api python manage.py migrate --noinput
+            docker compose -f docker-compose.hostinger.yml run --rm api python manage.py migrate_from_worker --noinput
+            docker compose -f docker-compose.hostinger.yml run --rm api python manage.py collectstatic --noinput
+            docker compose -f docker-compose.hostinger.yml up -d --force-recreate
+            docker compose -f docker-compose.hostinger.yml ps

@@ -61,4 +61,8 @@ fix*.py
 patch*.js
 update_*.js
 update_*.mjs
+
+# Deploy keys (never commit)
+.github/deploy_key
+.github/deploy_key.pub
 Git-2.55.0.5-64-bit (1).exe
