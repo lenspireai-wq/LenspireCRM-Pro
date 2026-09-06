@@ -5,9 +5,9 @@ test.describe("Authentication", () => {
     await page.goto("/");
     await expect(page.getByRole("button", { name: /^Main Dashboard$/i })).toBeVisible();
     await expect(
-      page.getByRole("button", { name: /Open Administration/ }),
+      page.getByRole("button", { name: /Admin Console/ }),
     ).toBeVisible();
-    await page.getByRole("button", { name: /Open Administration/ }).click();
+    await page.getByRole("button", { name: /Admin Console/ }).click();
     await expect(page.getByRole("button", { name: /^Audit$/i })).toBeVisible();
   });
 

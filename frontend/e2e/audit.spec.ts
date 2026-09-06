@@ -7,16 +7,14 @@ test.describe("Audit workspace", () => {
   });
 
   const openAudit = async (page: import("@playwright/test").Page) => {
-    const adminGroup = page.getByRole("button", { name: /Open Administration/ });
-    await adminGroup.click();
-    const auditButton = page.getByRole("button", { name: /^Audit$/i });
-    await auditButton.click();
+    await page.getByRole("button", { name: /Admin Console/i }).click();
+    await page.getByRole("button", { name: /^Audit$/i }).click();
   };
 
-  test("admin sees the Administration tabs and can open Audit", async ({ page }) => {
-    const adminGroup = page.getByRole("button", { name: /Open Administration/ });
-    await expect(adminGroup).toBeVisible();
-    await adminGroup.click();
+  test("admin sees the Admin Console tabs and can open Audit", async ({ page }) => {
+    const adminConsole = page.getByRole("button", { name: /Admin Console/i });
+    await expect(adminConsole).toBeVisible();
+    await adminConsole.click();
     const auditButton = page.getByRole("button", { name: /^Audit$/i });
     await expect(auditButton).toBeVisible();
     await auditButton.click();
@@ -64,7 +62,7 @@ test.describe("Audit workspace", () => {
     await expect(page.getByRole("heading", { name: "Audit Log" })).toBeVisible();
     await expect(page.locator(".auditTable tbody tr").first()).toBeVisible();
 
-    await page.getByRole("searchbox", { name: "Search" }).fill("audit_test");
+    await page.getByRole("searchbox", { name: "Search", exact: true }).fill("audit_test");
     await expect(page.locator(".auditTable tbody tr").first()).toBeVisible();
     const after = await page.locator(".auditTable tbody tr").count();
     expect(after).toBeGreaterThan(0);

@@ -8,6 +8,7 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from django.conf import settings
 from django.core import serializers
 from django.apps import apps
+from django.db import transaction
 
 BACKUP_FORMAT = "lenspirecrm-django-backup"
 BACKUP_VERSION = 1
@@ -50,7 +51,7 @@ def encrypted_snapshot():
 
 
 def create_backup_file():
-    folder = Path(settings.BASE_DIR) / "backups"
+    folder = Path(settings.BACKUP_ROOT)
     folder.mkdir(exist_ok=True)
     path = folder / f"lenspire-{datetime.now():%Y%m%d-%H%M%S}.json"
     path.write_text(json.dumps(encrypted_snapshot()), encoding="utf-8")
@@ -80,13 +81,14 @@ def restore_snapshot(path: Path, dry_run: bool = True) -> dict:
     if dry_run:
         summary["dry_run"] = True
         return summary
-    for obj in objects:
-        try:
-            obj.save()
-        except Exception as exc:
-            summary.setdefault("errors", []).append(
-                f"{obj.object._meta.label}: {exc}"
-            )
+    try:
+        with transaction.atomic():
+            for obj in objects:
+                obj.save()
+    except Exception as exc:
+        raise RuntimeError(
+            "Backup restore failed; no database changes were committed."
+        ) from exc
     summary["dry_run"] = False
     return summary
 

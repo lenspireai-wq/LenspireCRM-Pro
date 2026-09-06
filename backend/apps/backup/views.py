@@ -24,7 +24,7 @@ class BackupView(APIView):
 
 
 def _backup_folder() -> Path:
-    folder = Path(settings.BASE_DIR) / "backups"
+    folder = Path(settings.BACKUP_ROOT)
     folder.mkdir(exist_ok=True)
     return folder
 
