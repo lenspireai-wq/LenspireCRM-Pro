@@ -1,0 +1,15 @@
+Django>=5.2,<6.1
+djangorestframework>=3.15,<4
+djangorestframework-simplejwt>=5.4,<6
+django-cors-headers>=4.7,<5
+openpyxl>=3.1,<4
+cryptography>=44,<46
+celery>=5.4,<6
+redis>=5.2,<7
+psycopg[binary]>=3.2,<4
+python-dotenv>=1.0,<2
+django-filter>=24.3,<25
+drf-spectacular>=0.27,<1
+sentry-sdk>=2,<3
+gunicorn>=23,<24
+
