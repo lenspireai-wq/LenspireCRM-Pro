@@ -1,0 +1,18 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://127.0.0.1:3000",
+      "localStorage": [
+        {
+          "name": "lenspire-theme",
+          "value": "light"
+        },
+        {
+          "name": "lenspire-auth",
+          "value": "{\"state\":{\"access\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg4NjkyOTA0LCJpYXQiOjE3ODg2OTIwMDQsImp0aSI6Ijk5ZjdmNGY4MzM3MjRiNjZhZWY5NTNmYzVmMDAxN2ZkIiwidXNlcl9pZCI6IjEiLCJoYXNoX3Bhc3N3b3JkIjoiMDZFRjAyMDlERTQyNUI4NUVCNkU4ODgxNDdFMjU0MjAifQ.vvG4wMS_er8UbqAC3yDPr8On8cYnHZ_qNR9z9zKty-w\",\"refresh\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4OTI5NjgwNCwiaWF0IjoxNzg4NjkyMDA0LCJqdGkiOiI2ZjY0ODYwMzM2MWI0MDk0YjFlYjgwYjc2MDZmZjk1MSIsInVzZXJfaWQiOiIxIiwiaGFzaF9wYXNzd29yZCI6IjA2RUYwMjA5REU0MjVCODVFQjZFODg4MTQ3RTI1NDIwIn0.AubdBNFX_lxQrQWtk1FeL9xONT3GRRGmGDlR64seP60\",\"user\":{\"id\":1,\"username\":\"admin\",\"display_name\":\"\",\"mobile\":\"\",\"role\":\"Administrator\",\"department_access\":{},\"is_active\":true,\"is_staff\":true,\"is_superuser\":true,\"is_platform_owner\":true,\"organization\":1,\"date_joined\":\"2026-09-06T16:23:18.953247+05:30\",\"last_login\":\"2026-09-06T16:23:24.403950+05:30\"}},\"version\":0}"
+        }
+      ]
+    }
+  ]
+}

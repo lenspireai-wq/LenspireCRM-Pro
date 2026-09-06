@@ -1,0 +1,67 @@
+.fitUpcomingColumns { width: 100%; min-width: 0; container-type: inline-size; overflow-x: hidden !important; }
+.fitUpcomingColumns .upcomingEventsTable { width: 100% !important; min-width: 0 !important; table-layout: fixed !important; }
+.fitUpcomingColumns .upcomingEventsTable th { padding-right: 5px; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(1) { width: 6%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(2) { width: 8%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(3) { width: 6%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(4) { width: 8%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(5) { width: 7%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(6) { width: 6%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(n + 7):nth-child(-n + 10) { width: 5%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(11) { width: 4%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(12) { width: 5%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(13) { width: 4%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(14) { width: 6%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(15) { width: 4%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(16) { width: 7%; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(17) { width: 9%; }
+.fitUpcomingColumns .upcomingEventsTable th,
+.fitUpcomingColumns .upcomingEventsTable td { white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; word-break: normal !important; height: 36px; max-width: 100%; padding: 4px; font-size: var(--font-xs); line-height: 1.25; vertical-align: middle; }
+.fitUpcomingColumns .upcomingEventsTable th { height: 36px; white-space: nowrap !important; text-overflow: ellipsis !important; line-height: 1.1; }
+.fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(n + 7):nth-child(-n + 13) {
+  white-space: normal !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  text-overflow: clip !important;
+}
+.fitUpcomingColumns .upcomingEventsTable .crewAssignments,
+.fitUpcomingColumns .upcomingEventsTable .crewAssignments span { min-width: 0; max-width: 100%; white-space: normal; overflow: hidden; overflow-wrap: normal; word-break: normal; font-size: inherit; }
+.fitUpcomingColumns .eventRowActions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex-wrap: nowrap; min-width: 0; gap: 2px; }
+.fitUpcomingColumns .eventRowActions :is(button, a) { width: 100%; min-width: 0; min-height: 26px; height: 26px; padding: 0 2px; font-size: 10px; }
+/* Login credentials load after every theme stylesheet so browser focus and
+   autofill cannot reintroduce gold strips or black password text. */
+.login .loginInput {
+  overflow: hidden;
+  background: transparent !important;
+  border-color: rgba(115, 103, 240, 0.28) !important;
+}
+.login .loginUsernameField input,
+.login .loginPasswordField input,
+.login .loginUsernameField input:focus,
+.login .loginPasswordField input:focus,
+.login .loginUsernameField input:focus-visible,
+.login .loginPasswordField input:focus-visible {
+  outline: 0 !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  color: #f3f6fb !important;
+  -webkit-text-fill-color: #f3f6fb !important;
+  caret-color: #f3f6fb !important;
+}
+.login .loginInput input:-webkit-autofill,
+.login .loginInput input:-webkit-autofill:hover,
+.login .loginInput input:-webkit-autofill:focus,
+.login .loginInput input:-webkit-autofill:active {
+  outline: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  color: #f3f6fb !important;
+  -webkit-text-fill-color: #f3f6fb !important;
+  caret-color: #f3f6fb !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  transition: background-color 999999s ease-in-out 0s !important;
+}
