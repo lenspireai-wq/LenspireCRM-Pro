@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 // Hostinger-facing gateway for crm.lenspireai.com. The upstream is fixed so
 // request data can never be used to turn this endpoint into an open proxy.
-const LENSPIRE_UPSTREAM = 'https://lenspirecrm-api.lenspirecrm-worker.workers.dev';
+const LENSPIRE_WEB_UPSTREAM = 'http://187.52.122.113:8080';
+const LENSPIRE_API_UPSTREAM = 'http://187.52.122.113:8000';
 
 $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
 $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
-$upstreamUrl = LENSPIRE_UPSTREAM . (str_starts_with($requestUri, '/') ? $requestUri : '/' . $requestUri);
+$upstream = str_starts_with($requestUri, '/api/') ? LENSPIRE_API_UPSTREAM : LENSPIRE_WEB_UPSTREAM;
+$upstreamUrl = $upstream . (str_starts_with($requestUri, '/') ? $requestUri : '/' . $requestUri);
 
 $incomingHeaders = function_exists('getallheaders') ? getallheaders() : [];
 $forwardHeaders = [];
@@ -50,7 +52,7 @@ curl_setopt_array($curl, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_CONNECTTIMEOUT => 10,
     CURLOPT_TIMEOUT => 120,
-    CURLOPT_HEADERFUNCTION => static function ($handle, string $line) use ($publicHost): int {
+    CURLOPT_HEADERFUNCTION => static function ($handle, string $line) use ($publicHost, $upstream): int {
         $length = strlen($line);
         $trimmed = trim($line);
         if ($trimmed === '' || str_starts_with($trimmed, 'HTTP/')) {
@@ -77,7 +79,7 @@ curl_setopt_array($curl, [
         }
 
         if ($lowerName === 'location') {
-            $value = str_replace(LENSPIRE_UPSTREAM, 'https://' . $publicHost, $value);
+            $value = str_replace($upstream, 'https://' . $publicHost, $value);
         } elseif ($lowerName === 'set-cookie') {
             $value = preg_replace('/;\s*Domain=[^;]+/i', '', $value) ?? $value;
         }
@@ -104,6 +106,12 @@ if ($responseBody === false || $statusCode === 0) {
 }
 
 http_response_code($statusCode);
+// The gateway fronts a frequently updated authenticated application. Prevent
+// Hostinger CDN and browser caches from pinning an old Next.js document whose
+// chunk references no longer match the current deployment.
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0', true);
+header('Pragma: no-cache', true);
+header('Expires: 0', true);
 if ($method !== 'HEAD') {
     echo $responseBody;
 }
