@@ -309,7 +309,7 @@ linear-gradient(145deg,#17103a 0%,#0d1028 48%,#081724 100%)}.login-visual::befor
 
 /* Keep login credentials interactive even after a failed cloud request. */
 .login-input input{position:relative;z-index:2;pointer-events:auto;-webkit-appearance:none;appearance:none;background:transparent!important;border:0;color:inherit;flex:1;padding:0 10px;outline:none;font:inherit}
-.login-input input:-webkit-autofill,.login-input input:-webkit-autofill:hover,.login-input input:-webkit-autofill:focus,.login-input input:-webkit-autofill:active{-webkit-text-fill-color:var(--text);caret-color:var(--text);-webkit-box-shadow:0 0 0 1000px #0b1420 inset!important;box-shadow:0 0 0 1000px #0b1420 inset!important;transition:background-color 9999s ease-out 0s}
+.login-input input:-webkit-autofill,.login-input input:-webkit-autofill:hover,.login-input input:-webkit-autofill:focus,.login-input input:-webkit-autofill:active{-webkit-text-fill-color:var(--text);caret-color:var(--text);-webkit-box-shadow:0 0 0 1000px transparent inset!important;box-shadow:0 0 0 1000px transparent inset!important;transition:background-color 9999s ease-out 0s}
 body[data-theme=light] .login-input input:-webkit-autofill,body[data-theme=light] .login-input input:-webkit-autofill:hover,body[data-theme=light] .login-input input:-webkit-autofill:focus,body[data-theme=light] .login-input input:-webkit-autofill:active{-webkit-text-fill-color:#172133;caret-color:#172133;-webkit-box-shadow:0 0 0 1000px #fff inset!important;box-shadow:0 0 0 1000px #fff inset!important}
 
 /* Drag handles for Upcoming and Completed Event table columns. */
