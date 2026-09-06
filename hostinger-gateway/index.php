@@ -3,12 +3,17 @@ declare(strict_types=1);
 
 // Hostinger-facing gateway for crm.lenspireai.com. The upstream is fixed so
 // request data can never be used to turn this endpoint into an open proxy.
-const LENSPIRE_WEB_UPSTREAM = 'http://187.52.122.113:8080';
-const LENSPIRE_API_UPSTREAM = 'http://187.52.122.113:8000';
+//
+// Set these environment variables in Hostinger (or in a local override file)
+// instead of editing this file:
+//   LENSPIRE_WEB_UPSTREAM=http://<web-ip-or-host>:<port>
+//   LENSPIRE_API_UPSTREAM=http://<api-ip-or-host>:<port>
+$webUpstream   = getenv('LENSPIRE_WEB_UPSTREAM')   ?: 'http://187.52.122.113:8080';
+$apiUpstream   = getenv('LENSPIRE_API_UPSTREAM')   ?: 'http://187.52.122.113:8000';
 
 $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
 $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
-$upstream = str_starts_with($requestUri, '/api/') ? LENSPIRE_API_UPSTREAM : LENSPIRE_WEB_UPSTREAM;
+$upstream = str_starts_with($requestUri, '/api/') ? $apiUpstream : $webUpstream;
 $upstreamUrl = $upstream . (str_starts_with($requestUri, '/') ? $requestUri : '/' . $requestUri);
 
 $incomingHeaders = function_exists('getallheaders') ? getallheaders() : [];
