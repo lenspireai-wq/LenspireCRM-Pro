@@ -80,22 +80,22 @@ const formatINR = (value: string | number) => {
 const formatDate = (value?: string | null) => (value ? new Date(value).toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "2-digit" }) : "—");
 
 const STATUS_COLORS: Record<string, string> = {
-  Draft: "#64748b",
-  Sent: "#0ea5e9",
-  Accepted: "#22c55e",
-  Rejected: "#ef4444",
-  Expired: "#f59e0b",
-  Signed: "#22c55e",
-  "Partially Signed": "#f59e0b",
-  Cancelled: "#ef4444",
-  Issued: "#0ea5e9",
-  "Partially Paid": "#f59e0b",
-  Paid: "#22c55e",
-  Overdue: "#ef4444",
+  Draft: "var(--muted)",
+  Sent: "var(--info)",
+  Accepted: "var(--success)",
+  Rejected: "var(--danger)",
+  Expired: "var(--warning)",
+  Signed: "var(--success)",
+  "Partially Signed": "var(--warning)",
+  Cancelled: "var(--danger)",
+  Issued: "var(--info)",
+  "Partially Paid": "var(--warning)",
+  Paid: "var(--success)",
+  Overdue: "var(--danger)",
 };
 
 const Badge = ({ status }: { status: string }) => (
-  <span className="billStatus" style={{ background: STATUS_COLORS[status] || "#64748b" }}>{status}</span>
+  <span className="billStatus" style={{ background: STATUS_COLORS[status] || "var(--muted)" }}>{status}</span>
 );
 
 type Tab = "quotations" | "contracts" | "invoices";

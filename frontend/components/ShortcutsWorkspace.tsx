@@ -94,11 +94,11 @@ const buildShortcuts = (
   }
   if (isAdministrator(user)) {
     shortcuts.push({
-      id: "audit",
-      name: "Audit log",
-      description: "See who changed what, and when",
-      url: "/?section=Audit",
-      emoji: "🔍",
+      id: "admin-console",
+      name: "Admin Console",
+      description: "User management, permissions, and audit history",
+      url: "/?section=Admin",
+      emoji: "♙",
       departments: ["sales", "operations", "accounts", "production"],
     });
     shortcuts.push({

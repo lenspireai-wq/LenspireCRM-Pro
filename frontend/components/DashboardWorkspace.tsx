@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { CategoryBar, FunnelDoughnut, RevenueLineChart } from "@/components/charts";
+import { useAuthStore } from "@/stores/auth";
 
 type DashboardResponse = {
   reference_date: string;
@@ -22,19 +23,26 @@ const formatINR = (value: string | number) => {
 };
 
 const MetricCard = ({ label, value, hint, accent }: { label: string; value: string; hint?: string; accent?: string }) => (
-  <div className="dashMetric" style={accent ? { borderColor: accent } : undefined}>
+  <div className="dashMetric">
+    <span className="dashMetricIcon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        {label.startsWith("Revenue") || label === "Outstanding" ? <><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M3 10h18M7 15h4" /></> : label === "MoM Growth" ? <><path d="m4 17 6-6 4 3 6-9M15 5h5v5" /></> : label.startsWith("Leads") ? <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5" /></> : <><rect x="4" y="5" width="16" height="16" rx="3" /><path d="M8 3v4M16 3v4M4 11h16m-12 5 2 2 5-4" /></>}
+      </svg>
+    </span>
+    <div className="dashMetricCopy">
     <span className="dashMetricLabel">{label}</span>
     <strong>{value}</strong>
-    {hint ? <small>{hint}</small> : null}
+    {hint ? <small className={accent === "#ef4444" ? "dashMetricAlert" : undefined}>{hint}</small> : null}
+    </div>
   </div>
 );
 
-export default function DashboardWorkspace() {
+export default function DashboardWorkspace({ months, onMonthsChange }: { months: number; onMonthsChange: (value: number) => void }) {
+  const user = useAuthStore((state) => state.user);
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [revenue, setRevenue] = useState<RevenueResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [months, setMonths] = useState(6);
 
   useEffect(() => {
     let cancelled = false;
@@ -73,21 +81,6 @@ export default function DashboardWorkspace() {
 
   return (
     <section className="workspace dashboard">
-      <header className="dashHeader">
-        <div>
-          <h1>Studio Dashboard</h1>
-          <p>Snapshot for {data.reference_date} · {data.month.label}</p>
-        </div>
-        <label className="dashSelect">
-          Window
-          <select value={months} onChange={(e) => setMonths(Number(e.target.value))}>
-            <option value={3}>3 months</option>
-            <option value={6}>6 months</option>
-            <option value={12}>12 months</option>
-          </select>
-        </label>
-      </header>
-
       <div className="dashMetrics">
         <MetricCard label="Revenue (MTD)" value={formatINR(data.month.revenue_net)} hint={`Gross ${formatINR(data.month.revenue_gross)} · Refunds ${formatINR(data.month.refunds)}`} accent="#22c55e" />
         <MetricCard label="MoM Growth" value={`${data.month.growth_pct.toFixed(1)}%`} hint={`Previous: ${formatINR(data.month.previous_revenue_net)}`} accent={data.month.growth_pct >= 0 ? "#22c55e" : "#ef4444"} />

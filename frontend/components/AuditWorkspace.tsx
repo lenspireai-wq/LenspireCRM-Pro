@@ -331,7 +331,7 @@ export default function AuditWorkspace({ currentUser }: { currentUser: any }) {
                   <td>
                     <span className={actionTone(row.action)}>{row.action}</span>
                   </td>
-                  <td className="auditDescription">{row.description}</td>
+                   <td className="auditDescription" title={row.description}>{row.description}</td>
                 </tr>
               ))}
             </tbody>

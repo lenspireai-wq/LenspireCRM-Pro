@@ -1,7 +1,7 @@
 import { chromium } from "@playwright/test";
 
 const browser = await chromium.launch({ channel: "chrome" });
-const context = await browser.newContext({ storageState: "C:/Users/ankit/Downloads/LenspireCRM-Pro/frontend/e2e/.auth/admin.json" });
+const context = await browser.newContext({ storageState: "e2e/.auth/admin.json" });
 const page = await context.newPage();
 await page.goto("http://127.0.0.1:3000/", { waitUntil: "domcontentloaded" });
 await page.waitForTimeout(2000);
@@ -16,5 +16,5 @@ console.log("backups btn box:", JSON.stringify(btnBox));
 const sidebar = page.locator("aside");
 const sideBox = await sidebar.boundingBox();
 console.log("sidebar box:", JSON.stringify(sideBox));
-await page.screenshot({ path: "C:/Users/ankit/Downloads/LenspireCRM-Pro/frontend/settings-tabs-debug.png", fullPage: true });
+await page.screenshot({ path: "settings-tabs-debug.png", fullPage: true });
 await browser.close();

@@ -7,7 +7,7 @@ import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query
 
 type Row = Record<string, any>;
 type View =
-  "Dashboard" | "Edit Queue" | "My Work" | "Overdue" | "Activity History";
+  "Dashboard" | "Edit Queue" | "My Work" | "Overdue" | "Activity History" | "Delivery";
 type Filters = {
   search: string;
   editor: string;
@@ -33,6 +33,7 @@ const views: View[] = [
   "Edit Queue",
   "Overdue",
   "Activity History",
+  "Delivery",
 ];
 const deliverableNames = [
   "Raw Photos",
@@ -177,6 +178,7 @@ export default function ProductionWorkspace({
   const [exporting, setExporting] = useState(false);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [driveLinks, setDriveLinks] = useState<Record<number, string>>({});
   const today = new Date().toISOString().slice(0, 10);
   const availableViews: View[] = isEditor ? ["My Work"] : views;
   useEffect(() => {
@@ -418,11 +420,23 @@ export default function ProductionWorkspace({
       });
       setDraft(null);
     } catch (problem: any) {
-      setError(
-        Object.values(problem.response?.data || {})
-          .flat()
-          .join(" · ") || "Could not update production job.",
-      );
+      const data = problem.response?.data;
+      let message = "Could not update production job.";
+      if (typeof data === "string") {
+        message = data;
+      } else if (data && typeof data === "object") {
+        if (data.detail) {
+          message = String(data.detail);
+        } else {
+          const entries = Object.entries(data)
+            .filter(([, value]) => Array.isArray(value) || typeof value === "string")
+            .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(", ") : value}`);
+          if (entries.length) {
+            message = entries.join(" · ");
+          }
+        }
+      }
+      setError(message);
     } finally {
       setSaving(false);
     }
@@ -442,49 +456,59 @@ export default function ProductionWorkspace({
     status: "In Progress" | "Submitted for Review",
   ) => {
     setError("");
-    if (status === "Submitted for Review" && !task.drive_link?.trim()) {
+    const submittedLink = (driveLinks[task.id] ?? task.drive_link ?? "").trim();
+    if (status === "Submitted for Review" && !submittedLink) {
       setError("Paste the completed-work link before submitting for review.");
       return;
     }
     try {
       await updateDeliverableMutation.mutateAsync({
         url: `/production/${job.id}/deliverables/${task.id}/`,
-        payload: { status, drive_link: task.drive_link || "" },
+        payload: { status, drive_link: submittedLink },
       });
     } catch (problem: any) {
-      setError(
-        Object.values(problem.response?.data || {})
-          .flat()
-          .join(" · ") || "Could not update assigned work.",
-      );
+      const data = problem.response?.data;
+      let message = "Could not update assigned work.";
+      if (typeof data === "string") {
+        message = data;
+      } else if (data && typeof data === "object") {
+        if (data.detail) {
+          message = String(data.detail);
+        } else {
+          const entries = Object.entries(data)
+            .filter(([, value]) => Array.isArray(value) || typeof value === "string")
+            .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(", ") : value}`);
+          if (entries.length) {
+            message = entries.join(" · ");
+          }
+        }
+      }
+      setError(message);
     }
   };
 
   return (
     <div className="productionWorkspace">
-      <header className="productionHeader">
-        <div>
-          <small>PRODUCTION</small>
-          <h1>{isEditor ? "Work Assigned" : view}</h1>
-          <p>
-            {isEditor
-              ? `${user?.display_name || user?.username} workspace`
-              : "Track every confirmed booking from shoot planning to delivery."}
-          </p>
-        </div>
-      </header>
       {!isEditor && (
-        <nav className="operationsTabs" aria-label="Production views">
+        <nav className="operationsTabs productionPageTabs" aria-label="Production views">
           {availableViews.map((item) => (
             <button
               key={item}
               className={view === item ? "active" : ""}
               onClick={() => setView(item)}
             >
-              {item}
+              {item === view ? <b>{item}</b> : item}
             </button>
           ))}
         </nav>
+      )}
+      {isEditor && (
+        <header className="productionHeader productionEditorHeader">
+          <div>
+            <h1>Work Assigned</h1>
+            <p>{user?.display_name || user?.username} workspace</p>
+          </div>
+        </header>
       )}
       {!isEditor && (
         <section
@@ -739,10 +763,13 @@ export default function ProductionWorkspace({
                         Drive Link
                         <input
                           type="url"
-                          value={task.drive_link || ""}
+                          value={driveLinks[task.id] ?? task.drive_link ?? ""}
                           placeholder="https://drive.google.com/..."
                           onChange={(event) => {
-                            task.drive_link = event.target.value;
+                            setDriveLinks((current) => ({
+                              ...current,
+                              [task.id]: event.target.value,
+                            }));
                             setError("");
                           }}
                         />
@@ -809,6 +836,24 @@ export default function ProductionWorkspace({
             </div>
           </div>
           <ActivityTable activities={filteredActivities} />
+        </section>
+      )}
+
+      {view === "Delivery" && (
+        <section className="panel">
+          <div className="panelHead">
+            <div>
+              <h2>Delivery</h2>
+              <p>Jobs ready for delivery or already delivered.</p>
+            </div>
+          </div>
+          <ProductionTable
+            jobs={jobs.filter((job: Row) =>
+              ["Ready for Delivery", "Delivered"].includes(job.delivery_status),
+            )}
+            edit={readOnly ? undefined : openWorkflow}
+            remind={readOnly ? undefined : setReminderJob}
+          />
         </section>
       )}
 
@@ -1080,7 +1125,7 @@ export default function ProductionWorkspace({
             <section className="productionTimeline">
               <h3>Activity History</h3>
               {(draft.activities || []).map((activity: Row) => (
-                <article key={activity.id}>
+                <article key={activity.id} className={activityTypeClass(activity.activity_type)}>
                   <i />
                   <div>
                     <b>{activity.activity_type}</b>
@@ -1121,6 +1166,9 @@ export default function ProductionWorkspace({
           }}
         />
       )}
+      <footer className="productionFooter">
+        <p>Track every confirmed booking from shoot planning to delivery.</p>
+      </footer>
     </div>
   );
 }
@@ -1201,6 +1249,23 @@ function ProductionTable({
   edit?: (job: Row) => void;
   remind?: (job: Row) => void;
 }) {
+  const deliverableColumns = [
+    "Raw Photos",
+    "Photo Retouching",
+    "Reels",
+    "Teaser",
+    "Cinematic Highlight",
+    "Full Length Video",
+    "Wedding Album",
+  ];
+
+  const getDeliverableStatus = (job: Row, name: string): string => {
+    const match = (job.deliverables || []).find(
+      (item: Row) => item.name === name && item.enabled,
+    );
+    return match?.status || "Unassigned";
+  };
+
   return (
     <div className="table">
       <table className="productionTable">
@@ -1209,13 +1274,9 @@ function ProductionTable({
             <th>Client</th>
             <th>Booking</th>
             <th>Event</th>
-            <th>Editor</th>
-            <th>Stage</th>
-            <th>Editing</th>
-            <th>Album</th>
-            <th>Video</th>
-            <th>Due Date</th>
-            <th>Approval</th>
+            {deliverableColumns.map((name) => (
+              <th key={name}>{name}</th>
+            ))}
             <th>Delivery</th>
             <th>Action</th>
           </tr>
@@ -1226,21 +1287,21 @@ function ProductionTable({
               key={job.id}
               className={job.overdue ? "productionOverdueRow" : ""}
             >
-              <td>
+              <td title={job.client_name || "—"}>
                 <b>{job.client_name || "—"}</b>
               </td>
-              <td>{job.booking_code || "—"}</td>
-              <td>{job.event_type || "—"}</td>
-              <td>{job.editor_name || "Unassigned"}</td>
-              <td>
-                <span className="productionStatus">{job.stage}</span>
+              <td title={job.booking_code || "—"}>
+                {job.booking_code || "—"}
               </td>
-              <td>{job.editing_status}</td>
-              <td>{job.album_status}</td>
-              <td>{job.video_status}</td>
-              <td>{dateLabel(job.due_date)}</td>
-              <td>{job.client_approval_status || "Pending"}</td>
-              <td>{job.delivery_status}</td>
+              <td title={job.event_type || "—"}>
+                {job.event_type || "—"}
+              </td>
+              {deliverableColumns.map((name) => (
+                <td key={name} title={getDeliverableStatus(job, name)}>
+                  {getDeliverableStatus(job, name)}
+                </td>
+              ))}
+              <td title={job.delivery_status}>{job.delivery_status}</td>
               <td>
                 <div className="productionRowActions">
                   {job.overdue && remind && (
@@ -1275,6 +1336,33 @@ function ProductionTable({
   );
 }
 
+function activityTypeClass(activityType: string): string {
+  const normalized = activityType.trim().toLowerCase();
+  if (normalized === "overdue reminder") return "productionReminderRow";
+  if (
+    normalized === "submitted for review" ||
+    normalized === "in progress"
+  ) {
+    return "productionActiveRow";
+  }
+  return "";
+}
+
+function descriptionClass(activityType: string): string {
+  const normalized = activityType.trim().toLowerCase();
+  if (normalized === "overdue reminder") return "productionDescriptionDanger";
+  if (
+    normalized === "submitted for review" ||
+    normalized === "in progress"
+  ) {
+    return "productionDescriptionSuccess";
+  }
+  if (normalized === "stage change") return "productionDescriptionInfo";
+  if (normalized === "editor assignment") return "productionDescriptionWarning";
+  if (normalized === "deliverable status") return "productionDescriptionTeal";
+  return "";
+}
+
 function ActivityTable({ activities }: { activities: Row[] }) {
   return (
     <div className="table">
@@ -1295,11 +1383,7 @@ function ActivityTable({ activities }: { activities: Row[] }) {
           {activities.map((activity) => (
             <tr
               key={activity.id}
-              className={
-                activity.activity_type === "Overdue Reminder"
-                  ? "productionReminderRow"
-                  : ""
-              }
+              className={activityTypeClass(activity.activity_type)}
             >
               <td>{dateLabel(activity.activity_date)}</td>
               <td>
@@ -1312,7 +1396,9 @@ function ActivityTable({ activities }: { activities: Row[] }) {
                   {activity.activity_type}
                 </span>
               </td>
-              <td>{activity.description}</td>
+              <td className={descriptionClass(activity.activity_type)} title={activity.description}>
+                {activity.description}
+              </td>
               <td>{activity.performed_by || "—"}</td>
               <td>{activity.editor_name || "Unassigned"}</td>
             </tr>

@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "./studio-light.css";
+import "./studio-dark-modules.css";
+import "./studio-dark.css";
+import "./event-columns.css";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { QueryProvider } from "@/components/QueryProvider";
 import { ThemeProvider } from "@/components/ThemeToggle";
@@ -21,11 +25,11 @@ export const viewport: Viewport = {
 const themeBootstrap = `(() => {
   try {
     const stored = localStorage.getItem('lenspire-theme');
-    const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+    const theme = stored === 'light' || stored === 'dark' ? stored : 'light';
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
   } catch (e) {
-    document.documentElement.dataset.theme = 'dark';
+    document.documentElement.dataset.theme = 'light';
   }
 })();`;
 

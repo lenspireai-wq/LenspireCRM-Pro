@@ -9,6 +9,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { fetchAllPages, type Page } from "@/lib/pagination";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +55,13 @@ export function useApiQuery<TData = unknown, TError = Error>(
     queryKey: key as QueryKey,
     queryFn: async () => (await api.get(path)).data as TData,
     ...options,
+  });
+}
+
+export function useApiCollectionQuery<T>(key: readonly unknown[], path: string) {
+  return useQuery<Page<T>, Error>({
+    queryKey: [...key, "all-pages"],
+    queryFn: ({ signal }) => fetchAllPages<T>(path, signal),
   });
 }
 
