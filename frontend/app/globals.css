@@ -79,6 +79,7 @@ body {
     Segoe UI,
     sans-serif;
 }
+
 button,
 input {
   font: inherit;
@@ -373,6 +374,25 @@ input:-webkit-autofill:active {
 }
 .loginPasswordField input {
   padding-right: 34px;
+}
+
+/* Prevent Chromium autofill from adding a yellow edge or black password text. */
+:root:not([data-theme="light"]) .loginInput input,
+:root:not([data-theme="light"]) .loginPasswordField input {
+  color: #f3f6fb !important;
+  -webkit-text-fill-color: #f3f6fb !important;
+  caret-color: #f3f6fb !important;
+}
+:root:not([data-theme="light"]) .loginInput input:-webkit-autofill,
+:root:not([data-theme="light"]) .loginInput input:-webkit-autofill:hover,
+:root:not([data-theme="light"]) .loginInput input:-webkit-autofill:focus,
+:root:not([data-theme="light"]) .loginInput input:-webkit-autofill:active {
+  border-radius: 0 !important;
+  background: transparent !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-box-shadow: 0 0 0 1000px #132335 inset !important;
+  box-shadow: 0 0 0 1000px #132335 inset !important;
 }
 .loginOptions {
   display: flex;
@@ -1115,6 +1135,68 @@ input:-webkit-autofill:active {
   .loginCloudStatus span:last-child {
     text-align: left;
   }
+}
+
+/* Final credential-field authority: Chrome's password manager may ignore
+   autocomplete="off" and inject its own yellow background and black text. */
+.loginInput {
+  overflow: hidden;
+  background: linear-gradient(135deg, #132335, #101f31) !important;
+  border-color: rgba(115, 103, 240, 0.28) !important;
+}
+.loginInput input,
+.loginUsernameField input,
+.loginPasswordField input {
+  background-color: transparent !important;
+  color: #f3f6fb !important;
+  -webkit-text-fill-color: #f3f6fb !important;
+  caret-color: #f3f6fb !important;
+}
+.loginInput input:-webkit-autofill,
+.loginInput input:-webkit-autofill:hover,
+.loginInput input:-webkit-autofill:focus,
+.loginInput input:-webkit-autofill:active {
+  background-color: transparent !important;
+  background-image: none !important;
+  -webkit-text-fill-color: #f3f6fb !important;
+  caret-color: #f3f6fb !important;
+  -webkit-box-shadow: 0 0 0 1000px #132335 inset !important;
+  box-shadow: 0 0 0 1000px #132335 inset !important;
+  transition: background-color 999999s ease-in-out 0s !important;
+}
+
+/* Compact login typography and branding without changing the page layout. */
+.loginWordmark {
+  width: clamp(135px, 11vw, 180px);
+}
+.loginMobileWordmark {
+  width: 140px;
+}
+.loginHeroCopy h1 {
+  font-size: clamp(40px, 4.2vw, 64px);
+}
+.loginHeroCopy > p,
+.loginHeroNote,
+.loginFeatures small,
+.loginCard > label,
+.loginOptions,
+.loginCloudStatus,
+.loginCopyright {
+  font-size: 11px;
+}
+.loginFeatures b {
+  font-size: 18px;
+}
+.loginEyebrow {
+  min-height: 27px;
+  font-size: 10px;
+}
+.loginCard h2 {
+  font-size: clamp(27px, 2.5vw, 34px);
+}
+.loginCard > p,
+.loginInput input {
+  font-size: 12px;
 }
 @media (max-height: 820px) and (min-width: 821px) {
   .loginHero,
@@ -8310,7 +8392,7 @@ table th, table td { word-break: normal !important; overflow-wrap: normal !impor
 
 /* Login polish: keep the form fully visible on compact desktop windows and
    give light mode its own deliberate, high-contrast surface treatment. */
-@media (max-width: 1040px) {
+@media (max-width: 1400px) {
   .login {
     grid-template-columns: 1fr;
     min-width: 0;

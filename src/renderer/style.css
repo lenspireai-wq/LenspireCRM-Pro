@@ -288,6 +288,7 @@ linear-gradient(145deg,#17103a 0%,#0d1028 48%,#081724 100%)}.login-visual::befor
 @media(max-width:1120px){.login-visual{padding:34px 38px}}
 @media(max-width:850px){.login-visual{display:none}}
 
+
 /* Accounts report: five KPI cards fill the complete row. */
 .monthly-kpi-grid.accounts-monthly-kpis{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}.accounts-monthly-kpis .kpi{width:100%;min-width:0;min-height:106px;padding:15px;align-items:center}.accounts-monthly-kpis .kpi>div:nth-child(2){min-width:0}.accounts-monthly-kpis .kpi span,.accounts-monthly-kpis .kpi small{white-space:normal;line-height:1.3}.accounts-monthly-kpis .kpi strong{font-size:19px;white-space:nowrap}
 @media(max-width:1250px){.monthly-kpi-grid.accounts-monthly-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.accounts-monthly-kpis .kpi:nth-child(4),.accounts-monthly-kpis .kpi:nth-child(5){grid-column:span 1}}
@@ -402,3 +403,8 @@ body[data-theme=light] .login-input input:-webkit-autofill,body[data-theme=light
   .slot-event-filter select{min-width:0;flex:1}
   .slotting-excel-actions .btn{min-height:42px;flex:1 1 42%}
 }
+
+/* Dark credential autofill fixes. Final cascade authority so Electron and the
+   generated Cloudflare renderer behave alike. */
+.login-input input{color:#f3f6fb!important;-webkit-text-fill-color:#f3f6fb!important;caret-color:#f3f6fb!important}
+.login-input input:-webkit-autofill,.login-input input:-webkit-autofill:hover,.login-input input:-webkit-autofill:focus,.login-input input:-webkit-autofill:active{border-radius:0!important;background:transparent!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:#f3f6fb!important;caret-color:#f3f6fb!important;-webkit-box-shadow:0 0 0 1000px #0b1420 inset!important;box-shadow:0 0 0 1000px #0b1420 inset!important}
