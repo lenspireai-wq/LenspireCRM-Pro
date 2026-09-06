@@ -352,8 +352,8 @@ textarea {
 .loginPasswordField input:-webkit-autofill:hover,
 .loginPasswordField input:-webkit-autofill:focus,
 .loginPasswordField input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #132335 inset !important;
-  box-shadow: 0 0 0 1000px #132335 inset !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
