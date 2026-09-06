@@ -643,3 +643,83 @@
   color: var(--brand);
   border-color: rgb(118 80 200 / 18%);
 }
+
+/* Light mode logo and branding fixes */
+:root[data-theme="light"] .studioMark {
+  border-color: var(--line);
+  color: var(--brand);
+  box-shadow: inset 0 0 0 3px rgba(118, 80, 200, 0.08);
+}
+:root[data-theme="light"] .studioMark img {
+  filter: brightness(0) invert(0.25);
+}
+:root[data-theme="light"] .studioIdentity b {
+  color: var(--text-strong);
+}
+:root[data-theme="light"] .studioIdentity small {
+  color: var(--muted);
+}
+:root[data-theme="light"] .loginMobileWordmark {
+  filter: brightness(0) invert(0.25);
+}
+:root[data-theme="light"] .loginWordmark {
+  filter: none;
+}
+:root[data-theme="light"] .workspaceChrome {
+  background: var(--surface);
+  border-color: var(--line);
+}
+:root[data-theme="light"] .workspaceChrome h1 {
+  color: var(--text-strong);
+}
+:root[data-theme="light"] .workspaceChrome > div > span {
+  color: var(--muted);
+}
+:root[data-theme="light"] .chromeActions button,
+:root[data-theme="light"] .sidebarToggle {
+  background: var(--surface);
+  color: var(--brand);
+  border-color: var(--line);
+}
+:root[data-theme="light"] .chromeActions kbd {
+  display: none;
+}
+:root[data-theme="light"] .chromeActions label {
+  background: var(--surface);
+  border-color: var(--line);
+}
+:root[data-theme="light"] .chromeActions label > span {
+  color: var(--muted);
+}
+:root[data-theme="light"] .navGroupCard {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  backdrop-filter: none;
+}
+:root[data-theme="light"] .navGroupLabel {
+  color: var(--text);
+  background: transparent;
+  border-color: transparent;
+}
+:root[data-theme="light"] .navGroupLabel:hover {
+  color: var(--text-strong);
+  background: var(--hover-overlay);
+  border-color: transparent;
+}
+:root[data-theme="light"] .navGroup.groupActive .navGroupLabel,
+:root[data-theme="light"] .navSubmenu button.active {
+  background: var(--brand-soft);
+  color: var(--brand);
+  border-color: transparent;
+}
+:root[data-theme="light"] .navSubmenu button,
+:root[data-theme="light"] .navUtility button {
+  color: var(--muted);
+}
+:root[data-theme="light"] .navTopItem:hover,
+:root[data-theme="light"] .navGroupLabel:hover {
+  background: var(--hover-overlay);
+  color: var(--text-strong);
+}
