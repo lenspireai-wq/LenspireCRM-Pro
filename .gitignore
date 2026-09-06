@@ -65,4 +65,6 @@ update_*.mjs
 # Deploy keys (never commit)
 .github/deploy_key
 .github/deploy_key.pub
+.github/deploy_key_ci
+.github/deploy_key_ci.pub
 Git-2.55.0.5-64-bit (1).exe
