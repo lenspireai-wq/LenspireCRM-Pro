@@ -181,6 +181,7 @@ export default function SalesWorkspace({
     [priority, setPriority] = useState("All"),
     [source, setSource] = useState("All"),
     [reminder, setReminder] = useState("All"),
+    [visibleLeadCount, setVisibleLeadCount] = useState(25),
     [editing, setEditing] = useState<Lead | null | undefined>(undefined),
     [detail, setDetail] = useState<Lead | null>(null),
     [notice, setNotice] = useState("");
@@ -236,6 +237,14 @@ export default function SalesWorkspace({
         ),
     [leads, query, status, priority, source, reminder, buckets],
   );
+  const leadRenderBatchSize = 25;
+  const visibleLeads = useMemo(
+    () => filtered.slice(0, visibleLeadCount),
+    [filtered, visibleLeadCount],
+  );
+  useEffect(() => {
+    setVisibleLeadCount(leadRenderBatchSize);
+  }, [query, status, priority, source, reminder]);
   const activeValue = leads
     .filter((lead) => ["New", "Follow-up"].includes(lead.status))
     .reduce((sum, lead) => sum + Number(lead.budget || 0), 0);
@@ -697,11 +706,17 @@ export default function SalesWorkspace({
       </div>
       <section className="salesPanel">
         <LeadTable
-          leads={filtered}
+          leads={visibleLeads}
           onOpen={setDetail}
           onEdit={(lead) => setEditing(lead)}
           onDelete={remove}
           showActions
+          hasMore={visibleLeads.length < filtered.length}
+          onReachEnd={() =>
+            setVisibleLeadCount((count) =>
+              Math.min(filtered.length, count + leadRenderBatchSize),
+            )
+          }
         />
       </section>
       {editing !== undefined && (
@@ -879,18 +894,31 @@ function LeadTable({
   onEdit,
   onDelete,
   showActions = false,
+  hasMore = false,
+  onReachEnd,
 }: {
   leads: Lead[];
   onOpen: (lead: Lead) => void;
   onEdit?: (lead: Lead) => void;
   onDelete?: (lead: Lead) => void;
   showActions?: boolean;
+  hasMore?: boolean;
+  onReachEnd?: () => void;
 }) {
   return (
-    <div className="leadTableWrap">
+    <div
+      className="leadTableWrap"
+      onScroll={(event) => {
+        const table = event.currentTarget;
+        if (hasMore && table.scrollHeight - table.scrollTop - table.clientHeight < 120) {
+          onReachEnd?.();
+        }
+      }}
+    >
       <table className="leadTable">
         <thead>
           <tr>
+            <th className="srNo">Sr. No.</th>
             <th>Date</th>
             <th>Client Name</th>
             <th>Sales Person</th>
@@ -905,8 +933,9 @@ function LeadTable({
           </tr>
         </thead>
         <tbody>
-          {leads.map((l) => (
+          {leads.map((l, index) => (
             <tr key={l.id} onClick={() => onOpen(l)}>
+              <td className="srNo">{index + 1}</td>
               <td>{date(l.created_at)}</td>
               <td title={l.client_name || l.name}>
                 <b>{l.client_name || l.name}</b>
@@ -953,6 +982,17 @@ function LeadTable({
                       }}
                     >
                       ◉
+                    </button>
+                    <button
+                      className="attachmentAction"
+                      title="Attachments"
+                      aria-label="Open lead attachments"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onOpen(l);
+                      }}
+                    >
+                      📎
                     </button>
                     <button
                       title="Edit lead"

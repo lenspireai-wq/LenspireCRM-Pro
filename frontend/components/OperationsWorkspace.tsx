@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
-import { useApiMutation, useApiQuery, useApiCollectionQuery, queryKeys, queryClient } from "@/lib/query";
+import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import CalendarWorkspace from "@/components/CalendarWorkspace";
 
 export type View =
@@ -172,19 +172,14 @@ export default function OperationsWorkspace({
   const dashboardControlsRef = useRef<HTMLDivElement>(null);
   const eventFileInputRef = useState<HTMLInputElement | null>(null)[0];
   const photographerFileInputRef = useState<HTMLInputElement | null>(null)[0];
-  const eventsQuery = useApiCollectionQuery<Row>(
+  const eventsQuery = useApiQuery<{ results: Row[] } | Row[]>(
     queryKeys.events(),
-    "/events/?ordering=start_date,start_time,id",
+    "/events/?page_size=2000&ordering=start_date,start_time,id",
   );
   const crewQuery = useApiQuery<{ results: Row[] } | Row[]>(
     ["photographers"],
     "/photographers/?page_size=500",
   );
-  const loadCrew = () =>
-    api.get("/photographers/").then((r) => setPhotographers(rows(r.data)));
-  useEffect(() => {
-    loadCrew();
-  }, []);
   useEffect(() => {
     if (crewQuery.data) {
       setPhotographers(
@@ -338,7 +333,7 @@ export default function OperationsWorkspace({
     form.append("file", file);
     try {
       await api.post("/photographers/import/", form, { headers: { "Content-Type": "multipart/form-data" } });
-      await loadCrew();
+      await crewQuery.refetch();
     } catch (err: any) {
       setError(err.response?.data?.detail || JSON.stringify(err.response?.data || "Could not import photographers."));
     } finally {
@@ -472,7 +467,7 @@ export default function OperationsWorkspace({
           remove={
             readOnly
               ? undefined
-              : (id) => remove(`/photographers/${id}/`, loadCrew)
+              : (id) => remove(`/photographers/${id}/`, () => crewQuery.refetch())
           }
         />
       )}
