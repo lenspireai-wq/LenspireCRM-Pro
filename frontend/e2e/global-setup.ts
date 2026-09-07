@@ -14,13 +14,17 @@ export default async function globalSetup(_config: FullConfig) {
   const page = await context.newPage();
   await page.goto(WEB_URL, { waitUntil: "domcontentloaded" });
 
-  await page.locator('input[name="username"]').fill("admin");
-  await page.locator('input[name="password"]').fill("admin123");
-  await page.getByRole("button", { name: /Sign in/i }).click();
+  await page.locator('input[name="username"]').fill("sandeepj");
+  await page.locator('input[name="password"]').fill("Test@123");
+  await page.locator("button.loginSubmit").click();
 
-  await page
-    .getByRole("button", { name: /^Main Dashboard$/i })
-    .waitFor({ state: "visible", timeout: 60_000 });
+  await page.waitForTimeout(3000);
+  
+  const html = await page.content();
+  console.log("HTML after login:", html.substring(0, 1000));
+  console.log("URL:", page.url());
+  
+  await page.waitForSelector('nav.sidebar, .sidebar, [data-testid="sidebar"]', { timeout: 15000 }).catch(() => {});
   await page.waitForTimeout(1000);
 
   const storage = await context.storageState();

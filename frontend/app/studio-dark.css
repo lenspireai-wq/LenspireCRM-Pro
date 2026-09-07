@@ -316,6 +316,16 @@
 :root[data-theme="dark"] .dashHeader h1 { font-size: clamp(16px, 2vw, 22px); line-height: 1.15; margin: 0 0 4px; }
 :root[data-theme="dark"] .dashHeader p { color: var(--muted); font-size: 11px; margin: 0 0 3px; }
 :root[data-theme="dark"] .dashHeader small { color: var(--muted); font-size: 10px; }
+:root[data-theme="dark"] .dashHeader > div {
+  padding: 6px 8px;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px transparent;
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+:root[data-theme="dark"] .dashHeader > div:hover {
+  background: color-mix(in srgb, var(--brand) 8%, transparent);
+  box-shadow: inset 0 0 0 1px var(--brand);
+}
 :root[data-theme="dark"] .dashMetrics { gap: 6px; margin-bottom: 14px; }
 :root[data-theme="dark"] .dashMetric {
   display: flex;
@@ -346,13 +356,22 @@
 :root[data-theme="dark"] .dashMetric:nth-child(6) .dashMetricIcon { background: #49302e; color: #e8aaa2; }
 :root[data-theme="dark"] .dashMetricLabel {
   color: var(--text-strong);
-  font: 11px/1.2 Georgia, serif;
+  font: 700 10px/1.25 Inter, "Segoe UI", sans-serif;
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: .02em;
 }
-:root[data-theme="dark"] .dashMetric strong { color: var(--text-strong); font: 600 clamp(13px, 1.3vw, 17px)/1.1 Georgia, serif; overflow-wrap: anywhere; }
-:root[data-theme="dark"] .dashMetric small { color: var(--muted); font-size: 10px; }
+:root[data-theme="dark"] .dashMetric strong { color: var(--text-strong); font: 700 clamp(13px, 1.3vw, 17px)/1.1 Inter, "Segoe UI", sans-serif; overflow-wrap: anywhere; }
+:root[data-theme="dark"] .dashMetric small { color: var(--muted); font: 500 10px/1.3 Inter, "Segoe UI", sans-serif; }
 :root[data-theme="dark"] .dashMetric small.dashMetricAlert { color: var(--danger); }
+:root[data-theme="dark"] .dashSelect select.noFocusRing:focus-visible {
+  outline: none !important;
+  outline-offset: 0;
+  box-shadow: none !important;
+  border-color: var(--line) !important;
+}
+:root[data-theme="dark"] .dashSelect select:hover {
+  border-color: var(--brand);
+}
 :root[data-theme="dark"] .dashGrid { gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 :root[data-theme="dark"] .dashCard {
   min-width: 0;

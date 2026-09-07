@@ -12,19 +12,26 @@ const sources = [
   { path: "/events/", label: "Events", department: "operations", section: "Operations" },
 ] as const;
 type Group = { source: typeof sources[number]; count: number; rows: Record<string, any>[]; failed: boolean };
-export default function HeaderSearch({ onNavigate }: { onNavigate: (section: "Sales" | "Operations") => void }) {
+export default function HeaderSearch({ onNavigate, scope = "global" }: { onNavigate: (section: "Sales" | "Operations") => void; scope?: "global" | "lead-management" }) {
   const user = useAuthStore(state => state.user);
   const [term, setTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [groups, setGroups] = useState<Group[]>([]);
   const root = useRef<HTMLDivElement>(null);
+  const isLeadManagementSearch = scope === "lead-management";
   useEffect(() => {
     const close = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
     document.addEventListener("pointerdown", close);
     return () => document.removeEventListener("pointerdown", close);
   }, []);
   useEffect(() => {
+    setTerm("");
+    setOpen(false);
+    if (isLeadManagementSearch) window.dispatchEvent(new CustomEvent("lenspire:lead-search", { detail: "" }));
+  }, [isLeadManagementSearch]);
+  useEffect(() => {
+    if (isLeadManagementSearch) return;
     const search = term.trim();
     setGroups([]);
     if (search.length < 2) { setLoading(false); return; }
@@ -41,11 +48,19 @@ export default function HeaderSearch({ onNavigate }: { onNavigate: (section: "Sa
       if (!controller.signal.aborted) { setGroups(results); setLoading(false); }
     }, 300);
     return () => { clearTimeout(timer); controller.abort(); };
-  }, [term, user]);
+  }, [term, user, isLeadManagementSearch]);
+  const updateTerm = (value: string) => {
+    setTerm(value);
+    if (isLeadManagementSearch) {
+      window.dispatchEvent(new CustomEvent("lenspire:lead-search", { detail: value }));
+      return;
+    }
+    setOpen(value.trim().length >= 2);
+  };
   return <div className={styles.root} ref={root} onKeyDown={event => { if (event.key === "Escape") setOpen(false); }}>
-    <input className={styles.input} type="search" aria-label="Search CRM records" placeholder="Search leads, clients, events…" value={term} onFocus={() => setOpen(true)} onChange={event => { setTerm(event.target.value); setOpen(true); }} aria-expanded={open} aria-controls="header-search-results" />
-    {open && <div id="header-search-results" className={styles.results} aria-label="CRM search results">
-      <div role="status">{term.trim().length < 2 ? "Type at least 2 characters to search." : loading ? "Searching…" : groups.every(group => !group.count) && !groups.some(group => group.failed) ? "No matching records." : "Search results"}</div>
+    <input className={styles.input} type="search" aria-label={isLeadManagementSearch ? "Search leads in this table" : "Search CRM records"} placeholder={isLeadManagementSearch ? "Search leads in this table…" : "Search leads, clients, events…"} value={term} onChange={event => updateTerm(event.target.value)} aria-expanded={!isLeadManagementSearch && open} aria-controls={isLeadManagementSearch ? undefined : "header-search-results"} />
+    {!isLeadManagementSearch && open && term.trim().length >= 2 && <div id="header-search-results" className={styles.results} aria-label="CRM search results">
+      <div role="status">{loading ? "Searching…" : groups.every(group => !group.count) && !groups.some(group => group.failed) ? "No matching records." : "Search results"}</div>
       {groups.map(({ source, rows, count, failed }) => <section key={source.path}>
         {failed ? <p role="alert">Could not search {source.label.toLowerCase()}. Please try again.</p> : count > 0 && <>
           <h3>{source.label} · {count} matches</h3>

@@ -31,7 +31,7 @@ const nextConfig = {
   skipTrailingSlashRedirect: true,
   output: "standalone",
   outputFileTracingRoot: process.cwd(),
-  allowedDevOrigins: ["127.0.0.1", "localhost", "192.168.0.109"],
+  allowedDevOrigins: ["127.0.0.1", "localhost", "192.168.0.109", "192.168.1.6"],
   async rewrites() {
     if (isDev) return [];
     return [

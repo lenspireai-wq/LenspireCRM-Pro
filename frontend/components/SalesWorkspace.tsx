@@ -360,6 +360,11 @@ export default function SalesWorkspace({
       <small>{sub}</small>
     </button>
   );
+  useEffect(() => {
+    const syncHeaderSearch = (event: Event) => setQuery(String((event as CustomEvent<string>).detail || ""));
+    window.addEventListener("lenspire:lead-search", syncHeaderSearch);
+    return () => window.removeEventListener("lenspire:lead-search", syncHeaderSearch);
+  }, []);
   if (currentView === "Dashboard")
     return (
       <div className="salesPage">
@@ -691,47 +696,6 @@ export default function SalesWorkspace({
         </div>
       </div>
       <section className="salesPanel">
-        <div className="leadToolbar">
-          <div className="salesSearch">
-            ⌕
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Find in this module…"
-            />
-            <button onClick={() => setQuery("")}>×</button>
-          </div>
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-          >
-            <option>All</option>
-            <option>High</option>
-            <option>Medium</option>
-            <option>Low</option>
-          </select>
-          <select value={status} onChange={(e) => setStatus(e.target.value)}>
-            <option>All</option>
-            {["New", "Follow-up", "Confirmed", "Lost"].map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </select>
-          <select value={source} onChange={(e) => setSource(e.target.value)}>
-            <option>All</option>
-            {[
-              "Instagram",
-              "Google",
-              "Referral",
-              "WhatsApp",
-              "Website",
-              "Others",
-              "Excel Import",
-            ].map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </select>
-          <span>{filtered.length} records</span>
-        </div>
         <LeadTable
           leads={filtered}
           onOpen={setDetail}

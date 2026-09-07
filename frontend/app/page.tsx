@@ -446,7 +446,7 @@ export default function Home() {
               </div>
               <label className="dashSelect">
                 Window
-                <select value={months} onChange={(e) => setMonths(Number(e.target.value))}>
+                <select className="noFocusRing" value={months} onChange={(e) => setMonths(Number(e.target.value))}>
                   <option value={3}>3 months</option>
                   <option value={6}>6 months</option>
                   <option value={12}>12 months</option>
@@ -513,7 +513,7 @@ export default function Home() {
           ) : (
             <div><h1>{section}</h1><span>Your studio at a glance</span></div>
           )}
-          <div className="chromeActions">{!(section === "Sales" && salesView === "Lead Management") && <HeaderSearch onNavigate={setSection} />}<NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
+          <div className="chromeActions"><HeaderSearch onNavigate={setSection} scope={section === "Sales" && salesView === "Lead Management" ? "lead-management" : "global"} /><NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
         </div>
         {readOnly && (
           <div className="readOnlyNotice">
