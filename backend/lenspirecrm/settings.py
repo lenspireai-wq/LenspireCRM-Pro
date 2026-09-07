@@ -2,13 +2,20 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 from .logging_config import configure_logging
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
+
 DEBUG = os.getenv("DEBUG", "true").lower() == "true"
 SECRET_KEY = os.getenv("SECRET_KEY", "lenspire-development-key-change-before-production")
 if not DEBUG and SECRET_KEY == "lenspire-development-key-change-before-production":
     raise RuntimeError("Set a strong SECRET_KEY when DEBUG is false.")
+
+from .env_validator import check_settings
+check_settings()
 
 ALLOWED_HOSTS = [value.strip() for value in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if value.strip()]
 INSTALLED_APPS = [
@@ -40,9 +47,18 @@ WSGI_APPLICATION = "lenspirecrm.wsgi.application"
 ASGI_APPLICATION = "lenspirecrm.asgi.application"
 
 if os.getenv("POSTGRES_DB"):
-    DATABASES = {"default": {"ENGINE": "django.db.backends.postgresql", "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER", "postgres"), "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"), "PORT": os.getenv("POSTGRES_PORT", "5432")}}
+    ssl_mode = os.getenv("POSTGRES_SSL_MODE", "")
+    db_config = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+    }
+    if ssl_mode:
+        db_config["OPTIONS"] = {"sslmode": ssl_mode}
+    DATABASES = {"default": db_config}
 else:
     DATABASES = {
         "default": {

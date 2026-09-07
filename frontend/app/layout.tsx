@@ -7,6 +7,7 @@ import "./event-columns.css";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { QueryProvider } from "@/components/QueryProvider";
 import { ThemeProvider } from "@/components/ThemeToggle";
+import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
 
 export const metadata: Metadata = {
   title: "LenspireCRM Pro",
@@ -44,12 +45,14 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
       </head>
       <body suppressHydrationWarning>
-        <QueryProvider>
-          <ThemeProvider>
-            <ServiceWorkerRegister />
-            {children}
-          </ThemeProvider>
-        </QueryProvider>
+        <GlobalErrorBoundary>
+          <QueryProvider>
+            <ThemeProvider>
+              <ServiceWorkerRegister />
+              {children}
+            </ThemeProvider>
+          </QueryProvider>
+        </GlobalErrorBoundary>
       </body>
     </html>
   );

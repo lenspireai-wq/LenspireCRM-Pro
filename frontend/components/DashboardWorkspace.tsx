@@ -82,12 +82,12 @@ export default function DashboardWorkspace({ months, onMonthsChange }: { months:
   return (
     <section className="workspace dashboard">
       <div className="dashMetrics">
-        <MetricCard label="Revenue (MTD)" value={formatINR(data.month.revenue_net)} hint={`Gross ${formatINR(data.month.revenue_gross)} · Refunds ${formatINR(data.month.refunds)}`} accent="#22c55e" />
-        <MetricCard label="MoM Growth" value={`${data.month.growth_pct.toFixed(1)}%`} hint={`Previous: ${formatINR(data.month.previous_revenue_net)}`} accent={data.month.growth_pct >= 0 ? "#22c55e" : "#ef4444"} />
-        <MetricCard label="Leads (Total)" value={String(data.funnel.total)} hint={`Conversion ${data.funnel.conversion_pct.toFixed(1)}%`} />
-        <MetricCard label="Outstanding" value={formatINR(data.outstanding.amount)} hint="Unpaid across confirmed bookings" accent="#f59e0b" />
-        <MetricCard label="Today’s Events" value={String(data.today.event_count)} hint={data.today.event_count ? "Tap Operations to manage" : "No events scheduled"} />
-        <MetricCard label="Overdue Jobs" value={String(data.production.overdue_count)} hint={data.production.overdue_count ? "Production attention needed" : "All caught up"} accent={data.production.overdue_count ? "#ef4444" : "#22c55e"} />
+        <MetricCard label="Revenue (MTD)" value={formatINR(data.month.revenue_net)} hint={`Gross ${formatINR(data.month.revenue_gross)}`} accent="#22c55e" />
+        <MetricCard label="MoM Growth" value={`${data.month.growth_pct.toFixed(1)}%`} hint={`Prev ${formatINR(data.month.previous_revenue_net)}`} accent={data.month.growth_pct >= 0 ? "#22c55e" : "#ef4444"} />
+        <MetricCard label="Leads (Total)" value={String(data.funnel.total)} hint={`${data.funnel.conversion_pct.toFixed(1)}%`} />
+        <MetricCard label="Outstanding" value={formatINR(data.outstanding.amount)} hint="Unpaid" accent="#f59e0b" />
+        <MetricCard label="Today’s Events" value={String(data.today.event_count)} hint={data.today.event_count ? "Open Operations" : "No events"} />
+        <MetricCard label="Overdue Jobs" value={String(data.production.overdue_count)} hint={data.production.overdue_count ? "Needs attention" : "All good"} accent={data.production.overdue_count ? "#ef4444" : "#22c55e"} />
       </div>
 
       <div className="dashGrid">
