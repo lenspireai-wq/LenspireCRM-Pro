@@ -58,11 +58,18 @@ jobs:
 
       - name: Verify production health
         run: |
+          healthy=false
           for attempt in {1..12}; do
             if ssh -o BatchMode=yes -o IdentitiesOnly=yes root@187.52.122.113 \
-              'curl --fail --silent --show-error --max-time 15 http://127.0.0.1:8080/ >/dev/null'; then
-              exit 0
+              'curl --fail --silent --show-error --max-time 15 http://127.0.0.1:8080/ >/dev/null && curl --fail --silent --show-error --max-time 15 http://127.0.0.1:8080/api/health/ >/dev/null'; then
+              healthy=true
+              break
             fi
             sleep 10
           done
+          if [ "$healthy" = true ]; then
+            exit 0
+          fi
+          ssh -o BatchMode=yes -o IdentitiesOnly=yes root@187.52.122.113 \
+            'cd /docker/lenspire-crm-django && docker compose ps && docker compose logs --tail=200 api web redis'
           exit 1
