@@ -8762,3 +8762,46 @@ table > tbody > tr:has(td[colspan])::before {
   grid-row: 3;
   font-size: 10px;
 }
+.mainSalesDashboard .leadManagementSticky .reminderCard {
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+.mainSalesDashboard .leadManagementSticky .reminderCard:hover {
+  border-color: var(--brand-hover, #e6c993);
+  box-shadow: 0 0 0 1px var(--brand-hover, #e6c993);
+  transform: translateY(-1px);
+}
+
+/* Keep column headings at the top of the lead table, below the frozen controls. */
+.mainSalesDashboard .leadTableWrap {
+  max-height: calc(100dvh - var(--workspace-chrome-height, 68px) - 160px);
+  overflow: auto !important;
+}
+.mainSalesDashboard .leadTable thead th {
+  top: 0;
+  z-index: 2;
+}
+.leadTable > thead > tr::before,
+.leadTable > tbody > tr::before {
+  display: none;
+}
+.leadTable .srNo {
+  width: 52px;
+  min-width: 52px;
+  padding-inline: 6px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.leadTable th.srNo {
+  z-index: 3;
+}
+.leadRowActions .attachmentAction {
+  color: var(--brand-hover, #e6c993);
+  border-color: color-mix(in srgb, var(--brand-hover, #e6c993) 45%, transparent);
+}
+
+/* Use normal title case for every table column heading instead of ALL CAPS. */
+.shell table thead th {
+  text-transform: none !important;
+}
