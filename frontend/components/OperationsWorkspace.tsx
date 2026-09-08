@@ -367,6 +367,17 @@ export default function OperationsWorkspace({
       style={view === "Dashboard" || view === "Photographers Details" ? { "--operations-controls-height": `${dashboardControlsHeight}px` } as CSSProperties : undefined}
     >
       <div ref={dashboardControlsRef} className="operationsDashboardControls">
+        <nav className="operationsTabs">
+          {views.map((item) => (
+            <button
+              key={item}
+              className={view === item ? "active" : ""}
+              onClick={() => setViewSafe(item)}
+            >
+              {item}
+            </button>
+          ))}
+        </nav>
         <div className="operationsActions">
         {(view === "Upcoming Events" || view === "Completed Events") && (
           <>
@@ -429,17 +440,6 @@ export default function OperationsWorkspace({
           </>
         )}
         </div>
-        <nav className="operationsTabs">
-          {views.map((item) => (
-            <button
-              key={item}
-              className={view === item ? "active" : ""}
-              onClick={() => setViewSafe(item)}
-            >
-              {item}
-            </button>
-          ))}
-        </nav>
       </div>
       {view === "Dashboard" && (
         <Dashboard
@@ -1035,7 +1035,7 @@ function EventModal({ draft, photographers, close, save, error }: any) {
     });
   return (
     <div className="modalBackdrop">
-      <form className="modalCard operationModal" onSubmit={save}>
+      <form className="modalCard operationModal eventEditorModal" onSubmit={save}>
         <div className="modalHeader">
           <div>
             <small>OPERATIONS · UPCOMING EVENTS</small>
