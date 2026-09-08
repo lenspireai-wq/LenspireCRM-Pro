@@ -1137,9 +1137,9 @@
   color: var(--brand);
 }
 :root[data-theme="dark"] .pipelineTotal {
-  border: 18px solid var(--brand);
-  border-right-color: var(--success);
-  border-bottom-color: var(--warning);
+  border: 28px solid #8b7cf8;
+  border-right-color: #34d399;
+  border-bottom-color: #fbbf24;
 }
 :root[data-theme="dark"] .pipelineRow i {
   background: var(--panel);

@@ -456,7 +456,7 @@ export default function SalesWorkspace({
                 ◉
               </button>
             </div>
-            <LeadTable leads={leads.slice(0, 12)} onOpen={setDetail} />
+            <LeadTable leads={leads.slice(0, 15)} onOpen={setDetail} />
           </section>
           <section className="salesPanel pipelinePanel">
             <div className="panelTitle">

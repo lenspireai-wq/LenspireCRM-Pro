@@ -4728,6 +4728,31 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
 .leadListPanel {
   grid-row: span 2;
 }
+.leadListPanel > .panelTitle {
+  min-height: 40px;
+  padding-block: 6px;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+.leadListPanel > .panelTitle > div {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+.leadListPanel > .panelTitle h3 {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.leadListPanel > .panelTitle p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.leadListPanel > .panelTitle > button {
+  flex-shrink: 0;
+}
 .panelTitle {
   min-height: 61px;
   padding: var(--space-3) var(--space-4);
@@ -4748,13 +4773,16 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   color: #8b96ff;
 }
 .pipelineTotal {
-  width: 115px;
-  height: 115px;
+  width: min(200px, calc(100% - 32px));
+  height: auto;
+  aspect-ratio: 1;
   margin: 20px auto;
-  border: 18px solid #7367f0;
+  border: 28px solid #7367f0;
   border-right-color: #31c887;
   border-bottom-color: #f0a52b;
   border-radius: 50%;
+  background: #5145a6;
+  color: #ffffff;
   display: grid;
   place-content: center;
   text-align: center;
@@ -4762,6 +4790,14 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
 .pipelineTotal b,
 .pipelineTotal span {
   display: block;
+}
+.pipelineTotal b {
+  font-size: 32px;
+  line-height: 1.2;
+}
+.pipelineTotal span {
+  font-size: 13px;
+  color: #f0edff;
 }
 .pipelineRow {
   display: grid;
@@ -9123,4 +9159,15 @@ table > tbody > tr:has(td[colspan])::before {
 /* Use the Lead Management row-hover highlight consistently across data tables. */
 .shell table tbody tr:hover {
   background: #7367f00d;
+}
+
+/* Bring the Sales view tabs closer to the workspace header. */
+.mainSalesDashboard .workspaceChrome {
+  margin-bottom: 4px;
+}
+.mainSalesDashboard :is(.salesDashboardSticky, .leadManagementSticky) {
+  padding-top: 4px;
+}
+.mainSalesDashboard :is(.salesDashboardSticky, .leadManagementSticky) > .operationsTabs {
+  margin-top: 0;
 }
