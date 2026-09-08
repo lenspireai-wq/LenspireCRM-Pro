@@ -170,6 +170,20 @@ class UserViewSet(viewsets.ModelViewSet):
             self.record_activity(updated, "User Updated", ". ".join(changes) + ".")
         if password_changed:
             self.revoke_refresh_tokens(updated)
+
+    def perform_destroy(self, instance):
+        if instance.pk == self.request.user.pk:
+            raise serializers.ValidationError(
+                {"detail": "You cannot delete your own account."}
+            )
+        label = instance.display_name or instance.username
+        self.revoke_refresh_tokens(instance)
+        self.record_activity(
+            instance,
+            "User Deleted",
+            f"Deleted user account {label} ({instance.username}).",
+        )
+        instance.delete()
     @action(detail=True, methods=["post"], url_path="reset-password")
     def reset_password(self, request, pk=None):
         user = self.get_object()

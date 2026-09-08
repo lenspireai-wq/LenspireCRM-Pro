@@ -77,6 +77,9 @@ export default function AdminWorkspace({
     mutationFn: async ({ id, active }) =>
       (await api.post(`/users/${id}/set-active/`, { active })).data,
   });
+  const deleteUserMutation = useApiMutation<number, unknown, Error>({
+    mutationFn: async (id) => (await api.delete(`/users/${id}/`)).data,
+  });
   const resetPasswordMutation = useApiMutation<
     { id: number; password: string },
     unknown,
@@ -178,6 +181,23 @@ export default function AdminWorkspace({
     } catch (problem: any) {
       setError(
         problem.response?.data?.detail || "Could not change account status.",
+      );
+    }
+  };
+  const deleteUser = async (user: UserRow) => {
+    if (
+      !window.confirm(
+        `Permanently delete ${user.display_name || user.username}? This cannot be undone.`,
+      )
+    )
+      return;
+    setError("");
+    try {
+      await deleteUserMutation.mutateAsync(user.id);
+      await load();
+    } catch (problem: any) {
+      setError(
+        problem.response?.data?.detail || "Could not delete this user account.",
       );
     }
   };
@@ -316,7 +336,7 @@ export default function AdminWorkspace({
         </article>
       </section>
       {error && !draft && !resetOpen && <p className="formError">{error}</p>}
-      <section className="panel">
+      <section className="panel adminUsersPanel">
         <div className="panelHead">
           <h2>User Accounts</h2>
           <span>{loading ? "Loading…" : `${users.length} users`}</span>
@@ -405,22 +425,32 @@ export default function AdminWorkspace({
                         ↻
                       </button>
                       {user.id !== currentUser.id && (
-                        <button
-                          className={
-                            user.is_active
-                              ? "deactivateAction"
-                              : "activateAction"
-                          }
-                          title={
-                            user.is_active ? "Deactivate user" : "Activate user"
-                          }
-                          aria-label={
-                            user.is_active ? "Deactivate user" : "Activate user"
-                          }
-                          onClick={() => setActive(user)}
-                        >
-                          {user.is_active ? "×" : "✓"}
-                        </button>
+                        <>
+                          <button
+                            className={
+                              user.is_active
+                                ? "deactivateAction"
+                                : "activateAction"
+                            }
+                            title={
+                              user.is_active ? "Deactivate user" : "Activate user"
+                            }
+                            aria-label={
+                              user.is_active ? "Deactivate user" : "Activate user"
+                            }
+                            onClick={() => setActive(user)}
+                          >
+                            {user.is_active ? "×" : "✓"}
+                          </button>
+                          <button
+                            className="deleteUserAction"
+                            title="Delete user"
+                            aria-label="Delete user"
+                            onClick={() => deleteUser(user)}
+                          >
+                            🗑
+                          </button>
+                        </>
                       )}
                     </div>
                   </td>

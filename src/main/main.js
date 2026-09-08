@@ -21,6 +21,10 @@ const XLSX = require('xlsx');
 const { encryptPayload, decryptPayload, isEncryptedPayload } = require('./backup-crypto');
 const cloudApi = require('./cloud-api');
 const { importDate, leadRowsFromSheet, mapLeadRows, mapEventRows, mapPhotographerRows, mapPaymentRows, areDuplicateImportedEvents } = require('./import-mappers');
+const { validateBeforeStart } = require('./env-validator');
+
+validateBeforeStart();
+
 const MAX_IMPORT_BYTES = 20 * 1024 * 1024;
 const MAX_IMPORT_ROWS = 50000;
 function assertImportFileSafe(filePath){if(fs.statSync(filePath).size>MAX_IMPORT_BYTES)throw new Error('Spreadsheet is too large. Maximum size is 20 MB.');}

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useApiMutation, useApiCollectionQuery, queryKeys } from "@/lib/query";
 import { api } from "@/lib/api";
 
@@ -18,8 +18,6 @@ type CalendarEvent = {
   notes?: string;
   handled_by?: string;
 };
-
-type ViewMode = "day" | "week" | "month";
 
 const STATUS_COLORS: Record<string, string> = {
   Scheduled: "var(--info)",
@@ -73,28 +71,17 @@ const formatTime = (value?: string | null) => {
 
 export default function CalendarWorkspace() {
   const today = useMemo(() => new Date(), []);
-  const [view, setView] = useState<ViewMode>("month");
   const [cursor, setCursor] = useState<Date>(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
   const [selectedDate, setSelectedDate] = useState<string>(isoDate(today));
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [editing, setEditing] = useState<CalendarEvent | null>(null);
-  const [filter, setFilter] = useState<string>("all");
 
   const range = useMemo(() => {
-    if (view === "day") {
-      const iso = isoDate(cursor);
-      return { from: iso, to: iso };
-    }
-    if (view === "week") {
-      const start = startOfWeek(cursor);
-      const end = addDays(start, 6);
-      return { from: isoDate(start), to: isoDate(end) };
-    }
     const monthStart = startOfMonth(cursor);
     const gridStart = startOfWeek(monthStart);
     const gridEnd = addDays(gridStart, 41);
     return { from: isoDate(gridStart), to: isoDate(gridEnd) };
-  }, [view, cursor]);
+  }, [cursor]);
 
   const { data, isLoading, isError, refetch } = useApiCollectionQuery<CalendarEvent>(
     queryKeys.events(range),
@@ -113,8 +100,7 @@ export default function CalendarWorkspace() {
     return map;
   }, [events]);
 
-  const filteredEventsForDay = (key: string) =>
-    (eventsByDate[key] || []).filter((event) => filter === "all" || event.event_type === filter);
+  const filteredEventsForDay = (key: string) => eventsByDate[key] || [];
 
   const moveMutation = useApiMutation<{ id: number; start_date: string }, CalendarEvent>({
     mutationFn: async ({ id, start_date }) => (await api.patch(`/events/${id}/`, { start_date })).data,
@@ -129,64 +115,30 @@ export default function CalendarWorkspace() {
   };
 
   const days = useMemo(() => {
-    if (view === "day") return [cursor];
-    if (view === "week") {
-      const start = startOfWeek(cursor);
-      return Array.from({ length: 7 }, (_, index) => addDays(start, index));
-    }
     const gridStart = startOfWeek(startOfMonth(cursor));
     return Array.from({ length: 42 }, (_, index) => addDays(gridStart, index));
-  }, [view, cursor]);
+  }, [cursor]);
 
   const selectedEvents = filteredEventsForDay(selectedDate);
 
   return (
     <section className="workspace calendar">
-      <header className="dashHeader">
-        <div>
-          <h1>Studio Calendar</h1>
-          <p>Plan shoots, reschedule on the fly, and review the week ahead.</p>
-        </div>
-        <div className="kanbanControls">
-          <div className="kanbanToggle" role="tablist">
-            {(["day", "week", "month"] as ViewMode[]).map((mode) => (
-              <button key={mode} role="tab" aria-selected={view === mode} className={view === mode ? "active" : ""} onClick={() => setView(mode)}>
-                {mode === "day" ? "Day" : mode === "week" ? "Week" : "Month"}
-              </button>
-            ))}
-          </div>
-          <select className="dashSearch" value={filter} onChange={(e) => setFilter(e.target.value)}>
-            <option value="all">All event types</option>
-            {EVENT_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
-          </select>
-          <button className="billBtn" onClick={() => { setCursor(new Date(today.getFullYear(), today.getMonth(), today.getDate())); setSelectedDate(isoDate(today)); }}>Today</button>
-        </div>
-      </header>
-
       <div className="calNav">
-        <button className="billBtn" onClick={() => setCursor((c) => addDays(c, view === "month" ? -30 : view === "week" ? -7 : -1))} aria-label="Previous">‹</button>
-        <strong>
-          {view === "month"
-            ? cursor.toLocaleDateString("en-IN", { month: "long", year: "numeric" })
-            : view === "week"
-              ? `Week of ${startOfWeek(cursor).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}`
-              : cursor.toLocaleDateString("en-IN", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}
-        </strong>
-        <button className="billBtn" onClick={() => setCursor((c) => addDays(c, view === "month" ? 30 : view === "week" ? 7 : 1))} aria-label="Next">›</button>
+        <button className="billBtn" onClick={() => setCursor((c) => addDays(c, -30))} aria-label="Previous">‹</button>
+        <strong>{cursor.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}</strong>
+        <button className="billBtn" onClick={() => setCursor((c) => addDays(c, 30))} aria-label="Next">›</button>
       </div>
 
       {isLoading ? <p>Loading events…</p> : null}
       {isError ? <p role="alert">Could not load events. <button onClick={() => refetch()}>Retry</button></p> : null}
 
-      <div className={`calGrid calGrid${view.charAt(0).toUpperCase() + view.slice(1)}`}>
-        {view !== "day" ? (
-          <div className="calHeader">
-            {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
-              <span key={day}>{day}</span>
-            ))}
-          </div>
-        ) : null}
-        <div className={`calCells calCells${view.charAt(0).toUpperCase() + view.slice(1)}`}>
+      <div className="calGrid calGridMonth">
+        <div className="calHeader">
+          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+            <span key={day}>{day}</span>
+          ))}
+        </div>
+        <div className="calCells calCellsMonth">
           {days.map((day) => {
             const key = isoDate(day);
             const isCurrentMonth = day.getMonth() === cursor.getMonth();

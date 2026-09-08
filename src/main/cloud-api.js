@@ -1,6 +1,6 @@
 const API_BASE_URL = String(
-  process.env.LENSPIRECRM_API_URL || 'https://lenspirecrm-api.lenspirecrm-worker.workers.dev'
-).replace(/\/$/, '');
+  process.env.LENSPIRECRM_API_URL || 'https://www.crm.lenspireai.com'
+).replace(/\/?$/, '');
 
 async function request(pathname, options = {}) {
   const controller = new AbortController();
@@ -37,10 +37,10 @@ async function request(pathname, options = {}) {
 async function login(username, password) {
   const options = { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username, password }), timeoutMs: 30000 };
   for (let attempt = 0; attempt < 5; attempt++) {
-    try { return await request('/api/auth/login', options); }
+    try { return await request('/api/auth/login/', options); }
     catch (error) {
-      if (![502,503,504].includes(error.status) || attempt === 4) {
-        if ([502,503,504].includes(error.status)) throw new Error('LenspireCRM Cloud is temporarily unavailable. Please wait a moment and try again.');
+      if (![502, 503, 504].includes(error.status) || attempt === 4) {
+        if ([502, 503, 504].includes(error.status)) throw new Error('LenspireCRM Cloud is temporarily unavailable. Please wait a moment and try again.');
         throw error;
       }
       await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
@@ -51,15 +51,15 @@ async function login(username, password) {
 const refresh = async (refreshToken) => {
   const options = { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ refreshToken }), timeoutMs: 30000 };
   for (let attempt = 0; attempt < 5; attempt++) {
-    try { return await request('/api/auth/refresh', options); }
+    try { return await request('/api/auth/refresh/', options); }
     catch (error) {
-      if (![502,503,504].includes(error.status) || attempt === 4) throw error;
+      if (![502, 503, 504].includes(error.status) || attempt === 4) throw error;
       await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
     }
   }
 };
 
-const changePassword = (token, currentPassword, newPassword) => request('/api/auth/change-password', authorized(token, {
+const changePassword = (token, currentPassword, newPassword) => request('/api/auth/change-password/', authorized(token, {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ currentPassword, newPassword })
 }));
 
@@ -67,17 +67,17 @@ function authorized(token, options = {}) {
   return { ...options, headers: { ...(options.headers || {}), authorization: `Bearer ${token}` } };
 }
 
-const listLeads = token => request('/api/leads', authorized(token));
-const importLeads = (token, leads) => request('/api/leads/import', authorized(token, {
+const listLeads = token => request('/api/leads/', authorized(token));
+const importLeads = (token, leads) => request('/api/leads/import/', authorized(token, {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ leads }), timeoutMs: 120000
 }));
-const createLead = (token, lead) => request('/api/leads', authorized(token, {
+const createLead = (token, lead) => request('/api/leads/', authorized(token, {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(lead)
 }));
-const updateLead = (token, id, lead) => request(`/api/leads/${encodeURIComponent(id)}`, authorized(token, {
+const updateLead = (token, id, lead) => request(`/api/leads/${encodeURIComponent(id)}/`, authorized(token, {
   method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(lead)
 }));
-const deleteLead = (token, id) => request(`/api/leads/${encodeURIComponent(id)}`, authorized(token, { method: 'DELETE' }));
+const deleteLead = (token, id) => request(`/api/leads/${encodeURIComponent(id)}/`, authorized(token, { method: 'DELETE' }));
 const RESET_MARKER_NAME = '__LENSPIRECRM_WORKSPACE_RESET__';
 const RESET_MARKER_SOURCE = 'LenspireCRM Reset';
 const isResetMarker = lead => lead?.name === RESET_MARKER_NAME && lead?.source === RESET_MARKER_SOURCE;
@@ -103,8 +103,8 @@ const resetBusinessData = async token => {
   const leads = Array.isArray(initial?.leads) ? initial.leads : [];
   const clearedLeadIds = leads.map(lead => lead?.id).filter(Boolean).map(String);
   try {
-    const backup = await request('/api/backup', authorized(token, { timeoutMs: 120000 }));
-    await request('/api/backup/restore', authorized(token, {
+    const backup = await request('/api/backup/', authorized(token, { timeoutMs: 120000 }));
+    await request('/api/backup/restore/', authorized(token, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
@@ -130,8 +130,6 @@ const resetBusinessData = async token => {
       catch (deleteError) {
         if (deleteError.status === 404) { deletedLeads++; continue; }
         if ([401, 403].includes(deleteError.status)) throw deleteError;
-        // Older cloud deployments can reject converted leads with dependent records.
-        // The desktop reset marker below keeps those legacy records cleared locally.
       }
     }
     const markerResult = await createLead(token, {
@@ -142,10 +140,10 @@ const resetBusinessData = async token => {
     return { ok: true, compatibilityMode: true, deletedLeads, clearedLeadIds, marker: markerResult?.lead || null };
   }
 };
-const listLeadActivities = token => request('/api/lead-activities', authorized(token));
+const listLeadActivities = token => request('/api/lead-activities/', authorized(token));
 // The workspace endpoint is the server-authoritative snapshot for every CRM
 // module other than leads/activities (which have their own endpoints).
-const getWorkspace = token => request('/api/workspace', authorized(token));
+const getWorkspace = token => request('/api/workspace/', authorized(token));
 const jsonBody = body => ({ method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
 const saveSalesTarget = (token, target = {}) => {
   const salesperson = String(target.salesperson || target.salesPerson || '').trim();
@@ -160,7 +158,7 @@ const saveSalesTarget = (token, target = {}) => {
     targetAmount: Number(target.targetAmount ?? target.target_amount ?? 0),
     targetBookings: Number(target.targetBookings ?? target.target_bookings ?? 0)
   };
-  return request('/api/sales-targets', authorized(token, jsonBody(payload)));
+  return request('/api/sales-targets/', authorized(token, jsonBody(payload)));
 };
 const saveEvent = (token, id, event) => {
   const dateStatus = event?.dateStatus || event?.date_status || 'Confirmed';
@@ -177,12 +175,12 @@ const saveEvent = (token, id, event) => {
     city: event?.venue || event?.city || '',
     slotted: event?.slotted === true || String(event?.slotted) === '1' || event?.slotted === 'true'
   };
-  return request(id ? `/api/events/${encodeURIComponent(id)}` : '/api/events', authorized(token, { ...jsonBody(payload), method: id ? 'PUT' : 'POST' }));
+  return request(id ? `/api/events/${encodeURIComponent(id)}/` : '/api/events/', authorized(token, { ...jsonBody(payload), method: id ? 'PUT' : 'POST' }));
 };
-const deleteEvent = (token, id) => request(`/api/events/${encodeURIComponent(id)}`, authorized(token, { method: 'DELETE' }));
-const bulkUpdateEvents = (token, eventIds, data) => request('/api/events/bulk', authorized(token, jsonBody({ eventIds, ...data })));
-const savePhotographer = (token, id, detail) => request(id ? `/api/photographers/${encodeURIComponent(id)}` : '/api/photographers', authorized(token, { ...jsonBody(detail), method: id ? 'PUT' : 'POST' }));
-const deletePhotographer = (token, id) => request(`/api/photographers/${encodeURIComponent(id)}`, authorized(token, { method: 'DELETE' }));
+const deleteEvent = (token, id) => request(`/api/events/${encodeURIComponent(id)}/`, authorized(token, { method: 'DELETE' }));
+const bulkUpdateEvents = (token, eventIds, data) => request('/api/events/bulk/', authorized(token, jsonBody({ eventIds, ...data })));
+const savePhotographer = (token, id, detail) => request(id ? `/api/photographers/${encodeURIComponent(id)}/` : '/api/photographers/', authorized(token, { ...jsonBody(detail), method: id ? 'PUT' : 'POST' }));
+const deletePhotographer = (token, id) => request(`/api/photographers/${encodeURIComponent(id)}/`, authorized(token, { method: 'DELETE' }));
 const updateProduction = (token, id, data) => {
   const payload = {
     ...data,
@@ -203,26 +201,26 @@ const updateProduction = (token, id, data) => {
     clientApprovedAt: data?.clientApprovedAt ?? data?.client_approved_at,
     client_approved_at: data?.clientApprovedAt ?? data?.client_approved_at
   };
-  return request(`/api/production/${encodeURIComponent(id)}`, authorized(token, { ...jsonBody(payload), method: 'PUT' }));
+  return request(`/api/production/${encodeURIComponent(id)}/`, authorized(token, { ...jsonBody(payload), method: 'PUT' }));
 };
-const addPayment = (token, data) => request('/api/payments', authorized(token, jsonBody(data)));
-const updatePayment = (token, id, data) => request(`/api/payments/${encodeURIComponent(id)}`, authorized(token, { ...jsonBody(data), method: 'PUT' }));
-const deletePayment = (token, id) => request(`/api/payments/${encodeURIComponent(id)}`, authorized(token, { method: 'DELETE' }));
-const createClientPortalLink = (token, bookingId, options = {}) => request('/api/client-portal/link', authorized(token, jsonBody({ bookingId, ...options })));
-const getClientPortalAccess = (token, bookingId) => request('/api/client-portal/link?bookingId=' + encodeURIComponent(bookingId), authorized(token));
-const revokeClientPortalAccess = (token, bookingId) => request('/api/client-portal/link', authorized(token, { ...jsonBody({ bookingId }), method: 'DELETE' }));
-const portalLogin = (email, password) => request('/api/portal/login', jsonBody({ email, password }));
-const portalSetupPassword = (inviteToken, password) => request('/api/portal/setup-password', jsonBody({ inviteToken, password }));
-const portalInvite = (token, bookingId, { name, email, phone }) => request('/api/portal/invite', authorized(token, jsonBody({ bookingId, name, email, phone })));
-const convertLead = (token, id, options) => request(`/api/leads/${encodeURIComponent(id)}/convert`, authorized(token, jsonBody(options || {})));
-const createBackup = token => request('/api/backup', authorized(token, { timeoutMs: 120000 }));
+const addPayment = (token, data) => request('/api/payments/', authorized(token, jsonBody(data)));
+const updatePayment = (token, id, data) => request(`/api/payments/${encodeURIComponent(id)}/`, authorized(token, { ...jsonBody(data), method: 'PUT' }));
+const deletePayment = (token, id) => request(`/api/payments/${encodeURIComponent(id)}/`, authorized(token, { method: 'DELETE' }));
+const createClientPortalLink = (token, bookingId, options = {}) => request('/api/client-portal/link/', authorized(token, jsonBody({ bookingId, ...options })));
+const getClientPortalAccess = (token, bookingId) => request('/api/client-portal/link/?bookingId=' + encodeURIComponent(bookingId), authorized(token));
+const revokeClientPortalAccess = (token, bookingId) => request('/api/client-portal/link/', authorized(token, { ...jsonBody({ bookingId }), method: 'DELETE' }));
+const portalLogin = (email, password) => request('/api/portal/login/', jsonBody({ email, password }));
+const portalSetupPassword = (inviteToken, password) => request('/api/portal/setup-password/', jsonBody({ inviteToken, password }));
+const portalInvite = (token, bookingId, { name, email, phone }) => request('/api/portal/invite/', authorized(token, jsonBody({ bookingId, name, email, phone })));
+const convertLead = (token, id, options) => request(`/api/leads/${encodeURIComponent(id)}/convert/`, authorized(token, jsonBody(options || {})));
+const createBackup = token => request('/api/backup/', authorized(token, { timeoutMs: 120000 }));
 const createEncryptedBackup = (token, password) => request('/api/backup?password=' + encodeURIComponent(password), authorized(token, { timeoutMs: 120000 }));
-const restoreBackup = (token, backup) => request('/api/backup/restore', authorized(token, { ...jsonBody(backup), timeoutMs: 120000 }));
+const restoreBackup = (token, backup) => request('/api/backup/restore/', authorized(token, { ...jsonBody(backup), timeoutMs: 120000 }));
 const restoreEncryptedBackup = (token, encryptedBackup, password) => request('/api/backup/restore?password=' + encodeURIComponent(password), authorized(token, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(encryptedBackup), timeoutMs: 120000 }));
 // Auto-backup endpoints
 const listAutoBackups = token => request('/api/backup/auto/list', authorized(token));
 const getLatestAutoBackup = token => request('/api/backup/auto/latest', authorized(token, { timeoutMs: 120000 }));
-const triggerAutoBackup = token => request('/api/backup/auto/trigger', authorized(token, jsonBody({}), { timeoutMs: 120000 }));
+const triggerAutoBackup = token => request('/api/backup/auto/trigger/', authorized(token, jsonBody({})), { timeoutMs: 120000 });
 const deleteAutoBackup = (token, backupId) => request('/api/backup/auto/' + encodeURIComponent(backupId), authorized(token, { method: 'DELETE' }));
 const getAutoBackupConfig = token => request('/api/backup/auto/config', authorized(token));
 const setAutoBackupConfig = (token, config) => request('/api/backup/auto/config', authorized(token, jsonBody(config)));
@@ -236,17 +234,17 @@ const mutateWorkspace = async (token, mutator) => {
   await restoreBackup(token, next);
   return value;
 };
-const importLeadActivities = (token, activities) => request('/api/lead-activities/import', authorized(token, {
+const importLeadActivities = (token, activities) => request('/api/lead-activities/import/', authorized(token, {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ activities }), timeoutMs: 120000
 }));
-const createLeadActivity = (token, leadId, activity) => request(`/api/leads/${encodeURIComponent(leadId)}/activities`, authorized(token, {
+const createLeadActivity = (token, leadId, activity) => request(`/api/leads/${encodeURIComponent(leadId)}/activities/`, authorized(token, {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(activity)
 }));
-const updateLeadAttachment = (token, leadId, attachment) => request(`/api/leads/${encodeURIComponent(leadId)}/attachment`, authorized(token, {
+const updateLeadAttachment = (token, leadId, attachment) => request(`/api/leads/${encodeURIComponent(leadId)}/attachment/`, authorized(token, {
   method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(attachment)
 }));
-const listUsers = token => request('/api/users', authorized(token));
-const createUser = (token, user) => request('/api/users', authorized(token, {
+const listUsers = token => request('/api/users/', authorized(token));
+const createUser = (token, user) => request('/api/users/', authorized(token, {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(user)
 }));
 const setUserDepartmentAccess = (token, userId, access) => request('/api/users/' + encodeURIComponent(userId) + '/access', authorized(token, {
@@ -264,8 +262,8 @@ const resetUserPassword = (token, userId, password) => request('/api/users/' + e
 // Platform routes are separately authorized by the Cloud service. They are
 // deliberately not implemented as a wider version of /api/users: a studio
 // administrator must never be able to enumerate another studio's users.
-const listPlatformOrganizations = token => request('/api/platform/organizations', authorized(token));
-const createPlatformOrganization = (token, organization) => request('/api/platform/organizations', authorized(token, {
+const listPlatformOrganizations = token => request('/api/platform/organizations/', authorized(token));
+const createPlatformOrganization = (token, organization) => request('/api/platform/organizations/', authorized(token, {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(organization)
 }));
 const setPlatformOrganizationStatus = (token, organizationId, status) => request('/api/platform/organizations/' + encodeURIComponent(organizationId) + '/status', authorized(token, {
@@ -282,7 +280,7 @@ const uploadPlatformOrganizationLogo = (token, organizationId, { name, mimeType,
   form.append('file', new Blob([buffer], { type: mimeType || 'application/octet-stream' }), String(name || 'studio-logo'));
   return request('/api/platform/organizations/' + encodeURIComponent(organizationId) + '/logo', authorized(token, { method: 'POST', body: form, timeoutMs: 120000 }));
 };
-const googleConnect = token => request('/api/google/connect', authorized(token));
+const googleConnect = token => request('/api/google/connect/', authorized(token));
 
 const uploadDriveFile = (token, { leadId, name, mimeType, buffer }) => {
   const form = new FormData();
