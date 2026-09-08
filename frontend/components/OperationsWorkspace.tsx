@@ -152,10 +152,12 @@ Aarzoo Singh - 9307846897 - https://wa.me/9307846897
 }
 
 export default function OperationsWorkspace({
+  searchTerm = "",
   readOnly = false,
   view = "Dashboard",
   setView,
 }: {
+  searchTerm?: string;
   readOnly?: boolean;
   view?: View;
   setView?: (value: View) => void;
@@ -221,13 +223,24 @@ export default function OperationsWorkspace({
   });
   const invalidateEvents = () =>
     queryClient.invalidateQueries({ queryKey: queryKeys.events() });
+  const matchingEvents = useMemo(() => {
+    const terms = searchTerm.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    return events.filter(event => {
+      const text = [event.title, event.client_name, event.handled_by, event.couple_name,
+        event.contact_no, event.event_type, event.city, event.start_date,
+        dateLabel(event.start_date), event.start_time, event.notes, event.photo,
+        event.video, event.candid, event.cinematic, event.drone, event.assistant,
+        event.bts].filter(value => value != null).join(" ").toLowerCase();
+      return terms.every(term => text.includes(term));
+    });
+  }, [events, searchTerm]);
   const upcoming = useMemo(
-    () => events.filter((e) => upcomingStatuses.has(e.status)),
-    [events],
+    () => matchingEvents.filter((e) => upcomingStatuses.has(e.status)),
+    [matchingEvents],
   );
   const completed = useMemo(
-    () => events.filter((e) => e.status === "Completed"),
-    [events],
+    () => matchingEvents.filter((e) => e.status === "Completed"),
+    [matchingEvents],
   );
 
   const saveEvent = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -574,10 +587,10 @@ function EventTable({
   compact?: boolean;
   fitColumns?: boolean;
 }) {
-  const labels = ["Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
+  const labels = ["Sr. No.", "Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
   const crew = (value: any) => {
     const assignments = String(value || "")
-      .split(/\s*;\s*/)
+      .split(/\s*;\s*|\s*\+(?!\s*\d)\s*/)
       .map((assignment) => assignment.trim())
       .filter(Boolean);
     const namedAssignments = assignments.filter(
@@ -667,8 +680,9 @@ function EventTable({
           </tr>
         </thead>
         <tbody>
-          {events.map((row) => (
+          {events.map((row, index) => (
             <tr key={row.id}>
+              <td className="srNo">{index + 1}</td>
               <td>{dateLabel(row.start_date)}</td>
               <td>
                 <b>{row.client_name || row.title}</b>
