@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 
@@ -106,13 +106,28 @@ export default function AccountsWorkspace({
   readOnly = false,
   view = "Payment Dashboard",
   setView,
+  searchTerm = "",
+  onSearchChange,
 }: {
   onAddLead: () => void;
   readOnly?: boolean;
   view?: string;
   setView?: (value: string) => void;
+  searchTerm?: string;
+  onSearchChange?: (value: string) => void;
 }) {
   const setViewSafe = setView ?? (() => {});
+  const [accountsControlsHeight, setAccountsControlsHeight] = useState(176);
+  const accountsControlsRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!accountsControlsRef.current) return;
+    const controls = accountsControlsRef.current;
+    const updateHeight = () => setAccountsControlsHeight(controls.getBoundingClientRect().height);
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(controls);
+    return () => observer.disconnect();
+  }, [view]);
   const customersQuery = useApiQuery<{ results: Row[] } | Row[]>(
     queryKeys.customers(),
     "/customers/?page_size=500",
@@ -163,6 +178,7 @@ export default function AccountsWorkspace({
     mutationFn: async ({ id }) => (await api.delete(`/payments/${id}/`)).data,
   });
   const [query, setQuery] = useState("");
+  useEffect(() => setQuery(searchTerm), [searchTerm]);
   const [draft, setDraft] = useState<Row | null>(null),
     [ledgerId, setLedgerId] = useState<number | null>(null);
   const [receiptPayment, setReceiptPayment] = useState<Row | null>(null);
@@ -631,9 +647,12 @@ export default function AccountsWorkspace({
     </section>
   );
   return (
-    <div className="accountsWorkspace">
+    <div
+      className={`accountsWorkspace${view === "Client Ledger" ? " clientLedgerView" : ""}`}
+      style={{ "--accounts-controls-height": `${accountsControlsHeight}px` } as CSSProperties}
+    >
       {(view === "Payment Dashboard" || view === "Receivables" || view === "Client Ledger" || view === "Reports & Analytics") ? (
-        <div className="accountsViewSticky">
+        <div ref={accountsControlsRef} className="accountsViewSticky">
           <nav className="operationsTabs">
             {views.map((item) => (
               <button
@@ -660,7 +679,10 @@ export default function AccountsWorkspace({
               aria-label="Search client accounts"
               placeholder="Search client, couple, or booking…"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                onSearchChange?.(e.target.value);
+              }}
             />
             {view === "Receivables" && <select
               aria-label="Filter receivables ageing"
@@ -831,7 +853,7 @@ export default function AccountsWorkspace({
       )}
       {(view === "Receivables" || view === "Client Ledger") && (
         <>
-          <section className="panel table">
+          <section className="panel table accountsScheduleTableWrap">
             <table
               className={`accountsScheduleTable ${
                 view === "Receivables"
@@ -842,6 +864,7 @@ export default function AccountsWorkspace({
               <thead>
                 <tr>
                   {[
+                    "Sr. No.",
                     "Event Date",
                     "Client / Couple",
                     "Total Closing",
@@ -857,7 +880,7 @@ export default function AccountsWorkspace({
                 </tr>
               </thead>
               <tbody>
-                {displayedAccounts.map((a) => (
+                {displayedAccounts.map((a, index) => (
                   <tr
                     key={a.id}
                     className={
@@ -868,6 +891,7 @@ export default function AccountsWorkspace({
                         : ""
                     }
                   >
+                    <td>{index + 1}</td>
                     <td>{date(a.event_date)}</td>
                     <td>
                       <b>{a.client}</b>

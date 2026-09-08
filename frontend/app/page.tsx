@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import { queryClient, queryKeys } from "@/lib/query";
@@ -80,6 +80,12 @@ function Login({
   setOwnerMode: (value: boolean) => void;
   authenticated: (owner: boolean) => void;
 }) {
+  useLayoutEffect(() => {
+    document.documentElement.dataset.theme = "dark";
+    document.documentElement.style.colorScheme = "dark";
+    window.localStorage.setItem("lenspire-theme", "dark");
+  }, []);
+
   const setSession = useAuthStore((s) => s.setSession),
     [error, setError] = useState(""),
     [showPassword, setShowPassword] = useState(false),
@@ -252,6 +258,8 @@ export default function Home() {
     [months, setMonths] = useState(6),
     [targetOpen, setTargetOpen] = useState(false),
     [salesView, setSalesView] = useState<"Dashboard" | "Lead Management">("Dashboard"),
+    [eventSearch, setEventSearch] = useState(""),
+    [accountsSearch, setAccountsSearch] = useState(""),
     [operationsView, setOperationsView] = useState<OperationsView>("Dashboard"),
     [accountsView, setAccountsView] = useState<string>("Payment Dashboard"),
     [isFullscreen, setIsFullscreen] = useState(false),
@@ -513,7 +521,7 @@ export default function Home() {
           ) : (
             <div><h1>{section}</h1><span>Your studio at a glance</span></div>
           )}
-          <div className="chromeActions"><HeaderSearch onNavigate={setSection} scope={section === "Sales" && salesView === "Lead Management" ? "lead-management" : "global"} /><NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
+          <div className="chromeActions"><HeaderSearch onNavigate={setSection} onEventSearch={setEventSearch} onAccountsSearch={setAccountsSearch} scope={section === "Operations" && (operationsView === "Upcoming Events" || operationsView === "Completed Events") ? "events" : section === "Sales" && salesView === "Lead Management" ? "lead-management" : section === "Accounts" && (accountsView === "Receivables" || accountsView === "Client Ledger") ? "accounts-table" : "global"} /><NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
         </div>
         {readOnly && (
           <div className="readOnlyNotice">
@@ -534,7 +542,7 @@ export default function Home() {
           </ErrorBoundary>
         ) : section === "Operations" ? (
           <ErrorBoundary label="Operations">
-            <OperationsWorkspace readOnly={readOnly} view={operationsView} setView={setOperationsView} />
+            <OperationsWorkspace searchTerm={eventSearch} readOnly={readOnly} view={operationsView} setView={setOperationsView} />
           </ErrorBoundary>
         ) : section === "Calendar" ? (
           <ErrorBoundary label="Calendar">
@@ -546,6 +554,8 @@ export default function Home() {
               readOnly={readOnly}
               view={accountsView}
               setView={setAccountsView}
+              searchTerm={accountsSearch}
+              onSearchChange={setAccountsSearch}
               onAddLead={() => {
                 if (!canWrite(auth.user, "sales")) return;
                 setStartNewLead(true);
