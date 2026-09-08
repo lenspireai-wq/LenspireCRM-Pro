@@ -2,27 +2,31 @@
    Loaded after the legacy workspace stylesheet so hardcoded dark chrome
    cannot override the selected light theme. */
 :root[data-theme="light"] {
-  --bg: #faf8f6;
-  --panel: #fffefd;
+  /* Extracted from lenspireai.com: warm white, lilac surfaces, and violet action. */
+  --bg: #fbfaff;
+  --panel: #ffffff;
   --surface: #ffffff;
-  --surface-2: #f7f4fb;
-  --surface-strong: #eee8fb;
-  --surface2: #f7f4fb;
-  --line: #ece8ef;
-  --text: #302644;
-  --text-strong: #2c1234;
-  --muted: #696780;
-  --brand: #7650c8;
-  --brand-hover: #6038af;
-  --brand-soft: #eee7ff;
-  --secondary: #987fce;
-  --shadow-card: 0 5px 22px rgb(63 35 70 / 4%);
-  --hover-overlay: #f4effa;
+  --surface-2: #f8f6fd;
+  --surface-strong: #f1ecfa;
+  --surface2: #f8f6fd;
+  --line: #e4dcea;
+  --text: #30263d;
+  --text-strong: #17141f;
+  --muted: #6c647b;
+  --brand: #7c3aed;
+  --brand-hover: #6d28d9;
+  --brand-soft: #f1eafe;
+  --secondary: #8b5cf6;
+  --accent: #c44bd8;
+  --accent-warm: #f3b34c;
+  --card-gradient: linear-gradient(145deg, #fdfaff, #f6efff);
+  --shadow-card: 0 10px 28px rgb(62 27 93 / 3%);
+  --hover-overlay: #f6f0ff;
   --success: #168454;
   --danger: #b53757;
   --warning: #a85b30;
   --info: #6750b0;
-  --focus-ring: 0 0 0 3px rgb(118 80 200 / 20%);
+  --focus-ring: 0 0 0 3px rgb(124 58 237 / 20%);
   --success-soft: #def4e6;
   --danger-soft: #fbe3ec;
   --warning-soft: #ffeadb;
@@ -35,23 +39,23 @@
 }
 :root[data-theme="light"] .loginHero {
   background:
-    linear-gradient(90deg, rgb(44 18 52 / 88%) 0%, rgb(55 35 55 / 62%) 48%, rgb(55 35 55 / 20%) 100%),
+    linear-gradient(90deg, rgb(248 246 253 / 96%) 0%, rgb(241 236 250 / 82%) 50%, rgb(241 236 250 / 24%) 100%),
     url("/login/studio-camera.png") right center / cover no-repeat;
 }
 :root[data-theme="light"] .loginHeroCopy h1 {
-  color: #fffaf4;
-  font-family: Georgia, "Times New Roman", serif;
-  font-weight: 500;
+  color: var(--text-strong);
+  font-family: Inter, "Segoe UI", sans-serif;
+  font-weight: 800;
 }
-:root[data-theme="light"] .loginHeroCopy > p { color: #eee7ed; }
+:root[data-theme="light"] .loginHeroCopy > p { color: var(--muted); }
 :root[data-theme="light"] .loginFeatures {
-  border-color: rgb(255 255 255 / 22%);
-  background: rgb(44 18 52 / 55%);
+  border-color: var(--line);
+  background: rgb(255 255 255 / 72%);
 }
-:root[data-theme="light"] .loginFeatures > div { border-color: rgb(255 255 255 / 16%); }
+:root[data-theme="light"] .loginFeatures > div { border-color: var(--line); }
 :root[data-theme="light"] .loginFeatures i,
-:root[data-theme="light"] .loginHeroNote { color: #dbc8f7; }
-:root[data-theme="light"] .loginFeatures small { color: #d8ceda; }
+:root[data-theme="light"] .loginHeroNote { color: var(--brand); }
+:root[data-theme="light"] .loginFeatures small { color: var(--muted); }
 :root[data-theme="light"] .loginPanel {
   background:
     radial-gradient(circle at 100% 0, rgb(118 80 200 / 10%), transparent 38%),
@@ -94,8 +98,8 @@
 :root[data-theme="light"] .loginInput input::placeholder { color: #9b94a4; }
 :root[data-theme="light"] .loginOptions button { color: var(--brand); }
 :root[data-theme="light"] .loginSubmit {
-  background: linear-gradient(135deg, var(--brand), #9876d6);
-  box-shadow: 0 10px 26px rgb(118 80 200 / 22%);
+  background: linear-gradient(135deg, var(--brand), var(--secondary));
+  box-shadow: 0 10px 24px rgb(124 58 237 / 32%);
 }
 :root[data-theme="light"] .ownerPortalButton {
   border-color: rgb(118 80 200 / 24%);
@@ -276,7 +280,7 @@
 .dashMetricIcon { display: none; }
 .dashMetricCopy { display: grid; gap: 8px; min-width: 0; }
 :root[data-theme="light"] .shell aside {
-  background: linear-gradient(160deg, #fffefd 45%, #f3eee8);
+  background: linear-gradient(160deg, #ffffff 45%, #f8f4ff);
   border-right: 1px solid var(--line);
   box-shadow: 2px 0 18px rgb(60 35 70 / 3%);
 }
@@ -756,4 +760,43 @@
 :root[data-theme="light"] .navGroupLabel:hover {
   background: var(--hover-overlay);
   color: var(--text-strong);
+}
+
+/* Lenspire marketing-site primitives, applied to the existing CRM structure. */
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(1100px 520px at 78% 8%, rgb(139 92 246 / 10%), transparent 65%),
+    var(--bg);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+:root[data-theme="light"] :is(.primary, .loginSubmit, .billBtn.primary) {
+  background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 10px 24px rgb(124 58 237 / 32%);
+}
+:root[data-theme="light"] :is(.primary, .loginSubmit, .billBtn.primary):hover {
+  background: linear-gradient(135deg, #6d28d9, #7c3aed);
+  box-shadow: 0 12px 28px rgb(124 58 237 / 38%);
+}
+:root[data-theme="light"] :is(.secondary, .btnSecondary, .billBtn:not(.primary)) {
+  border-color: var(--line);
+  background: #fff;
+  color: var(--text);
+  box-shadow: 0 2px 8px rgb(44 36 64 / 6%);
+}
+:root[data-theme="light"] :is(.secondary, .btnSecondary, .billBtn:not(.primary)):hover {
+  border-color: rgb(124 58 237 / 30%);
+  background: var(--brand-soft);
+  color: var(--brand-hover);
+}
+:root[data-theme="light"] :is(.panel, .dashCard, .salesPanel, .accountPanel, .productionPanel, .adminPanel, .modalCard, .accountModal, .leadModal, .targetModal, .productionModal, .adminUserModal) {
+  border-radius: 20px;
+}
+:root[data-theme="light"] :is(.panel, .dashCard, .salesPanel, .accountPanel, .productionPanel, .adminPanel) {
+  background: var(--card-gradient);
+}
+:root[data-theme="light"] :is(input, select, textarea):focus {
+  border-color: var(--brand);
+  box-shadow: var(--focus-ring);
 }

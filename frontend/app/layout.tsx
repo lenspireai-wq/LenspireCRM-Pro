@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#7367f0",
+  themeColor: "#7c3aed",
   width: "device-width",
   initialScale: 1,
 };
@@ -36,7 +36,8 @@ const themeBootstrap = `(() => {
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
   } catch (e) {
-    document.documentElement.dataset.theme = 'dark';
+    document.documentElement.dataset.theme = 'light';
+    document.documentElement.style.colorScheme = 'light';
   }
 })();`;
 
