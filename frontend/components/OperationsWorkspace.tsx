@@ -176,7 +176,7 @@ export default function OperationsWorkspace({
   const photographerFileInputRef = useState<HTMLInputElement | null>(null)[0];
   const eventsQuery = useApiQuery<{ results: Row[] } | Row[]>(
     queryKeys.events(),
-    "/events/?page_size=2000&ordering=start_date,start_time,id",
+    "/events/?page_size=5000&ordering=start_date,start_time,id",
   );
   const crewQuery = useApiQuery<{ results: Row[] } | Row[]>(
     ["photographers"],
