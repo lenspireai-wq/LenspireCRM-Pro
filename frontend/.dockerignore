@@ -3,4 +3,9 @@ node_modules
 out
 .git
 .env*.local
+.env
+e2e/.auth
+playwright-report
+test-results
+*.log
 dist

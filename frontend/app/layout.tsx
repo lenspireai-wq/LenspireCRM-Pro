@@ -26,11 +26,11 @@ export const viewport: Viewport = {
 const themeBootstrap = `(() => {
   try {
     const stored = localStorage.getItem('lenspire-theme');
-    const theme = stored === 'light' || stored === 'dark' ? stored : 'light';
+    const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
   } catch (e) {
-    document.documentElement.dataset.theme = 'light';
+    document.documentElement.dataset.theme = 'dark';
   }
 })();`;
 

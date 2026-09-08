@@ -13,6 +13,19 @@ npm.cmd start
 
 Create an unpacked release with `npm.cmd run pack` and an installer with `npm.cmd run dist`.
 
+## Local webapp (Windows)
+
+The Next.js frontend needs the Django API running as well. For this checkout, create a local Python environment instead of using a virtual environment copied from another computer:
+
+```powershell
+python -m venv backend/.venv-local
+backend/.venv-local/Scripts/python.exe -m pip install -r backend/requirements.txt
+backend/.venv-local/Scripts/python.exe backend/manage.py check
+backend/.venv-local/Scripts/python.exe backend/manage.py runserver 127.0.0.1:8000 --noreload
+```
+
+Keep that terminal running. In a second terminal, run `npm.cmd --prefix frontend run dev -- --hostname 127.0.0.1` and open `http://127.0.0.1:3000`. The frontend's `NEXT_PUBLIC_API_URL` should be `http://127.0.0.1:8000/api` for this local setup. Reuse your existing account credentials.
+
 ## Security and data
 
 - Cloud access and refresh tokens stay in memory and are cleared at sign-out or application exit.
