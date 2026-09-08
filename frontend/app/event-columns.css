@@ -192,3 +192,26 @@
 :root .upcomingEventsTable > :is(thead, tbody) > tr::before {
   display: none;
 }
+
+/* Keep event-table labels visually distinct from the compact data rows. */
+:root .upcomingEventsTable thead th,
+:root .upcomingEventsTable thead th * {
+  font-weight: 700 !important;
+}
+
+/* Keep every event column label visible while browsing long event lists. */
+:root .upcomingEventsTableWrap {
+  height: calc(100dvh - var(--workspace-chrome-height, 68px) - 80px);
+  max-height: none;
+  overflow: auto !important;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+:root .upcomingEventsTableWrap::-webkit-scrollbar {
+  display: none;
+}
+:root .upcomingEventsTableWrap .upcomingEventsTable thead th {
+  position: sticky !important;
+  top: 0;
+  z-index: 5;
+}

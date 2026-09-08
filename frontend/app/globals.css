@@ -5495,6 +5495,59 @@ table td { font-size: 13px; }
 }
 .modalFooter { position: sticky; inset-block-end: 0; z-index: 3; background: var(--panel); }
 
+/* The event editor contains a large, structured form. Use the whole workspace
+   instead of nesting it in a scrolling dialog. */
+.modalBackdrop:has(.eventEditorModal) {
+  padding: 0;
+  overflow: hidden;
+}
+.eventEditorModal {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  overflow: hidden;
+  border-radius: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+.eventEditorModal .operationForm {
+  min-height: 0;
+  overflow: hidden;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+}
+.eventEditorModal .operationFormSection {
+  min-width: 0;
+  padding: var(--space-3);
+}
+.eventEditorModal .operationFieldGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+.eventEditorModal .assignmentGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.eventEditorModal .crewMultiField {
+  padding: var(--space-2);
+  gap: var(--space-1);
+}
+.eventEditorModal .operationFieldGrid :is(input, select, textarea),
+.eventEditorModal .crewMultiField :is(input, select) {
+  padding: var(--space-2);
+}
+@media (max-width: 900px), (max-height: 680px) {
+  .eventEditorModal .operationForm {
+    overflow-y: auto;
+    grid-template-columns: 1fr;
+  }
+  .eventEditorModal .operationFieldGrid,
+  .eventEditorModal .assignmentGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 1280px) and (min-width: 901px) {
   .sidebarToggle { left: 210px; }
   .shell main { padding: 20px; margin-left: 210px; }
@@ -8453,6 +8506,57 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .shell > main { overflow-x: hidden; }
 .operationsTabs, .billTabs { max-width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: thin; }
 .operationsTabs > button, .billTabs > button { flex: 0 0 auto; white-space: nowrap; }
+.operationsDashboardControls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.operationsDashboardControls .operationsTabs {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
+.operationsDashboardControls .operationsActions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  align-self: stretch;
+  margin-left: auto;
+  gap: var(--space-1);
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  border-bottom: 1px solid var(--line);
+}
+.operationsDashboardControls .operationsActions :is(button, .fileLabel) {
+  min-height: auto;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 7px 7px 0 0;
+  background: transparent;
+  color: var(--muted);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-xs);
+  font-weight: inherit;
+}
+.operationsDashboardControls .operationsActions :is(button, .fileLabel):hover {
+  color: #a99fff;
+  border-color: #3b4260;
+  background: #7367f014;
+}
+@media (max-width: 900px) {
+  .operationsDashboardControls {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+  .operationsDashboardControls .operationsTabs {
+    flex-basis: 100%;
+  }
+  .operationsDashboardControls .operationsActions {
+    margin-left: 0;
+    align-self: auto;
+    flex-wrap: wrap;
+  }
+}
 .leadTableWrap, .upcomingEventsTableWrap, .auditTableWrap,
 .table, .panel:has(> table), .panel:has(> .table) {
   max-width: 100%; overflow-x: auto !important; overscroll-behavior-inline: contain;
