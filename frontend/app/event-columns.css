@@ -215,3 +215,11 @@
   top: 0;
   z-index: 5;
 }
+
+/* Match the Lead Management row-hover feedback in both event lists. */
+:root .upcomingEventsTable tbody tr {
+  transition: background-color 140ms ease;
+}
+:root .upcomingEventsTable tbody tr:hover {
+  background: #7367f00d !important;
+}
