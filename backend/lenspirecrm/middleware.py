@@ -28,7 +28,10 @@ class RequestSizeLimitMiddleware:
 
     def __init__(self, get_response):
         self.get_response = get_response
-        self.max_bytes = getattr(settings, "DATA_UPLOAD_MAX_MEMORY_SIZE", 10 * 1024 * 1024)
+        # Multipart requests include boundaries and non-file fields. Keep the
+        # request cap separate from the per-file validation limit so a valid
+        # 10 MB quotation is not rejected before the serializer can validate it.
+        self.max_bytes = getattr(settings, "REQUEST_BODY_MAX_SIZE", 10 * 1024 * 1024 + 512 * 1024)
 
     def __call__(self, request):
         try:

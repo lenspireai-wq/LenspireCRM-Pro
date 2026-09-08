@@ -107,8 +107,12 @@ SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(minutes=15), "REFRESH_TOKEN_LIF
               "ROTATE_REFRESH_TOKENS": True, "BLACKLIST_AFTER_ROTATION": True,
               "CHECK_REVOKE_TOKEN": True}
 CORS_ALLOWED_ORIGINS = [value.strip() for value in os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",") if value.strip()]
+# The file-size policy is enforced by the upload serializers.  The HTTP request
+# is slightly larger than the file itself because multipart form-data includes
+# boundaries and field metadata, so it needs a small amount of extra headroom.
 DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.getenv("DATA_UPLOAD_MAX_MEMORY_SIZE", 10 * 1024 * 1024))
 FILE_UPLOAD_MAX_MEMORY_SIZE = int(os.getenv("FILE_UPLOAD_MAX_MEMORY_SIZE", 10 * 1024 * 1024))
+REQUEST_BODY_MAX_SIZE = int(os.getenv("REQUEST_BODY_MAX_SIZE", DATA_UPLOAD_MAX_MEMORY_SIZE + 512 * 1024))
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0

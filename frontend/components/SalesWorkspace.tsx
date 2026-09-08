@@ -1408,6 +1408,10 @@ function LeadDetail({
   });
   const uploadAttachment = async (file?: File) => {
     if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Quotation files must be 10 MB or smaller.");
+      return;
+    }
     setUploading(true);
     setError("");
     const data = new FormData();
@@ -1416,9 +1420,17 @@ function LeadDetail({
     data.append("file", file);
     try {
       await attachMutation.mutateAsync(data);
-      onRefresh();
+      await onRefresh();
     } catch (problem: any) {
-      setError(problem.response?.data?.detail || "Could not upload quotation");
+      const response = problem.response;
+      const details = response?.data;
+      const validationMessage = details && typeof details === "object"
+        ? Object.values(details).flat().filter((value) => typeof value === "string").join(" ")
+        : "";
+      setError(validationMessage || (response?.status === 413
+        ? "The server rejected this file as too large. Quotation files up to 10 MB are supported."
+        : "Could not upload quotation. Please try again or contact support."));
+    } finally {
       setUploading(false);
     }
   };
@@ -1492,7 +1504,11 @@ function LeadDetail({
                 disabled={uploading}
                 type="file"
                 accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
-                onChange={(event) => uploadAttachment(event.target.files?.[0])}
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  event.target.value = "";
+                  void uploadAttachment(file);
+                }}
               />
             </label>
           )}
