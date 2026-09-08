@@ -14,9 +14,6 @@ SECRET_KEY = os.getenv("SECRET_KEY", "lenspire-development-key-change-before-pro
 if not DEBUG and SECRET_KEY == "lenspire-development-key-change-before-production":
     raise RuntimeError("Set a strong SECRET_KEY when DEBUG is false.")
 
-from .env_validator import check_settings
-check_settings()
-
 ALLOWED_HOSTS = [value.strip() for value in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if value.strip()]
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
