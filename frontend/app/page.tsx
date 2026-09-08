@@ -281,6 +281,14 @@ export default function Home() {
     setMounted(true);
   }, []);
   useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 900px)");
+    const closeMobileDrawer = () => {
+      if (mobileQuery.matches) setSidebarHidden(true);
+    };
+    mobileQuery.addEventListener("change", closeMobileDrawer);
+    return () => mobileQuery.removeEventListener("change", closeMobileDrawer);
+  }, []);
+  useEffect(() => {
     setTargetOpen(false);
   }, [section]);
   useEffect(() => {
@@ -378,7 +386,7 @@ export default function Home() {
   const readOnly = department ? !canWrite(auth.user, department) : false;
   return (
     <div className={`shell ${sidebarHidden ? "sidebarHidden" : ""}`}>
-      <aside>
+      <aside aria-hidden={sidebarHidden ? true : undefined}>
         <div className="brand">
           <span className="studioMark" aria-hidden="true"><img src="/ankit-studios-logo.png" alt="" /></span>
           <span className="studioIdentity"><b>Ankit Studios</b><small>Powered by LenspireCRM</small></span>
@@ -428,6 +436,13 @@ export default function Home() {
           <button className="profilePower" aria-label="Sign out" onClick={auth.logout}>◯</button>
         </div>
       </aside>
+      <button
+        type="button"
+        className="sidebarBackdrop"
+        aria-label="Close navigation menu"
+        tabIndex={sidebarHidden ? -1 : 0}
+        onClick={() => setSidebarHidden(true)}
+      />
       <main
         className={section === "Dashboard" ? "mainDashboard" : section === "Sales" ? "mainSalesDashboard" : section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details") ? "mainOperationsDashboard" : section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics") ? "mainAccountsSticky" : undefined}
         style={section === "Dashboard" || section === "Sales" || (section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details")) || (section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics")) ? { "--workspace-chrome-height": `${workspaceChromeHeight}px` } as CSSProperties : undefined}

@@ -9302,6 +9302,106 @@ table > tbody > tr:has(td[colspan])::before {
 .mainSalesDashboard .workspaceChrome {
   margin-bottom: 4px;
 }
+
+/* Mobile navigation is an off-canvas drawer, not a squeezed desktop sidebar. */
+.sidebarBackdrop {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .shell.sidebarHidden aside {
+    display: flex !important;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(-105%);
+  }
+  .shell:not(.sidebarHidden) aside {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+  .shell:not(.sidebarHidden) .sidebarBackdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    border: 0;
+    padding: 0;
+    background: rgb(2 6 23 / 48%);
+    cursor: pointer;
+  }
+  .shell > main {
+    min-width: 0;
+  }
+  .workspaceChrome,
+  .workspaceHead,
+  .sectionHeader,
+  .salesHeader,
+  .dashHeader {
+    min-width: 0;
+  }
+  :is(.workspaceHeadActions, .salesActions, .adminHeaderActions, .productionToolActions) {
+    flex-wrap: wrap;
+  }
+  :is(.workspaceHeadActions, .salesActions, .adminHeaderActions, .productionToolActions) > :is(button, a, label) {
+    min-height: var(--control-md);
+  }
+}
+
+@media (max-width: 600px) {
+  .shell > main {
+    padding-inline: 12px;
+  }
+  .workspaceChrome {
+    margin-inline: -12px;
+  }
+  :is(.workspaceHeadActions, .salesActions, .adminHeaderActions, .productionToolActions) > :is(button, a, label) {
+    flex: 1 1 140px;
+  }
+  /* These rules deliberately come after the legacy compact overrides above. */
+  .dashMetrics,
+  .salesKpis,
+  .operationsWorkspace .salesKpis,
+  .accountMetrics,
+  .adminMetrics,
+  .productionMetrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .operationsTabs,
+  .billTabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 100%;
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+  }
+  .operationsTabs > button,
+  .billTabs > button {
+    min-width: 0;
+    min-height: 42px;
+    padding-inline: var(--space-2);
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .chromeActions :is(.notifBellButton, .themeToggle, button) {
+    width: 36px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    flex-basis: 36px;
+  }
+}
+
+@media (max-width: 359px) {
+  .dashMetrics,
+  .salesKpis,
+  .operationsWorkspace .salesKpis,
+  .accountMetrics,
+  .adminMetrics,
+  .productionMetrics {
+    grid-template-columns: 1fr;
+  }
+}
 .mainSalesDashboard :is(.salesDashboardSticky, .leadManagementSticky) {
   padding-top: 4px;
 }
