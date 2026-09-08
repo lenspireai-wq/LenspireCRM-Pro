@@ -4353,6 +4353,44 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   padding: var(--space-2) var(--space-4);
   white-space: nowrap;
 }
+.adminConsoleLayout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.adminConsoleHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.adminConsoleLayout .operationsTabs {
+  overflow-x: hidden;
+  min-width: 0;
+}
+.adminConsoleHeaderRow .adminHeaderActions {
+  margin-left: auto;
+}
+.adminConsolePageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.adminConsolePageHeader h1 {
+  margin: 3px 0 2px;
+  font-size: var(--font-2xl);
+  line-height: 1.15;
+}
+.adminConsolePageHeader p {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--font-xs);
+  line-height: 1.35;
+}
 .resetTestingModal {
   width: min(650px, 100%);
 }
@@ -6875,6 +6913,7 @@ input[aria-label="Search CRM records"]:focus-visible,
 .auditWorkspace .workspaceHead h1 { font-size: var(--font-2xl); margin: 0; }
 .auditWorkspace .workspaceSub { color: #94a3b8; font-size: var(--font-sm); margin: var(--space-1) 0 0; }
 .auditWorkspace .workspaceHeadActions { display: flex; gap: var(--space-2); }
+.auditToolbar { display: flex; justify-content: flex-end; }
 
 .auditSummary {
   display: grid;
@@ -6882,18 +6921,35 @@ input[aria-label="Search CRM records"]:focus-visible,
   gap: var(--space-3);
 }
 .auditSummaryCard {
-  background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
+  background: linear-gradient(145deg, rgba(18,27,40,.96), rgba(14,22,32,.96));
+  border: 1px solid var(--line);
+  border-top: 3px solid #6c61eb;
+  border-radius: 11px;
+  padding: var(--space-5);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
   min-height: 88px;
+  box-shadow: var(--shadow-card);
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
 }
-.auditSummaryCard span { color: #94a3b8; font-size: var(--font-xs); text-transform: uppercase; letter-spacing: 0.04em; }
-.auditSummaryCard strong { color: #e2e8f0; font-size: var(--font-xl); font-weight: 600; }
-.auditSummaryCard small { color: #94a3b8; font-size: var(--font-xs); }
+.auditSummaryCard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(0,0,0,.35);
+  border-color: rgba(148, 163, 184, 0.22);
+}
+.auditSummaryCard:nth-child(2) {
+  border-top-color: #e0a82f;
+}
+.auditSummaryCard:nth-child(3) {
+  border-top-color: #ef7b48;
+}
+.auditSummaryCard:nth-child(4) {
+  border-top-color: #ef5b67;
+}
+.auditSummaryCard span { color: var(--muted); font-size: var(--font-xs); text-transform: uppercase; letter-spacing: 0.04em; }
+.auditSummaryCard strong { font-size: var(--font-xl); overflow-wrap: anywhere; }
+.auditSummaryCard small { color: var(--muted); font-size: var(--font-xs); }
 
 .auditFilters {
   display: grid;
@@ -6925,16 +6981,16 @@ input[aria-label="Search CRM records"]:focus-visible,
   background: rgba(15, 23, 42, 0.45);
   border: 1px solid rgba(148, 163, 184, 0.12);
   border-radius: var(--radius-lg);
-  overflow: auto;
+  overflow: hidden;
   max-height: 70vh;
 }
-.auditTable { width: 100%; border-collapse: collapse; font-size: var(--font-sm); }
+.auditTable { width: 100%; min-width: 0; border-collapse: collapse; font-size: var(--font-xs); table-layout: fixed; }
 .auditTable thead th {
   position: sticky;
   top: 0;
   background: rgba(15, 23, 42, 0.95);
   text-align: left;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-3);
   font-size: var(--font-xs);
   color: #94a3b8;
   text-transform: uppercase;
@@ -6943,16 +6999,25 @@ input[aria-label="Search CRM records"]:focus-visible,
   border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
 .auditTable tbody td {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid rgba(148, 163, 184, 0.06);
   vertical-align: top;
   color: #e2e8f0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .auditTable tbody tr:hover { background: rgba(115, 103, 240, 0.04); }
 .auditTable tbody tr:last-child td { border-bottom: none; }
 .auditTable time { color: #cbd5e1; white-space: nowrap; }
+.auditTable .col-when { width: 14%; }
+.auditTable .col-source { width: 9%; }
+.auditTable .col-actor { width: 14%; }
+.auditTable .col-subject { width: 16%; }
+.auditTable .col-action { width: 14%; }
+.auditTable .col-details { width: 33%; }
 .auditSource { color: #94a3b8; font-size: var(--font-xs); text-transform: uppercase; letter-spacing: 0.04em; }
-.auditDescription { color: #cbd5e1; max-width: 520px; }
+.auditDescription { color: #cbd5e1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .auditPill {
   display: inline-block;
@@ -8882,6 +8947,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .productionActivityTable, .adminUsersTable, .adminAuditTable, .auditTable {
   min-width: 640px; width: 100%;
 }
+.auditTable { min-width: 0; }
 table th, table td { word-break: normal !important; overflow-wrap: normal !important; }
 :where(button, a, input, select, textarea, [tabindex]):focus-visible {
   outline: 3px solid #9d95ff !important; outline-offset: 2px !important;
