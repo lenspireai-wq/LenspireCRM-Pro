@@ -4,6 +4,7 @@
 .chrome-dbg/
 desktop.ini
 node_modules/
+backend/.venv-local/
 .env
 .env.*
 !.env.example

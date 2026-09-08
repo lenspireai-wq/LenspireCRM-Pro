@@ -19,11 +19,11 @@ const apply = (theme: Theme) => {
 };
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const initial = readStored() ?? "light";
+    const initial = readStored() ?? "dark";
     setTheme(initial);
     apply(initial);
     setMounted(true);
@@ -40,7 +40,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useTheme(): { theme: Theme; setTheme: (next: Theme) => void; toggle: () => void } {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>("dark");
   useEffect(() => {
     const sync = (event: Event) => {
       const next = (event as CustomEvent<Theme>).detail;

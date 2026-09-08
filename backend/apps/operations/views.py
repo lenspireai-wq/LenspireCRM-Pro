@@ -95,9 +95,9 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         today = timezone.localdate()
-        # Lifecycle readiness is calculated when an event is saved. On reads,
-        # only date-driven transitions need updating, which keeps large event
-        # lists responsive.
+        # Lifecycle readiness is calculated when an event is saved.  On reads,
+        # only date-driven transitions need updating; doing this in SQL avoids
+        # loading every event before returning a paginated response.
         queryset.filter(start_date__lt=today).exclude(
             status__in=("Cancelled", "Completed")
         ).update(status="Completed")
@@ -108,8 +108,7 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
         for event in queryset.filter(status__in=("Completed", "In Progress")).exclude(
             start_date__lte=today
         ):
-            next_status = automatic_event_status(event)
-            event.status = next_status
+            event.status = automatic_event_status(event)
             changed.append(event)
         if changed:
             CalendarEvent.objects.bulk_update(changed, ("status",))
