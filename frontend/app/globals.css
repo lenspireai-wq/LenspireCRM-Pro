@@ -2993,26 +2993,29 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   gap: var(--space-2);
 }
 .accountsScheduleTable th:nth-child(1) {
-  width: 6%;
+  width: 38px;
 }
 .accountsScheduleTable th:nth-child(2) {
-  width: 9%;
-}
-.accountsScheduleTable th:nth-child(3),
-.accountsScheduleTable th:nth-child(4),
-.accountsScheduleTable th:nth-child(5) {
-  width: 7%;
-}
-.accountsScheduleTable th:nth-child(6) {
-  width: 30%;
-}
-.accountsScheduleTable th:nth-child(7) {
-  width: 9%;
-}
-.accountsScheduleTable th:nth-child(8) {
   width: 6%;
 }
+.accountsScheduleTable th:nth-child(3) {
+  width: 9%;
+}
+.accountsScheduleTable th:nth-child(4),
+.accountsScheduleTable th:nth-child(5),
+.accountsScheduleTable th:nth-child(6) {
+  width: 7%;
+}
+.accountsScheduleTable th:nth-child(7) {
+  width: 30%;
+}
+.accountsScheduleTable th:nth-child(8) {
+  width: 9%;
+}
 .accountsScheduleTable th:nth-child(9) {
+  width: 6%;
+}
+.accountsScheduleTable th:nth-child(10) {
   width: 19%;
 }
 .accountsScheduleTable .accountPlan,
@@ -3039,42 +3042,45 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
 }
 .accountsScheduleTable.receivablesTable {
   width: 100%;
-  min-width: 1180px;
-  table-layout: auto;
-}
-.receivablesTable th {
-  width: auto;
+  min-width: 0;
+  table-layout: fixed;
 }
 .receivablesTable th:nth-child(1) {
-  min-width: 100px;
+  width: 38px;
+  min-width: 38px;
 }
 .receivablesTable th:nth-child(2) {
-  min-width: 145px;
+  min-width: 0;
 }
-.receivablesTable th:nth-child(3),
+.receivablesTable th:nth-child(3) {
+  min-width: 0;
+}
 .receivablesTable th:nth-child(4),
-.receivablesTable th:nth-child(5) {
-  min-width: 105px;
-}
+.receivablesTable th:nth-child(5),
 .receivablesTable th:nth-child(6) {
-  width: 38%;
-  min-width: 430px;
+  min-width: 0;
 }
 .receivablesTable th:nth-child(7) {
-  min-width: 125px;
+  width: 33%;
+  min-width: 0;
 }
 .receivablesTable th:nth-child(8) {
-  min-width: 75px;
+  min-width: 0;
 }
 .receivablesTable th:nth-child(9) {
-  min-width: 96px;
+  min-width: 0;
+}
+.receivablesTable th:nth-child(10) {
+  min-width: 0;
 }
 .receivablesTable .accountPlan {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
   gap: var(--space-1);
 }
 .receivablesTable .accountPlan > span {
+  flex: 1 1 0;
   min-width: 0;
 }
 .receivablesTable th,
@@ -6010,12 +6016,192 @@ body:has(.mainAccountsSticky) {
   position: sticky;
   top: var(--workspace-chrome-height, 68px);
   z-index: 35;
-  padding: 8px 0 12px;
+  padding: 0 0 12px;
   background: var(--bg);
   box-shadow: 0 10px 18px -16px rgb(0 0 0 / 35%);
 }
+.mainAccountsSticky .workspaceChrome {
+  margin-bottom: var(--space-2);
+}
+.mainAccountsSticky .receivablesTools {
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.mainAccountsSticky .receivablesTools :is(.accountSearch, select, button) {
+  min-height: 32px;
+  height: 32px;
+  padding: 4px 8px;
+  font-size: var(--font-xs);
+}
 .mainAccountsSticky .accountsViewSticky .accountMetrics {
   margin-bottom: 0;
+}
+.mainAccountsSticky .accountsViewSticky .accountMetrics article {
+  min-height: 80px;
+  padding: var(--space-3);
+}
+.mainAccountsSticky .accountsViewSticky .accountMetrics span {
+  margin-bottom: var(--space-1);
+}
+.mainAccountsSticky .accountsScheduleTableWrap {
+  max-height: calc(100dvh - var(--workspace-chrome-height, 68px) - var(--accounts-controls-height, 176px) - var(--space-3));
+  overflow: auto !important;
+  scrollbar-width: none;
+}
+.mainAccountsSticky .accountsScheduleTableWrap::-webkit-scrollbar {
+  display: none;
+}
+.mainAccountsSticky .accountsScheduleTableWrap thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface);
+  box-shadow: inset 0 -1px 0 var(--border);
+}
+.mainAccountsSticky .receivablesTable td {
+  padding: var(--space-1);
+  text-align: center;
+  vertical-align: middle;
+}
+.mainAccountsSticky .receivablesTable th {
+  text-align: center;
+}
+.mainAccountsSticky .receivablesTable .accountPlan > span {
+  padding: var(--space-1);
+  text-align: center;
+}
+.mainAccountsSticky .receivablesTable .receivableActions {
+  justify-content: center;
+}
+.mainAccountsSticky .receivablesTable .milestoneDue {
+  margin-top: 2px;
+}
+.mainAccountsSticky .receivablesTable .milestoneDateButton {
+  margin-top: 3px;
+}
+.accountsScheduleTable > thead > tr::before,
+.accountsScheduleTable > tbody > tr::before {
+  display: none;
+}
+.mainAccountsSticky .clientLedgerTable {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+.mainAccountsSticky .clientLedgerTable th {
+  min-width: 0;
+}
+.mainAccountsSticky .clientLedgerTable th:nth-child(1) { width: 4% !important; }
+.mainAccountsSticky .clientLedgerTable th:nth-child(2) { width: 7% !important; }
+.mainAccountsSticky .clientLedgerTable th:nth-child(3) { width: 11% !important; }
+.mainAccountsSticky .clientLedgerTable th:nth-child(4),
+.mainAccountsSticky .clientLedgerTable th:nth-child(5),
+.mainAccountsSticky .clientLedgerTable th:nth-child(6) { width: 7% !important; }
+.mainAccountsSticky .clientLedgerTable th:nth-child(7) { width: 32% !important; }
+.mainAccountsSticky .clientLedgerTable th:nth-child(8) { width: 10% !important; }
+.mainAccountsSticky .clientLedgerTable th:nth-child(9) { width: 7% !important; }
+.mainAccountsSticky .clientLedgerTable th:nth-child(10) { width: 8% !important; }
+.mainAccountsSticky .receivablesTable th:nth-child(1) { width: 4% !important; }
+.mainAccountsSticky .receivablesTable th:nth-child(2) { width: 7% !important; }
+.mainAccountsSticky .receivablesTable th:nth-child(3) { width: 11% !important; }
+.mainAccountsSticky .receivablesTable th:nth-child(4),
+.mainAccountsSticky .receivablesTable th:nth-child(5),
+.mainAccountsSticky .receivablesTable th:nth-child(6) { width: 7% !important; }
+.mainAccountsSticky .receivablesTable th:nth-child(7) { width: 32% !important; }
+.mainAccountsSticky .receivablesTable th:nth-child(8) { width: 10% !important; }
+.mainAccountsSticky .receivablesTable th:nth-child(9) { width: 7% !important; }
+.mainAccountsSticky .receivablesTable th:nth-child(10) { width: 8% !important; }
+.mainAccountsSticky .receivablesTable .accountPlan {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+}
+.mainAccountsSticky .receivablesTable .accountPlan > span {
+  width: auto;
+  min-width: 0;
+  font-size: 8px;
+  overflow-wrap: anywhere;
+}
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th:nth-child(1) { width: 5%; }
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th:nth-child(2) { width: 9%; }
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th:nth-child(3) { width: 13%; }
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th:nth-child(4),
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th:nth-child(5),
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th:nth-child(6) { width: 9%; }
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th:nth-child(7) { width: 18%; }
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th:nth-child(8) { width: 10%; }
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th:nth-child(9) { width: 8%; }
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th:nth-child(10) { width: 10%; }
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+.mainAccountsSticky .accountsScheduleTableWrap {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th,
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) td {
+  min-width: 0 !important;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) .receivableActions button {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mainAccountsSticky .clientLedgerTable .accountPlan > span {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.mainAccountsSticky .clientLedgerTable .accountPlan {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+}
+.mainAccountsSticky .clientLedgerTable .accountPlan > span {
+  width: auto;
+  min-width: 0;
+  text-align: center;
+  font-size: 8px;
+  overflow-wrap: anywhere;
+}
+.mainAccountsSticky .clientLedgerTable td {
+  padding: var(--space-1);
+  vertical-align: middle;
+}
+.mainAccountsSticky .clientLedgerTable .accountPlan > span {
+  padding: var(--space-1);
+}
+.mainAccountsSticky .clientLedgerTable .milestoneDue {
+  margin-top: 2px;
+}
+.mainAccountsSticky .clientLedgerTable .milestoneDateButton {
+  margin-top: 3px;
+}
+html:has(.clientLedgerView),
+body:has(.clientLedgerView),
+.clientLedgerView .accountsScheduleTableWrap {
+  scrollbar-width: none;
+}
+.clientLedgerView .accountsScheduleTableWrap::-webkit-scrollbar,
+body:has(.clientLedgerView)::-webkit-scrollbar {
+  display: none;
+}
+body:has(.clientLedgerView),
+body:has(.clientLedgerView) .shell > main,
+body:has(.clientLedgerView) .clientLedgerView,
+body:has(.clientLedgerView) .clientLedgerView * {
+  scrollbar-width: none;
+}
+body:has(.clientLedgerView) *::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 @media (max-width: 800px) {
   .dashboardChrome {
@@ -8413,7 +8599,7 @@ td {
 /* Exact compact sidebar from the desktop workspace */
 .shell aside { display: flex; flex-direction: column; height: 100dvh; }
 .shell aside .brand { flex: 0 0 112px; min-height: 112px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; padding: 12px 18px; gap: 10px; background: linear-gradient(135deg,rgba(69,61,145,.24),transparent 72%); }
-.studioMark { width: 82px; height: 82px; flex: 0 0 82px; border: 0; border-radius: 0; box-shadow: none; }
+.studioMark { width: 94px; height: 94px; flex: 0 0 94px; border: 0; border-radius: 0; box-shadow: none; }
 .studioMark img { width: 100%; height: 100%; display: block; object-fit: contain; }
 .studioIdentity b { font-size: 14px; }.studioIdentity small { margin-top: 2px; font-size: 8px; }
 .shell aside nav { flex: 1 1 auto; display: block; padding: 16px 13px; overflow: hidden; }
