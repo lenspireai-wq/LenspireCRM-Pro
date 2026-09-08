@@ -26,7 +26,13 @@ export const viewport: Viewport = {
 const themeBootstrap = `(() => {
   try {
     const stored = localStorage.getItem('lenspire-theme');
-    const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+    if (stored === 'light' || stored === 'dark') {
+      document.documentElement.dataset.theme = stored;
+      document.documentElement.style.colorScheme = stored;
+      return;
+    }
+    const host = window.location.hostname;
+    const theme = host === 'crm.lenspireai.com' ? 'light' : 'dark';
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
   } catch (e) {

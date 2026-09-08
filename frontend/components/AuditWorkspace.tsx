@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useApiQuery, queryKeys } from "@/lib/query";
 import { isAdministrator } from "@/lib/permissions";
 
@@ -61,7 +61,15 @@ const actionTone = (action: string) => {
   return "auditPill auditPillMuted";
 };
 
-export default function AuditWorkspace({ currentUser }: { currentUser: any }) {
+export default function AuditWorkspace({
+  currentUser,
+  exportTrigger,
+  onExportReady,
+}: {
+  currentUser: any;
+  exportTrigger?: number;
+  onExportReady?: (canExport: boolean) => void;
+}) {
   const [source, setSource] = useState<"all" | Source>("all");
   const [actor, setActor] = useState("");
   const [action, setAction] = useState("");
@@ -176,31 +184,17 @@ export default function AuditWorkspace({ currentUser }: { currentUser: any }) {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+  useEffect(() => {
+    if (exportTrigger) {
+      exportCsv();
+    }
+  }, [exportTrigger]);
+  useEffect(() => {
+    onExportReady?.(filtered.length > 0);
+  }, [filtered.length, onExportReady]);
 
   return (
     <section className="workspace auditWorkspace" aria-label="Audit log">
-      <header className="workspaceHead">
-        <div>
-          <h1>Audit Log</h1>
-          <p className="workspaceSub">
-            {isAdmin
-              ? "Every change made by your team — who, what, and when."
-              : "Changes your team has made — read-only history."}
-          </p>
-        </div>
-        <div className="workspaceHeadActions">
-          <button
-            type="button"
-            className="btnSecondary"
-            onClick={exportCsv}
-            disabled={!filtered.length}
-            title="Download the filtered list as a CSV"
-          >
-            Export CSV
-          </button>
-        </div>
-      </header>
-
       <div className="auditSummary">
         <div className="auditSummaryCard">
           <span>Today</span>
@@ -309,29 +303,29 @@ export default function AuditWorkspace({ currentUser }: { currentUser: any }) {
           <table className="auditTable">
             <thead>
               <tr>
-                <th scope="col">When</th>
-                <th scope="col">Source</th>
-                <th scope="col">Actor</th>
-                <th scope="col">Subject</th>
-                <th scope="col">Action</th>
-                <th scope="col">Details</th>
+                <th scope="col" className="col-when">When</th>
+                <th scope="col" className="col-source">Source</th>
+                <th scope="col" className="col-actor">Actor</th>
+                <th scope="col" className="col-subject">Subject</th>
+                <th scope="col" className="col-action">Action</th>
+                <th scope="col" className="col-details">Details</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((row) => (
                 <tr key={row.key}>
-                  <td>
+                  <td className="col-when">
                     <time dateTime={row.timestamp}>{dateTime(row.timestamp)}</time>
                   </td>
-                  <td className="auditSource">
+                  <td className="col-source auditSource">
                     {row.source === "organization" ? "Studio" : "User"}
                   </td>
-                  <td>{row.actor || "—"}</td>
-                  <td>{row.subject}</td>
-                  <td>
+                  <td className="col-actor">{row.actor || "—"}</td>
+                  <td className="col-subject">{row.subject}</td>
+                  <td className="col-action">
                     <span className={actionTone(row.action)}>{row.action}</span>
                   </td>
-                   <td className="auditDescription" title={row.description}>{row.description}</td>
+                   <td className="col-details auditDescription" title={row.description}>{row.description}</td>
                 </tr>
               ))}
             </tbody>

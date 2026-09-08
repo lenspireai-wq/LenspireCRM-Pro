@@ -23,7 +23,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const initial = readStored() ?? "dark";
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const host = window.location.hostname;
+    const initial = (stored === "light" || stored === "dark") ? stored : (host === "crm.lenspireai.com" ? "light" : "dark");
     setTheme(initial);
     apply(initial);
     setMounted(true);
@@ -42,6 +45,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 export function useTheme(): { theme: Theme; setTheme: (next: Theme) => void; toggle: () => void } {
   const [theme, setThemeState] = useState<Theme>("dark");
   useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hostname === "crm.lenspireai.com") {
+      setThemeState("light");
+    }
     const sync = (event: Event) => {
       const next = (event as CustomEvent<Theme>).detail;
       if (next) setThemeState(next);

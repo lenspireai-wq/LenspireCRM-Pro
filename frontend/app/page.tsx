@@ -263,7 +263,8 @@ export default function Home() {
     [operationsView, setOperationsView] = useState<OperationsView>("Dashboard"),
     [accountsView, setAccountsView] = useState<string>("Payment Dashboard"),
     [isFullscreen, setIsFullscreen] = useState(false),
-    [workspaceChromeHeight, setWorkspaceChromeHeight] = useState(68);
+    [workspaceChromeHeight, setWorkspaceChromeHeight] = useState(68),
+    [adminView, setAdminView] = useState<"Admin" | "Audit">("Admin");
   const dashboardChromeRef = useRef<HTMLDivElement>(null);
   const today = new Date();
   const referenceDate = today.toISOString().split("T")[0];
@@ -502,12 +503,21 @@ export default function Home() {
             </>
           ) : section === "Admin" ? (
             <>
-              <div className="sectionHeader">
-                <div>
-                  <h1>Admin Console</h1>
-                  <p>Manage users, permissions, and system settings.</p>
+              {adminView === "Admin" ? (
+                <div className="sectionHeader">
+                  <div>
+                    <h1>Users & Permissions</h1>
+                    <p>Control module visibility and read or full access for each user.</p>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="sectionHeader">
+                  <div>
+                    <h1>Audit Log</h1>
+                    <p>Every change made by your team — who, what, and when.</p>
+                  </div>
+                </div>
+              )}
             </>
           ) : section === "Settings" ? (
             <>
@@ -593,7 +603,7 @@ export default function Home() {
           </ErrorBoundary>
         ) : auth.user ? (
           <ErrorBoundary label="Admin Console">
-            <AdminConsoleWorkspace currentUser={auth.user} />
+            <AdminConsoleWorkspace currentUser={auth.user} view={adminView} onViewChange={setAdminView} />
           </ErrorBoundary>
         ) : null}
       </main>

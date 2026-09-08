@@ -65,12 +65,9 @@ test.describe("Notification preferences", () => {
     await expect(salesRow).toBeVisible();
 
     const inAppToggle = salesRow.locator('input[type="checkbox"]').first();
-    const digestToggle = salesRow.locator('input[type="checkbox"]').nth(1);
 
     await inAppToggle.uncheck();
-    await digestToggle.uncheck();
     await expect(inAppToggle).not.toBeChecked();
-    await expect(digestToggle).not.toBeChecked();
 
     const save = page.getByRole("button", { name: "Save preferences" });
     await expect(save).toBeEnabled();
@@ -83,12 +80,9 @@ test.describe("Notification preferences", () => {
     await page.getByRole("button", { name: "Settings" }).click();
     const salesRow2 = page.locator("tr", { hasText: "Bookings" }).first();
     const inAppAfter = salesRow2.locator('input[type="checkbox"]').first();
-    const digestAfter = salesRow2.locator('input[type="checkbox"]').nth(1);
     await expect(inAppAfter).not.toBeChecked();
-    await expect(digestAfter).not.toBeChecked();
 
     await inAppAfter.check();
-    await digestAfter.check();
     await page.getByRole("button", { name: "Save preferences" }).click();
     await expect(page.getByText(/Saved at/)).toBeVisible({ timeout: 15_000 });
   });

@@ -1,0 +1,119 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+      - codex/deploy-django
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      FRONTEND_DIR: frontend
+      DEPLOY_BRANCH: codex/deploy-django
+      VPS_PATH: /opt/lenspirecrm
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate required secrets
+        run: |
+          $missing = @()
+          $required = @(
+            "VPS_HOST",
+            "VPS_USERNAME",
+            "VPS_SSH_PRIVATE_KEY",
+            "SECRET_KEY",
+            "BACKUP_ENCRYPTION_KEY",
+            "POSTGRES_DB",
+            "POSTGRES_USER",
+            "POSTGRES_PASSWORD",
+            "POSTGRES_HOST"
+          )
+          foreach ($name in $required) {
+            if (-not $env:$name) {
+              $missing += $name
+            }
+          }
+          if ($missing.Count -gt 0) {
+            Write-Host "::error::Missing required secrets: $($missing -join ', ')"
+            exit 1
+          }
+        shell: pwsh
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: ${{ env.FRONTEND_DIR }}/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: ${{ env.FRONTEND_DIR }}
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: ${{ env.FRONTEND_DIR }}
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: /api
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Push to deploy branch
+        run: |
+          $branch = (git rev-parse --abbrev-ref HEAD)
+          if ($branch -ne '${{ env.DEPLOY_BRANCH }}') {
+            git push origin HEAD:${{ env.DEPLOY_BRANCH }} --force
+          } else {
+            git push origin HEAD:${{ env.DEPLOY_BRANCH }}
+          }
+        shell: pwsh
+
+      - name: Validate VPS .env before deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT || '22' }}
+          script: |
+            set -e
+            cd ${{ env.VPS_PATH }}
+            if [ ! -f .env ]; then
+              echo "::error::.env file is missing on VPS at ${{ env.VPS_PATH }}/.env"
+              exit 1
+            fi
+            required="DEBUG SECRET_KEY ALLOWED_HOSTS CORS_ALLOWED_ORIGINS TIME_ZONE POSTGRES_DB POSTGRES_USER POSTGRES_PASSWORD POSTGRES_HOST POSTGRES_PORT BACKUP_ENCRYPTION_KEY CELERY_BROKER_URL CELERY_RESULT_BACKEND CLIENT_PORTAL_BASE_URL SECURE_SSL_REDIRECT LOG_LEVEL"
+            missing=""
+            for var in $required; do
+              if ! grep -q "^${var}=" .env; then
+                missing="$missing $var"
+              fi
+            done
+            if [ -n "$missing" ]; then
+              echo "::error::Missing required variables in VPS .env:$missing"
+              exit 1
+            fi
+            echo "VPS .env validation passed."
+
+      - name: Deploy on VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT || '22' }}
+          script: |
+            set -e
+            cd ${{ env.VPS_PATH }}
+            docker compose -f docker-compose.hostinger.yml pull || true
+            docker compose -f docker-compose.hostinger.yml up -d --build
+            docker image prune -f --filter "until=72h"

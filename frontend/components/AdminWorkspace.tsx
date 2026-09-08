@@ -59,8 +59,14 @@ const dateTime = (value?: string | null) =>
 
 export default function AdminWorkspace({
   currentUser,
+  hideActions,
+  addUserTrigger,
+  resetTrigger,
 }: {
   currentUser: SessionUser;
+  hideActions?: boolean;
+  addUserTrigger?: number;
+  resetTrigger?: number;
 }) {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [audit, setAudit] = useState<AuditRow[]>([]);
@@ -123,7 +129,11 @@ export default function AdminWorkspace({
   useEffect(() => {
     void load();
   }, []);
-
+  useEffect(() => {
+    if (addUserTrigger) {
+      openNew();
+    }
+  }, [addUserTrigger]);
   const openNew = () => {
     setPassword("");
     setError("");
@@ -136,6 +146,11 @@ export default function AdminWorkspace({
       department_access: blankAccess(),
     });
   };
+  useEffect(() => {
+    if (addUserTrigger) {
+      openNew();
+    }
+  }, [addUserTrigger]);
   const openEdit = (user: UserRow) => {
     setPassword("");
     setError("");
@@ -291,30 +306,6 @@ export default function AdminWorkspace({
 
   return (
     <div className="adminWorkspace">
-      <header className="adminHeader">
-        <div>
-          <small>ADMINISTRATION</small>
-          <h1>Users & Permissions</h1>
-          <p>
-            Control module visibility and read or full access for each user.
-          </p>
-        </div>
-        <div className="adminHeaderActions">
-          <button
-            className="dangerButton resetDataAction"
-            onClick={() => {
-              setError("");
-              setResetResult("");
-              setResetOpen(true);
-            }}
-          >
-            ↺ Reset Testing Data
-          </button>
-          <button className="primary createAction" onClick={openNew}>
-            ＋ Add User
-          </button>
-        </div>
-      </header>
       <section className="accountMetrics adminMetrics">
         <article>
           <span>Total Users</span>

@@ -7,7 +7,6 @@ type Preference = {
   category: string;
   label: string;
   enabled: boolean;
-  email_digest: boolean;
 };
 
 const FALLBACK_CATEGORIES = [
@@ -51,7 +50,6 @@ export default function NotificationPreferencesWorkspace() {
             category,
             label: labelFor(category),
             enabled: true,
-            email_digest: false,
           });
         }
       }
@@ -100,8 +98,7 @@ export default function NotificationPreferencesWorkspace() {
         <div>
           <h1>Notification preferences</h1>
           <p className="workspaceSub">
-            Choose which categories appear in your notification bell, and
-            whether you want a daily email digest.
+            Choose which categories appear in your notification bell.
           </p>
         </div>
         <div className="workspaceHeadActions">
@@ -150,7 +147,6 @@ export default function NotificationPreferencesWorkspace() {
               <tr>
                 <th scope="col">Category</th>
                 <th scope="col">In-app bell</th>
-                <th scope="col">Daily email digest</th>
               </tr>
             </thead>
             <tbody>
@@ -172,18 +168,6 @@ export default function NotificationPreferencesWorkspace() {
                       <span>{entry.enabled ? "On" : "Off"}</span>
                     </label>
                   </td>
-                  <td>
-                    <label className="preferencesSwitch">
-                      <input
-                        type="checkbox"
-                        checked={entry.email_digest}
-                        onChange={(event) =>
-                          update(entry.category, { email_digest: event.target.checked })
-                        }
-                      />
-                      <span>{entry.email_digest ? "On" : "Off"}</span>
-                    </label>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -200,7 +184,7 @@ function isDirtyDiff(baseline: Preference[], draft: Preference[]): boolean {
     const b = baseline[i];
     const d = draft[i];
     if (!b || !d) return true;
-    if (b.enabled !== d.enabled || b.email_digest !== d.email_digest) return true;
+    if (b.enabled !== d.enabled) return true;
   }
   return false;
 }
