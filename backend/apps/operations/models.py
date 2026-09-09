@@ -19,7 +19,7 @@ class CalendarEvent(OrganizationScopedModel):
     client_name = models.CharField(max_length=160, blank=True)
     handled_by = models.CharField(max_length=160, blank=True)
     couple_name = models.CharField(max_length=200, blank=True)
-    contact_no = models.CharField(max_length=40, blank=True)
+    contact_no = models.CharField(max_length=200, blank=True)
     photo = models.CharField(max_length=160, blank=True)
     video = models.CharField(max_length=160, blank=True)
     candid = models.CharField(max_length=160, blank=True)
