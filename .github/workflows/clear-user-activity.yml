@@ -1,4 +1,4 @@
-name: Clear requested permission and user activity history
+name: Clear requested Audit Log history
 on:
   push:
     branches: [codex/deploy-django]
@@ -10,7 +10,7 @@ jobs:
     if: contains(github.event.head_commit.message, 'maintenance: clear requested user activity history')
     runs-on: ubuntu-latest
     steps:
-      - name: Clear only user activity records and verify
+      - name: Clear organization and user audit records and verify
         env:
           VPS_SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
         run: |
@@ -25,11 +25,12 @@ jobs:
           from apps.core.models import OrganizationAuditActivity
           with transaction.atomic():
               users_before = list(User.objects.order_by('id').values())
-              other_audit_before = OrganizationAuditActivity.objects.count()
               deleted, details = UserAuditActivity.objects.all().delete()
               assert set(details) <= {UserAuditActivity._meta.label}, details
+              org_deleted, org_details = OrganizationAuditActivity.objects.all().delete()
+              assert set(org_details) <= {OrganizationAuditActivity._meta.label}, org_details
               assert UserAuditActivity.objects.count() == 0
+              assert OrganizationAuditActivity.objects.count() == 0
               assert users_before == list(User.objects.order_by('id').values())
-              assert other_audit_before == OrganizationAuditActivity.objects.count()
-          print(f'Cleared {deleted} permission and user activity records; remaining=0; users and permissions unchanged.')
+          print(f'Cleared {deleted} user and {org_deleted} organization audit records; remaining=0; users and permissions unchanged.')
           PY
