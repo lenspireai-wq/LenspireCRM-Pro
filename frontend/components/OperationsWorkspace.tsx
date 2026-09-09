@@ -317,8 +317,9 @@ export default function OperationsWorkspace({
     const form = new FormData();
     form.append("file", file);
     try {
-      await api.post("/events/import/", form, { headers: { "Content-Type": "multipart/form-data" } });
+      const { data } = await api.post("/events/import/", form, { headers: { "Content-Type": "multipart/form-data" } });
       await invalidateEvents();
+      setMessageEvent(`${data.updated || 0} event(s) updated, ${data.created || 0} event(s) created.`);
     } catch (err: any) {
       setError(err.response?.data?.detail || JSON.stringify(err.response?.data || "Could not import events."));
     } finally {

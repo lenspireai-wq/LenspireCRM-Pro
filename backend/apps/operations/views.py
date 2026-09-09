@@ -119,7 +119,9 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
         workbook = Workbook()
         sheet = workbook.active
         sheet.title = "Upcoming Events"
-        fields = ["title", "client_name", "event_type", "start_date", "start_time", "city", "status", "handled_by", "couple_name", "contact_no", "photo", "video", "candid", "cinematic", "drone", "assistant", "bts", "notes"]
+        # Keep the primary key in the workbook so importing an edited export can
+        # update the same event instead of creating a second one.
+        fields = ["id", "title", "client_name", "event_type", "start_date", "start_time", "city", "status", "handled_by", "couple_name", "contact_no", "photo", "video", "candid", "cinematic", "drone", "assistant", "bts", "notes"]
         sheet.append(fields)
         for event in self.get_queryset():
             sheet.append([getattr(event, field) for field in fields])
@@ -138,6 +140,7 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
         worksheet_rows = sheet.iter_rows(values_only=True)
         headers = [str(value or "").strip() for value in next(worksheet_rows)]
         created = 0
+        updated = 0
         for values in worksheet_rows:
             row = dict(zip(headers, values))
             if not row.get("title"):
@@ -149,11 +152,25 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
             for field in ("start_time", "end_time"):
                 if payload.get(field) and hasattr(payload[field], "strftime"):
                     payload[field] = payload[field].strftime("%H:%M:%S")
-            serializer = self.get_serializer(data=payload)
+            event_id = row.get("id")
+            instance = None
+            if event_id not in (None, ""):
+                try:
+                    instance = CalendarEvent.objects.filter(
+                        organization=request.user.organization,
+                        pk=int(event_id),
+                    ).first()
+                except (TypeError, ValueError):
+                    raise serializers.ValidationError({"id": f"Invalid Event ID: {event_id!r}"})
+            serializer = self.get_serializer(instance, data=payload, partial=instance is not None)
             serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            created += 1
-        return Response({"created": created}, status=201)
+            if instance is None:
+                self.perform_create(serializer)
+                created += 1
+            else:
+                self.perform_update(serializer)
+                updated += 1
+        return Response({"created": created, "updated": updated}, status=201)
 
 
 class PhotographerDetailSerializer(serializers.ModelSerializer):
