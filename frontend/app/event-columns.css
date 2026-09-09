@@ -264,6 +264,11 @@
   color: #f6c544;
   font-weight: 700;
 }
+.upcomingEventsTable .tbdEventDate {
+  color: #f6c544;
+  font-weight: 800;
+  white-space: nowrap;
+}
 @media (prefers-reduced-motion: reduce) {
   .operationsWorkspace .salesKpis article {
     transition: none;

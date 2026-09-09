@@ -62,6 +62,15 @@ const dateLabel = (value?: string) =>
         year: "numeric",
       })
     : "TBD";
+const eventDateLabel = (event: Row) => {
+  if (event.date_status === "TBD Month" && event.tbd_month) {
+    return `TBD · ${new Date(`${event.tbd_month}-01T00:00:00`).toLocaleDateString("en-IN", {
+      month: "long",
+      year: "numeric",
+    })}`;
+  }
+  return dateLabel(event.start_date);
+};
 const ordinal = (day: number) => {
   const remainder = day % 100;
   if (remainder >= 11 && remainder <= 13) return `${day}th`;
@@ -755,7 +764,9 @@ function EventTable({
           {events.map((row, index) => (
             <tr key={row.id}>
               <td className="srNo">{index + 1}</td>
-              <td>{dateLabel(row.start_date)}</td>
+              <td className={row.date_status === "TBD Month" ? "tbdEventDate" : undefined}>
+                {eventDateLabel(row)}
+              </td>
               <td>
                 <b>{row.client_name || row.title}</b>
               </td>
