@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import CalendarWorkspace from "@/components/CalendarWorkspace";
+import { useAuthStore } from "@/stores/auth";
 
 export type View =
   | "Dashboard"
@@ -319,9 +320,16 @@ export default function OperationsWorkspace({
     const form = new FormData();
     form.append("file", file);
     try {
-      // Let the browser set multipart/form-data (including its required
-      // boundary); manually setting the header can make Django receive no file.
-      const { data } = await api.post("/events/import/", form);
+      // Use the browser's native multipart encoder. This preserves the file
+      // boundary through the production /api proxy.
+      const token = useAuthStore.getState().access;
+      const response = await fetch("/api/events/import/", {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        body: form,
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw { response: { data } };
       await invalidateEvents();
       setImportSummary(`${data.updated || 0} event(s) updated, ${data.created || 0} event(s) created.`);
     } catch (err: any) {
