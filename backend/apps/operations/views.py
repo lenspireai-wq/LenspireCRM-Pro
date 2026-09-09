@@ -159,6 +159,18 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                 continue
             editable_fields = {field.name for field in CalendarEvent._meta.fields if field.editable and not field.auto_created} - {"id", "organization", "created_at", "updated_at"}
             payload = {key: row.get(key) for key in headers if key in editable_fields}
+            # openpyxl returns None for an empty cell.  CalendarEvent's text
+            # fields are optional (blank=True), but they are not nullable;
+            # passing None to the serializer therefore rejects otherwise valid
+            # completed-event workbooks with blank City or Notes columns.
+            text_fields = {
+                field.name
+                for field in CalendarEvent._meta.fields
+                if field.name in editable_fields and field.get_internal_type() in {"CharField", "TextField"}
+            }
+            for field in text_fields:
+                if payload.get(field) is None and field in payload:
+                    payload[field] = ""
             if payload.get("start_date") and hasattr(payload["start_date"], "strftime"):
                 payload["start_date"] = payload["start_date"].strftime("%Y-%m-%d")
             for field in ("start_time", "end_time"):
