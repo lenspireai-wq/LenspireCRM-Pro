@@ -241,6 +241,70 @@
 /* On desktop, the event table is the only vertical scroll region. This keeps
    the broad page scrollbar out of the Operations Upcoming/Completed views. */
 @media (min-width: 769px) {
+  .shell main.mainCalendar,
+  .shell main.mainOperationsCalendar {
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .mainCalendar .calendar,
+  .mainOperationsCalendar .calendar {
+    height: calc(100% - var(--workspace-chrome-height, 68px));
+    min-height: 0;
+    padding: 10px 16px;
+    gap: 8px;
+    overflow: hidden;
+  }
+  .mainOperationsCalendar .operationsWorkspace {
+    height: calc(100% - var(--workspace-chrome-height, 68px));
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .mainOperationsCalendar .operationsDashboardControls {
+    flex: 0 0 auto;
+  }
+  .mainOperationsCalendar .calendar {
+    flex: 1 1 auto;
+    height: auto;
+  }
+  .mainCalendar .calGrid,
+  .mainOperationsCalendar .calGrid {
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 4px;
+  }
+  .mainCalendar .calHeader,
+  .mainOperationsCalendar .calHeader,
+  .mainCalendar .calCells,
+  .mainOperationsCalendar .calCells {
+    gap: 4px;
+  }
+  .mainCalendar .calCellsMonth,
+  .mainOperationsCalendar .calCellsMonth {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-auto-rows: minmax(0, 1fr);
+  }
+  .mainCalendar .calCell,
+  .mainOperationsCalendar .calCell {
+    min-height: 0;
+    padding: 4px;
+    gap: 2px;
+  }
+  .mainCalendar .calCell li,
+  .mainOperationsCalendar .calCell li {
+    padding: 2px 4px;
+    font-size: 9px;
+  }
+  .mainCalendar .calSidePanel,
+  .mainOperationsCalendar .calSidePanel {
+    max-height: 150px;
+    min-height: 0;
+    padding: 8px 12px;
+    gap: 6px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
   .shell main.mainDashboard {
     height: 100dvh;
     overflow: hidden;
