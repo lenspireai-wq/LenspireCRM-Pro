@@ -444,6 +444,11 @@ export default function OperationsWorkspace({
         )}
         </div>
       </div>
+      {error && !eventDraft && !crewDraft && !messageEvent && (
+        <p className="formError" role="alert">
+          {error}
+        </p>
+      )}
       {importSummary && <div className="operationsImportSummary" role="status">{importSummary}</div>}
       {view === "Dashboard" && (
         <Dashboard
