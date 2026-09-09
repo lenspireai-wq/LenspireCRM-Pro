@@ -178,7 +178,7 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
         headers = [str(value or "").strip() for value in next(worksheet_rows)]
         created = 0
         updated = 0
-        for values in worksheet_rows:
+        for row_number, values in enumerate(worksheet_rows, start=2):
             row = dict(zip(headers, values))
             if not row.get("title"):
                 continue
@@ -260,7 +260,11 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                 instances = list(candidates)
             if not instances:
                 serializer = self.get_serializer(data=payload)
-                serializer.is_valid(raise_exception=True)
+                if not serializer.is_valid():
+                    return Response(
+                        {"detail": f"Row {row_number}: {serializer.errors}"},
+                        status=400,
+                    )
                 self.perform_create(serializer)
                 created += 1
             else:
@@ -274,7 +278,11 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                             "allow_duplicate_identity": len(instances) > 1,
                         },
                     )
-                    serializer.is_valid(raise_exception=True)
+                    if not serializer.is_valid():
+                        return Response(
+                            {"detail": f"Row {row_number}: {serializer.errors}"},
+                            status=400,
+                        )
                     self.perform_update(serializer)
                     updated += 1
         return Response({"created": created, "updated": updated}, status=201)
