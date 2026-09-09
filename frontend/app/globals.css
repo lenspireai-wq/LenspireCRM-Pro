@@ -2298,10 +2298,25 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   height: calc(100dvh - 250px);
   max-height: calc(100dvh - 250px);
   overflow-x: auto;
-  overflow-y: auto;
+  overflow-y: scroll !important;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
-  scrollbar-width: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #7186a4 #142237;
+}
+.upcomingEventsTableWrap::-webkit-scrollbar {
+  width: 12px;
+}
+.upcomingEventsTableWrap::-webkit-scrollbar-track {
+  background: #142237;
+}
+.upcomingEventsTableWrap::-webkit-scrollbar-thumb {
+  background: #7186a4;
+  border: 3px solid #142237;
+  border-radius: 8px;
+}
+.upcomingEventsTableWrap::-webkit-scrollbar-thumb:hover {
+  background: #9aacbf;
 }
 .upcomingEventsTableWrap .upcomingEventsTable th {
   position: sticky;
