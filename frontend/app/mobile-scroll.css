@@ -1,0 +1,42 @@
+/* Mobile content scrolls with the page; drawers and dialog backdrops remain overlays. */
+@media (max-width: 900px) {
+  :root :is(
+    .workspaceChrome,
+    .dashMetrics,
+    .salesDashboardSticky,
+    .leadManagementSticky,
+    .operationsDashboardControls,
+    .operationsDashboardView > .salesKpis,
+    .accountsViewSticky,
+    .ownerSidebar,
+    .modalHeader,
+    .modalFooter
+  ),
+  :root table thead th,
+  :root .upcomingEventsTableWrap .upcomingEventsTable thead th {
+    position: static !important;
+    inset: auto !important;
+    z-index: auto !important;
+  }
+
+  :root :is(
+    .leadTableWrap,
+    .upcomingEventsTableWrap,
+    .accountsScheduleTableWrap,
+    .auditTableWrap,
+    .ownerSidebar
+  ) {
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .shell {
+    position: relative;
+  }
+
+  :root .sidebarToggle,
+  :root .sidebarHidden .sidebarToggle,
+  :root .loginThemeToggle {
+    position: absolute;
+  }
+}
