@@ -139,7 +139,13 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
         parser_classes=[MultiPartParser, FormParser],
     )
     def import_events(self, request):
-        upload = request.FILES.get("file")
+        content_type = (request.content_type or "").lower()
+        if content_type.startswith("multipart/"):
+            upload = request.FILES.get("file")
+        else:
+            # The web application can send the workbook as a direct binary
+            # body, avoiding proxies which incorrectly discard multipart files.
+            upload = BytesIO(request.body) if request.body else None
         if not upload:
             return Response({"detail": "Choose an Excel file."}, status=400)
         sheet = load_workbook(upload, data_only=True).active

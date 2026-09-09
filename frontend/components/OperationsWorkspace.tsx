@@ -317,16 +317,18 @@ export default function OperationsWorkspace({
     setImporting(true);
     setError("");
     setImportSummary("");
-    const form = new FormData();
-    form.append("file", file);
     try {
-      // Use the browser's native multipart encoder. This preserves the file
-      // boundary through the production /api proxy.
+      // Send the workbook directly instead of multipart. Some reverse proxies
+      // discard multipart boundaries, leaving Django with an empty FILES map.
       const token = useAuthStore.getState().access;
       const response = await fetch("/api/events/import/", {
         method: "POST",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        body: form,
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          "Content-Type": file.type || "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "X-Upload-Filename": encodeURIComponent(file.name),
+        },
+        body: file,
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw { response: { data } };
