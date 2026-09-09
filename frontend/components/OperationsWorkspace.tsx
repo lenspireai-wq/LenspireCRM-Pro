@@ -330,8 +330,19 @@ export default function OperationsWorkspace({
         },
         body: file,
       });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw { response: { data } };
+      const responseText = await response.text();
+      let data: any = {};
+      try {
+        data = responseText ? JSON.parse(responseText) : {};
+      } catch {
+        // Reverse proxies can return an HTML error document. Keep a short
+        // plain-text excerpt so the user is not shown an unhelpful `{}`.
+        data = { detail: responseText.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 300) };
+      }
+      if (!response.ok) {
+        const detail = data.detail || `Import failed (HTTP ${response.status}).`;
+        throw { response: { data: { ...data, detail } } };
+      }
       await invalidateEvents();
       setImportSummary(`${data.updated || 0} event(s) updated, ${data.created || 0} event(s) created.`);
     } catch (err: any) {
