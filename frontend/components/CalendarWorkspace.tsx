@@ -10,13 +10,15 @@ type CalendarEvent = {
   couple_name?: string;
   contact_no?: string;
   event_type?: string;
-  start_date: string;
+  start_date?: string | null;
   start_time?: string | null;
   end_time?: string | null;
   city?: string;
   status: string;
   notes?: string;
   handled_by?: string;
+  date_status?: string;
+  tbd_month?: string;
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -85,7 +87,7 @@ export default function CalendarWorkspace() {
 
   const { data, isLoading, isError, refetch } = useApiCollectionQuery<CalendarEvent>(
     queryKeys.events(range),
-    `/events/?start_date__gte=${range.from}&start_date__lte=${range.to}&ordering=start_date,start_time,id`,
+    `/events/?calendar_from=${range.from}&calendar_to=${range.to}&calendar_month=${isoDate(startOfMonth(cursor)).slice(0, 7)}&ordering=start_date,start_time,id`,
   );
 
   const events = useMemo(() => data?.results || [], [data?.results]);
@@ -93,7 +95,10 @@ export default function CalendarWorkspace() {
   const eventsByDate = useMemo(() => {
     const map: Record<string, CalendarEvent[]> = {};
     for (const event of events) {
-      const key = event.start_date;
+      const key = event.date_status === "TBD Month" && event.tbd_month
+        ? `${event.tbd_month}-01`
+        : event.start_date;
+      if (!key) continue;
       if (!map[key]) map[key] = [];
       map[key].push(event);
     }
@@ -109,7 +114,7 @@ export default function CalendarWorkspace() {
 
   const handleShift = (id: number, days: number) => {
     const event = events.find((row) => row.id === id);
-    if (!event) return;
+    if (!event?.start_date) return;
     const next = addDays(new Date(event.start_date), days);
     moveMutation.mutate({ id, start_date: isoDate(next) });
   };
@@ -169,12 +174,13 @@ export default function CalendarWorkspace() {
                   {dayEvents.slice(0, 3).map((event) => (
                     <li
                       key={event.id}
+                      className={event.date_status === "TBD Month" ? "calTbdEvent" : undefined}
                       draggable
                       onDragStart={(e) => e.dataTransfer.setData("text/plain", String(event.id))}
                       onClick={(e) => { e.stopPropagation(); setSelectedEvent(event); }}
                       style={{ borderLeft: `3px solid ${STATUS_COLORS[event.status] || "var(--muted)"}` }}
                     >
-                      <strong>{formatTime(event.start_time)}</strong>
+                      <strong>{event.date_status === "TBD Month" ? "TBD" : formatTime(event.start_time)}</strong>
                       <span>{event.client_name || event.title}</span>
                     </li>
                   ))}
@@ -250,7 +256,7 @@ const EventEditor = ({ event, onClose, onSaved }: { event: CalendarEvent; onClos
   const [title, setTitle] = useState(event.title);
   const [clientName, setClientName] = useState(event.client_name || "");
   const [eventType, setEventType] = useState(event.event_type || "Wedding");
-  const [startDate, setStartDate] = useState(event.start_date);
+  const [startDate, setStartDate] = useState(event.start_date || "");
   const [startTime, setStartTime] = useState(event.start_time || "");
   const [endTime, setEndTime] = useState(event.end_time || "");
   const [city, setCity] = useState(event.city || "");

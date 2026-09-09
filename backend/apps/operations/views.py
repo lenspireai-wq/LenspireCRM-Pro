@@ -1,6 +1,7 @@
 from io import BytesIO
 from datetime import datetime
 
+from django.db.models import Q
 from django.http import HttpResponse
 from django.utils.dateparse import parse_time
 from django.utils import timezone
@@ -142,6 +143,25 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
             changed.append(event)
         if changed:
             CalendarEvent.objects.bulk_update(changed, ("status",))
+
+        # Calendar screens need both dated events in their visible grid and
+        # date-TBD events assigned to the selected month.  These parameters
+        # intentionally bypass the normal AND-only filter combination.
+        calendar_from = self.request.query_params.get("calendar_from")
+        calendar_to = self.request.query_params.get("calendar_to")
+        calendar_month = self.request.query_params.get("calendar_month")
+        if calendar_from and calendar_to and calendar_month:
+            try:
+                start = datetime.strptime(calendar_from, "%Y-%m-%d").date()
+                end = datetime.strptime(calendar_to, "%Y-%m-%d").date()
+                datetime.strptime(calendar_month, "%Y-%m")
+            except ValueError:
+                pass
+            else:
+                queryset = queryset.filter(
+                    Q(start_date__gte=start, start_date__lte=end)
+                    | Q(date_status="TBD Month", tbd_month=calendar_month)
+                )
         return queryset
 
     @action(detail=False, methods=["get"])
