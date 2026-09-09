@@ -218,8 +218,8 @@ class ClientPortalAuthView(APIView):
             user = ClientPortalUser.objects.select_related("booking", "organization").filter(invite_token_hash=token_hash(raw), active=True, invite_expires_at__gt=now).first()
             if not user or not organization_available(user.organization):
                 return Response({"detail": "This invitation is invalid or expired."}, status=401)
-            if len(password) < 10:
-                return Response({"password": "Use at least 10 characters."}, status=400)
+            if len(password) < 4:
+                return Response({"password": "Use at least 4 characters."}, status=400)
             user.password_hash = make_password(password); user.invite_token_hash = ""; user.invite_expires_at = None
             audit_action = "Password Created"
         elif action == "login":

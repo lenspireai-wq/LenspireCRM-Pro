@@ -7009,6 +7009,10 @@ input[aria-label="Search CRM records"]:focus-visible,
 }
 .auditTable tbody tr:hover { background: rgba(115, 103, 240, 0.04); }
 .auditTable tbody tr:last-child td { border-bottom: none; }
+/* Keep every Audit Log cell outlined in both themes, including the final row. */
+:root .auditTableWrap .auditTable :is(th, td) {
+  border: 1px solid var(--line, #40536f);
+}
 .auditTable time { color: #cbd5e1; white-space: nowrap; }
 .auditTable .col-when { width: 14%; }
 .auditTable .col-source { width: 9%; }
