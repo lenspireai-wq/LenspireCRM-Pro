@@ -253,6 +253,17 @@
 .operationsWorkspace .salesKpis .operationsKpiLink {
   cursor: pointer;
 }
+.calCell li.calTbdEvent {
+  color: #f6c544;
+  background: rgb(246 197 68 / 14%);
+  border-left-color: #f6c544 !important;
+  font-weight: 700;
+}
+.calCell li.calTbdEvent strong,
+.calCell li.calTbdEvent span {
+  color: #f6c544;
+  font-weight: 700;
+}
 @media (prefers-reduced-motion: reduce) {
   .operationsWorkspace .salesKpis article {
     transition: none;
