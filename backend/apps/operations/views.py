@@ -162,6 +162,25 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                     ).first()
                 except (TypeError, ValueError):
                     raise serializers.ValidationError({"id": f"Invalid Event ID: {event_id!r}"})
+            else:
+                # Older exports did not contain an Event ID.  Match those rows
+                # using the same organization-scoped identity used by the
+                # serializer, but only update when the match is unambiguous.
+                identity_fields = ("client_name", "contact_no", "event_type", "start_date", "start_time", "tbd_month")
+                defaults = {"client_name": "", "contact_no": "", "event_type": "Shoot", "start_date": None, "start_time": None, "tbd_month": ""}
+                identity = {
+                    field: payload.get(field, defaults[field]) or defaults[field]
+                    for field in identity_fields
+                }
+                candidates = CalendarEvent.objects.filter(
+                    organization=request.user.organization,
+                    **identity,
+                )
+                if candidates.count() > 1:
+                    raise serializers.ValidationError({
+                        "detail": "More than one existing event matches this row. Export a fresh file and keep its Event ID column to update it safely."
+                    })
+                instance = candidates.first()
             serializer = self.get_serializer(instance, data=payload, partial=instance is not None)
             serializer.is_valid(raise_exception=True)
             if instance is None:
