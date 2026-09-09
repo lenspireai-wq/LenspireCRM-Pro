@@ -2,6 +2,10 @@ name: Audit VPS disk usage
 
 on:
   workflow_dispatch:
+  push:
+    branches: [codex/deploy-django]
+    paths:
+      - ".github/workflows/vps-disk-audit.yml"
 
 permissions:
   contents: read
