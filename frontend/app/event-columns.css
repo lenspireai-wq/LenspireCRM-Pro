@@ -518,6 +518,26 @@
 
 /* Touch devices retain vertical swipe scrolling without reserving a desktop-style rail. */
 @media (max-width: 768px) {
+  /* Desktop Operations uses contained scroll regions. On touch screens the
+     page itself must remain scrollable so controls and long lists are usable. */
+  .shell > main.mainOperationsDashboard,
+  .shell > main.mainOperationsEvents,
+  .shell > main.mainOperationsCalendar {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100dvh;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mainOperationsDashboard .operationsWorkspace,
+  .mainOperationsEvents .operationsWorkspace,
+  .mainOperationsCalendar .operationsWorkspace,
+  .mainOperationsDashboard .photographersDetailsView,
+  .mainOperationsCalendar .operationsCalendar {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
   :root .upcomingEventsTableWrap {
     overflow-y: auto !important;
     scrollbar-width: none;
