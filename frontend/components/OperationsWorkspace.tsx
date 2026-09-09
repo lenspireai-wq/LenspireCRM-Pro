@@ -168,6 +168,7 @@ export default function OperationsWorkspace({
   const [crewDraft, setCrewDraft] = useState<Row | null>(null);
   const [messageEvent, setMessageEvent] = useState<Row | null>(null);
   const [error, setError] = useState("");
+  const [importSummary, setImportSummary] = useState("");
   const [month, setMonth] = useState(() => new Date());
   const [importing, setImporting] = useState(false);
   const [dashboardControlsHeight, setDashboardControlsHeight] = useState(96);
@@ -314,12 +315,13 @@ export default function OperationsWorkspace({
     if (!file) return;
     setImporting(true);
     setError("");
+    setImportSummary("");
     const form = new FormData();
     form.append("file", file);
     try {
       const { data } = await api.post("/events/import/", form, { headers: { "Content-Type": "multipart/form-data" } });
       await invalidateEvents();
-      setMessageEvent(`${data.updated || 0} event(s) updated, ${data.created || 0} event(s) created.`);
+      setImportSummary(`${data.updated || 0} event(s) updated, ${data.created || 0} event(s) created.`);
     } catch (err: any) {
       setError(err.response?.data?.detail || JSON.stringify(err.response?.data || "Could not import events."));
     } finally {
@@ -442,6 +444,7 @@ export default function OperationsWorkspace({
         )}
         </div>
       </div>
+      {importSummary && <div className="operationsImportSummary" role="status">{importSummary}</div>}
       {view === "Dashboard" && (
         <Dashboard
           events={events}
