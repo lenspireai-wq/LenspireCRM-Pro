@@ -243,7 +243,12 @@ export default function OperationsWorkspace({
   const completed = useMemo(
     () => matchingEvents
       .filter((e) => e.status === "Completed")
-      .sort((a, b) => Number(b.id) - Number(a.id)),
+      .sort((a, b) => {
+        const dateOrder = String(b.start_date || "").localeCompare(String(a.start_date || ""));
+        if (dateOrder) return dateOrder;
+        const timeOrder = String(b.start_time || "").localeCompare(String(a.start_time || ""));
+        return timeOrder || Number(b.id) - Number(a.id);
+      }),
     [matchingEvents],
   );
 
