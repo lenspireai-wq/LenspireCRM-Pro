@@ -5,6 +5,7 @@ from django.utils import timezone
 from openpyxl import Workbook, load_workbook
 from rest_framework import serializers
 from rest_framework.decorators import action
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from apps.core.api import OrganizationScopedViewSet
 from apps.core.permissions import OperationsAccessPermission
@@ -131,7 +132,12 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
         response["Content-Disposition"] = 'attachment; filename="upcoming-events.xlsx"'
         return response
 
-    @action(detail=False, methods=["post"], url_path="import")
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="import",
+        parser_classes=[MultiPartParser, FormParser],
+    )
     def import_events(self, request):
         upload = request.FILES.get("file")
         if not upload:
