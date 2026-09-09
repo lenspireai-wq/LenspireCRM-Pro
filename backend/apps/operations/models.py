@@ -11,7 +11,7 @@ class CalendarEvent(OrganizationScopedModel):
     start_date = models.DateField(null=True, blank=True)
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
-    city = models.CharField(max_length=120, blank=True)
+    city = models.TextField(blank=True)
     status = models.CharField(max_length=30, default="Scheduled")
     assigned_user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
     notes = models.TextField(blank=True)
