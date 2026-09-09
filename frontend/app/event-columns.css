@@ -266,6 +266,17 @@
 /* On desktop, the event table is the only vertical scroll region. This keeps
    the broad page scrollbar out of the Operations Upcoming/Completed views. */
 @media (min-width: 769px) {
+  /* Keep the Operations navigation immediately below its workspace header. */
+  .mainOperationsDashboard .workspaceChrome,
+  .mainOperationsEvents .workspaceChrome,
+  .mainOperationsCalendar .workspaceChrome {
+    margin-bottom: var(--space-2);
+  }
+  .mainOperationsDashboard .operationsDashboardControls,
+  .mainOperationsEvents .operationsDashboardControls,
+  .mainOperationsCalendar .operationsDashboardControls {
+    padding-top: 0;
+  }
   /* Operations owns scrolling inside its individual views. This prevents the
      browser-level scrollbar from appearing beside the whole desktop page. */
   .shell > main.mainOperationsDashboard,
