@@ -2,6 +2,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useApiQuery, queryKeys } from "@/lib/query";
 import { isAdministrator } from "@/lib/permissions";
+import { formatDateTime } from "@/lib/date-format";
 
 type OrgAudit = {
   id: number;
@@ -41,13 +42,7 @@ const dateTime = (value: string) => {
   if (!value) return "—";
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
-  return parsed.toLocaleString("en-IN", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatDateTime(value, value);
 };
 
 const actionTone = (action: string) => {

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import { useAuthStore } from "@/stores/auth";
+import { formatDate, formatDateTime } from "@/lib/date-format";
 import { canWrite } from "@/lib/permissions";
 import LeadImportWizard from "@/components/LeadImportWizard";
 
@@ -90,24 +91,8 @@ const money = (value: any) =>
     currency: "INR",
     maximumFractionDigits: 0,
   }).format(Number(value) || 0);
-const date = (value: any) =>
-  value
-    ? new Date(value).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      })
-    : "—";
-const dateTime = (value: any) =>
-  value
-    ? new Date(value).toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "Not scheduled";
+const date = (value: any) => formatDate(value);
+const dateTime = (value: any) => formatDateTime(value, "Not scheduled");
 
 export default function SalesWorkspace({
   startNewLead = false,

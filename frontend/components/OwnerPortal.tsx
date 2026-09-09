@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api";
+import { formatDate, formatDateTime } from "@/lib/date-format";
 
 type Organization = Record<string, any>;
 type StudioActivity = Record<string, any>;
@@ -9,23 +10,8 @@ type StudioStatus = "active" | "paused" | "expired" | "expiring";
 
 const rows = (value: any): Organization[] =>
   Array.isArray(value) ? value : value?.results || [];
-const dateLabel = (value?: string) =>
-  value
-    ? new Date(`${String(value).slice(0, 10)}T00:00:00`).toLocaleDateString(
-        "en-IN",
-        { day: "2-digit", month: "short", year: "numeric" },
-      )
-    : "No expiry";
-const dateTimeLabel = (value?: string) =>
-  value
-    ? new Date(value).toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "—";
+const dateLabel = (value?: string) => formatDate(value, "No expiry");
+const dateTimeLabel = (value?: string) => formatDateTime(value);
 const localDateValue = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 const expiryFromToday = (months: number) => {

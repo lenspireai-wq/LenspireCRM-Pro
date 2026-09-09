@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
+import { formatDate } from "@/lib/date-format";
 
 type Row = Record<string, any>;
 const views = [
@@ -25,20 +26,7 @@ const money = (value: any) =>
     style: "currency",
     currency: "INR",
   });
-const date = (value: any) => {
-  if (!value) return "—";
-  const text = String(value);
-  if (!text.includes("T")) return text.slice(0, 10);
-  const parsed = new Date(text);
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(parsed);
-  const part = (type: string) =>
-    parts.find((item) => item.type === type)?.value;
-  return `${part("year")}-${part("month")}-${part("day")}`;
-};
+const date = (value: any) => formatDate(value);
 const pdfNamePart = (value: any) =>
   String(value || "")
     .trim()

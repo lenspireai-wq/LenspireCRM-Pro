@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
+import { formatDate } from "@/lib/date-format";
 
 const money = (value: any) => Number(value || 0).toLocaleString("en-IN", { style: "currency", currency: "INR" });
-const date = (value: any) => value ? new Date(`${String(value).slice(0, 10)}T00:00:00`).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "TBD";
+const date = (value: any) => formatDate(value, "TBD");
 
 export default function ClientPortalPage() {
   const { token } = useParams<{ token: string }>();
