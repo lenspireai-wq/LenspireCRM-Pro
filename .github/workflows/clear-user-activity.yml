@@ -1,0 +1,35 @@
+name: Clear requested permission and user activity history
+on:
+  push:
+    branches: [codex/deploy-django]
+    paths: [".github/workflows/clear-user-activity.yml"]
+permissions:
+  contents: read
+jobs:
+  clear:
+    if: contains(github.event.head_commit.message, 'maintenance: clear requested user activity history')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear only user activity records and verify
+        env:
+          VPS_SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' '187.52.122.113 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID0TTNCpOS+vZ3OJqQAlk8+cljKktR/1vtSBqPME44kM' > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+          ssh -o BatchMode=yes -o IdentitiesOnly=yes root@187.52.122.113 'cd /docker/lenspire-crm-django && docker compose exec -T api python manage.py shell' <<'PY'
+          from django.db import transaction
+          from apps.users.models import User, UserAuditActivity
+          from apps.core.models import OrganizationAuditActivity
+          with transaction.atomic():
+              users_before = list(User.objects.order_by('id').values())
+              other_audit_before = OrganizationAuditActivity.objects.count()
+              deleted, details = UserAuditActivity.objects.all().delete()
+              assert set(details) <= {UserAuditActivity._meta.label}, details
+              assert UserAuditActivity.objects.count() == 0
+              assert users_before == list(User.objects.order_by('id').values())
+              assert other_audit_before == OrganizationAuditActivity.objects.count()
+          print(f'Cleared {deleted} permission and user activity records; remaining=0; users and permissions unchanged.')
+          PY
