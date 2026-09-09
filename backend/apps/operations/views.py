@@ -1,6 +1,8 @@
 from io import BytesIO
+from datetime import datetime
 
 from django.http import HttpResponse
+from django.utils.dateparse import parse_time
 from django.utils import timezone
 from openpyxl import Workbook, load_workbook
 from rest_framework import serializers
@@ -14,6 +16,29 @@ from .models import CalendarEvent, PhotographerDetail
 
 CREW_FIELDS = ("photo", "video", "candid", "cinematic", "drone", "assistant", "bts")
 PENDING_CREW_VALUES = {"", "X", "XX"}
+
+
+def normalize_excel_time(value):
+    """Return an Excel time in API format, or None when it is a free-text note."""
+    if value is None or value == "":
+        return value
+    if hasattr(value, "strftime"):
+        return value.strftime("%H:%M:%S")
+    if not isinstance(value, str):
+        return value
+
+    candidate = value.strip()
+    if not candidate:
+        return ""
+    parsed = parse_time(candidate)
+    if parsed:
+        return parsed.strftime("%H:%M:%S")
+    for time_format in ("%I:%M %p", "%I:%M%p", "%I %p"):
+        try:
+            return datetime.strptime(candidate.upper(), time_format).strftime("%H:%M:%S")
+        except ValueError:
+            pass
+    return None
 
 
 def automatic_event_status(values, current_status: str | None = None) -> str:
@@ -173,9 +198,20 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                     payload[field] = ""
             if payload.get("start_date") and hasattr(payload["start_date"], "strftime"):
                 payload["start_date"] = payload["start_date"].strftime("%Y-%m-%d")
+            invalid_start_time = False
             for field in ("start_time", "end_time"):
-                if payload.get(field) and hasattr(payload[field], "strftime"):
-                    payload[field] = payload[field].strftime("%H:%M:%S")
+                if field not in payload:
+                    continue
+                normalized_time = normalize_excel_time(payload[field])
+                if normalized_time is None:
+                    if field == "start_time":
+                        invalid_start_time = True
+                        time_note = str(payload[field]).strip()
+                        existing_notes = str(payload.get("notes") or "").strip()
+                        payload["notes"] = f"{existing_notes}\nTime details: {time_note}".strip()
+                    payload.pop(field)
+                else:
+                    payload[field] = normalized_time
             event_id = row.get("id")
             instances = []
             if event_id not in (None, ""):
@@ -208,11 +244,15 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                 # exported title, date and time form a safe secondary key for
                 # the completed-events workbook supplied by users.
                 if not candidates.exists() and payload.get("title"):
+                    secondary_identity = {
+                        "organization": request.user.organization,
+                        "title__iexact": str(payload["title"]).strip(),
+                        "start_date": payload.get("start_date"),
+                    }
+                    if not invalid_start_time:
+                        secondary_identity["start_time"] = payload.get("start_time")
                     candidates = CalendarEvent.objects.filter(
-                        organization=request.user.organization,
-                        title__iexact=str(payload["title"]).strip(),
-                        start_date=payload.get("start_date"),
-                        start_time=payload.get("start_time"),
+                        **secondary_identity,
                     )
                 # An old workbook has no Event ID.  When it maps to duplicate
                 # copies of the exact same event, update every copy instead of
