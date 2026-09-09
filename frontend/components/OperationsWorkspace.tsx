@@ -866,6 +866,21 @@ function CrewTable({
   edit?: (row: Row) => void;
   remove?: (id: any) => void;
 }) {
+  // Older imports could create an identical photographer twice.  Keep the
+  // earliest record visible while the backend migration removes those legacy
+  // copies.  Mobile number is the stable identity when it is available.
+  const visibleRows = Array.from(
+    rows.reduce<Map<string, Row>>((unique, row) => {
+      const mobile = String(row.mobile || "").replace(/\D/g, "").slice(-10);
+      const identity = mobile
+        ? `mobile:${mobile}`
+        : `record:${String(row.name || "").trim().toLocaleLowerCase()}|${String(row.living_in || "").trim().toLocaleLowerCase()}|${String(row.work || "").trim().toLocaleLowerCase()}|${String(row.status || "").trim().toLocaleLowerCase()}`;
+      const existing = unique.get(identity);
+      if (!existing || Number(row.id) < Number(existing.id)) unique.set(identity, row);
+      return unique;
+    }, new Map<string, Row>()).values(),
+  );
+
   return (
     <section className="panel photographerTablePanel">
       <div className="table photographerTableWrap">
@@ -881,7 +896,7 @@ function CrewTable({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {visibleRows.map((row) => (
               <tr key={row.id}>
                 <td>
                   <b>{row.name}</b>
@@ -921,7 +936,7 @@ function CrewTable({
             ))}
           </tbody>
         </table>
-        {!rows.length && <div className="empty">No photographers yet.</div>}
+        {!visibleRows.length && <div className="empty">No photographers yet.</div>}
       </div>
     </section>
   );
