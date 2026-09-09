@@ -54,7 +54,7 @@ jobs:
       - name: Pull and restart CRM containers
         run: |
           ssh -o BatchMode=yes -o IdentitiesOnly=yes root@187.52.122.113 \
-            'cd /docker/lenspire-crm-django && docker compose pull && docker compose up -d --remove-orphans && docker compose ps'
+            'docker builder prune -af && docker image prune -af && cd /docker/lenspire-crm-django && docker compose pull && docker compose up -d --remove-orphans && docker compose ps'
 
       - name: Verify production health
         run: |
