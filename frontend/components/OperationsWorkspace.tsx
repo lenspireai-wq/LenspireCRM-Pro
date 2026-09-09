@@ -319,7 +319,9 @@ export default function OperationsWorkspace({
     const form = new FormData();
     form.append("file", file);
     try {
-      const { data } = await api.post("/events/import/", form, { headers: { "Content-Type": "multipart/form-data" } });
+      // Let the browser set multipart/form-data (including its required
+      // boundary); manually setting the header can make Django receive no file.
+      const { data } = await api.post("/events/import/", form);
       await invalidateEvents();
       setImportSummary(`${data.updated || 0} event(s) updated, ${data.created || 0} event(s) created.`);
     } catch (err: any) {
@@ -348,7 +350,7 @@ export default function OperationsWorkspace({
     const form = new FormData();
     form.append("file", file);
     try {
-      await api.post("/photographers/import/", form, { headers: { "Content-Type": "multipart/form-data" } });
+      await api.post("/photographers/import/", form);
       await crewQuery.refetch();
     } catch (err: any) {
       setError(err.response?.data?.detail || JSON.stringify(err.response?.data || "Could not import photographers."));
