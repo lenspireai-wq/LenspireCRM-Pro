@@ -176,6 +176,18 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                     organization=request.user.organization,
                     **identity,
                 )
+                # Older workbooks commonly store phone numbers as numbers or
+                # with spaces.  In that case the otherwise identical record
+                # cannot be found by the contact-number identity above.  The
+                # exported title, date and time form a safe secondary key for
+                # the completed-events workbook supplied by users.
+                if not candidates.exists() and payload.get("title"):
+                    candidates = CalendarEvent.objects.filter(
+                        organization=request.user.organization,
+                        title__iexact=str(payload["title"]).strip(),
+                        start_date=payload.get("start_date"),
+                        start_time=payload.get("start_time"),
+                    )
                 if candidates.count() > 1:
                     raise serializers.ValidationError({
                         "detail": "More than one existing event matches this row. Export a fresh file and keep its Event ID column to update it safely."

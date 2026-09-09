@@ -190,3 +190,29 @@ class OperationsApiTests(TestCase):
         event.refresh_from_db()
         self.assertEqual(event.title, "Edited wedding")
         self.assertEqual(event.notes, "Updated legacy export")
+
+    def test_legacy_import_uses_title_date_and_time_when_phone_format_differs(self):
+        event = CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Ankit Gupta · Pre-wedding",
+            client_name="Ankit Gupta",
+            contact_no="7977518696",
+            event_type="Pre-wedding",
+            start_date=date(2026, 9, 8),
+            start_time="07:00:00",
+        )
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["title", "client_name", "contact_no", "event_type", "start_date", "start_time", "date_status", "notes"])
+        sheet.append(["Ankit Gupta · Pre-wedding", "Ankit Gupta", 7977518696, "Pre-wedding", date(2026, 9, 8), "07:00:00", "Confirmed", "Imported note"])
+        from io import BytesIO
+        stream = BytesIO()
+        workbook.save(stream)
+        upload = SimpleUploadedFile("completed-events.xlsx", stream.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+        response = self.client.post("/api/events/import/", {"file": upload}, format="multipart")
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data, {"created": 0, "updated": 1})
+        event.refresh_from_db()
+        self.assertEqual(event.notes, "Imported note")
