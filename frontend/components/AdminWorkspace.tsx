@@ -23,13 +23,18 @@ type AuditRow = {
 };
 const roles = [
   "Administrator",
-  "Manager",
-  "Sales Executive",
-  "Operations Executive",
-  "Accountant",
+  "Sales & Marketing",
+  "Operations",
+  "Accounts & Finance",
+  "Post Production",
   "Editor",
   "Viewer",
 ];
+const renamedRoles: Record<string, string> = {
+  "Sales Executive": "Sales & Marketing",
+  "Operations Executive": "Operations",
+  Accountant: "Accounts & Finance",
+};
 const blankAccess = (): Record<Department, AccessLevel> => ({
   sales: "none",
   operations: "none",
@@ -38,12 +43,12 @@ const blankAccess = (): Record<Department, AccessLevel> => ({
 });
 const accessForRole = (role: string): Record<Department, AccessLevel> => {
   const access = blankAccess();
-  if (role === "Administrator" || role === "Manager") {
+  if (role === "Administrator") {
     departments.forEach((department) => (access[department] = "full"));
-  } else if (role === "Sales Executive") access.sales = "full";
-  else if (role === "Operations Executive") access.operations = "full";
-  else if (role === "Accountant") access.accounts = "full";
-  else if (role === "Editor") access.production = "full";
+  } else if (role === "Sales & Marketing") access.sales = "full";
+  else if (role === "Operations") access.operations = "full";
+  else if (role === "Accounts & Finance") access.accounts = "full";
+  else if (role === "Post Production" || role === "Editor") access.production = "full";
   return access;
 };
 const dateTime = (value?: string | null) =>
@@ -156,6 +161,7 @@ export default function AdminWorkspace({
     setError("");
     setDraft({
       ...user,
+      role: renamedRoles[user.role] || user.role,
       department_access: {
         ...blankAccess(),
         ...(user.department_access || {}),
@@ -609,6 +615,9 @@ export default function AdminWorkspace({
                   value={draft.role || "Viewer"}
                   onChange={(event) => updateRole(event.target.value)}
                 >
+                  {draft.role && !roles.includes(draft.role) && (
+                    <option value={draft.role} disabled>Select a role</option>
+                  )}
                   {roles.map((role) => (
                     <option key={role}>{role}</option>
                   ))}
