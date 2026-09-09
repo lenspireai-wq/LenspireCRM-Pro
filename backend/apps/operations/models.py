@@ -29,6 +29,7 @@ class CalendarEvent(OrganizationScopedModel):
     bts = models.CharField(max_length=160, blank=True)
     date_status = models.CharField(max_length=20, default="Confirmed")
     tbd_month = models.CharField(max_length=7, blank=True)
+    is_archived = models.BooleanField(default=False)
 
 
 class PhotographerDetail(OrganizationScopedModel):
