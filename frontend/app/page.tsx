@@ -444,7 +444,7 @@ export default function Home() {
         onClick={() => setSidebarHidden(true)}
       />
       <main
-        className={section === "Dashboard" ? "mainDashboard" : section === "Sales" ? "mainSalesDashboard" : section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details") ? "mainOperationsDashboard" : section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics") ? "mainAccountsSticky" : undefined}
+        className={section === "Dashboard" ? "mainDashboard" : section === "Sales" ? "mainSalesDashboard" : section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details") ? "mainOperationsDashboard" : section === "Operations" && (operationsView === "Upcoming Events" || operationsView === "Completed Events") ? "mainOperationsEvents" : section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics") ? "mainAccountsSticky" : undefined}
         style={section === "Dashboard" || section === "Sales" || (section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details")) || (section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics")) ? { "--workspace-chrome-height": `${workspaceChromeHeight}px` } as CSSProperties : undefined}
       >
         <button
