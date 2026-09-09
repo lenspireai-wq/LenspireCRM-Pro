@@ -81,7 +81,7 @@ class CalendarEventSerializer(serializers.ModelSerializer):
         duplicate = CalendarEvent.objects.filter(organization=request.user.organization, **identity)
         if self.instance:
             duplicate = duplicate.exclude(pk=self.instance.pk)
-        if duplicate.exists():
+        if duplicate.exists() and not self.context.get("allow_duplicate_identity", False):
             raise serializers.ValidationError({"detail": "This event already exists. Change the client, contact, event type, date, or time before saving."})
         return attrs
 
@@ -165,13 +165,15 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                 if payload.get(field) and hasattr(payload[field], "strftime"):
                     payload[field] = payload[field].strftime("%H:%M:%S")
             event_id = row.get("id")
-            instance = None
+            instances = []
             if event_id not in (None, ""):
                 try:
                     instance = CalendarEvent.objects.filter(
                         organization=request.user.organization,
                         pk=int(event_id),
                     ).first()
+                    if instance:
+                        instances = [instance]
                 except (TypeError, ValueError):
                     raise serializers.ValidationError({"id": f"Invalid Event ID: {event_id!r}"})
             else:
@@ -200,19 +202,29 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                         start_date=payload.get("start_date"),
                         start_time=payload.get("start_time"),
                     )
-                if candidates.count() > 1:
-                    raise serializers.ValidationError({
-                        "detail": "More than one existing event matches this row. Export a fresh file and keep its Event ID column to update it safely."
-                    })
-                instance = candidates.first()
-            serializer = self.get_serializer(instance, data=payload, partial=instance is not None)
-            serializer.is_valid(raise_exception=True)
-            if instance is None:
+                # An old workbook has no Event ID.  When it maps to duplicate
+                # copies of the exact same event, update every copy instead of
+                # rejecting the entire import.  Nothing is deleted.
+                instances = list(candidates)
+            if not instances:
+                serializer = self.get_serializer(data=payload)
+                serializer.is_valid(raise_exception=True)
                 self.perform_create(serializer)
                 created += 1
             else:
-                self.perform_update(serializer)
-                updated += 1
+                for instance in instances:
+                    serializer = self.get_serializer(
+                        instance,
+                        data=payload,
+                        partial=True,
+                        context={
+                            **self.get_serializer_context(),
+                            "allow_duplicate_identity": len(instances) > 1,
+                        },
+                    )
+                    serializer.is_valid(raise_exception=True)
+                    self.perform_update(serializer)
+                    updated += 1
         return Response({"created": created, "updated": updated}, status=201)
 
 

@@ -216,3 +216,33 @@ class OperationsApiTests(TestCase):
         self.assertEqual(response.data, {"created": 0, "updated": 1})
         event.refresh_from_db()
         self.assertEqual(event.notes, "Imported note")
+
+    def test_legacy_import_updates_all_identical_duplicate_matches(self):
+        event_values = {
+            "organization": self.organization,
+            "title": "Mamta Jadhav · Pre-wedding",
+            "client_name": "Mamta Jadhav",
+            "contact_no": "8291631219",
+            "event_type": "Pre-wedding",
+            "start_date": date(2025, 10, 19),
+            "start_time": "07:10:00",
+        }
+        first = CalendarEvent.objects.create(**event_values)
+        second = CalendarEvent.objects.create(**event_values)
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["title", "client_name", "contact_no", "event_type", "start_date", "start_time", "date_status", "notes"])
+        sheet.append(["Mamta Jadhav · Pre-wedding", "Mamta Jadhav", "8291631219", "Pre-wedding", date(2025, 10, 19), "07:10:00", "Confirmed", "South Bombay"])
+        from io import BytesIO
+        stream = BytesIO()
+        workbook.save(stream)
+        upload = SimpleUploadedFile("completed-events.xlsx", stream.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+        response = self.client.post("/api/events/import/", {"file": upload}, format="multipart")
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data, {"created": 0, "updated": 2})
+        first.refresh_from_db()
+        second.refresh_from_db()
+        self.assertEqual(first.notes, "South Bombay")
+        self.assertEqual(second.notes, "South Bombay")
