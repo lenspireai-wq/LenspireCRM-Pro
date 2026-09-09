@@ -135,3 +135,30 @@ class OperationsApiTests(TestCase):
         response = self.client.post("/api/events/import/", {"file": upload}, format="multipart")
         self.assertEqual(response.status_code, 201, response.data)
         self.assertEqual(response.data["created"], 1)
+
+    def test_importing_an_edited_export_updates_the_existing_event(self):
+        event = CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Original wedding",
+            client_name="Asha",
+            event_type="Wedding",
+            start_date=date(2026, 10, 2),
+            status="Completed",
+        )
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["id", "title", "client_name", "event_type", "start_date", "date_status", "notes"])
+        sheet.append([event.id, "Edited wedding", "Asha", "Wedding", date(2026, 10, 2), "Confirmed", "Updated from Excel"])
+        from io import BytesIO
+        stream = BytesIO()
+        workbook.save(stream)
+        upload = SimpleUploadedFile("edited-events.xlsx", stream.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+        response = self.client.post("/api/events/import/", {"file": upload}, format="multipart")
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data, {"created": 0, "updated": 1})
+        self.assertEqual(CalendarEvent.objects.filter(organization=self.organization).count(), 1)
+        event.refresh_from_db()
+        self.assertEqual(event.title, "Edited wedding")
+        self.assertEqual(event.notes, "Updated from Excel")
