@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, time, timedelta
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
@@ -217,6 +217,21 @@ class OperationsApiTests(TestCase):
         event.refresh_from_db()
         self.assertEqual(event.start_time.strftime("%H:%M:%S"), "10:00:00")
         self.assertEqual(event.notes, "Time details: TICKET DONE")
+
+    def test_completed_events_import_converts_non_string_city_cells(self):
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["title", "event_type", "start_date", "date_status", "city"])
+        sheet.append(["Timed city", "Wedding", date(2025, 10, 2), "Confirmed", time(15, 0)])
+        from io import BytesIO
+        stream = BytesIO()
+        workbook.save(stream)
+        upload = SimpleUploadedFile("completed-events.xlsx", stream.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+        response = self.client.post("/api/events/import/", {"file": upload}, format="multipart")
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(CalendarEvent.objects.get(title="Timed city").city, "15:00:00")
 
     def test_importing_a_legacy_export_without_id_updates_a_unique_match(self):
         event = CalendarEvent.objects.create(
