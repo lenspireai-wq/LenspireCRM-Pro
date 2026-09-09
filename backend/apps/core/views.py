@@ -32,8 +32,8 @@ class OrganizationSerializer(serializers.ModelSerializer):
         if expiry and expiry < timezone.localdate():
             raise serializers.ValidationError({"subscription_expires_at": "Expiry date cannot be before today."})
         password = attrs.get("password")
-        if password and len(password) < 10:
-            raise serializers.ValidationError({"password": "Use at least 10 characters."})
+        if password and len(password) < 4:
+            raise serializers.ValidationError({"password": "Use at least 4 characters."})
         return attrs
 
     @transaction.atomic

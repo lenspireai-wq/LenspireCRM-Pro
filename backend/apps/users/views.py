@@ -63,14 +63,14 @@ class UserSerializer(serializers.ModelSerializer):
         password = validated_data.pop("password", None)
         if not password:
             raise serializers.ValidationError({"password": "Password is required."})
-        if len(password) < 10:
-            raise serializers.ValidationError({"password": "Use at least 10 characters."})
+        if len(password) < 4:
+            raise serializers.ValidationError({"password": "Use at least 4 characters."})
         user = User(**validated_data, organization=self.context["request"].user.organization)
         user.set_password(password); user.save(); return user
     def update(self, instance, validated_data):
         password = validated_data.pop("password", None)
-        if password and len(password) < 10:
-            raise serializers.ValidationError({"password": "Use at least 10 characters."})
+        if password and len(password) < 4:
+            raise serializers.ValidationError({"password": "Use at least 4 characters."})
         for field, value in validated_data.items():
             setattr(instance, field, value)
         if password:
@@ -188,9 +188,9 @@ class UserViewSet(viewsets.ModelViewSet):
     def reset_password(self, request, pk=None):
         user = self.get_object()
         password = str(request.data.get("password", ""))
-        if len(password) < 10:
+        if len(password) < 4:
             return Response(
-                {"password": "Use at least 10 characters."},
+                {"password": "Use at least 4 characters."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         user.set_password(password)
@@ -330,8 +330,8 @@ class PasswordResetConfirmView(APIView):
         new_password = request.data.get("password") or ""
         if not raw_token or not new_password:
             return Response({"detail": "Token and password are required."}, status=400)
-        if len(new_password) < 10:
-            return Response({"password": "Use at least 10 characters."}, status=400)
+        if len(new_password) < 4:
+            return Response({"password": "Use at least 4 characters."}, status=400)
 
         candidate = None
         for token in PasswordResetToken.objects.filter(used_at__isnull=True).order_by("-created_at")[:200]:

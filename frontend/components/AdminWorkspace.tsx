@@ -621,10 +621,10 @@ export default function AdminWorkspace({
                     type="password"
                     autoComplete="new-password"
                     required
-                    minLength={10}
+                    minLength={4}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
-                    placeholder="Minimum 10 characters"
+                    placeholder="Minimum 4 characters"
                   />
                 </label>
               )}
@@ -730,10 +730,10 @@ export default function AdminWorkspace({
                   type="password"
                   autoComplete="new-password"
                   required
-                  minLength={10}
+                  minLength={4}
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  placeholder="Minimum 10 characters"
+                  placeholder="Minimum 4 characters"
                 />
               </label>
             </div>

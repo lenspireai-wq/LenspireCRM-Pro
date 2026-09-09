@@ -511,7 +511,7 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
                       name="password"
                       type="password"
                       required
-                      minLength={10}
+                      minLength={4}
                       autoComplete="new-password"
                     />
                   </label>
