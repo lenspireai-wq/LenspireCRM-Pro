@@ -26,6 +26,20 @@ class OperationsApiTests(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(PhotographerDetail.objects.get().organization, self.organization)
 
+    def test_photographers_stay_scoped_for_a_superuser(self):
+        other_organization = Organization.objects.create(name="Other Studio", slug="other-studio")
+        PhotographerDetail.objects.create(organization=self.organization, name="Avi")
+        PhotographerDetail.objects.create(organization=other_organization, name="Outside crew")
+        self.user.is_superuser = True
+        self.user.is_staff = True
+        self.user.save(update_fields=("is_superuser", "is_staff"))
+
+        response = self.client.get("/api/photographers/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertEqual(response.data["results"][0]["name"], "Avi")
+
     def test_tbd_event_requires_month(self):
         response = self.client.post("/api/events/", {"title": "Wedding", "event_type": "Wedding", "date_status": "TBD Month"})
         self.assertEqual(response.status_code, 400)
