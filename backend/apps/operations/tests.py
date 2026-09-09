@@ -162,3 +162,31 @@ class OperationsApiTests(TestCase):
         event.refresh_from_db()
         self.assertEqual(event.title, "Edited wedding")
         self.assertEqual(event.notes, "Updated from Excel")
+
+    def test_importing_a_legacy_export_without_id_updates_a_unique_match(self):
+        event = CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Original wedding",
+            client_name="Asha",
+            contact_no="9876543210",
+            event_type="Wedding",
+            start_date=date(2026, 10, 2),
+            start_time="10:00:00",
+        )
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["title", "client_name", "contact_no", "event_type", "start_date", "start_time", "date_status", "notes"])
+        sheet.append(["Edited wedding", "Asha", "9876543210", "Wedding", date(2026, 10, 2), "10:00:00", "Confirmed", "Updated legacy export"])
+        from io import BytesIO
+        stream = BytesIO()
+        workbook.save(stream)
+        upload = SimpleUploadedFile("legacy-events.xlsx", stream.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+        response = self.client.post("/api/events/import/", {"file": upload}, format="multipart")
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data, {"created": 0, "updated": 1})
+        self.assertEqual(CalendarEvent.objects.filter(organization=self.organization).count(), 1)
+        event.refresh_from_db()
+        self.assertEqual(event.title, "Edited wedding")
+        self.assertEqual(event.notes, "Updated legacy export")
