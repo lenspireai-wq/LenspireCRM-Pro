@@ -7013,6 +7013,10 @@ input[aria-label="Search CRM records"]:focus-visible,
 :root .auditTableWrap .auditTable :is(th, td) {
   border: 1px solid var(--line, #40536f);
 }
+/* Give notification preferences clear row and column dividers in both themes. */
+:root .notificationsWorkspace .auditTableWrap .auditTable :is(th, td) {
+  border: 1px solid color-mix(in srgb, var(--text, #e2e8f0) 32%, var(--surface, #0f172a)) !important;
+}
 .auditTable time { color: #cbd5e1; white-space: nowrap; }
 .auditTable .col-when { width: 14%; }
 .auditTable .col-source { width: 9%; }
