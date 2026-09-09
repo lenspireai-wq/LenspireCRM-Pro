@@ -427,3 +427,9 @@ class PhotographerDetailViewSet(OrganizationScopedViewSet):
     filterset_fields = {"status": ["exact", "in"], "work": ["exact", "icontains"], "living_in": ["exact", "icontains"]}
     search_fields = ("name", "mobile", "work", "living_in")
     ordering_fields = ("name", "status")
+
+    def get_queryset(self):
+        # Crew is a studio-owned resource.  Even a platform administrator
+        # working inside a studio should see that studio's crew total rather
+        # than the combined total from every organization.
+        return PhotographerDetail.objects.filter(organization=self.request.user.organization)
