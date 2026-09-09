@@ -194,8 +194,12 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                 if field.name in editable_fields and field.get_internal_type() in {"CharField", "TextField"}
             }
             for field in text_fields:
-                if payload.get(field) is None and field in payload:
+                if field not in payload:
+                    continue
+                if payload[field] is None:
                     payload[field] = ""
+                elif not isinstance(payload[field], str):
+                    payload[field] = str(payload[field])
             if payload.get("start_date") and hasattr(payload["start_date"], "strftime"):
                 payload["start_date"] = payload["start_date"].strftime("%Y-%m-%d")
             invalid_start_time = False
