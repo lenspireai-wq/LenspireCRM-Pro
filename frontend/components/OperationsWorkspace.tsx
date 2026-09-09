@@ -237,15 +237,13 @@ export default function OperationsWorkspace({
     });
   }, [events, searchTerm]);
   const upcoming = useMemo(
-    () => matchingEvents
-      .filter((e) => upcomingStatuses.has(e.status))
-      // Newer records have higher IDs. Keep the latest entry at the top without
-      // changing the server ordering used by other operations views.
-      .sort((a, b) => Number(b.id) - Number(a.id)),
+    () => matchingEvents.filter((e) => upcomingStatuses.has(e.status)),
     [matchingEvents],
   );
   const completed = useMemo(
-    () => matchingEvents.filter((e) => e.status === "Completed"),
+    () => matchingEvents
+      .filter((e) => e.status === "Completed")
+      .sort((a, b) => Number(b.id) - Number(a.id)),
     [matchingEvents],
   );
 
