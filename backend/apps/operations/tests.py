@@ -136,6 +136,41 @@ class OperationsApiTests(TestCase):
         self.assertEqual(response.status_code, 201, response.data)
         self.assertEqual(response.data["created"], 1)
 
+    def test_upcoming_events_import_accepts_tbd_in_date_column(self):
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["title", "event_type", "start_date", "date_status"])
+        sheet.append(["Date pending", "Wedding", "TBD", "Confirmed"])
+        from io import BytesIO
+        stream = BytesIO()
+        workbook.save(stream)
+        upload = SimpleUploadedFile("events.xlsx", stream.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+        response = self.client.post("/api/events/import/", {"file": upload}, format="multipart")
+
+        self.assertEqual(response.status_code, 201, response.data)
+        event = CalendarEvent.objects.get(organization=self.organization, title="Date pending")
+        self.assertIsNone(event.start_date)
+        self.assertEqual(event.date_status, "TBD")
+
+    def test_upcoming_events_import_converts_tbd_month_date_text(self):
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["title", "event_type", "start_date", "date_status"])
+        sheet.append(["December pending", "Wedding", "TBD - December", "Confirmed"])
+        from io import BytesIO
+        stream = BytesIO()
+        workbook.save(stream)
+        upload = SimpleUploadedFile("events.xlsx", stream.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+        response = self.client.post("/api/events/import/", {"file": upload}, format="multipart")
+
+        self.assertEqual(response.status_code, 201, response.data)
+        event = CalendarEvent.objects.get(organization=self.organization, title="December pending")
+        self.assertIsNone(event.start_date)
+        self.assertEqual(event.date_status, "TBD Month")
+        self.assertEqual(event.tbd_month, "2026-12")
+
     def test_importing_an_edited_export_updates_the_existing_event(self):
         event = CalendarEvent.objects.create(
             organization=self.organization,
@@ -260,6 +295,39 @@ class OperationsApiTests(TestCase):
         event.refresh_from_db()
         self.assertEqual(event.title, "Edited wedding")
         self.assertEqual(event.notes, "Updated legacy export")
+
+    def test_import_by_id_updates_an_event_when_another_duplicate_exists(self):
+        event = CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Repeated event",
+            client_name="Asha",
+            contact_no="9876543210",
+            event_type="Wedding",
+            start_date=date(2026, 10, 2),
+        )
+        CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Repeated event",
+            client_name="Asha",
+            contact_no="9876543210",
+            event_type="Wedding",
+            start_date=date(2026, 10, 2),
+        )
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["id", "title", "client_name", "contact_no", "event_type", "start_date", "date_status", "notes"])
+        sheet.append([event.id, "Repeated event", "Asha", "9876543210", "Wedding", date(2026, 10, 2), "Confirmed", "Updated duplicate"])
+        from io import BytesIO
+        stream = BytesIO()
+        workbook.save(stream)
+        upload = SimpleUploadedFile("legacy-events.xlsx", stream.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+        response = self.client.post("/api/events/import/", {"file": upload}, format="multipart")
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data, {"created": 0, "updated": 1})
+        event.refresh_from_db()
+        self.assertEqual(event.notes, "Updated duplicate")
 
     def test_legacy_import_uses_title_date_and_time_when_phone_format_differs(self):
         event = CalendarEvent.objects.create(

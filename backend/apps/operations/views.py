@@ -1,7 +1,10 @@
 from io import BytesIO
 from datetime import datetime
+from calendar import month_abbr, month_name
+import re
 
 from django.db.models import Q
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.http import HttpResponse
 from django.utils.dateparse import parse_time
 from django.utils import timezone
@@ -40,6 +43,28 @@ def normalize_excel_time(value):
         except ValueError:
             pass
     return None
+
+
+def normalize_tbd_date(value):
+    """Convert legacy values such as ``TBD - December`` to YYYY-MM."""
+    if not isinstance(value, str) or "TBD" not in value.upper():
+        return None
+    normalized = value.upper()
+    month = next(
+        (
+            number
+            for number in range(1, 13)
+            if re.search(rf"\b{month_name[number].upper()}\b|\b{month_abbr[number].upper()}\b", normalized)
+        ),
+        None,
+    )
+    if not month:
+        return ""
+    year_match = re.search(r"\b(20\d{2})\b", normalized)
+    year = int(year_match.group(1)) if year_match else timezone.localdate().year
+    if not year_match and month < timezone.localdate().month:
+        year += 1
+    return f"{year:04d}-{month:02d}"
 
 
 def automatic_event_status(values, current_status: str | None = None) -> str:
@@ -202,6 +227,7 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
         headers = [str(value or "").strip() for value in next(worksheet_rows)]
         created = 0
         updated = 0
+        skipped = 0
         for row_number, values in enumerate(worksheet_rows, start=2):
             row = dict(zip(headers, values))
             if not row.get("title"):
@@ -224,6 +250,19 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                     payload[field] = ""
                 elif not isinstance(payload[field], str):
                     payload[field] = str(payload[field])
+            # Older operational workbooks use "TBD" directly in the Date
+            # column.  It is an intentional undated event, not a date value
+            # for Django to parse. Keep it visible as TBD without requiring a
+            # month that is not present in the workbook.
+            raw_start_date = payload.get("start_date")
+            tbd_month = normalize_tbd_date(raw_start_date)
+            if tbd_month:
+                payload["start_date"] = None
+                payload["date_status"] = "TBD Month"
+                payload["tbd_month"] = tbd_month
+            elif isinstance(raw_start_date, str) and raw_start_date.strip().upper() in {"TBD", "TBC", "TO BE DECIDED"}:
+                payload["start_date"] = None
+                payload["date_status"] = "TBD"
             if payload.get("start_date") and hasattr(payload["start_date"], "strftime"):
                 payload["start_date"] = payload["start_date"].strftime("%Y-%m-%d")
             invalid_start_time = False
@@ -251,7 +290,10 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                     if instance:
                         instances = [instance]
                 except (TypeError, ValueError):
-                    raise serializers.ValidationError({"id": f"Invalid Event ID: {event_id!r}"})
+                    return Response(
+                        {"detail": f"Row {row_number}: Invalid Event ID: {event_id!r}"},
+                        status=400,
+                    )
             else:
                 # Older exports did not contain an Event ID.  Match those rows
                 # using the same organization-scoped identity used by the
@@ -259,14 +301,28 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                 identity_fields = ("client_name", "contact_no", "event_type", "start_date", "start_time", "tbd_month")
                 defaults = {"client_name": "", "contact_no": "", "event_type": "Shoot", "start_date": None, "start_time": None, "tbd_month": ""}
                 identity = {
-                    field: payload.get(field, defaults[field]) or defaults[field]
+                    # Keep explicit blank values exactly as the serializer
+                    # does. Converting a blank event type to "Shoot" here
+                    # makes the lookup miss an existing blank-valued row,
+                    # which is then rejected as a duplicate on create.
+                    field: payload[field] if field in payload else defaults[field]
                     for field in identity_fields
                 }
-                candidates = CalendarEvent.objects.filter(
-                    organization=request.user.organization,
-                    is_archived=False,
-                    **identity,
-                )
+                try:
+                    candidates = CalendarEvent.objects.filter(
+                        organization=request.user.organization,
+                        is_archived=False,
+                        **identity,
+                    )
+                    instances = list(candidates)
+                except (DjangoValidationError, TypeError, ValueError) as exc:
+                    return Response(
+                        {"detail": f"Row {row_number}: Invalid event data: {exc}"},
+                        status=400,
+                    )
+                # An old workbook has no Event ID. When it maps to duplicate
+                # copies of the exact same event, update every copy instead of
+                # rejecting the entire import. Nothing is deleted.
                 # Older workbooks commonly store phone numbers as numbers or
                 # with spaces.  In that case the otherwise identical record
                 # cannot be found by the contact-number identity above.  The
@@ -280,17 +336,28 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                     }
                     if not invalid_start_time:
                         secondary_identity["start_time"] = payload.get("start_time")
-                candidates = CalendarEvent.objects.filter(
-                    is_archived=False,
-                    **secondary_identity,
-                )
-                # An old workbook has no Event ID.  When it maps to duplicate
-                # copies of the exact same event, update every copy instead of
-                # rejecting the entire import.  Nothing is deleted.
-                instances = list(candidates)
+                    try:
+                        candidates = CalendarEvent.objects.filter(
+                            is_archived=False,
+                            **secondary_identity,
+                        )
+                        instances = list(candidates)
+                    except (DjangoValidationError, TypeError, ValueError) as exc:
+                        return Response(
+                            {"detail": f"Row {row_number}: Invalid event data: {exc}"},
+                            status=400,
+                        )
             if not instances:
                 serializer = self.get_serializer(data=payload)
                 if not serializer.is_valid():
+                    detail_errors = serializer.errors.get("detail", [])
+                    if any("already exists" in str(error).lower() for error in detail_errors):
+                        # A legacy row can be equivalent to an existing event
+                        # while differing in formatting that prevents a safe
+                        # deterministic match. It is already present, so do
+                        # not block the rest of the import or create a copy.
+                        skipped += 1
+                        continue
                     return Response(
                         {"detail": f"Row {row_number}: {serializer.errors}"},
                         status=400,
@@ -305,7 +372,11 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                         partial=True,
                         context={
                             **self.get_serializer_context(),
-                            "allow_duplicate_identity": len(instances) > 1,
+                            # A workbook row that matched an existing event
+                            # is an update, not a new duplicate. Existing
+                            # historical imports can legitimately contain
+                            # repeated identities, so preserve them.
+                            "allow_duplicate_identity": True,
                         },
                     )
                     if not serializer.is_valid():
@@ -315,7 +386,10 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                         )
                     self.perform_update(serializer)
                     updated += 1
-        return Response({"created": created, "updated": updated}, status=201)
+        result = {"created": created, "updated": updated}
+        if skipped:
+            result["skipped"] = skipped
+        return Response(result, status=201)
 
 
 class PhotographerDetailSerializer(serializers.ModelSerializer):
