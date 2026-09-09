@@ -148,9 +148,10 @@
    their own scrollbar visible so the action column is never stranded offscreen. */
 :root .upcomingEventsTableWrap {
   overflow-x: scroll !important;
-  overflow-y: hidden;
+  overflow-y: scroll !important;
   scrollbar-gutter: stable;
-  scrollbar-width: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #7186a4 #142237;
 }
 :root .upcomingEventsTableWrap .upcomingEventsTable {
   /* The operations lists use the compact "fitColumns" mode.  A modest
@@ -202,13 +203,26 @@
 /* Keep every event column label visible while browsing long event lists. */
 :root .upcomingEventsTableWrap {
   height: calc(100dvh - var(--workspace-chrome-height, 68px) - 80px);
-  max-height: none;
-  overflow: auto !important;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  max-height: calc(100dvh - var(--workspace-chrome-height, 68px) - 80px);
+  min-height: 360px;
+  overflow-x: auto !important;
+  overflow-y: scroll !important;
+  -ms-overflow-style: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #7186a4 #142237;
 }
 :root .upcomingEventsTableWrap::-webkit-scrollbar {
-  display: none;
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+:root .upcomingEventsTableWrap::-webkit-scrollbar-track {
+  background: #142237;
+}
+:root .upcomingEventsTableWrap::-webkit-scrollbar-thumb {
+  background: #7186a4;
+  border: 3px solid #142237;
+  border-radius: 8px;
 }
 :root .upcomingEventsTableWrap .upcomingEventsTable thead th {
   position: sticky !important;
