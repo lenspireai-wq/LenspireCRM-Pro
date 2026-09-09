@@ -1,0 +1,31 @@
+name: Audit VPS disk usage
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure VPS SSH access
+        env:
+          VPS_SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' '187.52.122.113 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID0TTNCpOS+vZ3OJqQAlk8+cljKktR/1vtSBqPME44kM' > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Report disk usage
+        run: |
+          ssh -o BatchMode=yes -o IdentitiesOnly=yes root@187.52.122.113 '
+            df -h / &&
+            echo "--- Docker ---" && docker system df &&
+            echo "--- Largest Docker paths ---" && du -xhd1 /var/lib/docker /var/lib/containerd 2>/dev/null | sort -h | tail -30 &&
+            echo "--- Largest top-level paths ---" && du -xhd1 / 2>/dev/null | sort -h | tail -30 &&
+            echo "--- Journal logs ---" && journalctl --disk-usage
+          '
