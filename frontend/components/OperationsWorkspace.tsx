@@ -178,6 +178,9 @@ export default function OperationsWorkspace({
   const [crewDraft, setCrewDraft] = useState<Row | null>(null);
   const [messageEvent, setMessageEvent] = useState<Row | null>(null);
   const [error, setError] = useState("");
+  useEffect(() => {
+    setError("");
+  }, [view]);
   const [importSummary, setImportSummary] = useState("");
   const [month, setMonth] = useState(() => new Date());
   const [importing, setImporting] = useState(false);
@@ -336,16 +339,31 @@ export default function OperationsWorkspace({
     try {
       // Send the workbook directly instead of multipart. This avoids reverse
       // proxies that discard multipart boundaries and empty Django's FILES map.
-      const token = useAuthStore.getState().access;
-      const response = await fetch("/api/events/import/", {
+      const upload = (token?: string | null) => fetch(`${api.defaults.baseURL}/events/import/`, {
         method: "POST",
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
           "Content-Type": file.type || "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          "X-Upload-Filename": encodeURIComponent(file.name),
         },
         body: file,
       });
+      let auth = useAuthStore.getState();
+      let response = await upload(auth.access);
+      // This direct file upload does not pass through Axios's normal token
+      // refresh interceptor. Refresh once and retry so a stale access token
+      // does not turn a valid Excel import into a login error.
+      if (response.status === 401 && auth.refresh) {
+        const refreshResponse = await fetch(`${api.defaults.baseURL}/auth/refresh/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh: auth.refresh }),
+        });
+        if (refreshResponse.ok) {
+          const refreshed = await refreshResponse.json();
+          useAuthStore.getState().setTokens(refreshed.access, refreshed.refresh || auth.refresh);
+          response = await upload(refreshed.access);
+        }
+      }
       const responseText = await response.text();
       let data: any = {};
       try {
@@ -360,7 +378,7 @@ export default function OperationsWorkspace({
         throw { response: { data: { ...data, detail } } };
       }
       await invalidateEvents();
-      setImportSummary(`${data.updated || 0} event(s) updated, ${data.created || 0} event(s) created.`);
+      setImportSummary(`${data.updated || 0} event(s) updated, ${data.created || 0} event(s) created, ${data.skipped || 0} duplicate event(s) skipped.`);
     } catch (err: any) {
       setError(err.response?.data?.detail || JSON.stringify(err.response?.data || "Could not import events."));
     } finally {
