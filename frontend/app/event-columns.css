@@ -241,6 +241,16 @@
 /* On desktop, the event table is the only vertical scroll region. This keeps
    the broad page scrollbar out of the Operations Upcoming/Completed views. */
 @media (min-width: 769px) {
+  .mainOperationsDashboard .photographersDetailsView .photographerTableWrap {
+    max-height: calc(100dvh - var(--workspace-chrome-height, 68px) - var(--operations-controls-height, 96px) - 56px);
+    overflow: auto !important;
+  }
+  .mainOperationsDashboard .photographersDetailsView .photographerTableWrap thead th {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 5;
+    background: var(--surface);
+  }
   .shell main.mainCalendar,
   .shell main.mainOperationsCalendar {
     height: 100dvh;
