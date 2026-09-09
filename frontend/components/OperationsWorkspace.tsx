@@ -484,7 +484,7 @@ export default function OperationsWorkspace({
         <Dashboard
           events={events}
           photographers={photographers}
-          open={() => setViewSafe("Upcoming Events")}
+          open={setViewSafe}
         />
       )}
       {view === "Calendar" && <CalendarWorkspace />}
@@ -557,14 +557,25 @@ function Dashboard({
 }: {
   events: Row[];
   photographers: Row[];
-  open: () => void;
+  open: (view: View) => void;
 }) {
   const today = new Date().toISOString().slice(0, 10),
     upcoming = events.filter((e) => upcomingStatuses.has(e.status));
   return (
     <>
       <section className="salesKpis">
-        <article>
+        <article
+          className="operationsKpiLink"
+          role="button"
+          tabIndex={0}
+          onClick={() => open("Upcoming Events")}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              open("Upcoming Events");
+            }
+          }}
+        >
           <span>Upcoming Events</span>
           <b>{upcoming.length}</b>
           <small>awaiting completion</small>
@@ -580,12 +591,34 @@ function Dashboard({
           </b>
           <small>events today</small>
         </article>
-        <article>
+        <article
+          className="operationsKpiLink"
+          role="button"
+          tabIndex={0}
+          onClick={() => open("Completed Events")}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              open("Completed Events");
+            }
+          }}
+        >
           <span>Completed</span>
           <b>{events.filter((e) => e.status === "Completed").length}</b>
           <small>finished shoots</small>
         </article>
-        <article>
+        <article
+          className="operationsKpiLink"
+          role="button"
+          tabIndex={0}
+          onClick={() => open("Photographers Details")}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              open("Photographers Details");
+            }
+          }}
+        >
           <span>Crew</span>
           <b>{photographers.length}</b>
           <small>photographers</small>
@@ -598,7 +631,7 @@ function Dashboard({
             className="iconOnlyAction viewAction"
             title="View all upcoming events"
             aria-label="View all upcoming events"
-            onClick={open}
+            onClick={() => open("Upcoming Events")}
           >
             ◉
           </button>
