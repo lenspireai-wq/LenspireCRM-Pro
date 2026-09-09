@@ -163,6 +163,34 @@ class OperationsApiTests(TestCase):
         self.assertEqual(event.title, "Edited wedding")
         self.assertEqual(event.notes, "Updated from Excel")
 
+    def test_completed_events_import_allows_blank_city_and_notes(self):
+        event = CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Completed wedding",
+            client_name="Asha",
+            event_type="Wedding",
+            start_date=date(2025, 10, 2),
+            status="Completed",
+            city="Mumbai",
+            notes="Previous note",
+        )
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["id", "title", "client_name", "event_type", "start_date", "date_status", "city", "notes"])
+        sheet.append([event.id, "Completed wedding", "Asha", "Wedding", date(2025, 10, 2), "Confirmed", None, None])
+        from io import BytesIO
+        stream = BytesIO()
+        workbook.save(stream)
+        upload = SimpleUploadedFile("completed-events.xlsx", stream.getvalue(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+        response = self.client.post("/api/events/import/", {"file": upload}, format="multipart")
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data, {"created": 0, "updated": 1})
+        event.refresh_from_db()
+        self.assertEqual(event.city, "")
+        self.assertEqual(event.notes, "")
+
     def test_importing_a_legacy_export_without_id_updates_a_unique_match(self):
         event = CalendarEvent.objects.create(
             organization=self.organization,
