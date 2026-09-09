@@ -103,7 +103,11 @@ class CalendarEventSerializer(serializers.ModelSerializer):
         identity_fields = ("client_name", "contact_no", "event_type", "start_date", "start_time", "tbd_month")
         defaults = {"client_name": "", "contact_no": "", "event_type": "Shoot", "start_date": None, "start_time": None, "tbd_month": ""}
         identity = {field: attrs.get(field, getattr(self.instance, field, defaults[field])) for field in identity_fields}
-        duplicate = CalendarEvent.objects.filter(organization=request.user.organization, **identity)
+        duplicate = CalendarEvent.objects.filter(
+            organization=request.user.organization,
+            is_archived=False,
+            **identity,
+        )
         if self.instance:
             duplicate = duplicate.exclude(pk=self.instance.pk)
         if duplicate.exists() and not self.context.get("allow_duplicate_identity", False):
@@ -111,7 +115,7 @@ class CalendarEventSerializer(serializers.ModelSerializer):
         return attrs
 
 class CalendarEventViewSet(OrganizationScopedViewSet):
-    queryset = CalendarEvent.objects.all().order_by("start_date", "start_time")
+    queryset = CalendarEvent.objects.filter(is_archived=False).order_by("start_date", "start_time")
     serializer_class = CalendarEventSerializer
     permission_classes = (OperationsAccessPermission,)
     filterset_fields = {"status": ["exact", "in"], "event_type": ["exact", "in"], "date_status": ["exact", "in"], "city": ["exact", "icontains"], "start_date": ["exact", "gte", "lte"], "assigned_user": ["exact"], "tbd_month": ["exact", "icontains"]}
@@ -240,6 +244,7 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                 }
                 candidates = CalendarEvent.objects.filter(
                     organization=request.user.organization,
+                    is_archived=False,
                     **identity,
                 )
                 # Older workbooks commonly store phone numbers as numbers or
@@ -255,9 +260,10 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                     }
                     if not invalid_start_time:
                         secondary_identity["start_time"] = payload.get("start_time")
-                    candidates = CalendarEvent.objects.filter(
-                        **secondary_identity,
-                    )
+                candidates = CalendarEvent.objects.filter(
+                    is_archived=False,
+                    **secondary_identity,
+                )
                 # An old workbook has no Event ID.  When it maps to duplicate
                 # copies of the exact same event, update every copy instead of
                 # rejecting the entire import.  Nothing is deleted.
