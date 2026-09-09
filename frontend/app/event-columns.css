@@ -423,13 +423,18 @@
     font-size: 9px;
   }
   .shell main.mainDashboard {
-    height: 100dvh;
-    overflow: hidden;
+    height: 100dvh !important;
+    max-height: 100dvh;
+    min-height: 0;
+    box-sizing: border-box;
+    overflow: hidden !important;
   }
   .mainDashboard .dashboard {
     height: calc(100% - var(--workspace-chrome-height, 68px));
+    max-height: calc(100% - var(--workspace-chrome-height, 68px));
     min-height: 0;
-    overflow-y: auto;
+    box-sizing: border-box;
+    overflow-y: auto !important;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
