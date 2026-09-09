@@ -318,8 +318,8 @@ export default function OperationsWorkspace({
     setError("");
     setImportSummary("");
     try {
-      // Send the workbook directly instead of multipart. Some reverse proxies
-      // discard multipart boundaries, leaving Django with an empty FILES map.
+      // Send the workbook directly instead of multipart. This avoids reverse
+      // proxies that discard multipart boundaries and empty Django's FILES map.
       const token = useAuthStore.getState().access;
       const response = await fetch("/api/events/import/", {
         method: "POST",
