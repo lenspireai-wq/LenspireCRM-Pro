@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   clear:
-    if: contains(github.event.head_commit.message, 'maintenance: clear requested user activity history')
+    if: "contains(github.event.head_commit.message, 'maintenance: clear requested user activity history')"
     runs-on: ubuntu-latest
     steps:
       - name: Clear organization and user audit records and verify
