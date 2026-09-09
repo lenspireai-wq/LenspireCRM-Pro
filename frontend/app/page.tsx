@@ -2,6 +2,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
+import { formatDate } from "@/lib/date-format";
 import { queryClient, queryKeys } from "@/lib/query";
 import HeaderSearch from "@/components/HeaderSearch";
 import SalesWorkspace from "@/components/SalesWorkspace";
@@ -432,7 +433,7 @@ export default function Home() {
               <span aria-hidden="true">{(auth.user?.display_name || auth.user?.username || "U").split(/\s+/).map((part: string) => part[0]).join("").slice(0, 2).toUpperCase()}</span>
             )}
           </span>
-          <span className="profileIdentity"><b>{auth.user?.display_name || auth.user?.username}</b><small><i />{auth.user?.role}</small><time>{new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "2-digit", month: "long" }).format(new Date())}</time></span>
+          <span className="profileIdentity"><b>{auth.user?.display_name || auth.user?.username}</b><small><i />{auth.user?.role}</small><time>{formatDate(new Date())}</time></span>
           <button className="profilePower" aria-label="Sign out" onClick={auth.logout}>◯</button>
         </div>
       </aside>

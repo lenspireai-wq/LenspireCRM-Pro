@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import { queryClient, useApiMutation } from "@/lib/query";
+import { formatDateTime } from "@/lib/date-format";
 import {
   departments,
   type AccessLevel,
@@ -51,16 +52,7 @@ const accessForRole = (role: string): Record<Department, AccessLevel> => {
   else if (role === "Post Production" || role === "Editor") access.production = "full";
   return access;
 };
-const dateTime = (value?: string | null) =>
-  value
-    ? new Date(value).toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "Never";
+const dateTime = (value?: string | null) => formatDateTime(value, "Never");
 
 export default function AdminWorkspace({
   currentUser,

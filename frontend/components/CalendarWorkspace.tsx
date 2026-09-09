@@ -2,6 +2,7 @@
 import { useMemo, useState } from "react";
 import { useApiMutation, useApiCollectionQuery, queryKeys } from "@/lib/query";
 import { api } from "@/lib/api";
+import { formatDate } from "@/lib/date-format";
 
 type CalendarEvent = {
   id: number;
@@ -194,7 +195,7 @@ export default function CalendarWorkspace() {
 
       <div className="calSidePanel">
         <header>
-          <h2>{new Date(selectedDate).toLocaleDateString("en-IN", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}</h2>
+          <h2>{formatDate(selectedDate)}</h2>
           <button className="billBtn primary" onClick={() => setEditing({ id: 0, title: "", client_name: "", event_type: "Wedding", start_date: selectedDate, start_time: "10:00", status: "Scheduled" })}>New event</button>
         </header>
         {selectedEvents.length === 0 ? <p className="dashEmpty">No events scheduled.</p> : null}

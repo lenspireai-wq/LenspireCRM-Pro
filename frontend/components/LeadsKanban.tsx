@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useApiMutation, useApiQuery, queryKeys } from "@/lib/query";
 import { api } from "@/lib/api";
+import { formatDate } from "@/lib/date-format";
 
 type Lead = {
   id: number;
@@ -33,7 +34,7 @@ const formatINR = (value: Lead["total_closing"]) => {
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(number);
 };
 
-const formatDate = (value?: string | null) => (value ? new Date(value).toLocaleDateString("en-IN", { month: "short", day: "2-digit" }) : null);
+const leadDate = (value?: string | null) => (value ? formatDate(value) : null);
 
 const priorityTone: Record<string, string> = { High: "var(--danger)", Medium: "var(--warning)", Low: "var(--success)" };
 
@@ -130,8 +131,8 @@ export default function LeadsKanban() {
               <div className="kanbanList">
                 {items.length === 0 ? <p className="dashEmpty">No leads</p> : null}
                 {items.map((lead) => {
-                  const eventDate = formatDate(lead.event_date);
-                  const followup = formatDate(lead.next_followup_at);
+                  const eventDate = leadDate(lead.event_date);
+                  const followup = leadDate(lead.next_followup_at);
                   const value = formatINR(lead.total_closing);
                   return (
                     <article

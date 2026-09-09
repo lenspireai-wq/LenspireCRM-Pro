@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api";
 import { useApiMutation } from "@/lib/query";
+import { formatDate } from "@/lib/date-format";
 
 type QuotationItem = { id?: number; name: string; description?: string; quantity: number; unit_price: string; line_total?: string; position?: number };
 type Quotation = {
@@ -77,7 +78,6 @@ const formatINR = (value: string | number) => {
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(number);
 };
 
-const formatDate = (value?: string | null) => (value ? new Date(value).toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "2-digit" }) : "—");
 
 const STATUS_COLORS: Record<string, string> = {
   Draft: "var(--muted)",

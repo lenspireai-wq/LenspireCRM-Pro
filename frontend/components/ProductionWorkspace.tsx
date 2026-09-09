@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
+import { formatDate } from "@/lib/date-format";
 
 type Row = Record<string, any>;
 type View =
@@ -108,14 +109,7 @@ const activityTypes = [
   "Album Delivery",
   "Overdue Reminder",
 ];
-const dateLabel = (value?: string) =>
-  value
-    ? new Date(`${value.slice(0, 10)}T00:00:00`).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      })
-    : "—";
+const dateLabel = (value?: string) => formatDate(value);
 const editorStatusMessage = (status: string) =>
   ({
     "Submitted for Review": "Waiting for Production Head review",

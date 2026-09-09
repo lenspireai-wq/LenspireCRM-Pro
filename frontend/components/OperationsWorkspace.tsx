@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import CalendarWorkspace from "@/components/CalendarWorkspace";
 import { useAuthStore } from "@/stores/auth";
+import { formatDate } from "@/lib/date-format";
 
 export type View =
   | "Dashboard"
@@ -54,27 +55,12 @@ const blankPhotographer = {
 };
 const rows = (value: any): Row[] =>
   Array.isArray(value) ? value : value?.results || [];
-const dateLabel = (value?: string) =>
-  value
-    ? new Date(`${value}T00:00:00`).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      })
-    : "TBD";
+const dateLabel = (value?: string) => formatDate(value, "TBD");
 const eventDateLabel = (event: Row) => {
   if (event.date_status === "TBD Month" && event.tbd_month) {
-    return `TBD · ${new Date(`${event.tbd_month}-01T00:00:00`).toLocaleDateString("en-IN", {
-      month: "long",
-      year: "numeric",
-    })}`;
+    return `TBD · ${formatDate(`${event.tbd_month}-01`)}`;
   }
   return dateLabel(event.start_date);
-};
-const ordinal = (day: number) => {
-  const remainder = day % 100;
-  if (remainder >= 11 && remainder <= 13) return `${day}th`;
-  return `${day}${day % 10 === 1 ? "st" : day % 10 === 2 ? "nd" : day % 10 === 3 ? "rd" : "th"}`;
 };
 const crewMessageValue = (value: any) =>
   String(value || "")
@@ -91,16 +77,8 @@ function eventMessage(event: Row) {
   const eventDate = event.start_date
     ? new Date(`${event.start_date}T00:00:00`)
     : null;
-  const shortDate = eventDate
-    ? `${ordinal(eventDate.getDate())} ${eventDate.toLocaleDateString("en-IN", { month: "short" })}`
-    : "Date TBD";
-  const fullDate = eventDate
-    ? eventDate.toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })
-    : "Date to be confirmed";
+  const shortDate = eventDate ? formatDate(event.start_date) : "Date TBD";
+  const fullDate = eventDate ? formatDate(event.start_date) : "Date to be confirmed";
   const day = eventDate
     ? eventDate.toLocaleDateString("en-IN", { weekday: "long" })
     : "Day to be confirmed";
