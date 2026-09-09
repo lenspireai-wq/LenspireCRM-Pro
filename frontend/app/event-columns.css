@@ -237,3 +237,16 @@
 :root .upcomingEventsTable tbody tr:hover {
   background: #7367f00d !important;
 }
+
+/* Touch devices retain vertical swipe scrolling without reserving a desktop-style rail. */
+@media (max-width: 768px) {
+  :root .upcomingEventsTableWrap {
+    overflow-y: auto !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  :root .upcomingEventsTableWrap::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+}
