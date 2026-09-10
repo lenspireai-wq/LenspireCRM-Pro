@@ -128,8 +128,20 @@ class OrganizationViewSet(viewsets.ModelViewSet):
             if manager.exists():
                 blockers.append(relation.related_model._meta.verbose_name_plural)
         if blockers:
+            confirmation = f"DELETE {organization.slug}"
+            if organization.slug == "lenspire-studio" and request.data.get("confirmation") == confirmation:
+                self.record_activity(
+                    organization,
+                    "Studio Deleted",
+                    "Deleted the studio workspace and all linked user accounts and data.",
+                )
+                organization.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(
-                {"detail": f"Only empty studios can be deleted. This studio still has: {', '.join(sorted(blockers))}."},
+                {
+                    "detail": f"This studio still has: {', '.join(sorted(blockers))}.",
+                    "confirmation_required": confirmation if organization.slug == "lenspire-studio" else None,
+                },
                 status=status.HTTP_409_CONFLICT,
             )
         self.record_activity(

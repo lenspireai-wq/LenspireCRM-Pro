@@ -84,6 +84,21 @@ class ApiTests(APITestCase):
             studio_name="Empty Studio", action="Studio Deleted"
         ).latest("created_at")
         self.assertIsNone(activity.organization)
+
+    def test_platform_owner_can_fully_delete_only_the_confirmed_lenspire_studio(self):
+        platform_owner = User.objects.create_superuser(
+            username="platform-owner-lenspire-delete", password="Owner-pass-123"
+        )
+        studio = Organization.objects.create(name="Lenspire Studio", slug="lenspire-studio")
+        User.objects.create_user(username="lenspire-admin", password="Studio-pass-123", organization=studio)
+        self.client.force_authenticate(platform_owner)
+        response = self.client.delete(
+            f"/api/organizations/{studio.id}/",
+            {"confirmation": "DELETE lenspire-studio"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(Organization.objects.filter(pk=studio.id).exists())
     def test_paused_studio_blocks_login_existing_tokens_and_refresh(self):
         member = User.objects.create_user(
             username="paused-admin",

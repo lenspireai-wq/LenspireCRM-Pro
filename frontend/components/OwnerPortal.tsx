@@ -158,15 +158,20 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
     }
   };
   const deleteStudio = async (organization: Organization) => {
+    const hasUsers = Number(organization.user_count || 0) > 0;
     if (
       !window.confirm(
-        `Permanently delete ${organization.name}? This can only delete an empty studio and cannot be undone.`,
+        hasUsers
+          ? `Permanently delete ${organization.name}, its ${organization.user_count} user account(s), and all linked studio data? This cannot be undone.`
+          : `Permanently delete ${organization.name}? This cannot be undone.`,
       )
     )
       return;
     setError("");
     try {
-      await api.delete(`/organizations/${organization.id}/`);
+      await api.delete(`/organizations/${organization.id}/`, {
+        data: { confirmation: `DELETE ${organization.slug}` },
+      });
       await load();
     } catch (problem: any) {
       setError(
@@ -379,10 +384,10 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
                         >
                           {organization.active ? "Ⅱ" : "▶"}
                         </button>
-                        {Number(organization.user_count || 0) === 0 && (
+                        {(Number(organization.user_count || 0) === 0 || organization.slug === "lenspire-studio") && (
                           <button
                             className="deleteAction"
-                            title="Delete empty studio"
+                            title={Number(organization.user_count || 0) === 0 ? "Delete empty studio" : "Delete studio and all data"}
                             onClick={() => void deleteStudio(organization)}
                           >
                             ×
