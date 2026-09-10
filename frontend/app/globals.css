@@ -6937,16 +6937,18 @@ input[aria-label="Search CRM records"]:focus-visible,
 .notifAction {
   flex: 0 0 auto;
   display: inline-grid;
-  width: 32px;
-  min-height: 32px;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
   padding: 0;
   place-items: center;
+  aspect-ratio: 1;
   border: 1px solid var(--brand, #7367f0);
   border-radius: 7px;
   background: transparent;
   color: var(--brand, #a5b4fc);
   font: inherit;
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
