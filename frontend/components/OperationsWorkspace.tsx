@@ -747,7 +747,7 @@ function EventTable({
                     .join(" · ") || "—"}
                 </td>
                 <td>
-                  <span className="statusPill">{row.status}</span>
+                  <span className={`statusPill status-${String(row.status || "").toLowerCase().replaceAll(" ", "-")}`}>{row.status}</span>
                 </td>
               </tr>
             ))}
@@ -953,7 +953,7 @@ function CrewTable({
                 <td>{row.living_in || "—"}</td>
                 <td>{row.work || "—"}</td>
                 <td>
-                  <span className="statusPill">{row.status}</span>
+                  <span className={`statusPill status-${String(row.status || "").toLowerCase().replaceAll(" ", "-")}`}>{row.status}</span>
                 </td>
                 <td>
                   <div className="rowActions">

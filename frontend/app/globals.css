@@ -9829,6 +9829,19 @@ table > tbody > tr:has(td[colspan])::before {
     line-height: 1.15;
     white-space: nowrap;
   }
+  .mainOperationsDashboard .operationsDashboardView .operationsActions > .primary {
+    display: none;
+  }
+  .mainOperationsDashboard .statusPill.status-scheduled {
+    border: 1px solid #b7791f;
+    background: #b7791f26;
+    color: #f6c85f;
+  }
+  .mainOperationsDashboard .statusPill.status-confirmed {
+    border: 1px solid #2f9e63;
+    background: #2f9e6326;
+    color: #63d69b;
+  }
   .operationsWorkspace .desktopOperationsTabLabel { display: none; }
   .operationsWorkspace .mobileOperationsTabLabel { display: inline; }
   .operationsChrome .desktopOperationsHeaderTitle { display: none; }
