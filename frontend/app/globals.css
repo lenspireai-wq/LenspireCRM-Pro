@@ -5762,8 +5762,8 @@ table td { font-size: 13px; }
   .operationsCalendar { overflow-x: auto; }
 }
 @media (max-width: 600px) {
-  .shell main { padding: 64px 10px 20px; }
-  .workspaceChrome { margin: -56px -10px 12px; padding: 8px 10px 8px 48px; }
+  .shell main { padding: 64px 12px 20px; }
+  .workspaceChrome { margin: -56px -12px 12px; padding: 8px 12px 8px 48px; }
   .workspaceChrome h1 { font-size: 15px; }
   .chromeActions { gap: 4px; }
   .chromeActions button { width: 30px; height: 30px; min-height: 30px; }
@@ -6116,7 +6116,7 @@ table td { font-size: 13px; }
 .shell > main.mainSalesDashboard,
 .shell > main.mainOperationsDashboard,
 .shell > main.mainAccountsSticky {
-  overflow-x: clip;
+  max-width: 100%;
 }
 html:has(.mainDashboard),
 body:has(.mainDashboard),
