@@ -72,6 +72,23 @@ const sectionDepartments: Partial<Record<Section, Department>> = {
   Reports: "sales",
   Settings: "sales",
 };
+
+const defaultSectionForRole = (role?: string): Section => {
+  switch (role?.trim().toLowerCase()) {
+    case "editor":
+    case "post production":
+      return "Production";
+    case "operations":
+      return "Operations";
+    case "accounts & finance":
+      return "Accounts";
+    case "sales & marketing":
+      return "Sales";
+    default:
+      return "Dashboard";
+  }
+};
+
 function Login({
   ownerMode,
   setOwnerMode,
@@ -267,6 +284,7 @@ export default function Home() {
     [workspaceChromeHeight, setWorkspaceChromeHeight] = useState(68),
     [adminView, setAdminView] = useState<"Admin" | "Audit">("Admin");
   const dashboardChromeRef = useRef<HTMLDivElement>(null);
+  const landingUserIdRef = useRef<number | null>(null);
   const today = new Date();
   const referenceDate = today.toISOString().split("T")[0];
   const monthLabel = today.toLocaleDateString("en-US", { month: "long", year: "numeric" });
@@ -343,6 +361,24 @@ export default function Home() {
       return isAdministrator(auth.user);
     return canAccess(auth.user, sectionDepartments[item]!);
   });
+  useEffect(() => {
+    if (!mounted || !auth.user) {
+      landingUserIdRef.current = null;
+      return;
+    }
+    if (landingUserIdRef.current === auth.user.id) return;
+
+    landingUserIdRef.current = auth.user.id;
+    const requestedSection = new URLSearchParams(window.location.search).get("section");
+    if (requestedSection && (sections as readonly string[]).includes(requestedSection)) return;
+
+    const preferredSection = defaultSectionForRole(auth.user.role);
+    setSection(
+      visibleSections.includes(preferredSection)
+        ? preferredSection
+        : visibleSections[0] || "Dashboard",
+    );
+  }, [mounted, auth.user, visibleSections.join("|")]);
   useEffect(() => {
     if (
       mounted &&
