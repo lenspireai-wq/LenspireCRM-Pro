@@ -42,6 +42,12 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [activities, setActivities] = useState<StudioActivity[]>([]);
   const [editing, setEditing] = useState<Organization | null>(null);
+  const [usersStudio, setUsersStudio] = useState<Organization | null>(null);
+  const [studioUsers, setStudioUsers] = useState<Organization[]>([]);
+  const [usersLoading, setUsersLoading] = useState(false);
+  const [resettingUserId, setResettingUserId] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [userMessage, setUserMessage] = useState("");
   const [creating, setCreating] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -165,6 +171,44 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
     } catch (problem: any) {
       setError(
         problem.response?.data?.detail || "Could not delete the studio workspace.",
+      );
+    }
+  };
+  const openStudioUsers = async (organization: Organization) => {
+    setUsersStudio(organization);
+    setStudioUsers([]);
+    setUsersLoading(true);
+    setUserMessage("");
+    setResettingUserId("");
+    setNewPassword("");
+    try {
+      const response = await api.get("/users/", {
+        params: { organization: organization.id },
+      });
+      setStudioUsers(rows(response.data));
+    } catch (problem: any) {
+      setUserMessage(
+        problem.response?.data?.detail || "Could not load this studio's users.",
+      );
+    } finally {
+      setUsersLoading(false);
+    }
+  };
+  const resetStudioUserPassword = async (user: Organization) => {
+    if (newPassword.length < 4) {
+      setUserMessage("Enter a new password with at least 4 characters.");
+      return;
+    }
+    if (!window.confirm(`Reset the password for ${user.username}? Their active sessions will be signed out.`)) return;
+    setUserMessage("");
+    try {
+      await api.post(`/users/${user.id}/reset-password/`, { password: newPassword });
+      setNewPassword("");
+      setResettingUserId("");
+      setUserMessage(`Password reset for ${user.username}. Existing sessions were signed out.`);
+    } catch (problem: any) {
+      setUserMessage(
+        problem.response?.data?.detail || "Could not reset this user's password.",
       );
     }
   };
@@ -309,6 +353,13 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
                           onClick={() => openStudioEditor(organization)}
                         >
                           ✎
+                        </button>
+                        <button
+                          className="usersAction"
+                          title="View studio users"
+                          onClick={() => void openStudioUsers(organization)}
+                        >
+                          ♙
                         </button>
                         {(studioStatus(organization) === "expired" || studioStatus(organization) === "expiring") && (
                           <button className="renewAction" title="Renew for one year" onClick={() => openStudioEditor(organization, true)}>↻</button>
@@ -603,6 +654,53 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
               </button>
             </div>
           </form>
+        </div>
+      )}
+      {usersStudio && (
+        <div className="modalBackdrop">
+          <section className="accountModal ownerUsersModal" aria-label={`${usersStudio.name} users`}>
+            <div className="modalHeader">
+              <div>
+                <small>STUDIO USERS</small>
+                <h2>{usersStudio.name}</h2>
+                <p>View login usernames or reset a user password.</p>
+              </div>
+              <button type="button" onClick={() => setUsersStudio(null)}>×</button>
+            </div>
+            <div className="ownerUsersList">
+              {usersLoading && <p>Loading users…</p>}
+              {!usersLoading && !studioUsers.length && !userMessage && <p>No user accounts were found for this studio.</p>}
+              {studioUsers.map((user) => (
+                <article key={user.id} className="ownerUserRow">
+                  <div>
+                    <b>{user.display_name || user.username}</b>
+                    <span>@{user.username} · {user.role || "User"} · {user.is_active ? "Active" : "Inactive"}</span>
+                  </div>
+                  {resettingUserId === user.id ? (
+                    <div className="ownerResetForm">
+                      <input
+                        aria-label={`New password for ${user.username}`}
+                        type="password"
+                        minLength={4}
+                        autoComplete="new-password"
+                        value={newPassword}
+                        onChange={(event) => setNewPassword(event.target.value)}
+                        placeholder="New password"
+                      />
+                      <button className="primary" onClick={() => void resetStudioUserPassword(user)}>Save</button>
+                      <button onClick={() => { setResettingUserId(""); setNewPassword(""); }}>Cancel</button>
+                    </div>
+                  ) : (
+                    <button onClick={() => { setResettingUserId(user.id); setNewPassword(""); setUserMessage(""); }}>Reset password</button>
+                  )}
+                </article>
+              ))}
+              {userMessage && <p className="ownerUserMessage">{userMessage}</p>}
+            </div>
+            <div className="modalFooter">
+              <button type="button" onClick={() => setUsersStudio(null)}>Close</button>
+            </div>
+          </section>
         </div>
       )}
     </main>

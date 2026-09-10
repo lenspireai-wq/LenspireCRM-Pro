@@ -935,6 +935,18 @@ input:-webkit-autofill:active {
   background: #481e28;
   color: #ff9daa;
 }
+.ownerRowActions .usersAction {
+  border: 1px solid #4e4a93;
+  background: #292453;
+  color: #c1baff;
+}
+.ownerUsersModal { width: min(680px, 100%); }
+.ownerUsersList { display: grid; gap: var(--space-3); padding: var(--space-5) var(--space-6); }
+.ownerUserRow { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-md); }
+.ownerUserRow > div:first-child { display: grid; gap: 3px; }
+.ownerUserRow span, .ownerUserMessage { color: var(--text-muted); font-size: 13px; }
+.ownerResetForm { display: flex; align-items: center; gap: var(--space-2); }
+.ownerResetForm input { width: 150px; }
 .ownerStudioModal {
   width: min(900px, 100%);
 }
