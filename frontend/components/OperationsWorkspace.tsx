@@ -6,6 +6,7 @@ import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query
 import CalendarWorkspace from "@/components/CalendarWorkspace";
 import { useAuthStore } from "@/stores/auth";
 import { formatDate } from "@/lib/date-format";
+import { exportFilename } from "@/lib/download-filename";
 
 export type View =
   | "Dashboard"
@@ -309,7 +310,7 @@ export default function OperationsWorkspace({
       const url = URL.createObjectURL(response.data);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `events-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      link.download = exportFilename("Events", "xlsx");
       link.click();
       URL.revokeObjectURL(url);
     } catch (err: any) {
@@ -376,7 +377,7 @@ export default function OperationsWorkspace({
       const url = URL.createObjectURL(response.data);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `photographers-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      link.download = exportFilename("Photographers", "xlsx");
       link.click();
       URL.revokeObjectURL(url);
     } catch (err: any) {

@@ -3,6 +3,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useApiQuery, queryKeys } from "@/lib/query";
 import { isAdministrator } from "@/lib/permissions";
 import { formatDateTime } from "@/lib/date-format";
+import { exportFilename } from "@/lib/download-filename";
 
 type OrgAudit = {
   id: number;
@@ -173,7 +174,7 @@ export default function AuditWorkspace({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `lenspire-audit-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = exportFilename("Audit-Log", "csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

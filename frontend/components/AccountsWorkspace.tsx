@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import { formatDate } from "@/lib/date-format";
+import { exportFilename } from "@/lib/download-filename";
 
 type Row = Record<string, any>;
 const views = [
@@ -415,7 +416,7 @@ export default function AccountsWorkspace({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `receivables-ageing-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = exportFilename("Receivables-Ageing", "csv");
     link.click();
     URL.revokeObjectURL(url);
   };

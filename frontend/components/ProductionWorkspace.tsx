@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import { formatDate } from "@/lib/date-format";
+import { exportFilename } from "@/lib/download-filename";
 
 type Row = Record<string, any>;
 type View =
@@ -346,7 +347,10 @@ export default function ProductionWorkspace({
       const url = URL.createObjectURL(response.data);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${activityView ? "production-activity-history" : "production-jobs"}-${today}.xlsx`;
+      link.download = exportFilename(
+        activityView ? "Production-Activity-History" : "Production-Jobs",
+        "xlsx",
+      );
       link.click();
       URL.revokeObjectURL(url);
     } catch {

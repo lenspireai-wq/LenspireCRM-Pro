@@ -4,6 +4,7 @@ import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import { useAuthStore } from "@/stores/auth";
 import { formatDate, formatDateTime } from "@/lib/date-format";
+import { exportFilename } from "@/lib/download-filename";
 import { canWrite } from "@/lib/permissions";
 import LeadImportWizard from "@/components/LeadImportWizard";
 
@@ -290,7 +291,7 @@ export default function SalesWorkspace({
       const url = URL.createObjectURL(response.data);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "Lenspire-Leads.xlsx";
+      link.download = exportFilename("Leads", "xlsx");
       link.click();
       URL.revokeObjectURL(url);
       notify("Lead workbook exported");
