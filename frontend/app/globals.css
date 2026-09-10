@@ -9649,6 +9649,12 @@ table > tbody > tr:has(td[colspan])::before {
     padding-left: 46px;
     padding-top: 4px;
   }
+  .leadManagementChrome .salesHeader {
+    padding-top: 8px;
+  }
+  .leadManagementChrome .salesHeader p {
+    margin-top: 8px;
+  }
   .salesChrome .salesHeader h1 {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -9681,6 +9687,21 @@ table > tbody > tr:has(td[colspan])::before {
     min-height: 20px !important;
     padding: 0 !important;
     place-items: center;
+  }
+  .leadManagementChrome .chromeActions {
+    grid-template-columns: repeat(5, 24px) !important;
+    grid-auto-rows: 24px !important;
+    gap: 5px !important;
+    margin: -5px 0 0;
+  }
+  .leadManagementChrome .chromeActions > * {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .leadManagementChrome .chromeActions :is(.notifBellButton, .themeToggle, button) {
+    width: 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
   }
   .mainSalesDashboard .salesKpis {
     grid-template-columns: repeat(3, minmax(0, 1fr));

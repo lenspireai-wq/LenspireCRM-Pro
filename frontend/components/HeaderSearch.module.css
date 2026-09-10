@@ -116,6 +116,20 @@
     padding: 0 !important;
     border-radius: var(--radius-sm) !important;
   }
+  :global(.leadManagementChrome .chromeActions) .root,
+  :global(.leadManagementChrome .chromeActions) .root:focus-within {
+    flex: 0 0 24px !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+  }
+  :global(.leadManagementChrome .chromeActions) .root::before {
+    font-size: 12px;
+  }
+  :global(.leadManagementChrome .chromeActions) .root .input {
+    height: 24px !important;
+    min-height: 24px !important;
+  }
   :global(.operationsChrome .chromeActions) .root,
   :global(.operationsChrome .chromeActions) .root:focus-within {
     flex: 0 0 24px !important;
