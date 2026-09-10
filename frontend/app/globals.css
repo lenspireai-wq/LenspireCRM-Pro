@@ -9692,7 +9692,7 @@ table > tbody > tr:has(td[colspan])::before {
     grid-template-columns: repeat(5, 24px) !important;
     grid-auto-rows: 24px !important;
     gap: 5px !important;
-    margin: -5px 0 0;
+    margin: -14px 0 0;
   }
   .leadManagementChrome .chromeActions > * {
     width: 24px !important;
