@@ -98,7 +98,12 @@ export function NotificationBell() {
           <header>
             <strong>Notifications</strong>
             {unread > 0 ? (
-              <button className="billBtn" onClick={() => markAll.mutate(undefined)} disabled={markAll.isPending}>
+              <button
+                type="button"
+                className="notifAction notifMarkAll"
+                onClick={() => markAll.mutate(undefined)}
+                disabled={markAll.isPending}
+              >
                 {markAll.isPending ? "Marking…" : "Mark all read"}
               </button>
             ) : null}
@@ -106,7 +111,7 @@ export function NotificationBell() {
           <ul>
             {items.length === 0 ? <li className="notifEmpty">You&apos;re all caught up.</li> : null}
             {items.map((notification) => (
-              <li key={notification.id} className={notification.is_read ? "read" : "unread"}>
+              <li key={notification.id} className={`notifItem ${notification.is_read ? "read" : "unread"}`}>
                 <div className="notifDot" style={{ background: LEVEL_COLORS[notification.level] || "var(--muted)" }} />
                 <div className="notifBody">
                   <strong>{notification.title}</strong>
@@ -114,7 +119,14 @@ export function NotificationBell() {
                   <small>{formatRelative(notification.created_at)} · {notification.category}</small>
                 </div>
                 {!notification.is_read ? (
-                  <button className="billBtn" onClick={() => markOne.mutate({ id: notification.id })}>Mark read</button>
+                  <button
+                    type="button"
+                    className="notifAction notifMarkRead"
+                    onClick={() => markOne.mutate({ id: notification.id })}
+                    disabled={markOne.isPending}
+                  >
+                    {markOne.isPending ? "Marking…" : "Mark read"}
+                  </button>
                 ) : null}
               </li>
             ))}
