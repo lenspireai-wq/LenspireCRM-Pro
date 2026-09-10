@@ -519,7 +519,7 @@ export default function Home() {
               <div className="salesHeader">
                 <div>
                   <h1>{salesView === "Dashboard" ? "Sales Dashboard" : "Lead Management"}</h1>
-                  <p>{salesView === "Dashboard" ? "Your studio at a glance" : "Track every inquiry from first call to booking"}</p>
+                  <p>{salesView === "Dashboard" ? "Your studio at a glance" : "Turn every inquiry into a confirmed booking"}</p>
                 </div>
                 <button className="secondary" onClick={() => setTargetOpen(true)}>
                   ◎ Set Target

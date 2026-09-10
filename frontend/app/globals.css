@@ -9717,7 +9717,7 @@ table > tbody > tr:has(td[colspan])::before {
   }
   .mainSalesDashboard .leadManagementSticky .reminderCard span {
     min-width: 0;
-    font-size: 9px;
+    font-size: 8px;
     line-height: 1.1;
     overflow-wrap: anywhere;
   }
@@ -9726,6 +9726,47 @@ table > tbody > tr:has(td[colspan])::before {
     margin: 1px 0 0;
     font-size: 17px;
     line-height: 1.1;
+  }
+  .mainSalesDashboard .leadManagementSticky .reminderCard.newLead {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    place-items: center;
+    min-height: 58px;
+    padding: 6px;
+    border: 1px solid color-mix(in srgb, var(--brand) 70%, var(--line));
+    border-top-width: 1px;
+    background:
+      radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--brand) 28%, transparent), transparent 72%),
+      color-mix(in srgb, var(--brand) 9%, var(--panel));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 12%, transparent);
+  }
+  .mainSalesDashboard .leadManagementSticky .reminderCard.newLead i {
+    display: none;
+  }
+  .mainSalesDashboard .leadManagementSticky .reminderCard.newLead span {
+    grid-column: 1;
+    grid-row: 1;
+    color: var(--brand);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-align: center;
+  }
+  .mainSalesDashboard .leadManagementSticky .reminderCard.newLead .newLeadPlus {
+    display: grid;
+    grid-column: 1;
+    grid-row: 2;
+    width: 22px;
+    height: 22px;
+    margin: 2px 0 0;
+    border-radius: 50%;
+    place-items: center;
+    background: var(--brand);
+    color: var(--bg);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
   }
 }
 

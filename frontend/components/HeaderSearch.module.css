@@ -62,7 +62,9 @@
   }
 }
 
-@media (max-width: 520px) {
+/* Mobile headers use the compact icon treatment; the field expands only while
+   the user is actively entering a search. */
+@media (max-width: 1000px) {
   .root .input::placeholder { color: transparent; }
   .root { flex-basis: 42px; min-width: 42px; max-width: 42px; }
   .root:focus-within { flex-basis: 180px; max-width: 180px; }
