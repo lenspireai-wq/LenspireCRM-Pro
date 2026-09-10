@@ -9497,6 +9497,43 @@ table > tbody > tr:has(td[colspan])::before {
   }
 }
 
+/* Mobile dashboard chrome: reserve space for the menu, then stack controls
+   predictably so they remain right-aligned without colliding with the greeting. */
+@media (max-width: 800px) {
+  .dashboardChrome {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    padding: 10px 12px 12px;
+    row-gap: var(--space-3);
+  }
+  .dashboardChrome .dashHeader {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    padding-left: 64px;
+  }
+  .dashboardChrome .chromeActions {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: end;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+  }
+  .dashboardChrome .dashSelect {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: end;
+    margin: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboardChrome .chromeActions > button {
+    display: inline-grid;
+  }
+}
+
 @media (max-width: 359px) {
   .dashMetrics,
   .salesKpis,
