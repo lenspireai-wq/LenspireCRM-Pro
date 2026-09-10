@@ -1382,7 +1382,11 @@ function LeadDetail({
   const [uploading, setUploading] = useState(false);
   const attachMutation = useApiMutation<FormData, any, Error>({
     mutationFn: async (payload) =>
-      (await api.post("/attachments/", payload)).data,
+      (
+        await api.post("/attachments/", payload, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+      ).data,
   });
   const logActivityMutation = useApiMutation<
     { type: string; description: string },

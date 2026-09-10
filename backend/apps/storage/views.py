@@ -1,5 +1,6 @@
 from pathlib import Path
 from rest_framework import serializers
+from rest_framework.parsers import FormParser, MultiPartParser
 from apps.core.api import OrganizationScopedViewSet
 from .models import Attachment
 from apps.core.permissions import SalesAccessPermission
@@ -17,6 +18,7 @@ class AttachmentViewSet(OrganizationScopedViewSet):
     queryset = Attachment.objects.all()
     serializer_class = AttachmentSerializer
     permission_classes = (SalesAccessPermission,)
+    parser_classes = (MultiPartParser, FormParser)
     filterset_fields = {"lead": ["exact"], "created_at": ["gte", "lte"]}
     search_fields = ("name",)
     ordering_fields = ("created_at", "name")
