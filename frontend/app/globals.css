@@ -9834,7 +9834,7 @@ table > tbody > tr:has(td[colspan])::before {
   .operationsChrome .desktopOperationsHeaderTitle { display: none; }
   .operationsChrome .mobileOperationsHeaderTitle { display: inline; }
   .mainDashboard .workspaceChrome {
-    margin-bottom: 0;
+    margin-bottom: 6px;
   }
   .mainDashboard .dashMetrics {
     position: static;
@@ -9855,7 +9855,7 @@ table > tbody > tr:has(td[colspan])::before {
    never covers the Revenue Trend or Lead Funnel panels while scrolling. */
 @media (min-width: 1001px) {
   .mainDashboard .workspaceChrome {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     position: relative;
     top: auto;
     z-index: auto;
