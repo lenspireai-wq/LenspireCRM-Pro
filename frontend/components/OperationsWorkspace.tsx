@@ -310,7 +310,10 @@ export default function OperationsWorkspace({
       const url = URL.createObjectURL(response.data);
       const link = document.createElement("a");
       link.href = url;
-      link.download = exportFilename("Events", "xlsx");
+      link.download = exportFilename(
+        view === "Completed Events" ? "Completed_Events" : "Upcoming_Events",
+        "xlsx",
+      );
       link.click();
       URL.revokeObjectURL(url);
     } catch (err: any) {
