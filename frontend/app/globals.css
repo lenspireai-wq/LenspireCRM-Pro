@@ -9553,6 +9553,9 @@ table > tbody > tr:has(td[colspan])::before {
   .mainDashboard .dashMetrics {
     padding: 0;
   }
+  .salesChrome .salesHeader {
+    padding-left: 46px;
+  }
 }
 
 @media (max-width: 1000px) {
@@ -9600,6 +9603,127 @@ table > tbody > tr:has(td[colspan])::before {
     min-height: 26px !important;
     flex-basis: 26px;
     padding: 0 !important;
+  }
+}
+
+.mobileSalesTarget { display: none; }
+
+@media (max-width: 1000px) {
+  .salesChrome .salesHeader > .secondary {
+    display: none;
+  }
+  .salesChrome .chromeActions {
+    justify-self: end;
+  }
+  .salesPage :is(.salesDashboardSticky, .leadManagementSticky) > .operationsTabs {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+  }
+  .salesPage .mobileSalesTarget {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    margin-left: auto;
+    padding: 0 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--brand);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .salesChrome {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto;
+    align-items: start;
+    padding: 10px 12px;
+  }
+  .salesChrome .salesHeader {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    padding-left: 46px;
+  }
+  .salesChrome .salesHeader h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .salesChrome .chromeActions {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid !important;
+    grid-template-columns: repeat(4, 26px) !important;
+    grid-auto-rows: 26px !important;
+    align-items: center;
+    justify-self: end;
+    gap: 8px !important;
+    margin: 0;
+  }
+  .salesChrome .chromeActions > * {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 0 !important;
+  }
+  .salesChrome .chromeActions > :first-child {
+    display: none !important;
+  }
+  .salesChrome .chromeActions :is(.notifBellButton, .themeToggle, button) {
+    display: inline-grid;
+    width: 26px !important;
+    height: 26px !important;
+    min-height: 26px !important;
+    padding: 0 !important;
+    place-items: center;
+  }
+  .mainSalesDashboard .salesKpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .mainSalesDashboard .salesKpi {
+    min-width: 0;
+    min-height: 82px;
+    padding: 8px;
+  }
+  .mainSalesDashboard .salesKpi b {
+    font-size: 16px;
+  }
+  .mainSalesDashboard .salesKpi:nth-child(5) {
+    grid-column: span 2;
+  }
+  .mainSalesDashboard .leadManagementSticky .reminderGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .mainSalesDashboard .leadManagementSticky .reminderCard {
+    min-width: 0;
+    min-height: 58px;
+    grid-template-rows: auto auto;
+    grid-template-columns: 14px minmax(0, 1fr);
+    column-gap: 4px;
+  }
+  .mainSalesDashboard .leadManagementSticky .reminderCard small {
+    display: none;
+  }
+  .mainSalesDashboard .leadManagementSticky .reminderCard i {
+    min-width: 0;
+    font-size: 13px;
+  }
+  .mainSalesDashboard .leadManagementSticky .reminderCard span {
+    min-width: 0;
+    font-size: 9px;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+  .mainSalesDashboard .leadManagementSticky .reminderCard b {
+    min-width: 0;
+    margin: 1px 0 0;
+    font-size: 17px;
+    line-height: 1.1;
   }
 }
 

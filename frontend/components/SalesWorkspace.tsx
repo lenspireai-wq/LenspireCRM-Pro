@@ -370,6 +370,9 @@ export default function SalesWorkspace({
             <button onClick={() => setViewSafe("Lead Management")}>
               Lead Management
             </button>
+            <button className="mobileSalesTarget" type="button" onClick={() => targetSetOpen(true)}>
+              ◎ Target
+            </button>
           </nav>
           <div className="salesKpis">
           {[
@@ -603,6 +606,9 @@ export default function SalesWorkspace({
           <button onClick={() => setViewSafe("Dashboard")}>Sales Dashboard</button>
           <button className="active" onClick={() => setViewSafe("Lead Management")}>
             Lead Management
+          </button>
+          <button className="mobileSalesTarget" type="button" onClick={() => targetSetOpen(true)}>
+            ◎ Target
           </button>
         </nav>
         <div className="reminderGrid">
