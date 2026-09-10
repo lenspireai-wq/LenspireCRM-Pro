@@ -238,6 +238,65 @@
   background: #7367f00d !important;
 }
 
+/* Upcoming Events is an operations view, but its table controls should feel
+   identical to Lead Management.  These are presentation-only overrides: the
+   event list, callbacks, and API connections remain untouched. */
+:root .fitUpcomingColumns .upcomingEventsTable :is(th, td) {
+  height: 36px;
+  padding: 0 4px !important;
+  font-size: clamp(8px, 0.9vw, 10px) !important;
+  line-height: normal;
+}
+:root .fitUpcomingColumns .upcomingEventsTable th {
+  height: 28px;
+  border-right: 1px solid #3a4c67;
+  border-bottom: 2px solid #596d8d;
+  background: linear-gradient(180deg, #263a54, #1b2b40);
+  color: #e7ecf6;
+  letter-spacing: 0.02em;
+}
+:root .fitUpcomingColumns .upcomingEventsTable td {
+  border-right: 1px solid #25354b;
+  border-bottom: 1px solid #25354b;
+}
+:root .fitUpcomingColumns .upcomingEventsTable tbody tr:nth-child(even) {
+  background: #101d2b;
+}
+:root .fitUpcomingColumns .upcomingEventsTable :is(th, td):last-child {
+  width: 13% !important;
+  min-width: 152px !important;
+  padding-inline: 4px !important;
+}
+:root .fitUpcomingColumns .eventRowActions {
+  display: flex;
+  gap: var(--space-1);
+}
+:root .fitUpcomingColumns .eventRowActions :is(button, a) {
+  flex: 0 0 28px;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  min-height: 28px;
+  padding: 0;
+  font-size: var(--font-base);
+}
+:root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable th {
+  border-right-color: var(--line);
+  border-bottom-color: var(--line);
+  background: linear-gradient(180deg, var(--panel), var(--panel));
+  color: var(--text);
+}
+:root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable td {
+  border-right-color: var(--line);
+  border-bottom-color: var(--line);
+}
+:root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable tbody tr:nth-child(even) {
+  background: var(--surface);
+}
+:root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable tbody tr:hover {
+  background: color-mix(in srgb, var(--brand) 5%, transparent) !important;
+}
+
 /* Operations dashboard KPIs use the same deliberate hover feedback, whether
    a card is linked to a drill-down view or is informational. */
 .operationsWorkspace .salesKpis article {
