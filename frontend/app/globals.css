@@ -820,6 +820,9 @@ input:-webkit-autofill:active {
 }
 .ownerActivityPanel { margin-top: 18px; }
 .ownerActivityPanel .panelHead > span { color: var(--muted);   font-size: var(--font-xs); }
+.ownerActivityActions { display: flex; align-items: center; gap: var(--space-3); }
+.ownerActivityActions > span { color: var(--muted); font-size: var(--font-xs); }
+.ownerClearActivityButton { padding: var(--space-2) var(--space-3); font-size: var(--font-xs); }
 .ownerActivityTable { min-width: 850px; table-layout: fixed; }
 .ownerActivityTable th,
 .ownerActivityTable td {   padding: var(--space-2) var(--space-2); text-align: center; vertical-align: middle; }

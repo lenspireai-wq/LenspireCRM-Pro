@@ -157,6 +157,16 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         activities = OrganizationAuditActivity.objects.select_related("organization")[:500]
         return Response(OrganizationAuditActivitySerializer(activities, many=True).data)
 
+    @audit_history.mapping.post
+    def clear_audit_history(self, request):
+        if request.data.get("confirmation") != "CLEAR STUDIO ACTIVITY":
+            return Response(
+                {"detail": "Confirmation is required to permanently clear studio activity history."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        deleted, _ = OrganizationAuditActivity.objects.all().delete()
+        return Response({"deleted": deleted})
+
 class HealthView(APIView):
     permission_classes = [AllowAny]
     def get(self, request):

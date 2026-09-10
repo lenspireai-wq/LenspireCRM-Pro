@@ -179,6 +179,21 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
       );
     }
   };
+  const clearActivityHistory = async () => {
+    if (!activities.length) return;
+    if (!window.confirm(`Permanently delete all ${activities.length} Studio Activity History entries? This cannot be undone.`)) return;
+    setError("");
+    try {
+      await api.post("/organizations/audit-history/", {
+        confirmation: "CLEAR STUDIO ACTIVITY",
+      });
+      await load();
+    } catch (problem: any) {
+      setError(
+        problem.response?.data?.detail || "Could not clear studio activity history.",
+      );
+    }
+  };
   const openStudioUsers = async (organization: Organization) => {
     setUsersStudio(organization);
     setStudioUsers([]);
@@ -411,7 +426,14 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
               <h2>Studio Activity History</h2>
               <p>Permanent record of owner-level workspace changes.</p>
             </div>
-            <span>{activities.length} activities</span>
+            <div className="ownerActivityActions">
+              <span>{activities.length} activities</span>
+              {!!activities.length && (
+                <button className="dangerButton ownerClearActivityButton" onClick={clearActivityHistory}>
+                  Clear history
+                </button>
+              )}
+            </div>
           </div>
           <div className="table">
             <table className="ownerActivityTable">

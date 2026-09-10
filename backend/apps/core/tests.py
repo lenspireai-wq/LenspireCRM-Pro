@@ -99,6 +99,28 @@ class ApiTests(APITestCase):
         )
         self.assertEqual(response.status_code, 204)
         self.assertFalse(Organization.objects.filter(pk=studio.id).exists())
+
+    def test_platform_owner_can_clear_studio_activity_history_with_confirmation(self):
+        platform_owner = User.objects.create_superuser(
+            username="platform-owner-activity-clear", password="Owner-pass-123"
+        )
+        OrganizationAuditActivity.objects.create(
+            studio_name="Deleted Studio",
+            action="Studio Deleted",
+            description="Deleted an empty studio workspace.",
+            performed_by="platform-owner",
+        )
+        self.client.force_authenticate(platform_owner)
+        rejected = self.client.post("/api/organizations/audit-history/", {}, format="json")
+        self.assertEqual(rejected.status_code, 400)
+        response = self.client.post(
+            "/api/organizations/audit-history/",
+            {"confirmation": "CLEAR STUDIO ACTIVITY"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["deleted"], 1)
+        self.assertFalse(OrganizationAuditActivity.objects.exists())
     def test_paused_studio_blocks_login_existing_tokens_and_refresh(self):
         member = User.objects.create_user(
             username="paused-admin",
