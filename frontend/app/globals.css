@@ -9647,6 +9647,7 @@ table > tbody > tr:has(td[colspan])::before {
     grid-row: 1;
     min-width: 0;
     padding-left: 46px;
+    padding-top: 4px;
   }
   .salesChrome .salesHeader h1 {
     overflow: hidden;
@@ -9657,26 +9658,27 @@ table > tbody > tr:has(td[colspan])::before {
     grid-column: 2;
     grid-row: 1;
     display: grid !important;
-    grid-template-columns: repeat(4, 26px) !important;
-    grid-auto-rows: 26px !important;
+    grid-template-columns: repeat(5, 20px) !important;
+    grid-auto-rows: 20px !important;
     align-items: center;
     justify-self: end;
-    gap: 8px !important;
-    margin: 0;
+    gap: 5px !important;
+    margin: -3px 0 0;
   }
   .salesChrome .chromeActions > * {
-    width: 26px !important;
-    height: 26px !important;
+    width: 20px !important;
+    height: 20px !important;
     min-width: 0 !important;
   }
   .salesChrome .chromeActions > :first-child {
-    display: none !important;
+    display: inline-grid !important;
+    place-items: center;
   }
   .salesChrome .chromeActions :is(.notifBellButton, .themeToggle, button) {
     display: inline-grid;
-    width: 26px !important;
-    height: 26px !important;
-    min-height: 26px !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-height: 20px !important;
     padding: 0 !important;
     place-items: center;
   }
