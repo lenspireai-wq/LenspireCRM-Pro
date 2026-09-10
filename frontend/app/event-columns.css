@@ -619,3 +619,57 @@
     width: 0;
   }
 }
+
+/* Compact, right-aligned Operations actions. Labels remain visible while the
+   small trailing icon makes the action type easy to scan. */
+.operationsDashboardControls .operationsActions .operationsActionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+  min-height: 30px;
+  padding: 5px 8px 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--line) 88%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease, transform 150ms ease;
+}
+.operationsDashboardControls .operationsActions .operationsActionButton:hover {
+  transform: translateY(-1px);
+  color: var(--brand);
+  border-color: color-mix(in srgb, var(--brand) 58%, var(--line));
+  background: color-mix(in srgb, var(--brand) 8%, var(--surface));
+}
+.operationsDashboardControls .operationsActions .operationsActionButton.primary {
+  color: #fff;
+  border-color: var(--brand);
+  background: var(--brand);
+}
+.operationsDashboardControls .operationsActions .operationsActionButton.primary:hover {
+  color: #fff;
+  background: color-mix(in srgb, var(--brand) 88%, #000);
+}
+.operationsActionIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 800;
+  color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 13%, transparent);
+}
+.operationsActionButton.primary .operationsActionIcon {
+  color: var(--brand);
+  background: #fff;
+}
+@media (max-width: 900px) {
+  .operationsDashboardControls .operationsActions .operationsActionButton {
+    min-height: 28px;
+    padding: 4px 7px 4px 9px;
+  }
+}

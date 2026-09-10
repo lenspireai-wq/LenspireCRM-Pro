@@ -427,11 +427,11 @@ export default function OperationsWorkspace({
         <div className="operationsActions">
         {(view === "Upcoming Events" || view === "Completed Events") && (
           <>
-            <button type="button" onClick={exportEvents} title="Export events to Excel">
-              Export
+            <button type="button" className="operationsActionButton" onClick={exportEvents} title="Export events to Excel">
+              <span>Export</span><span className="operationsActionIcon" aria-hidden="true">↗</span>
             </button>
-            <label className="fileLabel" title="Import events from Excel">
-              Import
+            <label className="fileLabel operationsActionButton" title="Import events from Excel">
+              <span>Import</span><span className="operationsActionIcon" aria-hidden="true">↥</span>
               <input
                 type="file"
                 accept=".xlsx,.xls"
@@ -447,11 +447,11 @@ export default function OperationsWorkspace({
         )}
         {view === "Photographers Details" && (
           <>
-            <button type="button" onClick={exportPhotographers} title="Export photographers to Excel">
-              Export
+            <button type="button" className="operationsActionButton" onClick={exportPhotographers} title="Export photographers to Excel">
+              <span>Export</span><span className="operationsActionIcon" aria-hidden="true">↗</span>
             </button>
-            <label className="fileLabel" title="Import photographers from Excel">
-              Import
+            <label className="fileLabel operationsActionButton" title="Import photographers from Excel">
+              <span>Import</span><span className="operationsActionIcon" aria-hidden="true">↥</span>
               <input
                 type="file"
                 accept=".xlsx,.xls"
@@ -465,22 +465,22 @@ export default function OperationsWorkspace({
             </label>
             {!readOnly && (
               <button
-                className="primary"
+                className="primary operationsActionButton"
                 onClick={() => setCrewDraft({ ...blankPhotographer })}
               >
-                ＋ Add Photographer
+                <span>Add Photographer</span><span className="operationsActionIcon" aria-hidden="true">＋</span>
               </button>
             )}
           </>
         )}
-        {view !== "Photographers Details" && view !== "Completed Events" && (
+        {view === "Upcoming Events" && (
           <>
             {!readOnly && (
               <button
-                className="primary"
+                className="primary operationsActionButton"
                 onClick={() => setEventDraft({ ...blankEvent })}
               >
-                ＋ Add Event
+                <span>Add Event</span><span className="operationsActionIcon" aria-hidden="true">＋</span>
               </button>
             )}
           </>
