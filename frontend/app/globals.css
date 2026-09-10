@@ -9882,6 +9882,39 @@ table > tbody > tr:has(td[colspan])::before {
   }
 }
 
+@media (max-width: 900px) {
+  .shell aside,
+  .shell.sidebarHidden aside {
+    width: min(204px, 68vw);
+  }
+  .shell aside .brand {
+    flex: 0 0 142px;
+    min-height: 142px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    gap: 4px;
+  }
+  .shell aside .studioMark {
+    width: 72px;
+    height: 72px;
+    flex-basis: 72px;
+  }
+  .shell aside .studioIdentity {
+    text-align: center;
+  }
+  .shell aside .studioIdentity b {
+    font-size: 13px;
+  }
+  .shell aside .studioIdentity small {
+    font-size: 8px;
+  }
+  .shell:not(.sidebarHidden) .sidebarToggle {
+    left: min(182px, calc(68vw - 22px));
+  }
+}
+
 @media (max-width: 359px) {
   .dashMetrics,
   .salesKpis,
