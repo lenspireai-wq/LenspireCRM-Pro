@@ -19,6 +19,6 @@ if not exist "%BROWSER%" (
   exit /b 1
 )
 
-echo Opening phone preview at 393 x 852...
-start "LenspireCRM Mobile Preview" "%BROWSER%" --app=http://127.0.0.1:3000/ --window-size=393,852 --window-position=80,80
+echo Opening OnePlus Nord CE6 Lite preview at 412 x 915...
+start "LenspireCRM OnePlus Nord CE6 Lite Preview" "%BROWSER%" --new-window --app=http://127.0.0.1:3000/ --window-size=412,915 --window-position=80,80
 endlocal

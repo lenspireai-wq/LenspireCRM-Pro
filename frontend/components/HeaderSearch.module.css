@@ -74,13 +74,23 @@
 @media (max-width: 1000px) {
   :global(.dashboardChrome .chromeActions) .root,
   :global(.dashboardChrome .chromeActions) .root:focus-within {
-    flex: 0 0 16px !important;
-    width: 16px !important;
-    min-width: 16px !important;
-    max-width: 16px !important;
+    flex: 0 0 26px !important;
+    width: 26px !important;
+    min-width: 26px !important;
+    max-width: 26px !important;
   }
   :global(.dashboardChrome .chromeActions) .root::before {
     left: 50%;
+    font-family: system-ui, "Segoe UI Symbol", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
     transform: translate(-50%, -50%);
+  }
+  :global(.dashboardChrome .chromeActions) .root .input {
+    height: 26px !important;
+    min-height: 26px !important;
+    padding: 0 !important;
+    border-radius: var(--radius-sm) !important;
   }
 }

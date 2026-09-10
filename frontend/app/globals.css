@@ -1233,7 +1233,7 @@ input:-webkit-autofill:active {
     margin-bottom: 18px;
   }
   .loginCard > label {
-    margin-top: 12px;
+    margin-top: 16px;
   }
   .loginInput {
     height: 45px;
@@ -1953,7 +1953,6 @@ th {
 .chromeActions .notifBellButton,
 .chromeActions .themeToggle { width: 34px; height: 34px; min-height: 34px; padding: 0; gap: 0; border-radius: 8px; }
 .chromeActions .themeToggleLabel { display: none; }
-.mobileSearchBellGap { display: none; }
 .salesPage > .salesTop:first-child { min-height: 0; margin: -12px 0 10px; justify-content: flex-end; }
 .salesPage > .salesTop:first-child > div:first-child { display: none; }
 .salesPage > .salesTop:first-child .salesActions { margin-left: auto; }
@@ -9503,9 +9502,9 @@ table > tbody > tr:has(td[colspan])::before {
 @media (max-width: 1000px) {
   .dashboardChrome {
     grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-rows: auto auto;
-    padding: 10px 12px 12px;
-    row-gap: 6px;
+    grid-template-rows: auto;
+    padding: 10px 12px 0;
+    row-gap: 0;
   }
   .dashboardChrome .dashHeader {
     grid-column: 1;
@@ -9513,6 +9512,21 @@ table > tbody > tr:has(td[colspan])::before {
     width: 100%;
     min-width: 0;
     padding-left: 46px;
+  }
+  .dashboardChrome .dashHeader p,
+  .dashboardChrome .dashHeader small {
+    display: block;
+    position: relative;
+    left: -46px;
+    top: 6px;
+    width: calc(100% + 46px);
+    margin-left: 0 !important;
+  }
+  .dashboardChrome .dashHeader p {
+    margin-top: 12px;
+  }
+  .dashboardChrome .dashHeader small {
+    margin-top: 2px;
   }
   .dashboardChrome .chromeActions {
     grid-column: 2;
@@ -9530,16 +9544,23 @@ table > tbody > tr:has(td[colspan])::before {
     align-self: start;
     justify-self: end !important;
     justify-content: flex-end;
-    margin: 34px 0 0;
+    margin: 42px 0 0;
+  }
+  .mainDashboard .dashboard {
+    padding-top: 0;
+    gap: 0;
+  }
+  .mainDashboard .dashMetrics {
+    padding: 0;
   }
 }
 
 @media (max-width: 1000px) {
   .dashboardChrome .chromeActions {
     display: grid !important;
-    grid-template-columns: 16px 12px repeat(4, 26px) !important;
+    grid-template-columns: repeat(5, 26px) !important;
     grid-auto-rows: 26px !important;
-    flex: 0 0 172px;
+    flex: 0 0 162px;
     align-items: center;
     column-gap: 8px !important;
     row-gap: 4px;
@@ -9549,22 +9570,16 @@ table > tbody > tr:has(td[colspan])::before {
     width: 26px !important;
     height: 26px !important;
   }
-  .dashboardChrome .mobileSearchBellGap {
-    display: block;
-    width: 12px !important;
-    height: 1px !important;
-  }
   .dashboardChrome .chromeActions > :first-child {
-    align-self: center;
-    flex: 0 0 16px !important;
-    width: 16px !important;
+    flex: 0 0 26px !important;
+    width: 26px !important;
     height: 26px !important;
-    min-width: 16px !important;
-    max-width: 16px !important;
+    min-width: 26px !important;
+    max-width: 26px !important;
   }
   .dashboardChrome .chromeActions > :first-child input {
     box-sizing: border-box;
-    width: 16px !important;
+    width: 26px !important;
     height: 26px !important;
     min-height: 26px !important;
     min-width: 16px !important;
