@@ -103,8 +103,10 @@ export function NotificationBell() {
                 className="notifAction notifMarkAll"
                 onClick={() => markAll.mutate(undefined)}
                 disabled={markAll.isPending}
+                aria-label="Mark all notifications as read"
+                title="Mark all as read"
               >
-                {markAll.isPending ? "Marking…" : "Mark all read"}
+                {markAll.isPending ? "…" : "✓✓"}
               </button>
             ) : null}
           </header>
@@ -124,8 +126,10 @@ export function NotificationBell() {
                     className="notifAction notifMarkRead"
                     onClick={() => markOne.mutate({ id: notification.id })}
                     disabled={markOne.isPending}
+                    aria-label={`Mark ${notification.title} as read`}
+                    title="Mark as read"
                   >
-                    {markOne.isPending ? "Marking…" : "Mark read"}
+                    {markOne.isPending ? "…" : "✓"}
                   </button>
                 ) : null}
               </li>

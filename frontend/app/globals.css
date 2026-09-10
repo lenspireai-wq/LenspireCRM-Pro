@@ -6936,14 +6936,17 @@ input[aria-label="Search CRM records"]:focus-visible,
 .notifEmpty {   padding: var(--space-5); text-align: center; color: #94a3b8;   font-size: var(--font-base); }
 .notifAction {
   flex: 0 0 auto;
+  display: inline-grid;
+  width: 32px;
   min-height: 32px;
-  padding: 6px 10px;
+  padding: 0;
+  place-items: center;
   border: 1px solid var(--brand, #7367f0);
   border-radius: 7px;
   background: transparent;
   color: var(--brand, #a5b4fc);
   font: inherit;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
@@ -6951,7 +6954,7 @@ input[aria-label="Search CRM records"]:focus-visible,
 }
 .notifAction:hover:not(:disabled) { background: color-mix(in srgb, var(--brand, #7367f0) 14%, transparent); }
 .notifAction:disabled { cursor: wait; opacity: .65; }
-.notifMarkAll { margin-left: var(--space-3); }
+.notifMarkAll { margin-left: var(--space-3); letter-spacing: -3px; text-indent: -2px; }
 .notifMarkRead { align-self: center; }
 
 @media (max-width: 640px) {
