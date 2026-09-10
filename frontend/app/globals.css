@@ -6337,7 +6337,7 @@ body:has(.mainAccountsSticky) {
   table-layout: fixed !important;
 }
 .mainAccountsSticky .accountsScheduleTableWrap {
-  overflow-x: hidden !important;
+  overflow-x: auto !important;
   overflow-y: auto !important;
 }
 .mainAccountsSticky :is(.receivablesTable, .clientLedgerTable) th,
