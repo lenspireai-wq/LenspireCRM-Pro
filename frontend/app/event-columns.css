@@ -247,6 +247,13 @@
   font-size: clamp(8px, 0.9vw, 10px) !important;
   line-height: normal;
 }
+:root .fitUpcomingColumns .upcomingEventsTable {
+  /* Match Lead Management: let browser zoom and the current workspace width
+     drive column sizing instead of pinning the table to a fixed 1180px grid. */
+  width: max-content !important;
+  min-width: 100% !important;
+  table-layout: auto !important;
+}
 :root .fitUpcomingColumns .upcomingEventsTable th {
   height: 28px;
   border-right: 1px solid #3a4c67;
