@@ -1678,7 +1678,7 @@ th {
   .eventMessageModal {
     width: 100%;
     max-width: 100%;
-    max-height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 32px);
     box-sizing: border-box;
   }
 }
@@ -2076,13 +2076,13 @@ body { font-size: 13px; background: var(--bg); }
 .navIcon { width: 20px; flex: 0 0 20px; color: inherit; font-size: 17px; text-align: center; }
 .profile { min-height: 76px; padding: 13px; border-top: 1px solid var(--line); }
 .shell main { max-width: none; padding: 22px 24px 32px; }
-.sidebarToggle { left: 216px; width: 38px; height: 48px; border-radius: 10px; background: #111925; }
+.sidebarToggle { left: 216px; width: 38px; height: 48px; border-radius: 10px; background: var(--surface); }
 .shell.sidebarHidden { grid-template-columns: 0 minmax(0, 1fr); }
 .shell.sidebarHidden .sidebarToggle { left: 12px; }
 .panel, .dashPanel, .salesPanel, .accountPanel, .productionPanel, .adminPanel,
 .metrics article, .salesKpi, .accountMetrics article, .productionMetrics article, .adminMetrics article {
-  border-color: var(--line); border-radius: 11px;
-  background: linear-gradient(145deg, rgba(18,27,40,.96), rgba(14,22,32,.96));
+  border-color: var(--line); border-radius: var(--radius-md);
+  background: var(--panel);
   box-shadow: var(--shadow-card);
   transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
 }
@@ -2094,9 +2094,9 @@ body { font-size: 13px; background: var(--bg); }
 button, [role="button"] { min-height: var(--control-md); }
 input, select { min-height: var(--control-md); }
 textarea { min-height: 72px; }
-table { font-size: 11px; }
-th { height: 38px; color: #7f8da1; font-size: 9px; }
-td { height: 48px; color: #b9c4d3; font-size: 10px; }
+table { font-size: var(--font-sm); }
+th { height: 44px; color: var(--muted); font-size: var(--font-xs); font-weight: 600; }
+td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 
 @media (max-width: 1250px) and (min-width: 901px) {
   .shell aside { width: 205px; }
@@ -2169,15 +2169,15 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
 .rowActions button,
 .operationsCalendar button {
   border: 1px solid var(--line);
-  background: #111d2b;
-  color: #dbe3ee;
+  background: var(--surface);
+  color: var(--text);
   border-radius: var(--radius-md);
   padding: var(--space-2) var(--space-3);
 }
 .operationsActions .fileLabel {
   border: 1px solid var(--line);
-  background: #111d2b;
-  color: #dbe3ee;
+  background: var(--surface);
+  color: var(--text);
   border-radius: var(--radius-md);
   padding: var(--space-2) var(--space-3);
   font-size: var(--font-xs);
@@ -2249,9 +2249,9 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   box-sizing: border-box;
   padding: var(--space-4);
   border: 1px solid var(--line);
-  border-top: 3px solid #7367f0;
+  border-top: 3px solid var(--brand);
   border-radius: var(--radius-md);
-  background: linear-gradient(145deg, #121d2c, #0e1723);
+  background: var(--panel);
   text-align: left;
 }
 .operationsWorkspace .salesKpis article:nth-child(2) {
@@ -2285,8 +2285,8 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   display: inline-block;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-xl);
-  background: #7367f022;
-  color: #b9b2ff;
+  background: var(--brand-soft);
+  color: var(--brand);
 }
 .upcomingEventsTableWrap .upcomingEventsTable {
   width: 100%;
@@ -3588,7 +3588,7 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
 }
 .productionMetrics {
   margin-top: 20px;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .productionTable th:last-child {
   width: 7%;
@@ -4785,9 +4785,10 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   padding: var(--space-2) var(--space-4);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: #111d2b;
-  color: #aeb9c8;
+  background: var(--surface);
+  color: var(--text);
   cursor: pointer;
+  min-height: var(--control-md);
 }
 .dangerButton {
   border-color: #7d3038;
@@ -4806,7 +4807,7 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   text-align: left;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: linear-gradient(145deg, #121d2c, #0e1723);
+  background: var(--panel);
   color: var(--text);
   cursor: pointer;
 }
@@ -4857,7 +4858,7 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   gap: var(--space-4);
 }
 .salesPanel {
-  background: linear-gradient(145deg, #121b28, #0e1620);
+  background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -4866,9 +4867,9 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   grid-row: span 2;
 }
 .leadListPanel > .panelTitle {
-  min-height: 40px;
-  padding-block: 6px;
-  gap: 8px;
+  min-height: 44px;
+  padding-block: 8px;
+  gap: var(--space-2);
   flex-wrap: nowrap;
 }
 .leadListPanel > .panelTitle > div {
@@ -4907,7 +4908,7 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
 .panelTitle button {
   border: 0;
   background: none;
-  color: #8b96ff;
+  color: var(--brand);
 }
 .pipelineTotal {
   width: min(200px, calc(100% - 32px));
@@ -5100,8 +5101,8 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   padding: var(--space-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: #0b1521;
-  color: #aab5c5;
+  background: var(--surface);
+  color: var(--text);
 }
 .leadToolbar > span {
   margin-left: auto;
@@ -5405,8 +5406,8 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   padding: var(--space-3);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: #09131f;
-  color: #e8edf5;
+  background: var(--surface);
+  color: var(--text);
 }
 .bookingBox {
   padding: var(--space-4);
@@ -5442,7 +5443,7 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
 }
 .detailSummary div {
   padding: var(--space-4) var(--space-4);
-  background: #111d2b;
+  background: var(--surface);
 }
 .detailSummary span,
 .detailSummary b {
@@ -5628,10 +5629,9 @@ td { height: 48px; color: #b9c4d3; font-size: 10px; }
   --shadow-surface: 0 8px 24px rgb(0 0 0 / 18%);
   --shadow-dialog: 0 24px 70px rgb(0 0 0 / 48%);
 }
-html, body { max-width: 100%; overflow-x: hidden; }
+html, body { max-width: 100%; }
 .shell, .shell main, .workspace, .salesPage, .operationsWorkspace,
 .accountsWorkspace, .productionWorkspace, .adminWorkspace { min-width: 0; }
-.shell main { overflow-x: hidden; }
 :where(button, a, input, select, textarea, [tabindex]):focus-visible {
   outline: 3px solid color-mix(in srgb, var(--color-primary) 70%, white) !important;
   outline-offset: 2px !important; box-shadow: var(--focus-ring);
@@ -5681,7 +5681,7 @@ table td { font-size: 13px; }
   overflow: hidden;
 }
 .eventEditorModal {
-  width: 100vw;
+  width: 100%;
   max-width: none;
   height: 100dvh;
   max-height: none;
@@ -5740,10 +5740,11 @@ table td { font-size: 13px; }
     position: fixed; inset: 0 auto 0 0; z-index: 60; width: min(290px, 86vw);
     height: 100dvh; padding: 0; overflow: hidden; transform: translateX(0);
     transition: transform 180ms ease;
+    display: flex; flex-direction: column;
   }
-  .shell.sidebarHidden aside { display: flex; transform: translateX(-105%); }
+  .shell.sidebarHidden aside { transform: translateX(-105%); }
   .shell.sidebarHidden aside nav, .shell.sidebarHidden aside .profile { display: flex; }
-  .shell aside .brand { flex-basis: 104px; min-height: 104px; }
+  .shell aside .brand { flex: 0 0 104px; min-height: 104px; }
   .shell aside nav { display: block; flex: 1 1 auto; padding: 12px; overflow-y: auto; overflow-x: hidden; }
   .shell aside nav button { text-align: left; }
   .sidebarToggle, .sidebarHidden .sidebarToggle { position: fixed; top: 12px; left: 12px; right: auto; z-index: 70; }
@@ -5753,7 +5754,7 @@ table td { font-size: 13px; }
   .chromeActions { min-width: 0; }
   .chromeActions .chromeSearch, .chromeActions kbd { display: none; }
   .dashMetrics, .salesKpis, .operationsWorkspace .salesKpis,
-  .accountMetrics, .adminMetrics, .productionMetrics { grid-template-columns: repeat(6, 1fr); }
+  .accountMetrics, .adminMetrics, .productionMetrics { grid-template-columns: repeat(2, 1fr); }
   .dashGrid, .salesDashboardGrid, .accountColumns { grid-template-columns: 1fr; }
   .productionFilters, .activityHistoryTools .productionFilters,
   .auditFilters, .collectionFilters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -5772,7 +5773,7 @@ table td { font-size: 13px; }
   .salesActions, .adminHeaderActions, .workspaceHeadActions, .productionToolActions { width: 100%; }
   .salesActions > *, .adminHeaderActions > *, .workspaceHeadActions > * { flex: 1 1 auto; }
   .dashMetrics, .salesKpis, .operationsWorkspace .salesKpis,
-  .accountMetrics, .adminMetrics, .productionMetrics { grid-template-columns: repeat(6, 1fr); }
+  .accountMetrics, .adminMetrics, .productionMetrics { grid-template-columns: repeat(2, 1fr); }
   .metrics article, .salesKpi, .accountMetrics article,
   .adminMetrics article, .productionMetrics article { min-height: 96px; }
   .productionFilters, .activityHistoryTools .productionFilters,
@@ -6125,7 +6126,7 @@ html:has(.mainOperationsDashboard),
 body:has(.mainOperationsDashboard),
 html:has(.mainAccountsSticky),
 body:has(.mainAccountsSticky) {
-  overflow-x: clip;
+  max-width: 100%;
 }
 .mainDashboard .dashMetrics {
   position: sticky;
@@ -6529,14 +6530,14 @@ input[aria-label="Search CRM records"]:focus-visible,
   gap: var(--space-1);
 }
 .dashMetric {
-  background: var(--panel, #101b2a);
-  border: 1px solid var(--line, #233149);
-  border-left: 3px solid var(--line, #233149);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line);
   border-radius: var(--radius-md);
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: var(--space-1);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
 }
@@ -6548,20 +6549,20 @@ input[aria-label="Search CRM records"]:focus-visible,
 .dashMetric strong {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .dashMetricLabel {
-  font-size: 10px;
+  font-size: var(--font-xs);
   text-transform: uppercase;
-  letter-spacing: 0.2px;
-  color: #94a3b8;
+  letter-spacing: 0.05em;
+  color: var(--muted);
   font-weight: 600;
 }
 .dashMetric small {
-  color: #94a3b8;
-  font-size: 10px;
-  line-height: 1.3;
+  color: var(--muted);
+  font-size: var(--font-xs);
+  line-height: 1.4;
 }
 .dashGrid {
   display: grid;
@@ -6569,8 +6570,8 @@ input[aria-label="Search CRM records"]:focus-visible,
   gap: var(--space-3);
 }
 .dashCard {
-  background: var(--panel, #101b2a);
-  border: 1px solid var(--line, #233149);
+  background: var(--panel);
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   padding: var(--space-4) var(--space-5);
   display: flex;
@@ -6588,8 +6589,8 @@ input[aria-label="Search CRM records"]:focus-visible,
 .dashCard h2 {
   margin: 0;
   font-size: var(--font-md);
-  letter-spacing: 0.1px;
-  color: #cbd5e1;
+  letter-spacing: 0.01em;
+  color: var(--text-strong);
   font-weight: 650;
 }
 .dashCardWide {
@@ -6618,8 +6619,8 @@ input[aria-label="Search CRM records"]:focus-visible,
   padding: var(--space-2) var(--space-3);
   display: flex;
   flex-direction: column;
-  gap: 0;
-  background: rgba(255, 255, 255, 0.02);
+  gap: var(--space-1);
+  background: var(--hover-overlay);
   transition: background 120ms ease, border-color 120ms ease, transform 100ms ease;
 }
 .dashList li:hover {
@@ -6628,7 +6629,7 @@ input[aria-label="Search CRM records"]:focus-visible,
   transform: translateX(2px);
 }
 .dashList li strong {
-  color: #e2e8f0;
+  color: var(--text-strong);
   font-size: var(--font-sm);
   display: flex;
   gap: var(--space-2);
@@ -6636,7 +6637,7 @@ input[aria-label="Search CRM records"]:focus-visible,
   font-weight: 650;
 }
 .dashList li em {
-  color: #94a3b8;
+  color: var(--muted);
   font-style: normal;
   font-size: var(--font-xs);
   font-weight: 500;
@@ -8482,7 +8483,7 @@ textarea {
 .shell aside nav button.active,
 .shell aside nav button[aria-current="page"] {
   background: var(--brand-soft);
-  color: #c8c3ff;
+  color: var(--brand);
 }
 .shell main {
   margin-left: 235px;
@@ -8825,6 +8826,7 @@ td {
 }
 .shell aside nav { overflow-x: hidden; scrollbar-width: none; }
 .shell aside nav::-webkit-scrollbar { display: none; }
+:root[data-theme="light"] .shell aside nav::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .shell aside nav button.navGroupLabel { width: 100%; min-width: 0; padding-inline: 10px; font-size: 13px; }
 .navGroupCard { max-width: 100%; overflow: hidden; }
 
@@ -8918,10 +8920,9 @@ table td[title]:hover::after {
   max-width: 320px;
   text-align: left;
 }
-html, body { max-width: 100%; overflow-x: hidden; }
+html, body { max-width: 100%; }
 .shell, .shell > main, .workspace, .salesPage, .operationsWorkspace,
 .accountsWorkspace, .productionWorkspace, .adminWorkspace { min-width: 0; }
-.shell > main { overflow-x: hidden; }
 .operationsTabs, .billTabs { max-width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: thin; }
 .operationsTabs > button, .billTabs > button { flex: 0 0 auto; white-space: nowrap; }
 .operationsDashboardControls {
@@ -9012,8 +9013,9 @@ table th, table td { word-break: normal !important; overflow-wrap: normal !impor
     position: fixed; inset: 0 auto 0 0; z-index: 60;
     width: min(290px, 86vw); height: 100dvh; padding: 0;
     overflow: hidden; transform: translateX(0); transition: transform 180ms ease;
+    display: flex; flex-direction: column;
   }
-  .shell.sidebarHidden aside { display: flex; visibility: visible; transform: translateX(-105%); }
+  .shell.sidebarHidden aside { visibility: hidden; transform: translateX(-105%); }
   .shell.sidebarHidden aside nav, .shell.sidebarHidden aside .profile { display: flex; }
   .shell aside .brand { flex: 0 0 104px; min-height: 104px; }
   .shell aside nav {
@@ -9030,7 +9032,7 @@ table th, table td { word-break: normal !important; overflow-wrap: normal !impor
   .chromeActions { min-width: 0; }
   .chromeActions .chromeSearch, .chromeActions kbd { display: none; }
   .dashMetrics, .salesKpis, .operationsWorkspace .salesKpis,
-  .accountMetrics, .adminMetrics, .productionMetrics { grid-template-columns: repeat(6, 1fr); }
+  .accountMetrics, .adminMetrics, .productionMetrics { grid-template-columns: repeat(2, 1fr); }
   .dashGrid, .salesDashboardGrid, .accountColumns { grid-template-columns: 1fr; }
   .productionFilters, .activityHistoryTools .productionFilters,
   .auditFilters, .collectionFilters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -9039,20 +9041,21 @@ table th, table td { word-break: normal !important; overflow-wrap: normal !impor
 }
 
 @media (max-width: 600px) {
-  .shell > main { padding: 64px 10px 20px; }
-  .workspaceChrome { margin: -56px -10px 12px; padding: 8px 10px 8px 48px; }
+  .shell > main { padding: 64px 12px 20px; }
+  .workspaceChrome { margin: -56px -12px 12px; padding: 8px 12px 8px 48px; }
   .workspaceChrome h1 { font-size: 15px; }
   .chromeActions { gap: 4px; }
   .chromeActions button { width: 30px; height: 30px; min-height: 30px; }
   .salesTop, .adminHeader, .productionEditorHeader, .workspaceHead { align-items: flex-start; flex-direction: column; }
   .salesActions, .adminHeaderActions, .workspaceHeadActions, .productionToolActions { width: 100%; }
+  .salesActions > *, .adminHeaderActions > *, .workspaceHeadActions > * { flex: 1 1 auto; }
   .dashMetrics, .salesKpis, .operationsWorkspace .salesKpis,
-  .accountMetrics, .adminMetrics, .productionMetrics { grid-template-columns: repeat(6, 1fr); }
+  .accountMetrics, .adminMetrics, .productionMetrics { grid-template-columns: repeat(2, 1fr); }
   .productionFilters, .activityHistoryTools .productionFilters,
   .auditFilters, .collectionFilters, .leadFormGrid, .operationFieldGrid,
   .crewFormGrid, .adminUserForm, .clientInviteForm { grid-template-columns: 1fr !important; }
   .leadTable, .paymentTable, .productionTable,
-  .productionActivityTable, .adminUsersTable, .adminAuditTable, .auditTable { min-width: 560px; }
+  .productionActivityTable, .adminUsersTable, .adminAuditTable, .auditTable { min-width: 100%; }
   .modalBackdrop, .billModalBackdrop { padding: 0; align-items: flex-end; }
   .accountModal, .billModal, .modalCard, .leadModal, .targetModal,
   .productionModal, .adminUserModal, .backupRestoreCard {
@@ -9177,7 +9180,7 @@ table th, table td { word-break: normal !important; overflow-wrap: normal !impor
 }
 .mainSalesDashboard .salesDashboardSticky .salesKpi {
   min-height: 88px;
-  padding: 10px 12px;
+  padding: var(--space-2) var(--space-3);
 }
 .mainSalesDashboard .salesDashboardSticky .salesKpi b {
   margin: 5px 0 3px;
@@ -9252,15 +9255,15 @@ table > tbody > tr:has(td[colspan])::before {
 
 /* Compact the Lead Management status cards without changing their content. */
 .mainSalesDashboard .leadManagementSticky .reminderGrid {
-  gap: 6px;
+  gap: var(--space-2);
 }
 .mainSalesDashboard .leadManagementSticky .reminderCard {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   grid-template-rows: auto auto auto;
-  column-gap: 6px;
+  column-gap: var(--space-2);
   min-height: 76px;
-  padding: 8px 10px;
+  padding: var(--space-2);
 }
 .mainSalesDashboard .leadManagementSticky .reminderCard i {
   grid-column: 1;
@@ -9296,7 +9299,7 @@ table > tbody > tr:has(td[colspan])::before {
 
 /* Keep column headings at the top of the lead table, below the frozen controls. */
 .mainSalesDashboard .leadTableWrap {
-  max-height: calc(100dvh - var(--workspace-chrome-height, 68px) - 160px);
+  max-height: calc(100dvh - var(--workspace-chrome-height, 68px) - 180px);
   overflow: auto !important;
 }
 .mainSalesDashboard .leadTable thead th {
