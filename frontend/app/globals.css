@@ -9768,47 +9768,47 @@ table > tbody > tr:has(td[colspan])::before {
     font-weight: 500;
     line-height: 1;
   }
-  .operationsDashboardChrome {
+  .operationsChrome {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto;
     align-items: start;
     padding: 10px 12px;
   }
-  .operationsDashboardChrome .sectionHeader {
+  .operationsChrome .sectionHeader {
     grid-column: 1;
     grid-row: 1;
     min-width: 0;
     padding-left: 46px;
   }
-  .operationsDashboardChrome .sectionHeader h1 {
+  .operationsChrome .sectionHeader h1 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .operationsDashboardChrome .chromeActions {
+  .operationsChrome .chromeActions {
     grid-column: 2;
     grid-row: 1;
     display: grid !important;
-    grid-template-columns: repeat(5, 20px) !important;
-    grid-auto-rows: 20px !important;
+    grid-template-columns: repeat(5, 24px) !important;
+    grid-auto-rows: 24px !important;
     align-items: center;
     justify-self: end;
     gap: 5px !important;
     width: auto;
     min-width: 0;
-    margin: -3px 0 0;
+    margin: 0;
   }
-  .operationsDashboardChrome .chromeActions > * {
-    width: 20px !important;
-    height: 20px !important;
+  .operationsChrome .chromeActions > * {
+    width: 24px !important;
+    height: 24px !important;
     min-width: 0 !important;
   }
-  .operationsDashboardChrome .chromeActions :is(.notifBellButton, .themeToggle, button) {
+  .operationsChrome .chromeActions :is(.notifBellButton, .themeToggle, button) {
     display: inline-grid;
-    width: 20px !important;
-    height: 20px !important;
-    min-height: 20px !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
     padding: 0 !important;
     place-items: center;
   }
@@ -9831,9 +9831,53 @@ table > tbody > tr:has(td[colspan])::before {
   }
   .operationsWorkspace .desktopOperationsTabLabel { display: none; }
   .operationsWorkspace .mobileOperationsTabLabel { display: inline; }
+  .mainDashboard .workspaceChrome {
+    margin-bottom: 0;
+  }
+  .mainDashboard .dashMetrics {
+    position: static;
+    top: auto;
+    z-index: auto;
+    padding: 0;
+    box-shadow: none;
+  }
+  .mainDashboard .dashboard {
+    gap: 8px;
+  }
 }
 
 .mobileOperationsTabLabel { display: none; }
+
+/* Desktop dashboard: keep KPI content roomy and in normal document flow so it
+   never covers the Revenue Trend or Lead Funnel panels while scrolling. */
+@media (min-width: 1001px) {
+  .mainDashboard .workspaceChrome {
+    margin-bottom: 8px;
+    position: relative;
+    top: auto;
+    z-index: auto;
+  }
+  .mainDashboard .dashMetrics {
+    position: static;
+    top: auto;
+    z-index: auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  .mainDashboard .dashMetric {
+    min-width: 0;
+    min-height: 96px;
+  }
+  .mainDashboard .dashMetricCopy {
+    min-width: 0;
+  }
+  .mainDashboard .dashMetric strong {
+    overflow-wrap: anywhere;
+  }
+}
 
 @media (max-width: 359px) {
   .dashMetrics,

@@ -495,7 +495,7 @@ export default function Home() {
         >
           {sidebarHidden ? "☰" : "‹"}
         </button>
-        <div ref={dashboardChromeRef} className={`workspaceChrome${section === "Dashboard" ? " dashboardChrome" : ""}${section === "Sales" ? " salesChrome" : ""}${section === "Operations" && operationsView === "Dashboard" ? " operationsDashboardChrome" : ""}`}>
+        <div ref={dashboardChromeRef} className={`workspaceChrome${section === "Dashboard" ? " dashboardChrome" : ""}${section === "Sales" ? " salesChrome" : ""}${section === "Operations" ? " operationsChrome" : ""}`}>
           {section === "Dashboard" ? (
             <>
               <div className="dashHeader">

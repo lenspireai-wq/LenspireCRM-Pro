@@ -95,14 +95,14 @@
     padding: 0 !important;
     border-radius: var(--radius-sm) !important;
   }
-  :global(:is(.salesChrome, .operationsDashboardChrome) .chromeActions) .root,
-  :global(:is(.salesChrome, .operationsDashboardChrome) .chromeActions) .root:focus-within {
+  :global(.salesChrome .chromeActions) .root,
+  :global(.salesChrome .chromeActions) .root:focus-within {
     flex: 0 0 20px !important;
     width: 20px !important;
     min-width: 20px !important;
     max-width: 20px !important;
   }
-  :global(:is(.salesChrome, .operationsDashboardChrome) .chromeActions) .root::before {
+  :global(.salesChrome .chromeActions) .root::before {
     left: 50%;
     font-family: system-ui, "Segoe UI Symbol", sans-serif;
     font-size: 11px;
@@ -110,9 +110,30 @@
     line-height: 1;
     transform: translate(-50%, -50%);
   }
-  :global(:is(.salesChrome, .operationsDashboardChrome) .chromeActions) .root .input {
+  :global(.salesChrome .chromeActions) .root .input {
     height: 20px !important;
     min-height: 20px !important;
+    padding: 0 !important;
+    border-radius: var(--radius-sm) !important;
+  }
+  :global(.operationsChrome .chromeActions) .root,
+  :global(.operationsChrome .chromeActions) .root:focus-within {
+    flex: 0 0 24px !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+  }
+  :global(.operationsChrome .chromeActions) .root::before {
+    left: 50%;
+    font-family: system-ui, "Segoe UI Symbol", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+  }
+  :global(.operationsChrome .chromeActions) .root .input {
+    height: 24px !important;
+    min-height: 24px !important;
     padding: 0 !important;
     border-radius: var(--radius-sm) !important;
   }
