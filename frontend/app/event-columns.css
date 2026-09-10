@@ -673,3 +673,60 @@
     padding: 4px 7px 4px 9px;
   }
 }
+
+/* Keep the full Operations event list on the exact Lead Management table
+   model. Event fields remain present, but their presentation must not switch
+   to the older dense/wrapping mode at different browser zoom levels. */
+:root .fitUpcomingColumns .upcomingEventsTable {
+  width: max-content !important;
+  min-width: 100% !important;
+  table-layout: auto !important;
+  font-size: clamp(8px, 0.9vw, 10px) !important;
+}
+:root .fitUpcomingColumns .upcomingEventsTable th {
+  height: 28px !important;
+  padding: 0 4px !important;
+  font-size: clamp(8px, 0.9vw, 10px) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+:root .fitUpcomingColumns .upcomingEventsTable td {
+  height: 36px !important;
+  padding: 0 4px !important;
+  font-size: clamp(8px, 0.9vw, 10px) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+:root .fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(n + 7):nth-child(-n + 17),
+:root .fitUpcomingColumns .upcomingEventsTable .crewAssignments,
+:root .fitUpcomingColumns .upcomingEventsTable .crewAssignments span {
+  display: revert !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  text-overflow: ellipsis !important;
+}
+:root .fitUpcomingColumns .upcomingEventsTable .crewAssignments {
+  display: flex !important;
+}
+:root .fitUpcomingColumns .upcomingEventsTable .crewAssignments span {
+  flex-shrink: 0;
+}
+:root .fitUpcomingColumns .upcomingEventsTable :is(th, td):last-child {
+  width: 13% !important;
+  min-width: 0 !important;
+  padding-inline: 4px !important;
+}
+:root .fitUpcomingColumns .upcomingEventsTable tbody tr {
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
