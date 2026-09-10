@@ -19,6 +19,16 @@ class LeadSerializer(serializers.ModelSerializer):
     activities = serializers.SerializerMethodField()
     attachments = serializers.SerializerMethodField()
     class Meta: model = Lead; fields = "__all__"; read_only_fields = ("organization", "lead_code")
+    def to_internal_value(self, data):
+        # Optional Django text fields use an empty string rather than NULL.  A
+        # few clients serialize untouched form controls as null, which DRF
+        # otherwise rejects before model validation can apply blank=True.
+        if isinstance(data, dict):
+            data = data.copy()
+            for field in ("city", "notes"):
+                if data.get(field) is None:
+                    data[field] = ""
+        return super().to_internal_value(data)
     def get_activities(self, obj):
         return LeadActivitySerializer(obj.activities.order_by("-created_at", "-id"), many=True).data
     def get_attachments(self, obj):

@@ -1,4 +1,4 @@
-const { createMigration } = require('../runner');
+const { createMigration } = require('./runner');
 
 module.exports = createMigration(
     '20260907000001-add-cloud-sync-fields',

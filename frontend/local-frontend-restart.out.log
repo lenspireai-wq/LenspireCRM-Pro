@@ -1,0 +1,33 @@
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.109:3000
+- Environments: .env
+✓ Ready in 3.0s
+✓ Running next.config.mjs took 29ms
+
+○ Compiling / ...
+ GET / 200 in 10.9s (next.js: 10.4s, application-code: 491ms)
+ GET / 200 in 111ms (next.js: 21ms, application-code: 91ms)
+ GET /manifest.webmanifest 200 in 257ms (next.js: 224ms, application-code: 33ms)
+ GET / 200 in 146ms (next.js: 40ms, application-code: 107ms)
+ GET / 200 in 73ms (next.js: 3ms, application-code: 69ms)
+ GET /manifest.webmanifest 200 in 15ms (next.js: 4ms, application-code: 11ms)
+ GET / 200 in 40ms (next.js: 3ms, application-code: 37ms)
+✓ Compiled in 412ms
+ GET / 200 in 51ms (next.js: 8ms, application-code: 42ms)
+ GET /manifest.webmanifest 200 in 14ms (next.js: 8ms, application-code: 7ms)
+ GET / 200 in 32ms (next.js: 2ms, application-code: 29ms)
+ GET /api/health/ 404 in 1372ms (next.js: 1336ms, application-code: 36ms)
+ GET / 200 in 55ms (next.js: 15ms, application-code: 40ms)
+ GET / 200 in 42ms (next.js: 4ms, application-code: 38ms)
+ GET / 200 in 73ms (next.js: 7ms, application-code: 67ms)
+ GET /manifest.webmanifest 200 in 32ms (next.js: 16ms, application-code: 16ms)
+ GET / 200 in 55ms (next.js: 5ms, application-code: 50ms)
+ GET /manifest.webmanifest 200 in 8ms (next.js: 4ms, application-code: 4ms)
+✓ Compiled in 281ms
+ GET / 200 in 75ms (next.js: 35ms, application-code: 39ms)
+ GET / 200 in 83ms (next.js: 16ms, application-code: 67ms)
+ GET /manifest.webmanifest 200 in 16ms (next.js: 9ms, application-code: 7ms)
+ GET / 200 in 40ms (next.js: 4ms, application-code: 36ms)
+ GET /manifest.webmanifest 200 in 7ms (next.js: 3ms, application-code: 5ms)
+ GET / 200 in 43ms (next.js: 2ms, application-code: 41ms)

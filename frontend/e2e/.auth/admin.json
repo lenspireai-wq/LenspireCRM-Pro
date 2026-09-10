@@ -1,0 +1,18 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://127.0.0.1:3000",
+      "localStorage": [
+        {
+          "name": "lenspire-theme",
+          "value": "light"
+        },
+        {
+          "name": "lenspire-auth",
+          "value": "{\"state\":{\"access\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg4ODEzMTc0LCJpYXQiOjE3ODg4MTIyNzQsImp0aSI6IjM1MmQ2ZDNkZmM4ZDQxYWU4Mzc0ZmQ3NTQxM2MyODU4IiwidXNlcl9pZCI6IjEiLCJoYXNoX3Bhc3N3b3JkIjoiMkYzRTQ3NDgyNDU4RDk3MkRFNTdCQjcyQTAzMjA4QjMifQ.-Ouidx8alNGshaNvbxkwxGP9IDhWZk4zPf4Q_5MZM-g\",\"refresh\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4OTQxNzA3NCwiaWF0IjoxNzg4ODEyMjc0LCJqdGkiOiIyMzZhNWJmZjdiYmM0YzY0OTkzNzE3ZTUzMDliZjUzMSIsInVzZXJfaWQiOiIxIiwiaGFzaF9wYXNzd29yZCI6IjJGM0U0NzQ4MjQ1OEQ5NzJERTU3QkI3MkEwMzIwOEIzIn0.h8itpsYoGq_YajymUiDVS52TbwY8jLAVjQVoPz2RF94\",\"user\":{\"id\":1,\"username\":\"sandeepj\",\"display_name\":\"\",\"mobile\":\"\",\"role\":\"Administrator\",\"department_access\":{},\"is_active\":true,\"is_staff\":true,\"is_superuser\":true,\"is_platform_owner\":true,\"organization\":7,\"date_joined\":\"2026-09-04T23:58:53.574424+05:30\",\"last_login\":\"2026-09-08T01:47:54.785293+05:30\"}},\"version\":0}"
+        }
+      ]
+    }
+  ]
+}

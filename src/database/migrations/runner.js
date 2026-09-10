@@ -36,7 +36,9 @@ class MigrationRunner {
         }
 
         const files = fs.readdirSync(this.migrationsDir)
-            .filter(f => f.endsWith('.js'))
+            // The runner lives beside migrations; only timestamped migration
+            // modules are executable migrations.
+            .filter(f => /^\d{14,}-.*\.js$/.test(f))
             .sort();
 
         return files.map(filename => {
@@ -55,7 +57,7 @@ class MigrationRunner {
         });
     }
 
-    async migrate() {
+    migrate() {
         const pending = this.getPendingMigrations();
         
         if (pending.length === 0) {
@@ -94,7 +96,7 @@ class MigrationRunner {
         return results;
     }
 
-    async rollback(steps = 1) {
+    rollback(steps = 1) {
         const applied = this.getAppliedMigrations().reverse().slice(0, steps);
         
         if (applied.length === 0) {

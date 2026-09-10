@@ -1,0 +1,24 @@
+Performing system checks...
+
+System check identified no issues (0 silenced).
+September 08, 2026 - 17:48:04
+Django version 6.0.8, using settings 'lenspirecrm.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/6.0/howto/deployment/
+{"timestamp": "2026-09-08T17:53:11+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T18:03:27+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T18:08:40+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T18:19:51+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T18:23:49+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T18:39:20+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T18:41:04+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/photographers/", "taskName": null, "request": "<WSGIRequest: GET '/api/photographers/?page_size=500'>", "status_code": 401}
+{"timestamp": "2026-09-08T18:41:04+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/events/", "taskName": null, "request": "<WSGIRequest: GET '/api/events/?page_size=5000&ordering=start_date,start_time,id'>", "status_code": 401}
+{"timestamp": "2026-09-08T18:54:47+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T18:59:24+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T19:09:48+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T19:18:45+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T19:25:18+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T19:40:46+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}

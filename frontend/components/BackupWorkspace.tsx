@@ -2,6 +2,7 @@
 import { useMemo, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys } from "@/lib/query";
+import { formatDateTime } from "@/lib/date-format";
 
 type Backup = {
   filename: string;
@@ -20,18 +21,7 @@ type RestoreSummary = {
   dry_run?: boolean;
 };
 
-const formatDate = (value: string) => {
-  if (!value) return "—";
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return value;
-  return parsed.toLocaleString("en-IN", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
+const formatBackupDate = (value: string) => formatDateTime(value, value || "—");
 
 const downloadFile = async (filename: string) => {
   const response = await api.get(`/backups/download/${filename}/`, { responseType: "blob" });
@@ -44,6 +34,13 @@ const downloadFile = async (filename: string) => {
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+};
+
+const errorMessage = (error: unknown, fallback: string) => {
+  const detail = (error as { response?: { data?: { detail?: unknown } } })?.response?.data?.detail;
+  if (typeof detail === "string" && detail.trim()) return detail;
+  const message = (error as { message?: unknown })?.message;
+  return typeof message === "string" && message.trim() ? message : fallback;
 };
 
 export default function BackupWorkspace() {
@@ -67,6 +64,9 @@ export default function BackupWorkspace() {
       setActionMessage("Backup created.");
       backupsQuery.refetch?.();
     },
+    onError: (error) => {
+      setActionMessage(`Could not create backup: ${errorMessage(error, "Check the API connection and try again.")}`);
+    },
   });
 
   const deleteMutation = useApiMutation<{ filename: string }, unknown, Error>({
@@ -74,6 +74,9 @@ export default function BackupWorkspace() {
     onSuccess: (_data, variables) => {
       setActionMessage(`Deleted ${variables.filename}.`);
       backupsQuery.refetch?.();
+    },
+    onError: (error) => {
+      setActionMessage(`Could not delete backup: ${errorMessage(error, "Please try again.")}`);
     },
   });
 
@@ -86,6 +89,9 @@ export default function BackupWorkspace() {
     onSuccess: (data) => {
       setActionMessage(`Uploaded ${data.filename}.`);
       backupsQuery.refetch?.();
+    },
+    onError: (error) => {
+      setActionMessage(`Could not upload backup: ${errorMessage(error, "Please try again.")}`);
     },
   });
 
@@ -182,7 +188,7 @@ export default function BackupWorkspace() {
         </div>
         <div className="auditSummaryCard">
           <span>Last backup</span>
-          <strong>{lastBackup ? formatDate(lastBackup.created_at) : "Never"}</strong>
+          <strong>{lastBackup ? formatBackupDate(lastBackup.created_at) : "Never"}</strong>
           <small>{lastBackup?.size_human ?? "—"}</small>
         </div>
         <div className="auditSummaryCard">
@@ -197,7 +203,7 @@ export default function BackupWorkspace() {
       ) : backupsQuery.isError ? (
         <div className="auditEmpty">
           <strong>Could not load backups.</strong>
-          <small>Check the API connection and try again.</small>
+          <small>{errorMessage(backupsQuery.error, "Check the API connection and try again.")}</small>
         </div>
       ) : backups.length === 0 ? (
         <div className="auditEmpty">
@@ -219,7 +225,7 @@ export default function BackupWorkspace() {
               {backups.map((backup) => (
                 <tr key={backup.filename}>
                   <td>
-                    <time dateTime={backup.created_at}>{formatDate(backup.created_at)}</time>
+                    <time dateTime={backup.created_at}>{formatBackupDate(backup.created_at)}</time>
                   </td>
                   <td className="auditDescription">
                     <code>{backup.filename}</code>

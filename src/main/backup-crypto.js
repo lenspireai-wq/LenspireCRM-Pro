@@ -42,16 +42,23 @@ function decryptPayload(encryptedObj, password) {
   const ciphertext = Buffer.from(encryptedObj.ciphertext, 'base64');
   const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
   decipher.setAuthTag(authTag);
-  const decrypted = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
-  return JSON.parse(decrypted.toString('utf8'));
+  try {
+    const decrypted = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+    return JSON.parse(decrypted.toString('utf8'));
+  } catch {
+    // Do not expose crypto implementation details; callers need one stable
+    // error for a wrong password or a tampered backup.
+    throw new Error('Backup decryption authentication failed: unable to authenticate; password may be incorrect.');
+  }
 }
 
 function isEncryptedPayload(payload) {
-  return payload && payload.encrypted === true &&
+  if (payload === undefined) return undefined;
+  return Boolean(payload && payload.encrypted === true &&
     typeof payload.salt === 'string' &&
     typeof payload.iv === 'string' &&
     typeof payload.authTag === 'string' &&
-    typeof payload.ciphertext === 'string';
+    typeof payload.ciphertext === 'string');
 }
 
 module.exports = { encryptPayload, decryptPayload, isEncryptedPayload };

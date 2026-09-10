@@ -10,6 +10,15 @@ if ([string]::IsNullOrWhiteSpace($setupToken)) {
     throw 'LENSPIRE_SETUP_TOKEN is not set in this PowerShell session.'
 }
 
+# Recovery belongs to the Cloudflare Worker.  The Hostinger CRM hostname may
+# still route API traffic to the legacy Django service, which has no owner
+# recovery endpoint.
+$apiBase = [Environment]::GetEnvironmentVariable('LENSPIRE_API_URL', 'Process')
+if ([string]::IsNullOrWhiteSpace($apiBase)) {
+    $apiBase = 'https://lenspirecrm-api.lenspirecrm-worker.workers.dev'
+}
+$apiBase = $apiBase.TrimEnd('/')
+
 $username = Read-Host 'Enter the exact owner username'
 if ([string]::IsNullOrWhiteSpace($username)) {
     throw 'Owner username is required.'
@@ -33,7 +42,7 @@ try {
     $headers = @{ 'x-setup-token' = $setupToken }
     $body = @{ username = $username.Trim(); newPassword = $passwordText } | ConvertTo-Json -Compress
     $result = Invoke-RestMethod `
-        -Uri 'https://crm.lenspireai.com/api/auth/reset-password' `
+        -Uri "$apiBase/api/auth/reset-password" `
         -Method Post `
         -Headers $headers `
         -ContentType 'application/json' `

@@ -1,0 +1,4 @@
+npm notice run lenspirecrm-web@1.0.0 dev
+npm notice run next dev -H 0.0.0.0
+⚠ Slow filesystem detected. The benchmark took 390ms. If \\?\F:\LenspireCRM-Pro\frontend\.next\dev is a network drive, consider moving it to a local folder.
+See more: https://nextjs.org/docs/app/guides/local-development

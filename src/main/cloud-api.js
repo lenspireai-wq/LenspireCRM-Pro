@@ -39,8 +39,8 @@ async function login(username, password) {
   for (let attempt = 0; attempt < 5; attempt++) {
     try { return await request('/api/auth/login/', options); }
     catch (error) {
-      if (![502, 503, 504].includes(error.status) || attempt === 4) {
-        if ([502, 503, 504].includes(error.status)) throw new Error('LenspireCRM Cloud is temporarily unavailable. Please wait a moment and try again.');
+      if (![502,503,504].includes(error.status) || attempt === 4) {
+        if ([502,503,504].includes(error.status)) throw new Error('LenspireCRM Cloud is temporarily unavailable. Please wait a moment and try again.');
         throw error;
       }
       await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
@@ -53,7 +53,7 @@ const refresh = async (refreshToken) => {
   for (let attempt = 0; attempt < 5; attempt++) {
     try { return await request('/api/auth/refresh/', options); }
     catch (error) {
-      if (![502, 503, 504].includes(error.status) || attempt === 4) throw error;
+      if (![502,503,504].includes(error.status) || attempt === 4) throw error;
       await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
     }
   }

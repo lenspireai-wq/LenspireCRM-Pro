@@ -308,7 +308,7 @@ test('confirmed manual cloud leads create the complete connected workflow', () =
   assert.match(mainSource, /ensureConfirmedCloudWorkflow\(event,session,\{\.\.\.leadData,\.\.\.lead\}/);
   assert.match(mainSource, /updated\?\.lead\?\.status\|\|payload\?\.lead\?\.status/);
   assert.match(mainSource, /cloudApi\.convertLead\(token,cloudId,\{performedBy\}\)/);
-  const workflow = mainSource.match(/async function ensureConfirmedCloudWorkflow[\s\S]*?\n}\n\nasync function authenticateCloudUser/)?.[0] || '';
+  const workflow = mainSource.match(/async function ensureConfirmedCloudWorkflow[\s\S]*?\r?\n}\r?\n\r?\nasync function authenticateCloudUser/)?.[0] || '';
   assert.match(workflow, /Cloud conversion endpoint creates its connected event atomically/);
   assert.doesNotMatch(workflow, /cloudApi\.saveEvent/);
 });

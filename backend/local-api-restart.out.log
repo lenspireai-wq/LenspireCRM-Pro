@@ -1,0 +1,14 @@
+{"timestamp": "2026-09-08T11:31:30+0530", "level": "INFO", "logger": "django.utils.autoreload", "message": "Watching for file changes with StatReloader", "taskName": null}
+Performing system checks...
+
+System check identified no issues (0 silenced).
+September 08, 2026 - 11:31:32
+Django version 6.0.8, using settings 'lenspirecrm.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/6.0/howto/deployment/
+{"timestamp": "2026-09-08T11:53:41+0530", "level": "WARNING", "logger": "django.request", "message": "Unauthorized: /api/notifications/summary/", "taskName": null, "request": "<WSGIRequest: GET '/api/notifications/summary/'>", "status_code": 401}
+{"timestamp": "2026-09-08T12:04:50+0530", "level": "INFO", "logger": "django.utils.autoreload", "message": "D:\\LenspireCRM-Pro\\backend\\apps\\operations\\views.py changed, reloading.", "taskName": null}
+{"timestamp": "2026-09-08T12:04:51+0530", "level": "INFO", "logger": "django.utils.autoreload", "message": "Watching for file changes with StatReloader", "taskName": null}

@@ -1,0 +1,53 @@
+
+> lenspirecrm-web@1.0.0 dev
+> next dev --hostname 127.0.0.1
+
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+- Environments: .env
+✓ Ready in 2.7s
+✓ Running next.config.mjs took 68ms
+
+ GET / 200 in 1658ms (next.js: 628ms, application-code: 1030ms)
+ GET / 200 in 173ms (next.js: 23ms, application-code: 150ms)
+ GET / 200 in 212ms (next.js: 30ms, application-code: 182ms)
+ GET /manifest.webmanifest 200 in 659ms (next.js: 523ms, application-code: 136ms)
+✓ Compiled in 564ms
+ GET / 200 in 173ms (next.js: 31ms, application-code: 142ms)
+ GET /manifest.webmanifest 200 in 183ms (next.js: 126ms, application-code: 57ms)
+✓ Compiled in 424ms
+ GET / 200 in 203ms (next.js: 37ms, application-code: 166ms)
+ GET /manifest.webmanifest 200 in 98ms (next.js: 66ms, application-code: 32ms)
+✓ Compiled in 740ms
+ GET / 200 in 268ms (next.js: 118ms, application-code: 150ms)
+ GET / 200 in 337ms (next.js: 66ms, application-code: 271ms)
+ GET /manifest.webmanifest 200 in 37ms (next.js: 11ms, application-code: 26ms)
+✓ Compiled in 213ms
+✓ Compiled in 4s
+✓ Compiled in 253ms
+✓ Compiled in 1838ms
+✓ Compiled in 228ms
+✓ Compiled in 373ms
+ GET / 200 in 175ms (next.js: 25ms, application-code: 150ms)
+ GET /manifest.webmanifest 200 in 87ms (next.js: 38ms, application-code: 49ms)
+✓ Compiled in 508ms
+✓ Compiled in 482ms
+ GET / 200 in 206ms (next.js: 29ms, application-code: 177ms)
+ GET /manifest.webmanifest 200 in 131ms (next.js: 85ms, application-code: 45ms)
+✓ Compiled in 352ms
+✓ Compiled in 595ms
+✓ Compiled in 360ms
+✓ Compiled in 284ms
+✓ Compiled in 1386ms
+ GET / 200 in 460ms (next.js: 330ms, application-code: 130ms)
+ GET / 200 in 463ms (next.js: 112ms, application-code: 351ms)
+ GET /manifest.webmanifest 200 in 34ms (next.js: 11ms, application-code: 23ms)
+✓ Compiled in 505ms
+✓ Compiled in 209ms
+✓ Compiled in 312ms
+ GET / 200 in 166ms (next.js: 38ms, application-code: 129ms)
+ GET /manifest.webmanifest 200 in 47ms (next.js: 21ms, application-code: 26ms)
+✓ Compiled in 260ms
+ GET / 200 in 746ms (next.js: 448ms, application-code: 298ms)
+ GET /manifest.webmanifest 200 in 69ms (next.js: 31ms, application-code: 38ms)
