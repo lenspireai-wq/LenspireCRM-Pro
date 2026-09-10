@@ -304,6 +304,39 @@
   background: color-mix(in srgb, var(--brand) 5%, transparent) !important;
 }
 
+/* Operations lists use a predictable, spreadsheet-like grid: every data
+   column has the same width and always remains on one line.  The table grows
+   horizontally instead of changing its geometry as values or zoom change. */
+:root .fitUpcomingColumns .upcomingEventsTableWrap {
+  touch-action: pan-x pan-y pinch-zoom;
+}
+:root .fitUpcomingColumns .upcomingEventsTable {
+  --event-standard-column-width: 124px;
+  width: max-content !important;
+  min-width: max-content !important;
+  table-layout: fixed !important;
+}
+:root .fitUpcomingColumns .upcomingEventsTable :is(th, td) {
+  width: var(--event-standard-column-width) !important;
+  min-width: var(--event-standard-column-width) !important;
+  max-width: var(--event-standard-column-width) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  text-overflow: ellipsis !important;
+}
+:root .fitUpcomingColumns .upcomingEventsTable :is(th, td):first-child {
+  width: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+}
+:root .fitUpcomingColumns .upcomingEventsTable :is(th, td):last-child {
+  width: 124px !important;
+  min-width: 124px !important;
+  max-width: 124px !important;
+}
+
 /* Operations dashboard KPIs use the same deliberate hover feedback, whether
    a card is linked to a drill-down view or is informational. */
 .operationsWorkspace .salesKpis article {
