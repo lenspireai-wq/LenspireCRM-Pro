@@ -435,14 +435,6 @@ export default function SalesWorkspace({
                 <h3>Recent Leads</h3>
                 <p>Latest sales opportunities</p>
               </div>
-              <button
-                className="iconOnlyAction viewAction"
-                title="View all leads"
-                aria-label="View all leads"
-                onClick={() => setViewSafe("Lead Management")}
-              >
-                ◉
-              </button>
             </div>
             <LeadTable leads={leads.slice(0, 15)} onOpen={setDetail} />
           </section>
