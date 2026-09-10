@@ -9558,9 +9558,9 @@ table > tbody > tr:has(td[colspan])::before {
 @media (max-width: 1000px) {
   .dashboardChrome .chromeActions {
     display: grid !important;
-    grid-template-columns: repeat(5, 26px) !important;
+    grid-template-columns: repeat(4, 26px) !important;
     grid-auto-rows: 26px !important;
-    flex: 0 0 162px;
+    flex: 0 0 128px;
     align-items: center;
     column-gap: 8px !important;
     row-gap: 4px;
@@ -9571,11 +9571,7 @@ table > tbody > tr:has(td[colspan])::before {
     height: 26px !important;
   }
   .dashboardChrome .chromeActions > :first-child {
-    flex: 0 0 26px !important;
-    width: 26px !important;
-    height: 26px !important;
-    min-width: 26px !important;
-    max-width: 26px !important;
+    display: none !important;
   }
   .dashboardChrome .chromeActions > :first-child input {
     box-sizing: border-box;
