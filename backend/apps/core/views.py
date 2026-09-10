@@ -1,4 +1,4 @@
-from django.db import connection
+from django.db import connection, models
 from django.db import transaction
 from django.utils import timezone
 from django.utils.text import slugify
@@ -119,10 +119,26 @@ class OrganizationViewSet(viewsets.ModelViewSet):
             self.record_activity(updated, "Studio Edited", f"Plan changed from {previous_plan} to {updated.plan}.")
 
     def destroy(self, request, *args, **kwargs):
-        return Response(
-            {"detail": "Studio deletion is disabled to protect client records. Pause the studio instead."},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED,
+        organization = self.get_object()
+        blockers = []
+        for relation in organization._meta.related_objects:
+            if relation.on_delete is not models.CASCADE:
+                continue
+            manager = getattr(organization, relation.get_accessor_name())
+            if manager.exists():
+                blockers.append(relation.related_model._meta.verbose_name_plural)
+        if blockers:
+            return Response(
+                {"detail": f"Only empty studios can be deleted. This studio still has: {', '.join(sorted(blockers))}."},
+                status=status.HTTP_409_CONFLICT,
+            )
+        self.record_activity(
+            organization,
+            "Studio Deleted",
+            "Deleted an empty studio workspace.",
         )
+        organization.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=["get"], url_path="audit-history")
     def audit_history(self, request):

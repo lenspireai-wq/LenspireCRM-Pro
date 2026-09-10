@@ -151,6 +151,23 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
       );
     }
   };
+  const deleteStudio = async (organization: Organization) => {
+    if (
+      !window.confirm(
+        `Permanently delete ${organization.name}? This can only delete an empty studio and cannot be undone.`,
+      )
+    )
+      return;
+    setError("");
+    try {
+      await api.delete(`/organizations/${organization.id}/`);
+      await load();
+    } catch (problem: any) {
+      setError(
+        problem.response?.data?.detail || "Could not delete the studio workspace.",
+      );
+    }
+  };
   const openStudioEditor = (organization: Organization, renew = false) => {
     setCreating(false);
     setEditing(organization);
@@ -311,6 +328,15 @@ export default function OwnerPortal({ logout }: { logout: () => void }) {
                         >
                           {organization.active ? "Ⅱ" : "▶"}
                         </button>
+                        {Number(organization.user_count || 0) === 0 && (
+                          <button
+                            className="deleteAction"
+                            title="Delete empty studio"
+                            onClick={() => void deleteStudio(organization)}
+                          >
+                            ×
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

@@ -210,6 +210,7 @@
       case 'run-cloud-migrations': return api('/api/platform/migrations',body({}));
       case 'create-platform-organization': return api('/api/platform/organizations',body(value));
       case 'set-platform-organization-status': return api(`/api/platform/organizations/${encodeURIComponent(value?.organizationId)}/status`,patch({status:value?.status}));
+      case 'delete-platform-organization': return api(`/api/platform/organizations/${encodeURIComponent(value?.organizationId)}`,{method:'DELETE'});
       case 'update-platform-organization-subscription': return api(`/api/platform/organizations/${encodeURIComponent(value?.organizationId)}/subscription`,patch(value));
       case 'update-platform-organization-branding': return api(`/api/platform/organizations/${encodeURIComponent(value?.organizationId)}/branding`,patch(value));
       case 'upload-platform-organization-logo': return uploadLogo(value);

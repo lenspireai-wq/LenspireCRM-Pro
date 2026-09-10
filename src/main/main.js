@@ -1174,6 +1174,10 @@ ipcMain.handle('set-platform-organization-status', async (event,payload) => {
     const session=requirePlatformOwner(event);
     return withCloudAuth(session,token=>cloudApi.setPlatformOrganizationStatus(token,payload?.organizationId,payload?.status));
 });
+ipcMain.handle('delete-platform-organization', async (event,payload) => {
+    const session=requirePlatformOwner(event);
+    return withCloudAuth(session,token=>cloudApi.deletePlatformOrganization(token,payload?.organizationId));
+});
 ipcMain.handle('update-platform-organization-subscription', async (event,payload) => {
     const session=requirePlatformOwner(event);
     return withCloudAuth(session,token=>cloudApi.updatePlatformOrganizationSubscription(token,payload?.organizationId,{plan:payload?.plan,subscriptionExpiresAt:payload?.subscriptionExpiresAt,licenseCode:payload?.licenseCode}));

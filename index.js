@@ -6838,6 +6838,16 @@ async function platformOrganizationsApi(request, env, pathname) {
       if (!updated) return json({ error: "Studio workspace not found." }, 404);
       return json({ organization: { organizationId: updated.organization_id, studioName: updated.studio_name, status: updated.status, plan: updated.plan, createdAt: updated.created_at } });
     }
+    const deleteMatch = pathname.match(/^\/api\/platform\/organizations\/([0-9a-f-]{36})$/i);
+    if (request.method === "DELETE" && deleteMatch) {
+      const organizationId = deleteMatch[1];
+      const [organization] = await sql`select o.id,o.name,(select count(*)::int from users where organization_id=o.id) as user_count from organizations o where o.id=${organizationId} limit 1`;
+      if (!organization) return json({ error: "Studio workspace not found." }, 404);
+      if (Number(organization.user_count) !== 0) return json({ error: "Only empty studio workspaces can be deleted. Remove or deactivate its user accounts first." }, 409);
+      await sql`delete from organizations where id=${organizationId}`;
+      if (env.STUDIO_ASSETS) await env.STUDIO_ASSETS.delete(`studio-logos/${organizationId}/logo`);
+      return json({ deleted: true, organizationId, studioName: organization.name });
+    }
     const subscriptionMatch = pathname.match(/^\/api\/platform\/organizations\/([0-9a-f-]{36})\/subscription$/i);
     if (request.method === "PATCH" && subscriptionMatch) {
       const body = await readJson(request);

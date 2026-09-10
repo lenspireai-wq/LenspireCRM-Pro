@@ -930,6 +930,11 @@ input:-webkit-autofill:active {
   background: #17394b;
   color: #7ad7ff;
 }
+.ownerRowActions .deleteAction {
+  border: 1px solid #963e4c;
+  background: #481e28;
+  color: #ff9daa;
+}
 .ownerStudioModal {
   width: min(900px, 100%);
 }

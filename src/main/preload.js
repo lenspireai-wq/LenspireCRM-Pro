@@ -37,6 +37,7 @@ const allowedChannels = new Set([
   'list-platform-organizations',
   'create-platform-organization',
   'set-platform-organization-status',
+  'delete-platform-organization',
   'update-platform-organization-subscription',
   'update-platform-organization-branding',
   'upload-platform-organization-logo',

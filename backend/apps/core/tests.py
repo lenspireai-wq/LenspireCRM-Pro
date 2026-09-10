@@ -68,8 +68,22 @@ class ApiTests(APITestCase):
         self.assertEqual(history.status_code, 200)
         self.assertGreaterEqual(len(history.data), 3)
         protected = self.client.delete(f"/api/organizations/{organization.id}/")
-        self.assertEqual(protected.status_code, 405)
+        self.assertEqual(protected.status_code, 409)
         self.assertTrue(Organization.objects.filter(pk=organization.id).exists())
+
+    def test_platform_owner_can_delete_an_empty_studio_only(self):
+        platform_owner = User.objects.create_superuser(
+            username="platform-owner-delete", password="Owner-pass-123"
+        )
+        empty = Organization.objects.create(name="Empty Studio", slug="empty-studio")
+        self.client.force_authenticate(platform_owner)
+        response = self.client.delete(f"/api/organizations/{empty.id}/")
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(Organization.objects.filter(pk=empty.id).exists())
+        activity = OrganizationAuditActivity.objects.filter(
+            studio_name="Empty Studio", action="Studio Deleted"
+        ).latest("created_at")
+        self.assertIsNone(activity.organization)
     def test_paused_studio_blocks_login_existing_tokens_and_refresh(self):
         member = User.objects.create_user(
             username="paused-admin",
