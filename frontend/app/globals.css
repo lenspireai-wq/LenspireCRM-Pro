@@ -9812,7 +9812,28 @@ table > tbody > tr:has(td[colspan])::before {
     padding: 0 !important;
     place-items: center;
   }
+  .operationsWorkspace .operationsDashboardControls .operationsTabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+  .operationsWorkspace .operationsDashboardControls .operationsTabs::-webkit-scrollbar { display: none; }
+  .operationsWorkspace .operationsDashboardControls .operationsTabs > button {
+    flex: 0 0 auto;
+    min-width: max-content;
+    min-height: 34px;
+    padding: 5px 4px;
+    font-size: 10px;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+  .operationsWorkspace .desktopOperationsTabLabel { display: none; }
+  .operationsWorkspace .mobileOperationsTabLabel { display: inline; }
 }
+
+.mobileOperationsTabLabel { display: none; }
 
 @media (max-width: 359px) {
   .dashMetrics,

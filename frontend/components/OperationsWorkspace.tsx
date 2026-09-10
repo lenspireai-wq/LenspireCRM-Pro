@@ -21,6 +21,13 @@ const views: View[] = [
   "Completed Events",
   "Photographers Details",
 ];
+const mobileViewLabels: Record<View, string> = {
+  Dashboard: "Dashboard",
+  Calendar: "Calendar",
+  "Upcoming Events": "Upcoming",
+  "Completed Events": "Completed",
+  "Photographers Details": "Photographers",
+};
 const upcomingStatuses = new Set(["Scheduled", "Confirmed", "In Progress"]);
 const blankEvent = {
   title: "",
@@ -412,7 +419,8 @@ export default function OperationsWorkspace({
               className={view === item ? "active" : ""}
               onClick={() => setViewSafe(item)}
             >
-              {item}
+              <span className="desktopOperationsTabLabel">{item}</span>
+              <span className="mobileOperationsTabLabel">{mobileViewLabels[item]}</span>
             </button>
           ))}
         </nav>
