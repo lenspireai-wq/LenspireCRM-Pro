@@ -530,7 +530,12 @@ export default function Home() {
             <>
               <div className="sectionHeader">
                 <div>
-                  <h1>{operationsView}</h1>
+                  <h1>
+                    <span className="desktopOperationsHeaderTitle">{operationsView}</span>
+                    <span className="mobileOperationsHeaderTitle">
+                      {operationsView === "Photographers Details" ? "Photographers" : operationsView}
+                    </span>
+                  </h1>
                   <p>Plan shoots, assign your crew, and track every event.</p>
                 </div>
               </div>

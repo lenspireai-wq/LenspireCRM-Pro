@@ -9831,6 +9831,8 @@ table > tbody > tr:has(td[colspan])::before {
   }
   .operationsWorkspace .desktopOperationsTabLabel { display: none; }
   .operationsWorkspace .mobileOperationsTabLabel { display: inline; }
+  .operationsChrome .desktopOperationsHeaderTitle { display: none; }
+  .operationsChrome .mobileOperationsHeaderTitle { display: inline; }
   .mainDashboard .workspaceChrome {
     margin-bottom: 0;
   }
@@ -9847,6 +9849,7 @@ table > tbody > tr:has(td[colspan])::before {
 }
 
 .mobileOperationsTabLabel { display: none; }
+.mobileOperationsHeaderTitle { display: none; }
 
 /* Desktop dashboard: keep KPI content roomy and in normal document flow so it
    never covers the Revenue Trend or Lead Funnel panels while scrolling. */

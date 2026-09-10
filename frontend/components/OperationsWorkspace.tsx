@@ -419,7 +419,7 @@ export default function OperationsWorkspace({
               className={view === item ? "active" : ""}
               onClick={() => setViewSafe(item)}
             >
-              <span className="desktopOperationsTabLabel">{item}</span>
+              <span className="desktopOperationsTabLabel">{item === "Photographers Details" ? "Photographers" : item}</span>
               <span className="mobileOperationsTabLabel">{mobileViewLabels[item]}</span>
             </button>
           ))}
