@@ -68,3 +68,19 @@
   .root:focus-within { flex-basis: 180px; max-width: 180px; }
   .root:focus-within .input::placeholder { color: var(--muted); }
 }
+
+/* The dashboard header has a compact fixed action strip on phones. Do not let
+   a focused search field expand over the notification bell in that strip. */
+@media (max-width: 1000px) {
+  :global(.dashboardChrome .chromeActions) .root,
+  :global(.dashboardChrome .chromeActions) .root:focus-within {
+    flex: 0 0 20px !important;
+    width: 20px !important;
+    min-width: 20px !important;
+    max-width: 20px !important;
+  }
+  :global(.dashboardChrome .chromeActions) .root::before {
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
