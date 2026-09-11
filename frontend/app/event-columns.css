@@ -346,6 +346,77 @@
   display: grid !important;
 }
 
+/* Mobile Photographers follows the same readable, horizontally scrollable
+   table treatment as the Operations event lists. Desktop keeps its existing
+   full-width photographer layout. */
+@media (max-width: 900px) {
+  :root .photographersDetailsView .photographerTablePanel {
+    max-width: 100%;
+    overflow-x: scroll !important;
+    overflow-y: auto !important;
+    scrollbar-gutter: stable;
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+  :root .photographersDetailsView .photographerTable {
+    width: 780px !important;
+    min-width: 780px !important;
+    table-layout: fixed !important;
+  }
+  :root .photographersDetailsView .photographerTable :is(th, td):not(:last-child) {
+    width: 124px !important;
+    min-width: 124px !important;
+    max-width: 124px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    text-overflow: ellipsis !important;
+  }
+  :root .photographersDetailsView .photographerTable :is(th, td):last-child {
+    width: 160px !important;
+    min-width: 160px !important;
+    max-width: 160px !important;
+  }
+  :root .photographersDetailsView .photographerTable th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: 28px !important;
+    padding: 0 4px !important;
+    border-right: 1px solid #3a4c67 !important;
+    border-bottom: 2px solid #596d8d !important;
+    background: linear-gradient(180deg, #263a54, #1b2b40) !important;
+    color: #e7ecf6;
+    font-size: clamp(8px, 0.9vw, 10px) !important;
+  }
+  :root .photographersDetailsView .photographerTable td {
+    height: 36px;
+    padding: 0 4px !important;
+    border-right: 1px solid #25354b;
+    border-bottom: 1px solid #25354b;
+    font-size: clamp(8px, 0.9vw, 10px) !important;
+  }
+  :root .photographersDetailsView .photographerTable tbody tr:nth-child(even) {
+    background: #101d2b;
+  }
+  :root .photographersDetailsView .photographerTable .rowActions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-1);
+    min-width: max-content;
+  }
+  :root .photographersDetailsView .photographerTable .rowActions button {
+    display: grid;
+    place-items: center;
+    flex: 0 0 26px;
+    width: 26px !important;
+    min-width: 26px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 !important;
+  }
+}
+
 /* Operations lists use a predictable, spreadsheet-like grid: every data
    column has the same width and always remains on one line.  The table grows
    horizontally instead of changing its geometry as values or zoom change. */
