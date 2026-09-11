@@ -735,6 +735,44 @@
   }
 }
 
+/* Photographers has six predictable fields. Keep it within the available
+   viewport instead of exposing a horizontal scrollbar for this short table. */
+.photographerTableWrap {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+.photographerTableWrap > table {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+.photographerTableWrap :is(th, td) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.photographerTableWrap :is(th, td):nth-child(1) { width: 16%; }
+.photographerTableWrap :is(th, td):nth-child(2) { width: 13%; }
+.photographerTableWrap :is(th, td):nth-child(3) { width: 10%; }
+.photographerTableWrap :is(th, td):nth-child(4) { width: 31%; }
+.photographerTableWrap :is(th, td):nth-child(5) { width: 13%; }
+.photographerTableWrap :is(th, td):nth-child(6) { width: 17%; }
+
+/* Let the photographer list run as one full table in the Operations view
+   rather than trapping it inside a second scroll container. */
+.mainOperationsDashboard .photographersDetailsView {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-width: thin;
+}
+.mainOperationsDashboard .photographersDetailsView .photographerTablePanel,
+.mainOperationsDashboard .photographersDetailsView .photographerTableWrap {
+  flex: 0 0 auto !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
 @media (max-width: 900px) {
   .operationsDashboardControls .operationsActions .operationsActionButton {
     min-height: 28px;
