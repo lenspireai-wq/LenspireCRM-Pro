@@ -416,7 +416,8 @@
     padding: 0 !important;
   }
   /* Accounts navigation stays in one compact, scrollable row on phones. */
-  :root .accountsWorkspace .accountsViewSticky .operationsTabs {
+  :root .accountsWorkspace .accountsViewSticky .operationsTabs,
+  :root .accountsWorkspace > .operationsTabs {
     display: flex !important;
     flex-wrap: nowrap !important;
     align-items: center;
@@ -427,7 +428,8 @@
     overscroll-behavior-inline: contain;
     scrollbar-width: thin;
   }
-  :root .accountsWorkspace .accountsViewSticky .operationsTabs > button {
+  :root .accountsWorkspace .accountsViewSticky .operationsTabs > button,
+  :root .accountsWorkspace > .operationsTabs > button {
     flex: 0 0 auto !important;
     min-width: max-content !important;
     min-height: 34px;
@@ -436,6 +438,54 @@
     line-height: 1.15;
     white-space: nowrap !important;
   }
+  /* Compact the four Account dashboard KPI cards on phones without making
+     their large currency values unreadable. */
+  :root .accountsWorkspace .accountMetrics {
+    gap: 6px;
+    margin: 8px 0;
+  }
+  :root .accountsWorkspace .accountMetrics article {
+    min-height: 64px !important;
+    padding: 7px 8px !important;
+  }
+  :root .accountsWorkspace .accountMetrics span {
+    margin-bottom: 2px !important;
+    font-size: 10px;
+  }
+  :root .accountsWorkspace .accountMetrics strong {
+    font-size: clamp(14px, 4vw, 17px);
+    line-height: 1.15;
+  }
+  /* Payment and Collection rows stay compact on phones, while the fixed
+     table width keeps every column available through horizontal scrolling. */
+  :root .accountsWorkspace .table:has(.paymentTable) {
+    overflow-x: auto !important;
+    overscroll-behavior-inline: contain;
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+  :root .accountsWorkspace .paymentTable {
+    width: 1030px !important;
+    min-width: 1030px !important;
+    table-layout: fixed !important;
+  }
+  :root .accountsWorkspace .paymentTable th,
+  :root .accountsWorkspace .paymentTable td {
+    min-height: 32px;
+    padding: 4px 6px !important;
+    font-size: 10px !important;
+    line-height: 1.2;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :root .accountsWorkspace .paymentTable :is(th, td):nth-child(1) { width: 170px !important; }
+  :root .accountsWorkspace .paymentTable :is(th, td):nth-child(2) { width: 118px !important; }
+  :root .accountsWorkspace .paymentTable :is(th, td):nth-child(3) { width: 110px !important; }
+  :root .accountsWorkspace .paymentTable :is(th, td):nth-child(4) { width: 100px !important; }
+  :root .accountsWorkspace .paymentTable :is(th, td):nth-child(5) { width: 95px !important; }
+  :root .accountsWorkspace .paymentTable :is(th, td):nth-child(6) { width: 110px !important; }
+  :root .accountsWorkspace .paymentTable :is(th, td):nth-child(7) { width: 145px !important; }
+  :root .accountsWorkspace .paymentTable :is(th, td):nth-child(8) { width: 150px !important; }
 }
 
 /* Operations lists use a predictable, spreadsheet-like grid: every data
