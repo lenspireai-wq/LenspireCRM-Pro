@@ -707,6 +707,15 @@
   color: var(--brand);
   background: #fff;
 }
+
+/* Keep the Operations navigation and its Export/Import/Add controls from
+   sitting against the main workspace header on either desktop or mobile. */
+.mainOperationsDashboard .operationsDashboardControls,
+.mainOperationsEvents .operationsDashboardControls,
+.mainOperationsCalendar .operationsDashboardControls {
+  padding-top: 10px !important;
+}
+
 @media (max-width: 900px) {
   .operationsDashboardControls .operationsActions .operationsActionButton {
     min-height: 28px;
