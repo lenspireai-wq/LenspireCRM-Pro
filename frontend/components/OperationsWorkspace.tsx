@@ -692,7 +692,7 @@ function EventTable({
     const multipleNames = namedAssignments.length > 1;
     return assignments.length ? (
       <div className={`crewAssignments ${multipleNames ? "multipleCrew" : ""}`}>
-        {assignments.map((assignment) => {
+        {assignments.map((assignment, index) => {
           const marker = assignment.toUpperCase();
           const displayAssignment = crewDisplayValue(assignment) || assignment;
           const colorClass =
@@ -706,7 +706,7 @@ function EventTable({
                     ? "crewAssignedMultiple"
                     : "crewAssigned";
           return (
-            <span className={colorClass} key={assignment}>
+            <span className={colorClass} key={`${assignment}-${index}`}>
               {displayAssignment}
             </span>
           );
@@ -942,6 +942,7 @@ function CrewTable({
         <table className="photographerTable">
           <thead>
             <tr>
+              <th className="mobilePhotographerSerial">Sr. No.</th>
               <th>Name</th>
               <th>Mobile</th>
               <th>Based In</th>
@@ -951,8 +952,9 @@ function CrewTable({
             </tr>
           </thead>
           <tbody>
-            {visibleRows.map((row) => (
+            {visibleRows.map((row, index) => (
               <tr key={row.id}>
+                <td className="mobilePhotographerSerial">{index + 1}</td>
                 <td>
                   <b>{row.name}</b>
                 </td>

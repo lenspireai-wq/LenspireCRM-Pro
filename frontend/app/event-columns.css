@@ -304,6 +304,106 @@
   background: color-mix(in srgb, var(--brand) 5%, transparent) !important;
 }
 
+/* Final mobile Operations table standard.  This is intentionally last because
+   older Operations styles above use several overlapping table selectors. */
+@media (max-width: 900px) {
+  :root .mainOperationsDashboard .operationsWorkspace table thead th,
+  :root .mainOperationsDashboard .operationsWorkspace table > thead > tr::before {
+    font-family: var(--font-sans) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    background: var(--surface-strong) !important;
+  }
+
+  :root .mainOperationsDashboard .operationsWorkspace table tbody td,
+  :root .mainOperationsDashboard .operationsWorkspace table tbody td :is(b, span, small) {
+    font-size: 9px !important;
+    line-height: 1.3 !important;
+  }
+}
+
+/* Phone-only final Photographer treatment.  Earlier desktop rules intentionally
+   let this table expand with the page; on a phone it needs its own usable
+   vertical and horizontal scroll area, matching the Operations event lists. */
+@media (max-width: 900px) {
+  .mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
+    height: calc(100dvh - 210px) !important;
+    max-height: calc(100dvh - 210px) !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  :root[data-theme="dark"] .mainOperationsDashboard .photographersDetailsView .photographerTable th {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    border-color: var(--line) !important;
+  }
+
+  :root[data-theme="dark"] .mainOperationsDashboard .photographersDetailsView .photographerTable td {
+    border-color: var(--line) !important;
+  }
+
+  :root[data-theme="dark"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:nth-child(even) {
+    background: var(--surface) !important;
+  }
+
+  /* One consistent header treatment for every Operations data list. */
+  :root .fitUpcomingColumns .upcomingEventsTable thead th,
+  :root .mainOperationsDashboard .photographersDetailsView .photographerTable thead th {
+    font-family: var(--font-sans) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    background: var(--surface-strong) !important;
+  }
+
+  :root .fitUpcomingColumns .upcomingEventsTable thead th *,
+  :root .mainOperationsDashboard .photographersDetailsView .photographerTable thead th * {
+    font: inherit !important;
+  }
+
+  /* Make the actual event and photographer values comfortably readable too. */
+  :root .fitUpcomingColumns .upcomingEventsTable tbody td,
+  :root .fitUpcomingColumns .upcomingEventsTable tbody td :is(b, span, small),
+  :root .mainOperationsDashboard .photographersDetailsView .photographerTable tbody td,
+  :root .mainOperationsDashboard .photographersDetailsView .photographerTable tbody td :is(b, span, small) {
+    font-size: 9px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Sr. No. is generated with a table-row pseudo-cell, so give it the exact
+     same header typography instead of the global serial-number size. */
+  :root .fitUpcomingColumns .upcomingEventsTable > thead > tr::before,
+  :root .mainOperationsDashboard .photographersDetailsView .photographerTable > thead > tr::before {
+    font-family: var(--font-sans) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+  }
+
+  /* This is a real cell (rather than generated text), so it can be selected
+     with the other Photographer headers. */
+  :root .mainOperationsDashboard .photographersDetailsView .photographerTable > :is(thead, tbody) > tr::before {
+    display: none !important;
+  }
+  :root .mainOperationsDashboard .photographersDetailsView .photographerTable .mobilePhotographerSerial {
+    display: table-cell !important;
+    width: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    text-align: center !important;
+  }
+}
+
+/* Keep the pre-existing generated serial column on desktop. */
+.photographerTable .mobilePhotographerSerial {
+  display: none;
+}
+
 /* Upcoming Events: lock the Date-to-Notes columns to one real table-grid
    width. The fixed layout prevents long client/crew values from silently
    expanding only their own column. */
@@ -354,6 +454,7 @@
     max-width: 100%;
     overflow-x: scroll !important;
     overflow-y: auto !important;
+    max-height: calc(100dvh - 210px);
     scrollbar-gutter: stable;
     touch-action: pan-x pan-y pinch-zoom;
   }
@@ -398,6 +499,19 @@
   }
   :root .photographersDetailsView .photographerTable tbody tr:nth-child(even) {
     background: #101d2b;
+  }
+  :root[data-theme="dark"] .photographersDetailsView .photographerTable th {
+    border-right-color: var(--line) !important;
+    border-bottom-color: var(--line) !important;
+    background: var(--surface) !important;
+    color: var(--text) !important;
+  }
+  :root[data-theme="dark"] .photographersDetailsView .photographerTable td {
+    border-right-color: var(--line) !important;
+    border-bottom-color: var(--line) !important;
+  }
+  :root[data-theme="dark"] .photographersDetailsView .photographerTable tbody tr:nth-child(even) {
+    background: var(--surface) !important;
   }
   :root .photographersDetailsView .photographerTable .rowActions {
     display: flex;
