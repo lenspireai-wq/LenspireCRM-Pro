@@ -9670,10 +9670,27 @@ table > tbody > tr:has(td[colspan])::before {
     padding-top: 4px;
   }
   .leadManagementChrome .salesHeader {
-    padding-top: 8px;
+    position: absolute;
+    top: 14px;
+    left: 58px;
+    right: 132px;
+    z-index: 1;
+    min-height: 24px;
+    padding: 0;
+    align-items: center;
+  }
+  .leadManagementChrome {
+    position: relative;
   }
   .leadManagementChrome .salesHeader p {
-    margin-top: 8px;
+    display: block;
+    margin: 2px 0 0;
+    line-height: 1.25;
+    white-space: normal;
+  }
+  .leadManagementChrome .salesHeader h1 {
+    margin: 0;
+    line-height: 24px;
   }
   .salesChrome .salesHeader h1 {
     overflow: hidden;
@@ -9708,11 +9725,65 @@ table > tbody > tr:has(td[colspan])::before {
     padding: 0 !important;
     place-items: center;
   }
+  /* Sales Dashboard: keep its four actions together, with a full search
+     field directly beneath them. Lead Management keeps its own compact grid. */
+  .salesChrome:not(.leadManagementChrome) .chromeActions {
+    grid-template-columns: repeat(4, 24px) !important;
+    grid-auto-rows: 24px !important;
+  }
+  .salesChrome:not(.leadManagementChrome) .chromeActions .root:first-child {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: stretch;
+    width: 111px !important;
+    min-width: 111px !important;
+    max-width: 111px !important;
+  }
+  .salesChrome:not(.leadManagementChrome) .chromeActions > * {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .salesChrome:not(.leadManagementChrome) .chromeActions :is(.notifBellButton, .themeToggle, button) {
+    width: 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+  }
+  .salesChrome:not(.leadManagementChrome) {
+    position: relative;
+  }
+  .salesChrome:not(.leadManagementChrome) .salesHeader {
+    position: absolute;
+    top: 14px;
+    left: 58px;
+    right: 132px;
+    z-index: 1;
+    min-height: 24px;
+    padding: 0;
+    align-items: center;
+  }
+  .salesChrome:not(.leadManagementChrome) .salesHeader p {
+    display: block;
+    margin: 2px 0 0;
+    line-height: 1.25;
+    white-space: normal;
+  }
+  .salesChrome:not(.leadManagementChrome) .salesHeader h1 {
+    margin: 0;
+    line-height: 24px;
+  }
   .leadManagementChrome .chromeActions {
-    grid-template-columns: repeat(5, 24px) !important;
+    grid-template-columns: repeat(4, 24px) !important;
     grid-auto-rows: 24px !important;
     gap: 5px !important;
-    margin: -14px 0 0;
+    margin: -3px 0 0;
+  }
+  .leadManagementChrome .chromeActions .root:first-child {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: stretch;
+    width: 111px !important;
+    min-width: 111px !important;
+    max-width: 111px !important;
   }
   .leadManagementChrome .chromeActions > * {
     width: 24px !important;
@@ -9811,27 +9882,39 @@ table > tbody > tr:has(td[colspan])::before {
   }
   .operationsChrome {
     display: grid;
+    position: relative;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto;
     align-items: start;
     padding: 10px 12px;
   }
   .operationsChrome .sectionHeader {
-    grid-column: 1;
-    grid-row: 1;
+    position: absolute;
+    top: 14px;
+    left: 58px;
+    right: 132px;
+    z-index: 1;
     min-width: 0;
-    padding-left: 46px;
+    min-height: 24px;
+    padding: 0;
   }
   .operationsChrome .sectionHeader h1 {
+    margin: 0;
+    line-height: 24px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .operationsChrome .sectionHeader p {
+    margin: 2px 0 0;
+    line-height: 1.25;
+    white-space: normal;
   }
   .operationsChrome .chromeActions {
     grid-column: 2;
     grid-row: 1;
     display: grid !important;
-    grid-template-columns: repeat(5, 24px) !important;
+    grid-template-columns: repeat(4, 24px) !important;
     grid-auto-rows: 24px !important;
     align-items: center;
     justify-self: end;
@@ -9839,6 +9922,14 @@ table > tbody > tr:has(td[colspan])::before {
     width: auto;
     min-width: 0;
     margin: 0;
+  }
+  .operationsChrome .chromeActions .root:first-child {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: stretch;
+    width: 111px !important;
+    min-width: 111px !important;
+    max-width: 111px !important;
   }
   .operationsChrome .chromeActions > * {
     width: 24px !important;

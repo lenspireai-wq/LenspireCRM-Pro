@@ -122,10 +122,10 @@
   }
   :global(.salesChrome .chromeActions) .root,
   :global(.salesChrome .chromeActions) .root:focus-within {
-    flex: 0 0 20px !important;
-    width: 20px !important;
-    min-width: 20px !important;
-    max-width: 20px !important;
+    flex: 0 0 24px !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
   }
   :global(.salesChrome .chromeActions) .root::before {
     left: 50%;
@@ -186,5 +186,75 @@
     left: calc(50% - 5px) !important;
     font-size: 0 !important;
     transform: none !important;
+  }
+  /* Operations uses a full-width search field below its four header actions. */
+  :global(.operationsChrome .chromeActions) .root::before {
+    left: 9px !important;
+  }
+  :global(.operationsChrome .chromeActions) .root::after {
+    left: 17px;
+  }
+  :global(.operationsChrome .chromeActions) .root,
+  :global(.operationsChrome .chromeActions) .root:focus-within {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    flex: 0 0 111px !important;
+    width: 111px !important;
+    min-width: 111px !important;
+    max-width: 111px !important;
+  }
+  :global(.operationsChrome .chromeActions) .root .input {
+    height: 24px !important;
+    min-height: 24px !important;
+    padding: 0 8px 0 26px !important;
+  }
+  :global(.operationsChrome .chromeActions) .root .input::placeholder {
+    color: transparent !important;
+  }
+  :global(.salesChrome:not(.leadManagementChrome) .chromeActions) .root,
+  :global(.salesChrome:not(.leadManagementChrome) .chromeActions) .root:focus-within {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    flex: 0 0 111px !important;
+    width: 111px !important;
+    min-width: 111px !important;
+    max-width: 111px !important;
+  }
+  :global(.salesChrome:not(.leadManagementChrome) .chromeActions) .root::before {
+    left: 8px !important;
+  }
+  :global(.salesChrome:not(.leadManagementChrome) .chromeActions) .root::after {
+    left: 16px;
+  }
+  :global(.salesChrome:not(.leadManagementChrome) .chromeActions) .root .input {
+    height: 24px !important;
+    min-height: 24px !important;
+    padding: 0 8px 0 26px !important;
+  }
+  :global(.salesChrome:not(.leadManagementChrome) .chromeActions) .root .input::placeholder {
+    color: transparent !important;
+  }
+  :global(.leadManagementChrome .chromeActions) .root,
+  :global(.leadManagementChrome .chromeActions) .root:focus-within {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    flex: 0 0 111px !important;
+    width: 111px !important;
+    min-width: 111px !important;
+    max-width: 111px !important;
+  }
+  :global(.leadManagementChrome .chromeActions) .root::before {
+    left: 9px !important;
+  }
+  :global(.leadManagementChrome .chromeActions) .root::after {
+    left: 17px;
+  }
+  :global(.leadManagementChrome .chromeActions) .root .input {
+    height: 24px !important;
+    min-height: 24px !important;
+    padding: 0 8px 0 26px !important;
+  }
+  :global(.leadManagementChrome .chromeActions) .root .input::placeholder {
+    color: transparent !important;
   }
 }
