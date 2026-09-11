@@ -65,10 +65,35 @@
 /* Mobile headers use the compact icon treatment; the field expands only while
    the user is actively entering a search. */
 @media (max-width: 1000px) {
+  /* Draw the magnifier instead of relying on a font glyph, which can render
+     as unreadable characters on some Android devices. */
+  .root::before {
+    content: "";
+    top: calc(50% - 6px);
+    left: calc(50% - 5px);
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid var(--muted);
+    border-radius: 50%;
+    transform: none;
+  }
+  .root::after {
+    content: "";
+    position: absolute;
+    top: calc(50% + 3px);
+    left: calc(50% + 3px);
+    z-index: 1;
+    width: 5px;
+    height: 1.5px;
+    border-radius: 2px;
+    background: var(--muted);
+    pointer-events: none;
+    transform: rotate(45deg);
+    transform-origin: left center;
+  }
   .root .input::placeholder { color: transparent; }
   .root { flex-basis: 42px; min-width: 42px; max-width: 42px; }
   .root:focus-within { flex-basis: 180px; max-width: 180px; }
-  .root:focus-within .input::placeholder { color: var(--muted); }
 }
 
 /* The dashboard header has a compact fixed action strip on phones. Do not let
@@ -150,5 +175,16 @@
     min-height: 24px !important;
     padding: 0 !important;
     border-radius: var(--radius-sm) !important;
+  }
+}
+
+/* Keep the drawn mobile icon centered even inside the workspace-specific
+   compact action strips above. */
+@media (max-width: 1000px) {
+  .root::before {
+    top: calc(50% - 6px) !important;
+    left: calc(50% - 5px) !important;
+    font-size: 0 !important;
+    transform: none !important;
   }
 }
