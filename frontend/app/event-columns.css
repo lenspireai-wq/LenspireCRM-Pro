@@ -716,6 +716,25 @@
   padding-top: 10px !important;
 }
 
+@media (min-width: 769px) {
+  /* The Operations workspace is already below the main header. Keeping the
+     sticky strip 68 px lower created the large Photographer/Dashboard gap. */
+  .mainOperationsDashboard .operationsDashboardControls {
+    top: 0 !important;
+    margin-top: 10px !important;
+  }
+  /* This scroll container begins below the workspace header, so adding the
+     header height again left a large empty band before the dashboard cards. */
+  .mainOperationsDashboard .operationsDashboardView > .salesKpis {
+    top: var(--operations-controls-height, 40px) !important;
+  }
+  /* Controls remain in normal flow here, so reserving their measured height
+     again pushed the photographer table down and let its heading meet tabs. */
+  .mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
+    margin-top: 0 !important;
+  }
+}
+
 @media (max-width: 900px) {
   .operationsDashboardControls .operationsActions .operationsActionButton {
     min-height: 28px;
