@@ -509,6 +509,7 @@ export default function OperationsWorkspace({
         <EventTable
           events={upcoming}
           fitColumns
+          compactDateColumn
           edit={readOnly ? undefined : setEventDraft}
           onMessage={setMessageEvent}
           onDuplicate={readOnly ? undefined : duplicateEvent}
@@ -667,6 +668,7 @@ function EventTable({
   onDuplicate,
   compact = false,
   fitColumns = false,
+  compactDateColumn = false,
 }: {
   events: Row[];
   edit?: (row: Row) => void;
@@ -675,6 +677,7 @@ function EventTable({
   onDuplicate?: (row: Row) => void;
   compact?: boolean;
   fitColumns?: boolean;
+  compactDateColumn?: boolean;
 }) {
   const labels = ["Sr. No.", "Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
   const crew = (value: any) => {
@@ -761,7 +764,7 @@ function EventTable({
       </div>
     );
   return (
-    <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns" : ""}`}>
+    <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns" : ""}${compactDateColumn ? " compactEventDateColumn" : ""}`}>
       <table className="upcomingEventsTable">
         <thead>
           <tr>

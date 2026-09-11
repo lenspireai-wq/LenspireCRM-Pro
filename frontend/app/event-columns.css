@@ -338,6 +338,14 @@
   min-width: 56px !important;
   max-width: 56px !important;
 }
+/* Upcoming dates are short (for example, 16-Aug-2026), so they should not
+   consume the standard data-column width. Completed Events keeps its current
+   grid width. */
+:root .fitUpcomingColumns.compactEventDateColumn .upcomingEventsTable :is(th, td):nth-child(2) {
+  width: 100px !important;
+  min-width: 100px !important;
+  max-width: 100px !important;
+}
 :root .fitUpcomingColumns .upcomingEventsTable :is(th, td):last-child {
   width: 124px !important;
   min-width: 124px !important;
