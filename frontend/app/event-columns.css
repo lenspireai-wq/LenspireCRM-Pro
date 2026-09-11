@@ -705,6 +705,58 @@
     min-height: 28px;
     padding: 4px 7px 4px 9px;
   }
+
+  /* Upcoming Events keeps its three actions compact and on the far right on
+     phones. The text remains available through each control's title while the
+     visible symbols make room for the event tabs. */
+  .operationsDashboardControls .operationsActions:is(.upcomingEventActions, .photographerActions) {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-bottom: 10px;
+    border-bottom: 0;
+  }
+  .operationsDashboardControls .operationsActions:is(.upcomingEventActions, .photographerActions) .operationsActionButton {
+    flex: 0 0 96px;
+    box-sizing: border-box;
+    width: 96px;
+    min-width: 96px;
+    max-width: 96px;
+    height: 30px;
+    min-height: 30px;
+    max-height: 30px;
+    padding: 0 7px 0 9px;
+    justify-content: space-between;
+    border-radius: 8px;
+  }
+  .operationsDashboardControls .operationsActions:is(.upcomingEventActions, .photographerActions) .operationsActionButton > span:first-child {
+    display: inline;
+  }
+  .operationsDashboardControls .operationsActions:is(.upcomingEventActions, .photographerActions) .operationsActionIcon {
+    width: 14px;
+    height: 14px;
+    font-size: 11px;
+  }
+  .operationsDashboardControls .operationsActions.photographerActions .operationsActionButton {
+    flex: 0 0 108px;
+    width: 108px;
+    min-width: 108px;
+    max-width: 108px;
+    padding: 0 6px 0 8px;
+    gap: 4px;
+    font-size: 10px;
+  }
+  .operationsDashboardControls .operationsActions.photographerActions .operationsActionButton:not(.primary) {
+    flex-basis: 84px;
+    width: 84px;
+    min-width: 84px;
+    max-width: 84px;
+  }
+  .operationsDashboardControls .operationsActions.photographerActions {
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
 }
 
 /* Keep the full Operations event list on the exact Lead Management table

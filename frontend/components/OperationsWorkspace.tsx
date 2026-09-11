@@ -428,7 +428,7 @@ export default function OperationsWorkspace({
             </button>
           ))}
         </nav>
-        <div className="operationsActions">
+        <div className={`operationsActions${view === "Upcoming Events" || view === "Completed Events" ? " upcomingEventActions" : view === "Photographers Details" ? " photographerActions" : ""}`}>
         {(view === "Upcoming Events" || view === "Completed Events") && (
           <>
             <button type="button" className="operationsActionButton" onClick={exportEvents} title="Export events to Excel">
