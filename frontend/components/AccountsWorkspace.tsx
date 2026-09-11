@@ -379,6 +379,25 @@ export default function AccountsWorkspace({
               ageingCategory(stage.due_date) === ageingFilter,
           ))),
   );
+  if (view === "Receivables") {
+    const today = new Date().toISOString().slice(0, 10);
+    const nextDueDate = (account: Row) =>
+      account.stages
+        .filter((stage: Row) => stage.remaining > 0 && stage.due_date)
+        .map((stage: Row) => String(stage.due_date))
+        .sort()[0] || "";
+    const dueRank = (dueDate: string) =>
+      dueDate === today ? 0 : dueDate > today ? 1 : dueDate ? 2 : 3;
+
+    displayedAccounts.sort((first, second) => {
+      const firstDue = nextDueDate(first);
+      const secondDue = nextDueDate(second);
+      const rankDifference = dueRank(firstDue) - dueRank(secondDue);
+      if (rankDifference) return rankDifference;
+      if (firstDue && secondDue && firstDue !== secondDue) return firstDue.localeCompare(secondDue);
+      return String(first.client || "").localeCompare(String(second.client || ""));
+    });
+  }
   const exportAgeing = () => {
     const safe = (value: any) => {
       const text = String(value ?? "");

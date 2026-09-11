@@ -107,7 +107,12 @@ function Login({
   const setSession = useAuthStore((s) => s.setSession),
     [error, setError] = useState(""),
     [showPassword, setShowPassword] = useState(false),
-    [submitting, setSubmitting] = useState(false);
+    [submitting, setSubmitting] = useState(false),
+    [username, setUsername] = useState("");
+
+  useEffect(() => {
+    setUsername(window.localStorage.getItem("lenspire-last-username") || "");
+  }, []);
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
@@ -198,7 +203,7 @@ function Login({
             Username
             <div className="loginInput loginUsernameField">
               <i>♟</i>
-              <input name="username" defaultValue="sandeepj" autoFocus required autoComplete="off" spellCheck="false" />
+              <input name="username" value={username} onChange={(event) => setUsername(event.target.value)} autoFocus required autoComplete="off" spellCheck="false" />
             </div>
           </label>
           <label>
@@ -267,6 +272,11 @@ function Login({
 }
 export default function Home() {
   const auth = useAuthStore();
+  const logout = () => {
+    const username = auth.user?.username?.trim();
+    if (username) window.localStorage.setItem("lenspire-last-username", username);
+    auth.logout();
+  };
   const [mounted, setMounted] = useState(false),
     [ownerPortalMode, setOwnerPortalMode] = useState(false),
     [startNewLead, setStartNewLead] = useState(false),
@@ -415,7 +425,7 @@ export default function Home() {
         logout={() => {
           sessionStorage.removeItem("lenspire-owner-portal");
           setOwnerPortalMode(false);
-          auth.logout();
+          logout();
         }}
       />
     );
@@ -470,7 +480,7 @@ export default function Home() {
             )}
           </span>
           <span className="profileIdentity"><b>{auth.user?.display_name || auth.user?.username}</b><small><i />{auth.user?.role}</small><time>{formatDate(new Date())}</time></span>
-          <button className="profilePower" aria-label="Sign out" onClick={auth.logout}>◯</button>
+          <button className="profilePower" aria-label="Sign out" onClick={logout}>◯</button>
         </div>
       </aside>
       <button

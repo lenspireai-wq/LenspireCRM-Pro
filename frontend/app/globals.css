@@ -6193,13 +6193,13 @@ body:has(.mainAccountsSticky) {
   background: var(--bg);
   box-shadow: 0 10px 18px -16px rgb(0 0 0 / 35%);
 }
-.mainOperationsDashboard .photographersDetailsView .photographerTableWrap {
+.mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
   overflow: visible;
 }
-.mainOperationsDashboard .photographersDetailsView .photographerTableWrap table {
+.mainOperationsDashboard .photographersDetailsView .photographerTable {
   min-width: 100% !important;
 }
-.mainOperationsDashboard .photographersDetailsView .photographerTableWrap thead th {
+.mainOperationsDashboard .photographersDetailsView .photographerTable thead th {
   position: sticky;
   top: calc(var(--workspace-chrome-height, 68px) + var(--operations-controls-height, 96px));
   z-index: 34;
