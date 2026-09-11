@@ -453,14 +453,13 @@
     margin-top: var(--operations-controls-height, 48px);
     margin-bottom: 0;
   }
-  .mainOperationsDashboard .photographersDetailsView .photographerTableWrap {
-    flex: 1 1 auto;
+  .mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
     min-height: 0;
     max-height: none;
-    overflow: auto !important;
+    overflow: visible !important;
     position: relative;
   }
-  .mainOperationsDashboard .photographersDetailsView .photographerTableWrap thead th {
+  .mainOperationsDashboard .photographersDetailsView .photographerTablePanel thead th {
     position: sticky !important;
     top: 0 !important;
     z-index: 10;
@@ -737,26 +736,26 @@
 
 /* Photographers has six predictable fields. Keep it within the available
    viewport instead of exposing a horizontal scrollbar for this short table. */
-.photographerTableWrap {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+.photographerTablePanel {
+  width: 100%;
+  overflow: visible !important;
 }
-.photographerTableWrap > table {
+.photographerTable {
   width: 100% !important;
   min-width: 0 !important;
   table-layout: fixed !important;
 }
-.photographerTableWrap :is(th, td) {
+.photographerTable :is(th, td) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.photographerTableWrap :is(th, td):nth-child(1) { width: 16%; }
-.photographerTableWrap :is(th, td):nth-child(2) { width: 13%; }
-.photographerTableWrap :is(th, td):nth-child(3) { width: 10%; }
-.photographerTableWrap :is(th, td):nth-child(4) { width: 31%; }
-.photographerTableWrap :is(th, td):nth-child(5) { width: 13%; }
-.photographerTableWrap :is(th, td):nth-child(6) { width: 17%; }
+.photographerTable :is(th, td):nth-child(1) { width: 16%; }
+.photographerTable :is(th, td):nth-child(2) { width: 13%; }
+.photographerTable :is(th, td):nth-child(3) { width: 10%; }
+.photographerTable :is(th, td):nth-child(4) { width: 31%; }
+.photographerTable :is(th, td):nth-child(5) { width: 13%; }
+.photographerTable :is(th, td):nth-child(6) { width: 17%; }
 
 /* Let the photographer list run as one full table in the Operations view
    rather than trapping it inside a second scroll container. */
@@ -765,8 +764,7 @@
   overflow-y: auto !important;
   scrollbar-width: thin;
 }
-.mainOperationsDashboard .photographersDetailsView .photographerTablePanel,
-.mainOperationsDashboard .photographersDetailsView .photographerTableWrap {
+.mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
   flex: 0 0 auto !important;
   height: auto !important;
   max-height: none !important;

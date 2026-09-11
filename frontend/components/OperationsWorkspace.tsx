@@ -934,9 +934,8 @@ function CrewTable({
   );
 
   return (
-    <section className="panel photographerTablePanel">
-      <div className="table photographerTableWrap">
-        <table>
+    <section className="photographerTablePanel">
+        <table className="photographerTable">
           <thead>
             <tr>
               <th>Name</th>
@@ -989,7 +988,6 @@ function CrewTable({
           </tbody>
         </table>
         {!visibleRows.length && <div className="empty">No photographers yet.</div>}
-      </div>
     </section>
   );
 }
