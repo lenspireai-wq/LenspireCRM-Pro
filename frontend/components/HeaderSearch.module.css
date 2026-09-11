@@ -211,6 +211,29 @@
   :global(.operationsChrome .chromeActions) .root .input::placeholder {
     color: transparent !important;
   }
+  :global(.accountsChrome .chromeActions) .root::before {
+    left: 9px !important;
+  }
+  :global(.accountsChrome .chromeActions) .root::after {
+    left: 17px;
+  }
+  :global(.accountsChrome .chromeActions) .root,
+  :global(.accountsChrome .chromeActions) .root:focus-within {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    flex: 0 0 111px !important;
+    width: 111px !important;
+    min-width: 111px !important;
+    max-width: 111px !important;
+  }
+  :global(.accountsChrome .chromeActions) .root .input {
+    height: 24px !important;
+    min-height: 24px !important;
+    padding: 0 8px 0 26px !important;
+  }
+  :global(.accountsChrome .chromeActions) .root .input::placeholder {
+    color: transparent !important;
+  }
   :global(.salesChrome:not(.leadManagementChrome) .chromeActions) .root,
   :global(.salesChrome:not(.leadManagementChrome) .chromeActions) .root:focus-within {
     grid-column: 1 / -1 !important;
