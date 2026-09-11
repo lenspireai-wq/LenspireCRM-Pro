@@ -30,6 +30,21 @@
     max-height: none !important;
   }
 
+  /* Data grids should keep their horizontal swipe, but must never prevent the
+     native two-finger zoom gesture on phones and tablets. */
+  :root :is(
+    .leadTableWrap,
+    .upcomingEventsTableWrap,
+    .photographerTableWrap,
+    .accountsScheduleTableWrap,
+    .auditTableWrap,
+    .billTableWrap,
+    .tableWrap,
+    .kanbanBoard
+  ) {
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+
   .shell {
     position: relative;
   }
