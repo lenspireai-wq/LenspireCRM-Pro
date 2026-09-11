@@ -47,6 +47,14 @@ const sections = [
   "Admin",
 ] as const;
 type Section = (typeof sections)[number];
+type MobileRoute = {
+  userId: number;
+  section: Section;
+  salesView: "Dashboard" | "Lead Management";
+  operationsView: OperationsView;
+  accountsView: string;
+};
+const mobileRouteStorageKey = "lenspire-mobile-route";
 const sectionIcons: Record<Section, string> = {
   Dashboard: "⌂", Sales: "◎", Kanban: "▦", Operations: "◇", Calendar: "□",
   Accounts: "₹", Production: "▷", Billing: "▤", Reports: "↗",
@@ -295,12 +303,24 @@ export default function Home() {
     [adminView, setAdminView] = useState<"Admin" | "Audit">("Admin");
   const dashboardChromeRef = useRef<HTMLDivElement>(null);
   const landingUserIdRef = useRef<number | null>(null);
+  const savedMobileRouteRef = useRef<MobileRoute | null>(null);
   const today = new Date();
   const referenceDate = today.toISOString().split("T")[0];
   const monthLabel = today.toLocaleDateString("en-US", { month: "long", year: "numeric" });
   useEffect(() => {
     setOwnerPortalMode(sessionStorage.getItem("lenspire-owner-portal") === "1");
-    setSidebarHidden(window.matchMedia("(max-width: 900px)").matches);
+    const isMobile = window.matchMedia("(max-width: 900px)").matches;
+    setSidebarHidden(isMobile);
+    if (isMobile) {
+      try {
+        const saved = JSON.parse(sessionStorage.getItem(mobileRouteStorageKey) || "null");
+        if (saved && (sections as readonly string[]).includes(saved.section)) {
+          savedMobileRouteRef.current = saved as MobileRoute;
+        }
+      } catch {
+        sessionStorage.removeItem(mobileRouteStorageKey);
+      }
+    }
     const params = new URLSearchParams(window.location.search);
     const requestedSection = params.get("section");
     if (requestedSection && (sections as readonly string[]).includes(requestedSection)) {
@@ -382,6 +402,20 @@ export default function Home() {
     const requestedSection = new URLSearchParams(window.location.search).get("section");
     if (requestedSection && (sections as readonly string[]).includes(requestedSection)) return;
 
+    const savedRoute = savedMobileRouteRef.current;
+    if (
+      window.matchMedia("(max-width: 900px)").matches &&
+      savedRoute?.userId === auth.user.id &&
+      visibleSections.includes(savedRoute.section)
+    ) {
+      setSection(savedRoute.section);
+      setSalesView(savedRoute.salesView);
+      setOperationsView(savedRoute.operationsView);
+      setAccountsView(savedRoute.accountsView);
+      savedMobileRouteRef.current = null;
+      return;
+    }
+
     const preferredSection = defaultSectionForRole(auth.user.role);
     setSection(
       visibleSections.includes(preferredSection)
@@ -389,6 +423,13 @@ export default function Home() {
         : visibleSections[0] || "Dashboard",
     );
   }, [mounted, auth.user, visibleSections.join("|")]);
+  useEffect(() => {
+    if (!mounted || !auth.user || !window.matchMedia("(max-width: 900px)").matches) return;
+    sessionStorage.setItem(
+      mobileRouteStorageKey,
+      JSON.stringify({ userId: auth.user.id, section, salesView, operationsView, accountsView } satisfies MobileRoute),
+    );
+  }, [mounted, auth.user, section, salesView, operationsView, accountsView]);
   useEffect(() => {
     if (
       mounted &&
