@@ -200,11 +200,16 @@ export default function AccountsWorkspace({
     paymentReminders = (Array.isArray(remindersQuery.data)
       ? remindersQuery.data
       : remindersQuery.data?.results || []) as Row[];
-  const accounts: Row[] = (
-    Array.isArray(bookingsQuery.data)
-      ? bookingsQuery.data
-      : bookingsQuery.data?.results || []
-  ).map((booking): Row => {
+  const bookingRows = Array.isArray(bookingsQuery.data)
+    ? bookingsQuery.data
+    : bookingsQuery.data?.results || [];
+  // A booking is the single source of truth for a Receivables row.  Guard
+  // against a repeated API/cache entry so the same booking cannot display
+  // twice with different loading states for its payments.
+  const uniqueBookings = Array.from(
+    new Map(bookingRows.map((booking: Row) => [Number(booking.id), booking])).values(),
+  ) as Row[];
+  const accounts: Row[] = uniqueBookings.map((booking): Row => {
     const customer = customers.find((c) => c.id === booking.customer);
     const lead = leads.find((l) => l.id === booking.lead);
     const entries = payments.filter((p) => p.booking === booking.id);
