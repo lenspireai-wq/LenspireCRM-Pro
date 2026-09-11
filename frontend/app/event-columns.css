@@ -304,6 +304,48 @@
   background: color-mix(in srgb, var(--brand) 5%, transparent) !important;
 }
 
+/* Upcoming Events: lock the Date-to-Notes columns to one real table-grid
+   width. The fixed layout prevents long client/crew values from silently
+   expanding only their own column. */
+:root .fitUpcomingColumns.uniformEventColumns .upcomingEventsTable {
+  --event-uniform-column-width: 124px;
+  /* 56px serial + sixteen 124px data columns + 160px actions. CSS calc()
+     does not support multiplication, so keep the resolved 2200px value. */
+  width: 2200px !important;
+  min-width: 2200px !important;
+  table-layout: fixed !important;
+}
+:root .fitUpcomingColumns.uniformEventColumns.upcomingEventsTableWrap {
+  overflow-x: scroll !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable;
+}
+:root .fitUpcomingColumns.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(n + 2):nth-child(-n + 17) {
+  width: var(--event-uniform-column-width) !important;
+  min-width: var(--event-uniform-column-width) !important;
+  max-width: var(--event-uniform-column-width) !important;
+}
+:root .fitUpcomingColumns.uniformEventColumns .upcomingEventsTable :is(th, td):last-child {
+  width: 160px !important;
+  min-width: 160px !important;
+  max-width: 160px !important;
+}
+/* Crew assignments need to remain readable even when several names share a
+   standard-width column. Keep the grid width, but allow only these columns
+   to grow vertically. */
+:root .fitUpcomingColumns.uniformEventColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14),
+:root .fitUpcomingColumns.uniformEventColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14) .crewAssignments,
+:root .fitUpcomingColumns.uniformEventColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14) .crewAssignments span {
+  white-space: normal !important;
+  overflow: visible !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  text-overflow: clip !important;
+}
+:root .fitUpcomingColumns.uniformEventColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14) .crewAssignments {
+  display: grid !important;
+}
+
 /* Operations lists use a predictable, spreadsheet-like grid: every data
    column has the same width and always remains on one line.  The table grows
    horizontally instead of changing its geometry as values or zoom change. */
@@ -338,13 +380,13 @@
   min-width: 56px !important;
   max-width: 56px !important;
 }
-/* Upcoming dates are short (for example, 16-Aug-2026), so they should not
-   consume the standard data-column width. Completed Events keeps its current
-   grid width. */
-:root .fitUpcomingColumns.compactEventDateColumn .upcomingEventsTable :is(th, td):nth-child(2) {
-  width: 100px !important;
-  min-width: 100px !important;
-  max-width: 100px !important;
+/* Keep Date through Notes on one consistent grid.  This includes Client,
+   crew coverage, Venue, Time, and Notes; only serial number and Actions are
+   intentionally sized differently. */
+:root .fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(n + 2):nth-child(-n + 17) {
+  width: var(--event-standard-column-width) !important;
+  min-width: var(--event-standard-column-width) !important;
+  max-width: var(--event-standard-column-width) !important;
 }
 :root .fitUpcomingColumns .upcomingEventsTable :is(th, td):last-child {
   width: 124px !important;
