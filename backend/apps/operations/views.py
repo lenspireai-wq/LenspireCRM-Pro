@@ -15,11 +15,81 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from apps.core.api import OrganizationScopedViewSet
 from apps.core.permissions import OperationsAccessPermission
+from apps.sales.models import Booking
 from .models import CalendarEvent, PhotographerDetail
 
 
 CREW_FIELDS = ("photo", "video", "candid", "cinematic", "drone", "assistant", "bts")
 PENDING_CREW_VALUES = {"", "X", "XX"}
+
+
+def normalized_text(value):
+    return re.sub(r"[^a-z0-9]+", "", str(value or "").casefold())
+
+
+def normalized_phone(value):
+    digits = "".join(filter(str.isdigit, str(value or "")))
+    return digits[-10:] if len(digits) >= 10 else digits
+
+
+def confirmed_bookings_for_organization(organization):
+    """Return only bookings that are safe targets for automatic event linking."""
+    return list(
+        Booking.objects.filter(
+            organization=organization,
+            status__iexact="Confirmed",
+            lead__status__iexact="Confirmed",
+        ).select_related("customer", "lead")
+    )
+
+
+def matching_confirmed_bookings(values, organization, bookings=None):
+    """Find unambiguous confirmed bookings from an event's client identity.
+
+    A couple-name match is sufficient only when it yields one confirmed booking.
+    Otherwise, both client name and phone must match. This deliberately avoids
+    linking an event based on a common client name alone.
+    """
+    client_name = normalized_text(values.get("client_name"))
+    couple_name = normalized_text(values.get("couple_name"))
+    contact_no = normalized_phone(values.get("contact_no"))
+    if not couple_name and not (client_name and contact_no):
+        return []
+
+    matches = []
+    for booking in bookings if bookings is not None else confirmed_bookings_for_organization(organization):
+        lead = booking.lead
+        customer = booking.customer
+        couple_match = bool(couple_name and couple_name == normalized_text(lead.couple_name))
+        name_match = bool(
+            client_name
+            and client_name
+            in {
+                normalized_text(lead.name),
+                normalized_text(lead.client_name),
+                normalized_text(customer.name),
+            }
+        )
+        phone_match = bool(
+            contact_no
+            and contact_no
+            in {
+                normalized_phone(lead.mobile),
+                normalized_phone(lead.client_mobile),
+                normalized_phone(customer.phone),
+            }
+        )
+        if couple_match or (name_match and phone_match):
+            matches.append(booking)
+    return matches
+
+
+def event_identity(event):
+    return {
+        "client_name": event.client_name,
+        "couple_name": event.couple_name,
+        "contact_no": event.contact_no,
+    }
 
 
 def normalize_excel_time(value):
@@ -126,6 +196,24 @@ class CalendarEventSerializer(serializers.ModelSerializer):
             for field in ("start_date", "start_time", "city", "notes", *CREW_FIELDS)
         }
         attrs["status"] = automatic_event_status(lifecycle_values, current_status)
+
+        # Manual events are linked only when their client identity maps to one
+        # confirmed booking. Explicitly supplied customer/booking values and
+        # existing links are never replaced automatically.
+        current_booking = getattr(self.instance, "booking", None)
+        current_customer = getattr(self.instance, "customer", None)
+        has_explicit_link = "booking" in attrs or "customer" in attrs
+        if not current_booking and not current_customer and not has_explicit_link:
+            identity_values = {
+                "client_name": attrs.get("client_name", ""),
+                "couple_name": attrs.get("couple_name", ""),
+                "contact_no": attrs.get("contact_no", ""),
+            }
+            matches = matching_confirmed_bookings(identity_values, request.user.organization)
+            if len(matches) == 1:
+                attrs["booking"] = matches[0]
+                attrs["customer"] = matches[0].customer
+
         identity_fields = ("client_name", "contact_no", "event_type", "start_date", "start_time", "tbd_month")
         defaults = {"client_name": "", "contact_no": "", "event_type": "Shoot", "start_date": None, "start_time": None, "tbd_month": ""}
         identity = {field: attrs.get(field, getattr(self.instance, field, defaults[field])) for field in identity_fields}
@@ -188,6 +276,73 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                     | Q(date_status="TBD Month", tbd_month=calendar_month)
                 )
         return queryset
+
+    @action(detail=False, methods=["get", "post"], url_path="link-confirmed-bookings")
+    def link_confirmed_bookings(self, request):
+        """Preview, then optionally repair, unlinked events with a safe match.
+
+        GET is always read-only. POST requires ``{"apply": true}`` and links
+        only events with exactly one confirmed booking match.
+        """
+        organization = request.user.organization
+        bookings = confirmed_bookings_for_organization(organization)
+        events = CalendarEvent.objects.filter(
+            organization=organization,
+            is_archived=False,
+            booking__isnull=True,
+            customer__isnull=True,
+        ).order_by("id")
+        preview = []
+        eligible = []
+        for event in events:
+            matches = matching_confirmed_bookings(event_identity(event), organization, bookings)
+            match_data = [
+                {
+                    "booking_id": booking.id,
+                    "booking_code": booking.booking_code,
+                    "lead_id": booking.lead_id,
+                    "couple_name": booking.lead.couple_name,
+                }
+                for booking in matches
+            ]
+            outcome = "eligible" if len(matches) == 1 else "ambiguous" if matches else "unmatched"
+            item = {
+                "event_id": event.id,
+                "title": event.title,
+                "client_name": event.client_name,
+                "couple_name": event.couple_name,
+                "contact_no": event.contact_no,
+                "outcome": outcome,
+                "matches": match_data,
+            }
+            preview.append(item)
+            if outcome == "eligible":
+                eligible.append((event, matches[0]))
+
+        apply = request.method == "POST" and request.data.get("apply") is True
+        linked = 0
+        if apply:
+            for event, booking in eligible:
+                linked += CalendarEvent.objects.filter(
+                    pk=event.id,
+                    organization=organization,
+                    booking__isnull=True,
+                    customer__isnull=True,
+                ).update(booking=booking, customer=booking.customer)
+
+        return Response(
+            {
+                "dry_run": not apply,
+                "summary": {
+                    "total_unlinked": len(preview),
+                    "eligible": len(eligible),
+                    "ambiguous": sum(item["outcome"] == "ambiguous" for item in preview),
+                    "unmatched": sum(item["outcome"] == "unmatched" for item in preview),
+                    "linked": linked,
+                },
+                "events": preview,
+            }
+        )
 
     @action(detail=False, methods=["get"])
     def export(self, request):

@@ -7,6 +7,7 @@ from openpyxl import Workbook
 from rest_framework.test import APIClient
 
 from apps.core.models import Organization
+from apps.sales.models import Booking, Customer, Lead
 from apps.users.models import User
 from .models import CalendarEvent, PhotographerDetail
 
@@ -25,6 +26,97 @@ class OperationsApiTests(TestCase):
         response = self.client.post("/api/photographers/", {"name": "Avi", "status": "Available"})
         self.assertEqual(response.status_code, 201)
         self.assertEqual(PhotographerDetail.objects.get().organization, self.organization)
+
+    def confirmed_booking(self, *, name="Asha Patel", couple_name="Asha & Rohan", phone="9876543210"):
+        lead = Lead.objects.create(
+            organization=self.organization,
+            lead_code=f"LD-{name.replace(' ', '-').upper()}",
+            name=name,
+            couple_name=couple_name,
+            mobile=phone,
+            event_type="Wedding",
+            status="Confirmed",
+        )
+        customer = Customer.objects.create(
+            organization=self.organization,
+            customer_code=f"C-{lead.id}",
+            name=name,
+            phone=phone,
+            lead=lead,
+        )
+        return Booking.objects.create(
+            organization=self.organization,
+            booking_code=f"B-{lead.id}",
+            customer=customer,
+            lead=lead,
+            event_type="Wedding",
+            status="Confirmed",
+            quoted_amount="100000.00",
+        )
+
+    def test_manual_event_auto_links_to_one_confirmed_booking(self):
+        booking = self.confirmed_booking()
+
+        response = self.client.post(
+            "/api/events/",
+            {
+                "title": "Asha Patel · Engagement",
+                "client_name": "Asha Patel",
+                "couple_name": "Asha & Rohan",
+                "contact_no": "98765 43210",
+                "event_type": "Engagement",
+                "start_date": "2030-01-10",
+                "date_status": "Confirmed",
+            },
+        )
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data["booking"], booking.id)
+        self.assertEqual(response.data["customer"], booking.customer_id)
+
+    def test_batch_link_preview_is_read_only_until_applied(self):
+        booking = self.confirmed_booking()
+        event = CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Asha Patel · Engagement",
+            client_name="Asha Patel",
+            couple_name="Asha & Rohan",
+            contact_no="9876543210",
+            event_type="Engagement",
+            start_date=date(2030, 1, 10),
+        )
+
+        preview = self.client.get("/api/events/link-confirmed-bookings/")
+        self.assertEqual(preview.status_code, 200, preview.data)
+        self.assertTrue(preview.data["dry_run"])
+        self.assertEqual(preview.data["summary"]["eligible"], 1)
+        event.refresh_from_db()
+        self.assertIsNone(event.booking_id)
+
+        applied = self.client.post("/api/events/link-confirmed-bookings/", {"apply": True}, format="json")
+        self.assertEqual(applied.status_code, 200, applied.data)
+        self.assertEqual(applied.data["summary"]["linked"], 1)
+        event.refresh_from_db()
+        self.assertEqual(event.booking_id, booking.id)
+        self.assertEqual(event.customer_id, booking.customer_id)
+
+    def test_manual_event_stays_unlinked_when_confirmed_match_is_ambiguous(self):
+        self.confirmed_booking(name="Asha Patel", couple_name="Asha & Rohan", phone="9876543210")
+        self.confirmed_booking(name="Asha Patel Two", couple_name="Asha & Rohan", phone="9123456789")
+
+        response = self.client.post(
+            "/api/events/",
+            {
+                "title": "Asha · Engagement",
+                "couple_name": "Asha & Rohan",
+                "event_type": "Engagement",
+                "start_date": "2030-01-10",
+                "date_status": "Confirmed",
+            },
+        )
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertIsNone(response.data["booking"])
 
     def test_photographers_stay_scoped_for_a_superuser(self):
         other_organization = Organization.objects.create(name="Other Studio", slug="other-studio")
