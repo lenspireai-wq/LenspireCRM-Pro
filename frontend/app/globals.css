@@ -1081,7 +1081,7 @@ input:-webkit-autofill:active {
 @media(max-width:700px){.clientInviteForm{grid-template-columns:1fr}.clientInviteResult{align-items:stretch;flex-direction:column}.clientUserRow{align-items:flex-start}}
 .clientPortalHero,.clientPortalCard{margin-bottom:var(--space-4);padding:var(--space-5);border:1px solid #2a3b52;border-radius:var(--radius-lg);background:#111c2b}
 .clientPortalHero{background:linear-gradient(135deg,#1b2750,#151d36)}
-.clientPortalHero img{max-width:150px;max-height:65px;object-fit:contain;margin-bottom:12px}
+.clientPortalHero img{max-width:220px;max-height:100px;object-fit:contain;margin-bottom:14px}
 .clientPortalHero small{display:block;color:#b4aaff;font-weight:800;letter-spacing:.12em}
 .clientPortalHero h1{margin:7px 0;font-size:clamp(26px,5vw,42px)}
 .clientPortalHero p,.clientPortalCard p,.clientPortalRow span,.clientDeliverable span,.clientPortal footer{color:#aebbd0}
