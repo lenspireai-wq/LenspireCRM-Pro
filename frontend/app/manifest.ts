@@ -10,7 +10,7 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#08101c",
     theme_color: "#7367f0",
-    orientation: "portrait",
+    orientation: "any",
     categories: ["business", "productivity"],
     icons: [
       { src: "/ankit-studios-logo.png", sizes: "any", type: "image/png", purpose: "any" },
