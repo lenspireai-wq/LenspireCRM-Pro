@@ -1306,7 +1306,10 @@ export default function AccountsWorkspace({
             <div className="clientStatementPrintArea">
               <div className="modalHeader statementHeader">
                 <div>
-                  <small>LENSPIRE CRM · CLIENT STATEMENT</small>
+                  <div className="statementStudioBrand">
+                    <img src="/ankit-studios-logo.png" alt="Ankit Studios" />
+                    <small>ANKIT STUDIOS · CLIENT STATEMENT</small>
+                  </div>
                   <h2>{selectedLedger.client}</h2>
                   <p>
                     {selectedLedger.booking_code} · {selectedLedger.event_type}
