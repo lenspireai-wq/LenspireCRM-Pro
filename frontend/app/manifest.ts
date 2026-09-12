@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "LenspireCRM Pro",
-    short_name: "LenspireCRM",
-    description: "Photography studio CRM for sales, operations, accounts, and production.",
+    name: "Ankit Studios",
+    short_name: "Ankit Studios",
+    description: "Ankit Studios workspace, powered by LenspireCRM.",
     start_url: "/",
     scope: "/",
     display: "standalone",
@@ -13,9 +13,8 @@ export default function manifest(): MetadataRoute.Manifest {
     orientation: "portrait",
     categories: ["business", "productivity"],
     icons: [
-      { src: "/icon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" },
-      { src: "/icon.svg", sizes: "any", type: "image/svg+xml", purpose: "maskable" },
-      { src: "/apple-icon.svg", sizes: "180x180", type: "image/svg+xml", purpose: "any" },
+      { src: "/ankit-studios-logo.png", sizes: "any", type: "image/png", purpose: "any" },
+      { src: "/ankit-studios-logo.png", sizes: "any", type: "image/png", purpose: "maskable" },
     ],
     shortcuts: [
       {

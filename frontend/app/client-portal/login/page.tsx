@@ -32,7 +32,7 @@ function ClientLoginForm() {
   return (
     <main className="clientAuth">
       <form onSubmit={submit}>
-        <small>LENSPIRECRM · CLIENT PORTAL</small>
+        <div className="clientAuthBrand"><img src="/ankit-studios-logo.png" alt="Ankit Studios" /><small>ANKIT STUDIOS · CLIENT PORTAL</small><span>Powered by LenspireCRM</span></div>
         <h1>Client Login</h1>
         <p>Sign in to view your event, payments and deliveries.</p>
         <label>

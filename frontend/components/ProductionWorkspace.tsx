@@ -1441,7 +1441,8 @@ Video Status: ${job.video_status}
 This production job is overdue. Please share the current progress and expected completion time.
 
 Regards,
-Lenspire CRM`;
+Ankit Studios
+Powered by LenspireCRM`;
   const log = async () => {
     setRecording(true);
     setError("");

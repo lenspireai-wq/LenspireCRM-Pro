@@ -1586,7 +1586,7 @@ function LeadDetail({
           {lead.mobile && (
             <a
               className="secondary whatsappButton"
-              href={`https://wa.me/${lead.mobile.replace(/\D/g, "")}?text=${encodeURIComponent(`Hello ${lead.name}, following up regarding your ${lead.event_type} inquiry with LenspireCRM.`)}`}
+              href={`https://wa.me/${lead.mobile.replace(/\D/g, "")}?text=${encodeURIComponent(`Hello ${lead.name}, following up regarding your ${lead.event_type} inquiry with Ankit Studios.\n\nPowered by LenspireCRM.`)}`}
               target="_blank"
               rel="noopener noreferrer"
             >

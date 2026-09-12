@@ -11,10 +11,10 @@ import { ThemeProvider } from "@/components/ThemeToggle";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
 
 export const metadata: Metadata = {
-  title: "LenspireCRM Pro",
-  description: "Photography studio CRM for sales, operations, accounts, and production.",
-  applicationName: "LenspireCRM Pro",
-  appleWebApp: { capable: true, title: "LenspireCRM", statusBarStyle: "black-translucent" },
+  title: "Ankit Studios",
+  description: "Ankit Studios workspace, powered by LenspireCRM.",
+  applicationName: "Ankit Studios",
+  appleWebApp: { capable: true, title: "Ankit Studios", statusBarStyle: "black-translucent" },
   formatDetection: { telephone: false },
 };
 

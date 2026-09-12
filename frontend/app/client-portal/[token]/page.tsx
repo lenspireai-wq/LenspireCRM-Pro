@@ -24,13 +24,13 @@ export default function ClientPortalPage() {
     catch (problem: any) { window.alert(problem.response?.data?.detail || "Could not submit feedback."); }
     finally { setBusy(null); }
   };
-  if (error) return <main className="clientPortal"><section className="clientPortalHero"><small>LENSPIRECRM · CLIENT PORTAL</small><h1>Portal unavailable</h1><p>{error}</p></section></main>;
-  if (!data) return <main className="clientPortal"><section className="clientPortalHero"><small>LENSPIRECRM · CLIENT PORTAL</small><h1>Opening secure portal…</h1></section></main>;
+  if (error) return <main className="clientPortal"><section className="clientPortalHero"><img src="/ankit-studios-logo.png" alt="Ankit Studios" /><small>ANKIT STUDIOS · CLIENT PORTAL</small><h1>Portal unavailable</h1><p>{error}</p></section></main>;
+  if (!data) return <main className="clientPortal"><section className="clientPortalHero"><img src="/ankit-studios-logo.png" alt="Ankit Studios" /><small>ANKIT STUDIOS · CLIENT PORTAL</small><h1>Opening secure portal…</h1></section></main>;
   const booking = data.booking;
   return <main className="clientPortal">
     <section className="clientPortalHero">
       {data.studio.logo_url && <img src={data.studio.logo_url} alt="Studio logo" />}
-      <small>{data.studio.name} · CLIENT PORTAL</small>
+      <small>{data.studio.name} · CLIENT PORTAL · Powered by LenspireCRM</small>
       <h1>{booking.couple_name || booking.client_name}</h1>
       <p>{booking.code} · {booking.event_type} · {date(booking.event_date)}</p>
     </section>
