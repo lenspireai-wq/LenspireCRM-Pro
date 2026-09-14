@@ -1109,13 +1109,9 @@ input:-webkit-autofill:active {
   background: #201e1b;
   box-shadow: 0 30px 90px rgb(0 0 0 / 45%);
 }
-.clientAuthIntro {
-  background:
-    linear-gradient(90deg, rgb(20 18 16 / 94%) 0%, rgb(27 24 20 / 70%) 48%, rgb(27 24 20 / 25%) 100%),
-    url("/login/studio-camera.png") right center / cover no-repeat;
-}
+.clientAuthIntro { background: linear-gradient(145deg, #302b46 0%, #211e34 52%, #182c3d 100%); }
 .clientAuthIntro::after { border-color: rgb(212 180 119 / 28%); box-shadow: 0 0 0 52px rgb(212 180 119 / 7%), 0 0 0 105px rgb(212 180 119 / 4%); }
-.clientAuthLenspireLogo { width: clamp(170px, 15vw, 240px); height: auto; object-fit: contain; object-position: left center; }
+.clientAuthLenspireLogo { width: clamp(125px, 10vw, 160px); height: auto; object-fit: contain; object-position: left center; }
 .clientAuthEyebrow { color: #d4b477 !important; }
 .clientAuthIntro h1 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.035em; }
 .clientAuthIntroCopy { color: #ddd3c5 !important; }
@@ -1124,7 +1120,7 @@ input:-webkit-autofill:active {
 .clientAuthSecurity b { color: #d4b477; }
 .clientAuth form { background: radial-gradient(circle at 100% 0, rgb(212 180 119 / 9%), transparent 38%), linear-gradient(145deg, #201e1b, #171614 72%); }
 .clientAuthBrand { gap: 6px; margin-bottom: 20px; }
-.clientAuthBrand img { width: min(260px, 100%); height: 104px; object-fit: contain; object-position: left center; }
+.clientAuthBrand img { width: min(300px, 100%); height: 118px; object-fit: contain; object-position: left center; }
 .clientAuth small { color: #d4b477; }
 .clientAuthBrand span, .clientAuth p { color: #b7ab9b; }
 .clientAuthHeading h2 { color: #f5f0e7; font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
@@ -1140,9 +1136,9 @@ input:-webkit-autofill:active {
 .clientAuth .primary:hover:not(:disabled) { background: linear-gradient(135deg, #e0c48d, #c29651); }
 .clientAuthHelp { color: #a99c8d !important; }
 @media(max-width:760px) {
-  .clientAuthIntro { background: linear-gradient(90deg, rgb(20 18 16 / 94%), rgb(27 24 20 / 52%)), url("/login/studio-camera.png") center / cover no-repeat; }
-  .clientAuthLenspireLogo { width: 190px; }
-  .clientAuthBrand img { width: 230px; height: 92px; }
+  .clientAuthIntro { background: linear-gradient(145deg, #302b46 0%, #211e34 52%, #182c3d 100%); }
+  .clientAuthLenspireLogo { width: 140px; }
+  .clientAuthBrand img { width: 260px; height: 106px; }
 }
 .error {
   margin-bottom: 12px;

@@ -38,7 +38,6 @@ function ClientLoginForm() {
             src="/login/lenspire-wordmark.png"
             alt="Lenspire.ai — See, Create, Inspire"
           />
-          <p className="clientAuthEyebrow">LENSPIRECRM · CLIENT PORTAL</p>
           <h1>Your event, all in one beautiful place.</h1>
           <p className="clientAuthIntroCopy">Review your event details, payments and final deliveries whenever you need them. Sign in with the Client ID shared by your studio.</p>
           <div className="clientAuthFeatures">
