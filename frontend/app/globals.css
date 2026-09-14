@@ -1194,6 +1194,8 @@ input:-webkit-autofill:active {
 .clientPortalHeroFooter b { font-size: 9px; }
 @media(max-width:700px) { .clientPortalHero { padding: 16px; }.clientPortalStudioLogo { width: min(300px, 78vw); height: 88px; }.clientPortalHeroFooter { align-items: center; flex-direction: row; flex-wrap: wrap; } }
 
+.clientEventDetails{padding:5px 8px;border:1px solid rgb(212 180 119 / 35%);border-radius:8px;background:transparent;color:#e6cf9b;font:inherit;font-size:10px;font-weight:700;white-space:nowrap;cursor:pointer}.clientEventDetails:hover{background:rgb(212 180 119 / 12%)}.clientEventModal{max-width:430px}.clientEventModal>small{color:#d4b477;font-size:10px;font-weight:800;letter-spacing:.11em}.clientEventModal dl{display:grid;gap:0;margin:18px 0}.clientEventModal dl>div{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:11px 0;border-top:1px solid rgb(255 255 255 / 10%)}.clientEventModal dt{color:#b6a891;font-size:12px}.clientEventModal dd{margin:0;color:#fff7ea;font-weight:600}.clientEventModal>div:last-child{display:flex;justify-content:flex-end}@media(max-width:700px){.clientPortalEvents .clientPortalRow{flex-wrap:wrap}.clientPortalEvents .clientPortalRow>div{min-width:calc(100% - 40px)}.clientPortalEvents .clientPortalRow em{margin-left:auto}.clientEventModal dl>div{grid-template-columns:1fr;gap:4px}}
+
 /* Give the client-portal introduction more breathing room below the brand. */
 .clientAuthLenspireLogo { width: clamp(102px, 8vw, 125px); }
 .clientAuthIntro h1 { margin-top: clamp(34px, 6vh, 64px); }

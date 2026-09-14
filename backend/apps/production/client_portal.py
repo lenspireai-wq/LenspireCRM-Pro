@@ -436,7 +436,21 @@ class ClientPortalPublicView(APIView):
         return Response({
             "studio": {"name": access.organization.name, "phone": access.organization.contact_phone, "email": access.organization.contact_email, "logo_url": access.organization.logo_url},
             "booking": {"id": booking.id, "code": booking.booking_code, "client_name": booking.customer.name, "couple_name": getattr(booking.lead, "couple_name", "") if booking.lead else "", "event_type": booking.event_type, "event_date": booking.event_date, "total": booking.quoted_amount, "received": received, "balance": max(booking.quoted_amount - received, 0)},
-            "events": [{"event_type": event.event_type, "start_date": event.start_date, "status": event.status} for event in events],
+            "events": [
+                {
+                    "id": event.id,
+                    "title": event.title,
+                    "event_type": event.event_type,
+                    "start_date": event.start_date,
+                    "start_time": event.start_time,
+                    "end_time": event.end_time,
+                    "city": event.city,
+                    "status": event.status,
+                    "date_status": event.date_status,
+                    "tbd_month": event.tbd_month,
+                }
+                for event in events
+            ],
             "payments": client_payment_schedule(booking, payments, events),
             "deliverables": [{"id": item.id, "name": item.name, "status": item.status, "drive_link": item.drive_link, "thumbnail_url": deliverable_thumbnail_url(item), "revision_notes": item.revision_notes} for item in deliverables],
         })
