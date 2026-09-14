@@ -10465,6 +10465,31 @@ table > tbody > tr:has(td[colspan])::before {
     font-variant-numeric: tabular-nums;
   }
 }
+
+/* Phone-specific client portal layout. Keep the identity header compact and
+   make event actions/statuses scan cleanly without colliding or overflowing. */
+@media (max-width: 700px) {
+  .clientPortal { padding: 16px 12px 28px; }
+  .clientPortalHero { padding: 20px 18px; }
+  .clientPortalHeroTop { flex-direction: row; align-items: flex-start; gap: 12px; }
+  .clientPortalStudioLogo { width: min(190px, 54vw); height: 64px; }
+  .clientPortalHeroTop > span { margin-left: auto; text-align: center; }
+  .clientPortalHero h1 { font-size: clamp(28px, 9vw, 36px); overflow-wrap: anywhere; }
+  .clientPortalHeroFeature { margin-top: 16px; padding: 14px 16px; }
+  .clientPortalHeroFooter { align-items: flex-start; }
+  .clientPortalStats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .clientPortalStats article:first-child { grid-column: 1 / -1; }
+  .clientPortalStats article { padding: 14px 16px; }
+  .clientPortalEvents .clientPortalRow { display: grid; grid-template-columns: 25px minmax(0, 1fr) auto; gap: 8px 10px; align-items: center; }
+  .clientPortalEvents .clientPortalRow > i { grid-column: 1; grid-row: 1 / span 2; }
+  .clientPortalEvents .clientPortalRow > div { grid-column: 2; grid-row: 1; min-width: 0; }
+  .clientPortalEvents .clientEventDetails { grid-column: 2; grid-row: 2; justify-self: start; }
+  .clientPortalEvents .clientPortalRow em { grid-column: 3; grid-row: 1 / span 2; margin-left: 0; }
+  .clientPortalPayments .clientPortalRow { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .clientPortalPayments .clientPortalRow > div { min-width: 0; }
+  .clientPortalPayments .clientPortalRow strong { grid-column: 2; grid-row: 1; white-space: nowrap; }
+  .clientPortalPayments .clientPortalRow em { grid-column: 2; grid-row: 2; justify-self: end; }
+}
 .mainSalesDashboard :is(.salesDashboardSticky, .leadManagementSticky) {
   padding-top: 4px;
 }
