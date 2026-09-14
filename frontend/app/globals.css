@@ -10440,6 +10440,31 @@ table > tbody > tr:has(td[colspan])::before {
     grid-template-columns: 1fr;
   }
 }
+
+/* Keep the Client Ledger summary useful at phone width: four compact but
+   readable KPI cards, independent of the wider Accounts dashboard layout. */
+@media (max-width: 700px) {
+  .clientLedgerView .accountMetrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 10px 0 12px;
+  }
+  .clientLedgerView .accountMetrics article {
+    min-height: 82px;
+    padding: 12px;
+  }
+  .clientLedgerView .accountMetrics span {
+    margin-bottom: 6px;
+    font-size: 10px;
+    letter-spacing: .05em;
+  }
+  .clientLedgerView .accountMetrics strong {
+    font-size: clamp(16px, 4.5vw, 20px);
+    line-height: 1.2;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+}
 .mainSalesDashboard :is(.salesDashboardSticky, .leadManagementSticky) {
   padding-top: 4px;
 }
