@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { CategoryBar, FunnelDoughnut, RevenueLineChart } from "@/components/charts";
 import { useAuthStore } from "@/stores/auth";
+import { formatTime } from "@/lib/date-format";
 
 type DashboardResponse = {
   reference_date: string;
@@ -118,7 +119,7 @@ export default function DashboardWorkspace({ months, onMonthsChange }: { months:
                 <li key={event.id}>
                   <strong>{event.client_name || event.title}</strong>
                   <span>{event.event_type} · {event.city}</span>
-                  <small>{event.start_time || "Time not set"} · {event.status}</small>
+                  <small>{formatTime(event.start_time, "Time not set")} · {event.status}</small>
                 </li>
               ))}
             </ul>

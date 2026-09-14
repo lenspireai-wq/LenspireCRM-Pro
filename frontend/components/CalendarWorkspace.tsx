@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import { useApiMutation, useApiCollectionQuery, queryKeys } from "@/lib/query";
 import { api } from "@/lib/api";
-import { formatDate } from "@/lib/date-format";
+import { formatDate, formatTime } from "@/lib/date-format";
 
 type CalendarEvent = {
   id: number;
@@ -59,17 +59,6 @@ const isoDate = (date: Date) => {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
-};
-
-const formatTime = (value?: string | null) => {
-  if (!value) return "—";
-  const [hour, minute] = value.split(":");
-  if (minute === undefined) return value;
-  const hourNumber = Number(hour);
-  if (Number.isNaN(hourNumber)) return value;
-  const suffix = hourNumber >= 12 ? "PM" : "AM";
-  const display = ((hourNumber + 11) % 12) + 1;
-  return `${display}:${minute} ${suffix}`;
 };
 
 export default function CalendarWorkspace() {

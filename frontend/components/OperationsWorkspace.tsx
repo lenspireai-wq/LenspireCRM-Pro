@@ -5,7 +5,7 @@ import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import CalendarWorkspace from "@/components/CalendarWorkspace";
 import { useAuthStore } from "@/stores/auth";
-import { formatDate } from "@/lib/date-format";
+import { formatDate, formatTime } from "@/lib/date-format";
 import { exportFilename } from "@/lib/download-filename";
 
 export type View =
@@ -90,12 +90,7 @@ function eventMessage(event: Row) {
   const day = eventDate
     ? eventDate.toLocaleDateString("en-IN", { weekday: "long" })
     : "Day to be confirmed";
-  const eventTime = event.start_time
-    ? new Date(`2000-01-01T${event.start_time}`).toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "Time to be confirmed";
+  const eventTime = formatTime(event.start_time, "Time to be confirmed");
   const roles = [
     ["📸", "Traditional Photographer", event.photo],
     ["🎥", "Traditional Videographer", event.video],
@@ -716,7 +711,7 @@ function NextShootsTable({ events }: { events: Row[] }) {
                 <td>
                   <div className="shootVenue">
                     <b>{event.city || "Venue to be confirmed"}</b>
-                    <small>{event.start_time?.slice(0, 5) || "Time TBD"}</small>
+                    <small>{formatTime(event.start_time, "Time TBD")}</small>
                   </div>
                 </td>
                 <td>
@@ -872,7 +867,7 @@ function EventTable({
               <td title={row.city || "—"}>
                 {row.city || "—"}
               </td>
-              <td>{row.start_time?.slice(0, 5) || "—"}</td>
+              <td>{formatTime(row.start_time)}</td>
               <td className="eventNotes" title={row.notes || "—"}>
                 {row.notes || "—"}
               </td>
@@ -973,11 +968,11 @@ function Calendar({
                 .map((e) =>
                   edit ? (
                     <button key={e.id} onClick={() => edit({ ...e })}>
-                      {e.start_time?.slice(0, 5)} {e.client_name || e.title}
+                      {formatTime(e.start_time, "Time TBD")} {e.client_name || e.title}
                     </button>
                   ) : (
                     <small key={e.id} className="calendarReadOnlyEvent">
-                      {e.start_time?.slice(0, 5)} {e.client_name || e.title}
+                      {formatTime(e.start_time, "Time TBD")} {e.client_name || e.title}
                     </small>
                   ),
                 )}
