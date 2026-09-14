@@ -59,7 +59,12 @@ const ageingCategory = (dueDate: string) => {
   if (days > 60) return "Overdue 60+ Days";
   return "Scheduled Later";
 };
-function plan(total: number, received: number, entries: Row[]) {
+function plan(
+  total: number,
+  received: number,
+  entries: Row[],
+  scheduledDates: Record<string, string> = {},
+) {
   let allocated = 0;
   return [10, 40, 40, 10].map((percent, index) => {
     const amount =
@@ -69,7 +74,7 @@ function plan(total: number, received: number, entries: Row[]) {
     const pendingPayment = entries.find(
       (entry) => entry.payment_type === types[index] && entry.status !== "Paid",
     );
-    const dueDate = pendingPayment?.due_date || "";
+    const dueDate = scheduledDates[types[index]] || pendingPayment?.due_date || "";
     const today = new Date().toISOString().slice(0, 10);
     const upcomingLimit = new Date();
     upcomingLimit.setDate(upcomingLimit.getDate() + 7);
@@ -132,6 +137,10 @@ export default function AccountsWorkspace({
   const bookingsQuery = useApiQuery<{ results: Row[] } | Row[]>(
     queryKeys.bookings(),
     "/bookings/?page_size=500",
+  );
+  const eventsQuery = useApiQuery<{ results: Row[] } | Row[]>(
+    queryKeys.events(),
+    "/events/?page_size=500",
   );
   const remindersQuery = useApiQuery<{ results: Row[] } | Row[]>(
     queryKeys.paymentReminders(),
@@ -203,6 +212,9 @@ export default function AccountsWorkspace({
   const bookingRows = Array.isArray(bookingsQuery.data)
     ? bookingsQuery.data
     : bookingsQuery.data?.results || [];
+  const eventRows = (Array.isArray(eventsQuery.data)
+    ? eventsQuery.data
+    : eventsQuery.data?.results || []) as Row[];
   // A booking is the single source of truth for a Receivables row.  Guard
   // against a repeated API/cache entry so the same booking cannot display
   // twice with different loading states for its payments.
@@ -230,6 +242,18 @@ export default function AccountsWorkspace({
       advance,
     );
     const total = Number(lead?.total_closing ?? booking.quoted_amount ?? 0);
+    const scheduledEvents = eventRows
+      .filter((event) => Number(event.booking) === Number(booking.id) && event.start_date)
+      .sort((first, second) => String(first.start_date).localeCompare(String(second.start_date)));
+    const weddingEvent = scheduledEvents.find(
+      (event) => String(event.event_type || "").trim().toLowerCase() === "wedding",
+    ) || scheduledEvents.find(
+      (event) => String(event.event_type || "").trim().toLowerCase().startsWith("wedding"),
+    );
+    const scheduledDates = {
+      "First Shoot": scheduledEvents[0]?.start_date || "",
+      "Wedding Day": weddingEvent?.start_date || booking.event_date || "",
+    };
     return {
       ...booking,
       id: Number(booking.id),
@@ -248,7 +272,7 @@ export default function AccountsWorkspace({
       entries,
       reminders,
       lastReminder: reminders[0],
-      stages: plan(total, received, entries),
+      stages: plan(total, received, entries, scheduledDates),
     };
   });
   const openPortal = async (booking: Row) => {
