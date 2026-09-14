@@ -10246,6 +10246,44 @@ table > tbody > tr:has(td[colspan])::before {
   .mainOperationsCalendar .calCell li strong {
     font-size: 8px;
   }
+
+  /* Receivables has ten data-heavy columns.  Keep their widths stable on a
+     phone and let the table wrapper provide the horizontal swipe instead of
+     squeezing headings and values into overlapping cells. */
+  .mainAccountsSticky .accountsScheduleTableWrap {
+    overflow-x: auto !important;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+  }
+  .mainAccountsSticky .accountsScheduleTableWrap::-webkit-scrollbar {
+    display: block;
+    height: 6px;
+  }
+  .mainAccountsSticky .accountsScheduleTableWrap::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 999px;
+  }
+  .mainAccountsSticky .receivablesTable {
+    width: 1344px !important;
+    min-width: 1344px !important;
+    max-width: none !important;
+    table-layout: fixed !important;
+  }
+  .mainAccountsSticky .receivablesTable th:nth-child(1) { width: 48px !important; }
+  .mainAccountsSticky .receivablesTable th:nth-child(2) { width: 100px !important; }
+  .mainAccountsSticky .receivablesTable th:nth-child(3) { width: 160px !important; }
+  .mainAccountsSticky .receivablesTable th:nth-child(4),
+  .mainAccountsSticky .receivablesTable th:nth-child(5),
+  .mainAccountsSticky .receivablesTable th:nth-child(6) { width: 110px !important; }
+  .mainAccountsSticky .receivablesTable th:nth-child(7) { width: 350px !important; }
+  .mainAccountsSticky .receivablesTable th:nth-child(8) { width: 140px !important; }
+  .mainAccountsSticky .receivablesTable th:nth-child(9) { width: 86px !important; }
+  .mainAccountsSticky .receivablesTable th:nth-child(10) { width: 130px !important; }
+  .mainAccountsSticky .receivablesTable th,
+  .mainAccountsSticky .receivablesTable td {
+    overflow: visible;
+    overflow-wrap: normal;
+  }
 }
 
 @media (max-width: 359px) {
