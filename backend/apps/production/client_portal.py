@@ -76,7 +76,7 @@ PAYMENT_SCHEDULE = (
 )
 
 
-def client_payment_schedule(booking, payments):
+def client_payment_schedule(booking, payments, events):
     """Return the client-facing 10 / 40 / 40 / 10 booking schedule.
 
     Payments are allocated in ledger order so older bookings with manually
@@ -130,6 +130,18 @@ def client_payment_schedule(booking, payments):
             continue
         stage["due_date"] = pending[pending_index].due_date
         pending_index += 1
+
+    wedding_events = [
+        event for event in events
+        if (event.event_type or "").strip().casefold() == "wedding"
+    ] or [
+        event for event in events
+        if (event.event_type or "").strip().casefold().startswith("wedding")
+    ]
+    if wedding_events:
+        wedding_stage = next(stage for stage in stages if stage["payment_type"] == "Wedding Day")
+        if wedding_stage["status"] != "Paid":
+            wedding_stage["due_date"] = wedding_events[0].start_date
     return stages
 
 
@@ -418,14 +430,14 @@ class ClientPortalPublicView(APIView):
         totals = payments.filter(status="Paid").aggregate(received=Sum("amount", filter=~Q(payment_type="Refund")), refunded=Sum("amount", filter=Q(payment_type="Refund")))
         payments = list(payments)
         received = (totals["received"] or 0) - (totals["refunded"] or 0)
-        events = CalendarEvent.objects.filter(organization=access.organization, booking=booking).order_by("start_date")
+        events = list(CalendarEvent.objects.filter(organization=access.organization, booking=booking).order_by("start_date"))
         deliverables = ProductionDeliverable.objects.filter(organization=access.organization, job__booking=booking, drive_link__gt="").select_related("job")
         ClientPortalActivity.objects.create(organization=access.organization, access=access, booking=booking, action="Portal Opened", detail="Client opened the secure portal.")
         return Response({
             "studio": {"name": access.organization.name, "phone": access.organization.contact_phone, "email": access.organization.contact_email, "logo_url": access.organization.logo_url},
             "booking": {"id": booking.id, "code": booking.booking_code, "client_name": booking.customer.name, "couple_name": getattr(booking.lead, "couple_name", "") if booking.lead else "", "event_type": booking.event_type, "event_date": booking.event_date, "total": booking.quoted_amount, "received": received, "balance": max(booking.quoted_amount - received, 0)},
-            "events": list(events.values("event_type", "start_date", "status")),
-            "payments": client_payment_schedule(booking, payments),
+            "events": [{"event_type": event.event_type, "start_date": event.start_date, "status": event.status} for event in events],
+            "payments": client_payment_schedule(booking, payments, events),
             "deliverables": [{"id": item.id, "name": item.name, "status": item.status, "drive_link": item.drive_link, "thumbnail_url": deliverable_thumbnail_url(item), "revision_notes": item.revision_notes} for item in deliverables],
         })
 

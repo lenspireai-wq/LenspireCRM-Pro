@@ -146,7 +146,7 @@ class ProductionApiTests(TestCase):
                 ("Final Delivery", "12500.00", "Pending"),
             ],
         )
-        self.assertEqual(str(portal.data["payments"][2]["due_date"]), "2026-12-31")
+        self.assertEqual(str(portal.data["payments"][2]["due_date"]), "2026-10-10")
 
     def test_client_invitation_pin_login_reset_disable_and_audit(self):
         invited = self.client.post(
