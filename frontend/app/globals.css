@@ -1201,6 +1201,10 @@ input:-webkit-autofill:active {
 .clientAuthFeatures { margin-top: 4px; }
 @media(max-width:760px) { .clientAuthLenspireLogo { width: 108px; }.clientAuthIntro h1 { margin-top: 28px; } }
 
+/* Match the client-portal introduction with the warm sign-in panel. */
+.clientAuthIntro { background: radial-gradient(circle at 12% 8%, rgb(212 180 119 / 14%), transparent 32%), radial-gradient(circle at 86% 92%, rgb(181 138 71 / 9%), transparent 38%), linear-gradient(145deg, #201e1b, #171614 72%); }
+@media(max-width:760px) { .clientAuthIntro { background: radial-gradient(circle at 12% 8%, rgb(212 180 119 / 14%), transparent 36%), linear-gradient(145deg, #201e1b, #171614 72%); } }
+
 .clientDeliverable.hasThumbnail { grid-template-columns: 132px 1fr auto; }
 .clientGalleryThumbnail { grid-row: span 3; width: 132px; height: 94px; border: 1px solid rgb(212 180 119 / 24%); border-radius: 11px; object-fit: cover; background: #1a1815; }
 .clientDeliverable.hasThumbnail .clientFeedback, .clientDeliverable.hasThumbnail .clientApproved { grid-column: 2 / -1; }
