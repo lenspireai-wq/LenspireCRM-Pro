@@ -1194,6 +1194,13 @@ input:-webkit-autofill:active {
 .clientPortalHeroFooter b { font-size: 9px; }
 @media(max-width:700px) { .clientPortalHero { padding: 16px; }.clientPortalStudioLogo { height: 44px; }.clientPortalHeroFooter { align-items: center; flex-direction: row; flex-wrap: wrap; } }
 
+/* Give the client-portal introduction more breathing room below the brand. */
+.clientAuthLenspireLogo { width: clamp(102px, 8vw, 125px); }
+.clientAuthIntro h1 { margin-top: clamp(34px, 6vh, 64px); }
+.clientAuthIntroCopy { margin-top: 16px !important; }
+.clientAuthFeatures { margin-top: 4px; }
+@media(max-width:760px) { .clientAuthLenspireLogo { width: 108px; }.clientAuthIntro h1 { margin-top: 28px; } }
+
 .clientDeliverable.hasThumbnail { grid-template-columns: 132px 1fr auto; }
 .clientGalleryThumbnail { grid-row: span 3; width: 132px; height: 94px; border: 1px solid rgb(212 180 119 / 24%); border-radius: 11px; object-fit: cover; background: #1a1815; }
 .clientDeliverable.hasThumbnail .clientFeedback, .clientDeliverable.hasThumbnail .clientApproved { grid-column: 2 / -1; }
