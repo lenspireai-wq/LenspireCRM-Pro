@@ -1198,6 +1198,8 @@ input:-webkit-autofill:active {
 
 .clientPortalHeroFeature{position:absolute;z-index:1;right:clamp(24px,4vw,50px);bottom:53px;display:grid;gap:6px;width:min(280px,28vw);padding:17px 19px;border:1px solid rgb(212 180 119 / 30%);border-radius:15px;background:linear-gradient(135deg,rgb(212 180 119 / 14%),rgb(255 255 255 / 3%));box-shadow:0 12px 32px rgb(0 0 0 / 16%)}.clientPortalHeroFeature small{margin:0!important;color:#d7bd87!important;font-size:9px!important;font-weight:800;letter-spacing:.13em}.clientPortalHeroFeature b{color:#fff7ea;font-family:Georgia,"Times New Roman",serif;font-size:22px;font-weight:500}.clientPortalHeroFeature span{color:#cabda9;font-size:12px}@media(max-width:700px){.clientPortalHeroFeature{position:relative;right:auto;bottom:auto;width:auto;margin-top:18px;padding:14px 16px}.clientPortalHeroFeature b{font-size:19px}}
 
+@media(min-width:701px){.clientPortalHero{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,310px);grid-template-areas:"top top" "eyebrow feature" "title feature" "meta feature" "footer footer";column-gap:clamp(32px,7vw,100px);align-items:center}.clientPortalHeroTop{grid-area:top;margin-bottom:18px}.clientPortalHero>small{grid-area:eyebrow}.clientPortalHero h1{grid-area:title}.clientPortalHero>p{grid-area:meta}.clientPortalHeroFeature{position:relative;right:auto;bottom:auto;grid-area:feature;align-self:center;width:auto;margin:0}.clientPortalHeroFooter{grid-area:footer;margin-top:22px}}
+
 /* Give the client-portal introduction more breathing room below the brand. */
 .clientAuthLenspireLogo { width: clamp(102px, 8vw, 125px); }
 .clientAuthIntro h1 { margin-top: clamp(34px, 6vh, 64px); }
