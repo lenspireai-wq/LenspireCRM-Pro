@@ -30,7 +30,7 @@ export default function ClientPortalPage() {
   return <main className="clientPortal">
     <section className="clientPortalHero">
       <div className="clientPortalHeroGlow" aria-hidden="true" />
-      <div className="clientPortalHeroTop"><img className="clientPortalStudioLogo" src={data.studio.logo_url || "/ankit-studios-logo.png"} alt={data.studio.name} /><span>Private client space</span></div>
+      <div className="clientPortalHeroTop"><img className="clientPortalStudioLogo" src={data.studio.logo_url || "/ankit-studios-logo.png"} alt={data.studio.name} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = "/ankit-studios-logo.png"; }} /><span>Private client space</span></div>
       <small>{data.studio.name} · CLIENT PORTAL</small>
       <h1>{booking.couple_name || booking.client_name}</h1>
       <p>{booking.code} <i>•</i> {booking.event_type} <i>•</i> {date(booking.event_date)}</p>
