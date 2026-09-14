@@ -31,50 +31,40 @@ function ClientLoginForm() {
   };
   return (
     <main className="clientAuth">
-      <form onSubmit={submit}>
-        <div className="clientAuthBrand"><img src="/ankit-studios-logo.png" alt="Ankit Studios" /><small>ANKIT STUDIOS · CLIENT PORTAL</small><span>Powered by LenspireCRM</span></div>
-        <h1>Client Login</h1>
-        <p>Sign in to view your event, payments and deliveries.</p>
-        <label>
-          Studio ID
-          <input
-            required
-            value={studio}
-            onChange={(e) => setStudio(e.target.value)}
-            placeholder="studio-name"
-          />
-        </label>
-        <label>
-          Email
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type={show ? "text" : "password"}
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <label className="clientShowPassword">
-          <input
-            type="checkbox"
-            checked={show}
-            onChange={(e) => setShow(e.target.checked)}
-          />{" "}
-          Show password
-        </label>
-        {error && <div className="error">{error}</div>}
-        <button className="primary" disabled={busy}>
-          {busy ? "Signing in…" : "Sign In"}
-        </button>
-      </form>
+      <div className="clientAuthShell">
+        <section className="clientAuthIntro" aria-label="Client portal overview">
+          <div className="clientAuthIntroMark">LP</div>
+          <p className="clientAuthEyebrow">LENSPIRECRM · CLIENT PORTAL</p>
+          <h1>Your event, all in one beautiful place.</h1>
+          <p className="clientAuthIntroCopy">Review your event details, payments and final deliveries whenever you need them.</p>
+          <div className="clientAuthFeatures">
+            <span>✦ Event details</span><span>✦ Payment tracking</span><span>✦ Secure deliveries</span>
+          </div>
+          <p className="clientAuthSecurity"><b>⌁</b> Private and secure client access</p>
+        </section>
+        <form onSubmit={submit}>
+          <div className="clientAuthBrand"><img src="/ankit-studios-logo.png" alt="Ankit Studios" /><small>ANKIT STUDIOS · CLIENT PORTAL</small><span>Powered by LenspireCRM</span></div>
+          <div className="clientAuthHeading"><h2>Welcome back</h2><p>Sign in to access your personal event space.</p></div>
+          <label>
+            Studio ID
+            <input required value={studio} onChange={(e) => setStudio(e.target.value)} placeholder="studio-name" />
+          </label>
+          <label>
+            Email address
+            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" placeholder="you@example.com" />
+          </label>
+          <label>
+            Password
+            <input type={show ? "text" : "password"} required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" placeholder="Enter your password" />
+          </label>
+          <label className="clientShowPassword">
+            <input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} /> Show password
+          </label>
+          {error && <div className="error">{error}</div>}
+          <button className="primary" disabled={busy}>{busy ? "Signing in…" : "Sign in to portal"}<span aria-hidden="true">→</span></button>
+          <p className="clientAuthHelp">Need access? Please contact your photography studio.</p>
+        </form>
+      </div>
     </main>
   );
 }
