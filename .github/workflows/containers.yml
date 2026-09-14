@@ -57,17 +57,52 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           printf '%s\n' '187.52.122.113 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID0TTNCpOS+vZ3OJqQAlk8+cljKktR/1vtSBqPME44kM' > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
+          cat >> ~/.ssh/config <<'EOF'
+          Host lenspire-vps
+            HostName 187.52.122.113
+            User root
+            IdentityFile ~/.ssh/id_ed25519
+            IdentitiesOnly yes
+            BatchMode yes
+            ConnectTimeout 30
+            ConnectionAttempts 5
+            ServerAliveInterval 15
+            ServerAliveCountMax 4
+          EOF
+          chmod 600 ~/.ssh/config
 
       - name: Recover Docker and restart CRM containers
         run: |
-          ssh -o BatchMode=yes -o IdentitiesOnly=yes root@187.52.122.113 \
-            'systemctl restart docker && sleep 5 && cd /docker/lenspire-crm-django && docker compose pull && docker compose up -d --remove-orphans && docker compose exec -T api python manage.py migrate --noinput && docker compose ps && (docker image prune -af || echo "Docker cleanup already running; skipped for this release.")'
+          for attempt in 1 2 3 4 5; do
+            if ssh lenspire-vps '
+              systemctl is-active --quiet docker || systemctl start docker
+              cd /docker/lenspire-crm-django
+              pulled=false
+              for pull_attempt in 1 2 3; do
+                if docker compose pull; then
+                  pulled=true
+                  break
+                fi
+                sleep $((pull_attempt * 15))
+              done
+              [ "$pulled" = true ] || exit 1
+              docker compose up -d --remove-orphans
+              docker compose exec -T api python manage.py migrate --noinput
+              docker compose ps
+              (docker image prune -af || echo "Docker cleanup already running; skipped for this release.")
+            '; then
+              exit 0
+            fi
+            echo "VPS deployment attempt $attempt failed; retrying shortly…"
+            sleep $((attempt * 15))
+          done
+          exit 1
 
       - name: Verify production health
         run: |
           healthy=false
           for attempt in {1..12}; do
-            if ssh -o BatchMode=yes -o IdentitiesOnly=yes root@187.52.122.113 \
+            if ssh lenspire-vps \
               'curl --fail --silent --show-error --max-time 15 http://127.0.0.1:8080/ >/dev/null && curl --fail --silent --show-error --max-time 15 http://127.0.0.1:8080/api/health/ >/dev/null'; then
               healthy=true
               break
@@ -77,6 +112,6 @@ jobs:
           if [ "$healthy" = true ]; then
             exit 0
           fi
-          ssh -o BatchMode=yes -o IdentitiesOnly=yes root@187.52.122.113 \
+          ssh lenspire-vps \
             'cd /docker/lenspire-crm-django && docker compose ps && docker compose logs --tail=200 api web redis'
           exit 1
