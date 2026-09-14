@@ -61,7 +61,7 @@ jobs:
       - name: Recover Docker and restart CRM containers
         run: |
           ssh -o BatchMode=yes -o IdentitiesOnly=yes root@187.52.122.113 \
-            'systemctl restart docker && sleep 5 && cd /docker/lenspire-crm-django && docker compose pull && docker compose up -d --remove-orphans && docker compose ps && (docker image prune -af || echo "Docker cleanup already running; skipped for this release.")'
+            'systemctl restart docker && sleep 5 && cd /docker/lenspire-crm-django && docker compose pull && docker compose up -d --remove-orphans && docker compose exec -T api python manage.py migrate --noinput && docker compose ps && (docker image prune -af || echo "Docker cleanup already running; skipped for this release.")'
 
       - name: Verify production health
         run: |
