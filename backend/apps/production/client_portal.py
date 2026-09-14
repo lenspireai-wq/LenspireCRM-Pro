@@ -73,6 +73,7 @@ class ClientPortalManageView(APIView):
             "expires_at": access.expires_at if access else None,
             "last_accessed_at": access.last_accessed_at if access else None,
             "access_count": access.access_count if access else 0,
+            "client_id": booking.booking_code,
             "activities": list(access.activities.values("action", "detail", "created_at")[:25]) if access else [],
             "portal_users": list(booking.portal_users.values("id", "name", "email", "mobile", "active", "last_login_at", "invite_expires_at")),
         })
@@ -125,7 +126,7 @@ class ClientPortalInviteView(APIView):
         ClientPortalActivity.objects.create(organization=booking.organization, access=access, booking=booking, action="Client Invited", detail=f"Password setup invitation generated for {email}.")
         base = getattr(settings, "CLIENT_PORTAL_BASE_URL", "http://127.0.0.1:3000").rstrip("/")
         url = f"{base}/client-portal/setup/{raw}"
-        text = f"Hello {name}, {booking.organization.name} has invited you to your secure Client Portal for {booking.booking_code}. Set your password here: {url}"
+        text = f"Hello {name}, {booking.organization.name} has invited you to your secure Client Portal for {booking.booking_code}. Your Client ID is {booking.booking_code}. Set your 4-digit PIN here: {url}"
         return Response({"id": user.id, "url": url, "whatsapp_url": f"https://wa.me/{''.join(filter(str.isdigit, mobile))}?text={quote(text)}", "expires_in_days": 7})
 
     def patch(self, request):
@@ -139,7 +140,7 @@ class ClientPortalInviteView(APIView):
         elif action == "enable":
             user.active = True; label = "Client Access Enabled"
         elif action == "reset":
-            raw = secrets.token_urlsafe(32); user.active = True; user.password_hash = ""; user.invite_token_hash = token_hash(raw); user.invite_expires_at = timezone.now() + timedelta(days=7); user.session_token_hash = ""; user.session_expires_at = None; label = "Client Password Reset"
+            raw = secrets.token_urlsafe(32); user.active = True; user.password_hash = ""; user.invite_token_hash = token_hash(raw); user.invite_expires_at = timezone.now() + timedelta(days=7); user.session_token_hash = ""; user.session_expires_at = None; label = "Client PIN Reset"
         else:
             return Response({"detail": "Choose reset, disable, or enable."}, status=400)
         user.save()
@@ -147,7 +148,7 @@ class ClientPortalInviteView(APIView):
         response = {"active": user.active}
         if action == "reset":
             base = getattr(settings, "CLIENT_PORTAL_BASE_URL", "http://127.0.0.1:3000").rstrip("/"); response["url"] = f"{base}/client-portal/setup/{raw}"
-            reset_text = f"Hello {user.name}, {user.organization.name} has reset your Client Portal password. Create a new password here: {response['url']}"
+            reset_text = f"Hello {user.name}, {user.organization.name} has reset your Client Portal PIN. Your Client ID is {user.booking.booking_code}. Create a new 4-digit PIN here: {response['url']}"
             response["whatsapp_url"] = f"https://wa.me/?text={quote(reset_text)}"
         return Response(response)
 
@@ -192,8 +193,8 @@ class ClientPortalWhatsAppView(APIView):
         received = (paid["received"] or 0) - (paid["refunded"] or 0)
         balance = max(booking.quoted_amount - received, 0)
         messages = {
-            "login": f"Hello {client_name},\n\nYou can access your secure {booking.organization.name} Client Portal here:\n{login_url}\n\nStudio ID: {booking.organization.slug}\nBooking: {booking.booking_code}",
-            "gallery_ready": f"Hello {client_name},\n\nYour gallery for {booking.event_type} is ready to review. Please open your Client Portal, view the gallery and select Approve or Request Changes.\n\n{login_url}\nStudio ID: {booking.organization.slug}",
+            "login": f"Hello {client_name},\n\nYou can access your secure {booking.organization.name} Client Portal here:\n{login_url}\n\nClient ID: {booking.booking_code}\nUse the 4-digit PIN you created during setup.",
+            "gallery_ready": f"Hello {client_name},\n\nYour gallery for {booking.event_type} is ready to review. Please open your Client Portal, view the gallery and select Approve or Request Changes.\n\n{login_url}\nClient ID: {booking.booking_code}",
             "payment_reminder": f"Hello {client_name},\n\nPayment reminder for {booking.booking_code}:\nTotal: ₹{booking.quoted_amount:,.2f}\nReceived: ₹{received:,.2f}\nBalance: ₹{balance:,.2f}\n\nYou can review the statement here: {login_url}",
             "approval_confirmation": f"Hello {client_name},\n\nThank you. Your approval for {booking.booking_code} has been recorded successfully. Our production team will proceed with the next delivery step.",
             "revision_acknowledgement": f"Hello {client_name},\n\nWe have received your requested changes for {booking.booking_code}. Our production team will update the work and notify this group when it is ready for review.",
@@ -207,9 +208,14 @@ class ClientPortalWhatsAppView(APIView):
         return Response({"label": labels[message_type], "message": text, "whatsapp_url": f"https://wa.me/?text={quote(text)}"})
 
 
+class ClientPortalLoginThrottle(AnonRateThrottle):
+    scope = "client_portal_login"
+
+
 class ClientPortalAuthView(APIView):
     permission_classes = (AllowAny,)
     authentication_classes = ()
+    throttle_classes = (ClientPortalLoginThrottle,)
 
     def post(self, request, action):
         now = timezone.now()
@@ -218,15 +224,16 @@ class ClientPortalAuthView(APIView):
             user = ClientPortalUser.objects.select_related("booking", "organization").filter(invite_token_hash=token_hash(raw), active=True, invite_expires_at__gt=now).first()
             if not user or not organization_available(user.organization):
                 return Response({"detail": "This invitation is invalid or expired."}, status=401)
-            if len(password) < 4:
-                return Response({"password": "Use at least 4 characters."}, status=400)
+            if not password.isdigit() or len(password) != 4:
+                return Response({"password": "Use exactly four numbers for your PIN."}, status=400)
             user.password_hash = make_password(password); user.invite_token_hash = ""; user.invite_expires_at = None
-            audit_action = "Password Created"
+            audit_action = "PIN Created"
         elif action == "login":
-            email = str(request.data.get("email", "")).strip().lower(); password = str(request.data.get("password", "")); studio = str(request.data.get("studio", "")).strip()
-            user = ClientPortalUser.objects.select_related("booking", "organization").filter(email=email, organization__slug=studio, active=True).first()
-            if not user or not organization_available(user.organization) or not check_password(password, user.password_hash):
-                return Response({"detail": "Invalid email or password."}, status=401)
+            client_id = str(request.data.get("client_id", "")).strip(); password = str(request.data.get("password", "")); studio = str(request.data.get("studio", "")).strip()
+            users = ClientPortalUser.objects.select_related("booking", "organization").filter(booking__booking_code__iexact=client_id, organization__slug=studio, active=True)
+            user = next((candidate for candidate in users if organization_available(candidate.organization) and check_password(password, candidate.password_hash)), None)
+            if not user:
+                return Response({"detail": "Invalid Client ID or PIN."}, status=401)
             user.last_login_at = now; audit_action = "Client Login"
         else:
             return Response({"detail": "Not found."}, status=404)

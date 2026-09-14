@@ -90,6 +90,7 @@ REST_FRAMEWORK = {
         "anon": "100/hour",
         "user": "2000/hour",
         "login": os.getenv("LOGIN_THROTTLE_RATE", "5/minute"),
+        "client_portal_login": "5/minute",
         "client_portal_reset": "5/hour",
         "password_reset_request": "3/hour",
         "password_reset_confirm": "5/hour",

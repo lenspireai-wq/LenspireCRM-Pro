@@ -117,7 +117,7 @@ class ProductionApiTests(TestCase):
         )
         self.assertEqual(revoked.status_code, 200)
 
-    def test_client_invitation_password_login_reset_disable_and_audit(self):
+    def test_client_invitation_pin_login_reset_disable_and_audit(self):
         invited = self.client.post(
             "/api/client-portal/invitations/",
             {"booking": self.booking.id, "name": "Test Client", "email": "client@example.com", "mobile": "919999999999"},
@@ -137,16 +137,16 @@ class ProductionApiTests(TestCase):
         self.assertEqual(copied.status_code, 200)
         invite_token = invited.data["url"].rstrip("/").split("/")[-1]
         public = APIClient()
-        setup = public.post("/api/client-portal/auth/setup/", {"token": invite_token, "password": "Client-pass-123"}, format="json")
+        setup = public.post("/api/client-portal/auth/setup/", {"token": invite_token, "password": "1234"}, format="json")
         self.assertEqual(setup.status_code, 200, setup.data)
-        self.assertEqual(public.post("/api/client-portal/auth/setup/", {"token": invite_token, "password": "Client-pass-123"}, format="json").status_code, 401)
+        self.assertEqual(public.post("/api/client-portal/auth/setup/", {"token": invite_token, "password": "1234"}, format="json").status_code, 401)
         self.assertEqual(public.get(f"/api{setup.data['portal_url']}/").status_code, 200)
-        login = public.post("/api/client-portal/auth/login/", {"studio": "studio", "email": "client@example.com", "password": "Client-pass-123"}, format="json")
+        login = public.post("/api/client-portal/auth/login/", {"studio": "studio", "client_id": self.booking.booking_code, "password": "1234"}, format="json")
         self.assertEqual(login.status_code, 200, login.data)
         status_view = self.client.get(f"/api/client-portal/access/?booking={self.booking.id}")
         user = status_view.data["portal_users"][0]
         actions = {item["action"] for item in status_view.data["activities"]}
-        self.assertTrue({"Client Invited", "Password Created", "Client Login", "WhatsApp Message Prepared", "WhatsApp Invitation Copied"}.issubset(actions))
+        self.assertTrue({"Client Invited", "PIN Created", "Client Login", "WhatsApp Message Prepared", "WhatsApp Invitation Copied"}.issubset(actions))
         disabled = self.client.patch("/api/client-portal/invitations/", {"user": user["id"], "action": "disable"}, format="json")
         self.assertEqual(disabled.status_code, 200)
         self.assertEqual(public.get(f"/api{login.data['portal_url']}/").status_code, 401)

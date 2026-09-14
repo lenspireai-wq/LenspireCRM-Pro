@@ -1102,6 +1102,10 @@ export default function AccountsWorkspace({
             <div className="clientPortalAccessBody">
               <div className="statementMetrics">
                 <article>
+                  <span>Client ID</span>
+                  <b>{portalInfo?.client_id || portalBooking.booking_code || "Loading…"}</b>
+                </article>
+                <article>
                   <span>Link Status</span>
                   <b>{portalInfo?.status || "Loading…"}</b>
                 </article>

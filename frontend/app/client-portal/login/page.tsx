@@ -7,7 +7,7 @@ function ClientLoginForm() {
   const router = useRouter(),
     params = useSearchParams();
   const [studio, setStudio] = useState(params.get("studio") || ""),
-    [email, setEmail] = useState(""),
+    [clientId, setClientId] = useState(""),
     [password, setPassword] = useState(""),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
@@ -19,7 +19,7 @@ function ClientLoginForm() {
     try {
       const { data } = await api.post("/client-portal/auth/login/", {
         studio,
-        email,
+        client_id: clientId,
         password,
       });
       router.replace(data.portal_url);
@@ -36,7 +36,7 @@ function ClientLoginForm() {
           <div className="clientAuthIntroMark">LP</div>
           <p className="clientAuthEyebrow">LENSPIRECRM · CLIENT PORTAL</p>
           <h1>Your event, all in one beautiful place.</h1>
-          <p className="clientAuthIntroCopy">Review your event details, payments and final deliveries whenever you need them.</p>
+          <p className="clientAuthIntroCopy">Review your event details, payments and final deliveries whenever you need them. Sign in with the Client ID shared by your studio.</p>
           <div className="clientAuthFeatures">
             <span>✦ Event details</span><span>✦ Payment tracking</span><span>✦ Secure deliveries</span>
           </div>
@@ -50,15 +50,15 @@ function ClientLoginForm() {
             <input required value={studio} onChange={(e) => setStudio(e.target.value)} placeholder="studio-name" />
           </label>
           <label>
-            Email address
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" placeholder="you@example.com" />
+            Client ID
+            <input required value={clientId} onChange={(e) => setClientId(e.target.value)} autoComplete="username" placeholder="e.g. BKG-00001" />
           </label>
           <label>
-            Password
-            <input type={show ? "text" : "password"} required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" placeholder="Enter your password" />
+            4-digit PIN
+            <input type={show ? "text" : "password"} inputMode="numeric" pattern="[0-9]{4}" maxLength={4} required value={password} onChange={(e) => setPassword(e.target.value.replace(/\D/g, ""))} autoComplete="current-password" placeholder="••••" />
           </label>
           <label className="clientShowPassword">
-            <input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} /> Show password
+            <input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} /> Show PIN
           </label>
           {error && <div className="error">{error}</div>}
           <button className="primary" disabled={busy}>{busy ? "Signing in…" : "Sign in to portal"}<span aria-hidden="true">→</span></button>
