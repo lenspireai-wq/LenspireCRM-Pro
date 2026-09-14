@@ -1217,15 +1217,6 @@ export default function AccountsWorkspace({
                     />
                   </label>
                   <label>
-                    Email *
-                    <input
-                      name="email"
-                      type="email"
-                      required
-                      defaultValue={portalBooking.email}
-                    />
-                  </label>
-                  <label>
                     Mobile Number *
                     <input
                       name="mobile"
@@ -1257,7 +1248,7 @@ export default function AccountsWorkspace({
                     <div>
                       <b>{user.name}</b>
                       <span>
-                        {user.email} · {user.mobile || "No mobile"}
+                        {user.mobile || "No mobile"}
                       </span>
                       <small>
                         {user.active ? "Active" : "Disabled"}

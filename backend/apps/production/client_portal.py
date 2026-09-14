@@ -127,16 +127,35 @@ class ClientPortalInviteView(APIView):
         name = str(request.data.get("name", "")).strip()
         email = str(request.data.get("email", "")).strip().lower()
         mobile = str(request.data.get("mobile", "")).strip()
-        if not name or "@" not in email:
-            return Response({"detail": "Enter the client name and a valid email address."}, status=400)
+        if not name or not mobile:
+            return Response({"detail": "Enter the client name and mobile number."}, status=400)
+        if email and "@" not in email:
+            return Response({"detail": "Enter a valid email address, or leave it blank."}, status=400)
         raw = secrets.token_urlsafe(32)
-        user, _ = ClientPortalUser.objects.update_or_create(
-            organization=booking.organization,
-            email=email,
-            defaults={"booking": booking, "name": name, "mobile": mobile, "active": True, "invite_token_hash": token_hash(raw), "invite_expires_at": timezone.now() + timedelta(days=7), "session_token_hash": "", "session_expires_at": None},
+        user = (
+            ClientPortalUser.objects.filter(organization=booking.organization, email=email).first()
+            if email
+            else booking.portal_users.filter(mobile=mobile).first() or booking.portal_users.filter(name__iexact=name).first()
         )
+        if not user:
+            user = ClientPortalUser(
+                organization=booking.organization,
+                booking=booking,
+                # The model keeps email unique, so clients invited by WhatsApp
+                # receive a private system address instead of needing an email.
+                email=email or f"client-{booking.id}-{secrets.token_hex(8)}@portal.local",
+            )
+        user.booking = booking
+        user.name = name
+        user.mobile = mobile
+        user.active = True
+        user.invite_token_hash = token_hash(raw)
+        user.invite_expires_at = timezone.now() + timedelta(days=7)
+        user.session_token_hash = ""
+        user.session_expires_at = None
+        user.save()
         access = ensure_portal_access(booking)
-        ClientPortalActivity.objects.create(organization=booking.organization, access=access, booking=booking, action="Client Invited", detail=f"Password setup invitation generated for {email}.")
+        ClientPortalActivity.objects.create(organization=booking.organization, access=access, booking=booking, action="Client Invited", detail=f"PIN setup invitation generated for {name} at {mobile}.")
         base = getattr(settings, "CLIENT_PORTAL_BASE_URL", "http://127.0.0.1:3000").rstrip("/")
         url = f"{base}/client-portal/setup/{raw}"
         text = f"Hello {name}, {booking.organization.name} has invited you to your secure Client Portal for {booking.booking_code}. Your Client ID is {booking.booking_code}. Set your 4-digit PIN here: {url}"
