@@ -1,6 +1,7 @@
 import hashlib
 import re
 import secrets
+from decimal import Decimal, ROUND_HALF_UP
 from datetime import timedelta
 from urllib.parse import quote
 
@@ -65,6 +66,71 @@ def deliverable_thumbnail_url(item):
     if re.search(r"\.(?:avif|gif|jpe?g|png|webp)(?:[?#].*)?$", link, re.IGNORECASE):
         return link
     return ""
+
+
+PAYMENT_SCHEDULE = (
+    ("Advance", 10),
+    ("First Shoot", 40),
+    ("Wedding Day", 40),
+    ("Final Delivery", 10),
+)
+
+
+def client_payment_schedule(booking, payments):
+    """Return the client-facing 10 / 40 / 40 / 10 booking schedule.
+
+    Payments are allocated in ledger order so older bookings with manually
+    entered or mislabelled pending rows still present one clear, complete
+    payment plan to the client. The financial totals themselves remain based
+    on the actual ledger entries.
+    """
+    total = Decimal(booking.quoted_amount or 0)
+    allocated = Decimal("0.00")
+    stages = []
+    for index, (label, percent) in enumerate(PAYMENT_SCHEDULE):
+        amount = (
+            total - allocated
+            if index == len(PAYMENT_SCHEDULE) - 1
+            else (total * Decimal(percent) / Decimal("100")).quantize(
+                Decimal("0.01"), rounding=ROUND_HALF_UP
+            )
+        )
+        allocated += amount
+        stages.append({
+            "payment_type": label,
+            "percent": percent,
+            "status": "Pending",
+            "amount": amount,
+            "due_date": None,
+            "paid_at": None,
+        })
+
+    paid = [payment for payment in payments if payment.status == "Paid" and payment.payment_type != "Refund"]
+    paid_index = 0
+    paid_remaining = Decimal("0.00")
+    for stage in stages:
+        remaining = stage["amount"]
+        while remaining > 0 and paid_index < len(paid):
+            payment = paid[paid_index]
+            if paid_remaining <= 0:
+                paid_remaining = Decimal(payment.amount or 0)
+            applied = min(remaining, paid_remaining)
+            remaining -= applied
+            paid_remaining -= applied
+            if remaining == 0:
+                stage["status"] = "Paid"
+                stage["paid_at"] = payment.paid_at
+            if paid_remaining <= 0:
+                paid_index += 1
+
+    pending = [payment for payment in payments if payment.status != "Paid" and payment.payment_type != "Refund"]
+    pending_index = 0
+    for stage in stages:
+        if stage["status"] == "Paid" or pending_index >= len(pending):
+            continue
+        stage["due_date"] = pending[pending_index].due_date
+        pending_index += 1
+    return stages
 
 
 class ClientPortalManageView(APIView):
@@ -350,6 +416,7 @@ class ClientPortalPublicView(APIView):
         booking = access.booking
         payments = booking.payments.order_by("paid_at", "due_date", "created_at")
         totals = payments.filter(status="Paid").aggregate(received=Sum("amount", filter=~Q(payment_type="Refund")), refunded=Sum("amount", filter=Q(payment_type="Refund")))
+        payments = list(payments)
         received = (totals["received"] or 0) - (totals["refunded"] or 0)
         events = CalendarEvent.objects.filter(organization=access.organization, booking=booking).order_by("start_date")
         deliverables = ProductionDeliverable.objects.filter(organization=access.organization, job__booking=booking, drive_link__gt="").select_related("job")
@@ -358,7 +425,7 @@ class ClientPortalPublicView(APIView):
             "studio": {"name": access.organization.name, "phone": access.organization.contact_phone, "email": access.organization.contact_email, "logo_url": access.organization.logo_url},
             "booking": {"id": booking.id, "code": booking.booking_code, "client_name": booking.customer.name, "couple_name": getattr(booking.lead, "couple_name", "") if booking.lead else "", "event_type": booking.event_type, "event_date": booking.event_date, "total": booking.quoted_amount, "received": received, "balance": max(booking.quoted_amount - received, 0)},
             "events": list(events.values("event_type", "start_date", "status")),
-            "payments": list(payments.values("payment_type", "status", "amount", "due_date", "paid_at")),
+            "payments": client_payment_schedule(booking, payments),
             "deliverables": [{"id": item.id, "name": item.name, "status": item.status, "drive_link": item.drive_link, "thumbnail_url": deliverable_thumbnail_url(item), "revision_notes": item.revision_notes} for item in deliverables],
         })
 

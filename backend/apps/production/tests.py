@@ -117,6 +117,37 @@ class ProductionApiTests(TestCase):
         )
         self.assertEqual(revoked.status_code, 200)
 
+    def test_client_portal_uses_standard_four_stage_payment_schedule(self):
+        self.booking.quoted_amount = "125000.00"
+        self.booking.save(update_fields=("quoted_amount",))
+        Payment.objects.filter(booking=self.booking).delete()
+        Payment.objects.create(
+            organization=self.organization, booking=self.booking, customer=self.customer,
+            amount="12500.00", payment_type="Advance", status="Paid", paid_at="2026-07-13T00:00:00Z",
+        )
+        Payment.objects.create(
+            organization=self.organization, booking=self.booking, customer=self.customer,
+            amount="50000.00", payment_type="First Shoot", status="Paid", paid_at="2026-08-24T00:00:00Z",
+        )
+        Payment.objects.create(
+            organization=self.organization, booking=self.booking, customer=self.customer,
+            amount="37500.00", payment_type="Advance", status="Pending", due_date="2026-12-31",
+        )
+        generated = self.client.post("/api/client-portal/access/", {"booking": self.booking.id, "expiry_days": 60}, format="json")
+        token = generated.data["url"].rstrip("/").split("/")[-1]
+        portal = APIClient().get(f"/api/client-portal/{token}/")
+        self.assertEqual(portal.status_code, 200, portal.data)
+        self.assertEqual(
+            [(item["payment_type"], str(item["amount"]), item["status"]) for item in portal.data["payments"]],
+            [
+                ("Advance", "12500.00", "Paid"),
+                ("First Shoot", "50000.00", "Paid"),
+                ("Wedding Day", "50000.00", "Pending"),
+                ("Final Delivery", "12500.00", "Pending"),
+            ],
+        )
+        self.assertEqual(str(portal.data["payments"][2]["due_date"]), "2026-12-31")
+
     def test_client_invitation_pin_login_reset_disable_and_audit(self):
         invited = self.client.post(
             "/api/client-portal/invitations/",
