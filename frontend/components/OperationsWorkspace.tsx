@@ -580,6 +580,7 @@ function Dashboard({
 }) {
   const today = new Date().toISOString().slice(0, 10),
     upcoming = events.filter((e) => upcomingStatuses.has(e.status));
+  const nextShoots = upcoming.slice(0, 10);
   return (
     <>
       <section className="salesKpis">
@@ -643,9 +644,14 @@ function Dashboard({
           <small>photographers</small>
         </article>
       </section>
-      <section className="panel">
-        <div className="panelHead">
-          <h2>Next Shoots</h2>
+      <section className="panel nextShootsPanel">
+        <div className="panelHead nextShootsHead">
+          <div>
+            <span className="sectionEyebrow">OPERATIONS TIMELINE</span>
+            <h2>Next Shoots</h2>
+            <p>Stay ahead of every upcoming assignment.</p>
+          </div>
+          <span className="nextShootsCount">{nextShoots.length} scheduled</span>
           <button
             className="iconOnlyAction viewAction"
             title="View all upcoming events"
@@ -655,9 +661,76 @@ function Dashboard({
             ◉
           </button>
         </div>
-        <EventTable events={upcoming.slice(0, 8)} compact />
+        <NextShootsTable events={nextShoots} />
       </section>
     </>
+  );
+}
+
+function NextShootsTable({ events }: { events: Row[] }) {
+  const crewCount = (event: Row) =>
+    [event.photo, event.video, event.candid, event.cinematic, event.drone, event.assistant, event.bts]
+      .flatMap((value) => String(value || "").split(/\s*;\s*|\s*\+(?!\s*\d)\s*/))
+      .filter((value) => value && !["X", "XX", "NA"].includes(value.trim().toUpperCase()))
+      .length;
+
+  return (
+    <div className="nextShootsTableWrap">
+      <table className="nextShootsTable">
+        <thead>
+          <tr>
+            <th>When</th>
+            <th>Client &amp; shoot</th>
+            <th>Coverage</th>
+            <th>Venue</th>
+            <th>Readiness</th>
+          </tr>
+        </thead>
+        <tbody>
+          {events.map((event, index) => {
+            const count = crewCount(event);
+            return (
+              <tr key={event.id}>
+                <td>
+                  <div className="shootDateCard">
+                    <span>{event.start_date ? new Date(`${event.start_date}T00:00:00`).toLocaleDateString("en-IN", { month: "short" }).toUpperCase() : "TBD"}</span>
+                    <b>{event.start_date ? new Date(`${event.start_date}T00:00:00`).getDate() : "—"}</b>
+                    <small>{event.start_date ? new Date(`${event.start_date}T00:00:00`).toLocaleDateString("en-IN", { weekday: "short" }) : "date"}</small>
+                  </div>
+                </td>
+                <td>
+                  <div className="shootClient">
+                    <span className="shootNumber">{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <b>{event.client_name || event.title || "Client to be confirmed"}</b>
+                      <small>{event.couple_name || event.event_type || "Shoot details pending"}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div className={`coverageMeter ${count ? "ready" : "pending"}`}>
+                    <span>{count ? `${count} crew assigned` : "Crew pending"}</span>
+                    <i><em style={{ width: `${Math.min(100, count * 20)}%` }} /></i>
+                  </div>
+                </td>
+                <td>
+                  <div className="shootVenue">
+                    <b>{event.city || "Venue to be confirmed"}</b>
+                    <small>{event.start_time?.slice(0, 5) || "Time TBD"}</small>
+                  </div>
+                </td>
+                <td>
+                  <span className={`statusPill status-${String(event.status || "scheduled").toLowerCase().replaceAll(" ", "-")}`}>
+                    <i aria-hidden="true">●</i>{event.status || "Scheduled"}
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      {!events.length && <div className="empty">No upcoming shoots found.</div>}
+    </div>
   );
 }
 
