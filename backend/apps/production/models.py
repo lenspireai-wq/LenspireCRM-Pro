@@ -63,6 +63,7 @@ class ProductionDeliverable(OrganizationScopedModel):
     priority = models.CharField(max_length=20, default="Normal")
     status = models.CharField(max_length=40, default="Unassigned")
     drive_link = models.URLField(max_length=500, blank=True)
+    thumbnail_url = models.URLField(max_length=500, blank=True)
     revision_notes = models.TextField(blank=True)
     revision_count = models.PositiveIntegerField(default=0)
     submitted_at = models.DateTimeField(null=True, blank=True)

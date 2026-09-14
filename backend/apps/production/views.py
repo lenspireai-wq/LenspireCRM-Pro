@@ -545,14 +545,16 @@ class ProductionJobViewSet(OrganizationScopedViewSet):
         if is_editor and requested_status not in {"In Progress", "Submitted for Review"}:
             return Response({"detail": "Editors can start work or submit it for review."}, status=400)
         drive_link = str(request.data.get("drive_link", deliverable.drive_link or "")).strip()
+        thumbnail_url = str(request.data.get("thumbnail_url", deliverable.thumbnail_url or "")).strip()
         if requested_status == "Submitted for Review" and not drive_link:
             return Response({"drive_link": "Add the completed-work link before submitting."}, status=400)
         previous_status = deliverable.status
         deliverable.status = requested_status
         deliverable.drive_link = drive_link
+        deliverable.thumbnail_url = thumbnail_url
         if requested_status == "Submitted for Review":
             deliverable.submitted_at = timezone.now()
-        deliverable.save(update_fields=("status", "drive_link", "submitted_at", "updated_at"))
+        deliverable.save(update_fields=("status", "drive_link", "thumbnail_url", "submitted_at", "updated_at"))
         if previous_status != requested_status:
             ProductionActivity.objects.create(
                 organization=job.organization,

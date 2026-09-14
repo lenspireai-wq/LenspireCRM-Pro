@@ -83,6 +83,7 @@ const workflowDeliverables = (job: Row) => {
     priority: existing.get(name)?.priority || "Normal",
     status: existing.get(name)?.status || "Unassigned",
     drive_link: existing.get(name)?.drive_link || "",
+    thumbnail_url: existing.get(name)?.thumbnail_url || "",
     revision_notes: existing.get(name)?.revision_notes || "",
     revision_count: existing.get(name)?.revision_count || 0,
   }));
@@ -174,6 +175,7 @@ export default function ProductionWorkspace({
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [driveLinks, setDriveLinks] = useState<Record<number, string>>({});
+  const [thumbnailLinks, setThumbnailLinks] = useState<Record<number, string>>({});
   const today = new Date().toISOString().slice(0, 10);
   const availableViews: View[] = isEditor ? ["My Work"] : views;
   useEffect(() => {
@@ -411,6 +413,7 @@ export default function ProductionWorkspace({
                   : item.status
                 : "Unassigned",
             drive_link: item.drive_link || "",
+            thumbnail_url: item.thumbnail_url || "",
             revision_notes: item.revision_notes || "",
             revision_count: Number(item.revision_count || 0),
           })),
@@ -455,6 +458,7 @@ export default function ProductionWorkspace({
   ) => {
     setError("");
     const submittedLink = (driveLinks[task.id] ?? task.drive_link ?? "").trim();
+    const thumbnailUrl = (thumbnailLinks[task.id] ?? task.thumbnail_url ?? "").trim();
     if (status === "Submitted for Review" && !submittedLink) {
       setError("Paste the completed-work link before submitting for review.");
       return;
@@ -462,7 +466,7 @@ export default function ProductionWorkspace({
     try {
       await updateDeliverableMutation.mutateAsync({
         url: `/production/${job.id}/deliverables/${task.id}/`,
-        payload: { status, drive_link: submittedLink },
+        payload: { status, drive_link: submittedLink, thumbnail_url: thumbnailUrl },
       });
     } catch (problem: any) {
       const data = problem.response?.data;
@@ -772,6 +776,15 @@ export default function ProductionWorkspace({
                           }}
                         />
                       </label>
+                      <label>
+                        Gallery Cover Image <small>(optional)</small>
+                        <input
+                          type="url"
+                          value={thumbnailLinks[task.id] ?? task.thumbnail_url ?? ""}
+                          placeholder="https://.../cover.jpg"
+                          onChange={(event) => setThumbnailLinks((current) => ({ ...current, [task.id]: event.target.value }))}
+                        />
+                      </label>
                     </div>
                     <footer>
                       <button
@@ -1025,6 +1038,16 @@ export default function ProductionWorkspace({
                               revision_notes: event.target.value,
                             })
                           }
+                        />
+                      </label>
+                      <label className="wide">
+                        Gallery Cover Image <small>(optional)</small>
+                        <input
+                          type="url"
+                          value={item.thumbnail_url || ""}
+                          disabled={!item.enabled}
+                          placeholder="https://.../cover.jpg"
+                          onChange={(event) => updateDeliverable(index, { thumbnail_url: event.target.value })}
                         />
                       </label>
                       {item.drive_link && (

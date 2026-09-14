@@ -1,4 +1,5 @@
 import hashlib
+import re
 import secrets
 from datetime import timedelta
 from urllib.parse import quote
@@ -68,6 +69,17 @@ class ClientPortalManageView(APIView):
         if not booking:
             return Response({"detail": "Booking not found."}, status=404)
         access = ClientPortalAccess.objects.filter(booking=booking).first()
+        def thumbnail_for(item):
+            if item.thumbnail_url:
+                return item.thumbnail_url
+            link = item.drive_link or ""
+            drive_file = re.search(r"/file/d/([a-zA-Z0-9_-]+)", link) or re.search(r"[?&]id=([a-zA-Z0-9_-]+)", link)
+            if drive_file and "drive.google.com" in link:
+                return f"https://drive.google.com/thumbnail?id={drive_file.group(1)}&sz=w1000"
+            if re.search(r"\.(?:avif|gif|jpe?g|png|webp)(?:[?#].*)?$", link, re.IGNORECASE):
+                return link
+            return ""
+
         return Response({
             "status": access_status(access),
             "expires_at": access.expires_at if access else None,
@@ -327,7 +339,7 @@ class ClientPortalPublicView(APIView):
             "booking": {"id": booking.id, "code": booking.booking_code, "client_name": booking.customer.name, "couple_name": getattr(booking.lead, "couple_name", "") if booking.lead else "", "event_type": booking.event_type, "event_date": booking.event_date, "total": booking.quoted_amount, "received": received, "balance": max(booking.quoted_amount - received, 0)},
             "events": list(events.values("event_type", "start_date", "status")),
             "payments": list(payments.values("payment_type", "status", "amount", "due_date", "paid_at")),
-            "deliverables": [{"id": item.id, "name": item.name, "status": item.status, "drive_link": item.drive_link, "revision_notes": item.revision_notes} for item in deliverables],
+            "deliverables": [{"id": item.id, "name": item.name, "status": item.status, "drive_link": item.drive_link, "thumbnail_url": thumbnail_for(item), "revision_notes": item.revision_notes} for item in deliverables],
         })
 
     def post(self, request, token):
