@@ -764,7 +764,10 @@ function EventTable({
     );
     const multipleNames = namedAssignments.length > 1;
     return assignments.length ? (
-      <div className={`crewAssignments ${multipleNames ? "multipleCrew" : ""}`}>
+      <div
+        className={`crewAssignments ${multipleNames ? "multipleCrew" : ""}`}
+        data-crew-count={multipleNames ? namedAssignments.length : undefined}
+      >
         {assignments.map((assignment, index) => {
           const marker = assignment.toUpperCase();
           const displayAssignment = crewDisplayValue(assignment) || assignment;

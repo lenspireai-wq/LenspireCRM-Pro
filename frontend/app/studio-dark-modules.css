@@ -373,9 +373,21 @@
   color: var(--success);
 }
 :root[data-theme="dark"] .crewAssignments span.crewAssignedMultiple {
-  border-color: var(--success);
-  background: var(--success-soft);
-  color: var(--success);
+  border-color: #a98af0;
+  background: #35245f;
+  color: #e1d3ff;
+}
+:root[data-theme="dark"] .crewAssignments.multipleCrew {
+  border-color: #8565cc;
+  background: linear-gradient(135deg, rgba(133, 101, 204, .25), rgba(31, 22, 58, .52));
+}
+:root[data-theme="dark"] .crewAssignments.multipleCrew::before {
+  color: #d0bcff;
+}
+:root[data-theme="dark"] .crewAssignments.multipleCrew span.crewAssignedMultiple:nth-of-type(even) {
+  border-color: #5da6ee;
+  background: #173e6b;
+  color: #c6e4ff;
 }
 :root[data-theme="dark"] .eventRowActions button,
 :root[data-theme="dark"] .eventRowActions a {

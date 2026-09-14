@@ -2456,10 +2456,31 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   font-weight: 800;
 }
 .crewAssignments span.crewAssignedMultiple {
-  border-color: #23805c;
-  background: #0d5a3f;
-  color: #8affc5;
+  border-color: #9270df;
+  background: #31245f;
+  color: #dbc8ff;
   font-weight: 800;
+}
+.crewAssignments.multipleCrew {
+  position: relative;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid #7656c1;
+  border-radius: 7px;
+  background: linear-gradient(135deg, rgba(118, 86, 193, .19), rgba(48, 32, 95, .26));
+}
+.crewAssignments.multipleCrew::before {
+  content: attr(data-crew-count) " CREW";
+  color: #c9b0ff;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  line-height: 1;
+}
+.crewAssignments.multipleCrew span.crewAssignedMultiple:nth-of-type(even) {
+  border-color: #4b91d8;
+  background: #173b67;
+  color: #b9dfff;
 }
 .eventNotes {
   max-width: 170px;
