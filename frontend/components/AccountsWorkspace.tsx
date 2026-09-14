@@ -685,7 +685,7 @@ export default function AccountsWorkspace({
   );
   return (
     <div
-      className={`accountsWorkspace${view === "Client Ledger" ? " clientLedgerView" : ""}`}
+      className={`accountsWorkspace${view === "Client Ledger" ? " clientLedgerView" : view === "Receivables" ? " receivablesView" : ""}`}
       style={{ "--accounts-controls-height": `${accountsControlsHeight}px` } as CSSProperties}
     >
       {(view === "Payment Dashboard" || view === "Receivables" || view === "Client Ledger" || view === "Reports & Analytics") ? (
