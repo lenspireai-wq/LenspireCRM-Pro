@@ -33,7 +33,11 @@ function ClientLoginForm() {
     <main className="clientAuth">
       <div className="clientAuthShell">
         <section className="clientAuthIntro" aria-label="Client portal overview">
-          <div className="clientAuthIntroMark">LP</div>
+          <img
+            className="clientAuthLenspireLogo"
+            src="/login/lenspire-wordmark.png"
+            alt="Lenspire.ai — See, Create, Inspire"
+          />
           <p className="clientAuthEyebrow">LENSPIRECRM · CLIENT PORTAL</p>
           <h1>Your event, all in one beautiful place.</h1>
           <p className="clientAuthIntroCopy">Review your event details, payments and final deliveries whenever you need them. Sign in with the Client ID shared by your studio.</p>
@@ -47,15 +51,15 @@ function ClientLoginForm() {
           <div className="clientAuthHeading"><h2>Welcome back</h2><p>Sign in to access your personal event space.</p></div>
           <label>
             Studio ID
-            <input required value={studio} onChange={(e) => setStudio(e.target.value)} placeholder="studio-name" />
+            <div className="clientAuthInput"><i>◇</i><input required value={studio} onChange={(e) => setStudio(e.target.value)} placeholder="studio-name" /></div>
           </label>
           <label>
             Client ID
-            <input required value={clientId} onChange={(e) => setClientId(e.target.value)} autoComplete="username" placeholder="e.g. BKG-00001" />
+            <div className="clientAuthInput"><i>♟</i><input required value={clientId} onChange={(e) => setClientId(e.target.value)} autoComplete="username" placeholder="e.g. BKG-00001" /></div>
           </label>
           <label>
             4-digit PIN
-            <input type={show ? "text" : "password"} inputMode="numeric" pattern="[0-9]{4}" maxLength={4} required value={password} onChange={(e) => setPassword(e.target.value.replace(/\D/g, ""))} autoComplete="current-password" placeholder="••••" />
+            <div className="clientAuthInput"><i>◈</i><input type={show ? "text" : "password"} inputMode="numeric" pattern="[0-9]{4}" maxLength={4} required value={password} onChange={(e) => setPassword(e.target.value.replace(/\D/g, ""))} autoComplete="current-password" placeholder="••••" /></div>
           </label>
           <label className="clientShowPassword">
             <input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} /> Show PIN
