@@ -1158,6 +1158,29 @@ input:-webkit-autofill:active {
 .clientPortalRow { align-items: center; gap: 12px; padding: 15px 0; border-color: rgb(255 255 255 / 8%); }.clientPortalRow > i { width: 25px; color: #bfa56f; font-size: 11px; font-style: normal; }.clientPortalRow > div { display: grid; gap: 4px; flex: 1; }.clientPortalRow b { color: #f2eadf; }.clientPortalRow span { color: #a99d8e; font-size: 12px; }.clientPortalRow strong { color: #f1d59d; font-size: 13px; }.clientPortalRow em { padding: 5px 9px; border: 1px solid rgb(212 180 119 / 20%); border-radius: 999px; background: rgb(212 180 119 / 8%); color: #dfc794; font-size: 10px; font-style: normal; white-space: nowrap; }
 .clientPortalDeliveries { background: linear-gradient(135deg, rgb(54 46 39 / 94%), rgb(31 28 25 / 94%)); }.clientDeliverable { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px; padding: 18px; border-color: rgb(212 180 119 / 17%); border-radius: 16px; background: rgb(18 17 15 / 45%); }.clientDeliverableTop { display: flex; align-items: center; gap: 13px; }.clientDeliverableIcon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 13px; background: rgb(212 180 119 / 13%); color: #d4b477; }.clientDeliverableTop > div:last-child { display: grid; gap: 4px; }.clientDeliverable span { color: #b3a695; font-size: 12px; }.clientDeliverable a { margin: 0; border: 1px solid #d4b477; border-radius: 10px; background: linear-gradient(135deg, #d4b477, #b58a47); color: #211b12; font-weight: 800; }.clientDeliverable a i { margin-left: 6px; font-size: 16px; font-style: normal; }.clientFeedback { grid-column: 1 / -1; }.clientFeedback button { border-radius: 9px; background: #6257df; }.clientApproved { grid-column: 1 / -1; margin: 0 !important; color: #8ce5b7 !important; }.clientPortal footer { color: #a99c8d; }
 @media(max-width:700px) { .clientPortalGrid { grid-template-columns: 1fr; }.clientPortalHeroFooter, .clientPortalHeroTop { align-items: flex-start; flex-direction: column; }.clientPortalHeroFooter { gap: 10px; }.clientDeliverable { grid-template-columns: 1fr; }.clientDeliverable a { width: 100%; justify-content: center; box-sizing: border-box; }.clientPortalRow em { max-width: 100px; overflow: hidden; text-overflow: ellipsis; }.clientPortalStats { grid-template-columns: 1fr; } }
+
+/* Keep the event portal concise: it should scan like a dashboard, not read
+   like a long-form page. */
+.clientPortal { padding-top: clamp(18px, 3vw, 36px); padding-bottom: 28px; }
+.clientPortalHero { padding: clamp(22px, 3.5vw, 34px); margin-bottom: 14px; border-radius: 22px; }
+.clientPortalHeroGlow { width: 300px; height: 300px; right: -110px; top: -150px; }
+.clientPortalStudioLogo { height: 70px; }
+.clientPortalHero small { margin-top: 14px; }
+.clientPortalHero h1 { margin: 5px 0; font-size: clamp(30px, 4vw, 46px); }
+.clientPortalHeroFooter { margin-top: 18px; padding-top: 12px; }
+.clientPortalStats { gap: 12px; margin-bottom: 12px; }
+.clientPortalStats article { padding: 15px 18px; border-radius: 14px; }
+.clientPortalStats b { margin-top: 4px; font-size: clamp(18px, 1.8vw, 23px); }
+.clientPortalGrid { gap: 12px; }
+.clientPortalCard { margin-bottom: 12px; padding: 19px 21px; border-radius: 16px; }
+.clientPortalCardTitle { gap: 10px; margin-bottom: 10px; }
+.clientPortalCardTitle > span { width: 30px; height: 30px; }
+.clientPortalCard h2 { font-size: 21px; }
+.clientPortalRow { padding: 10px 0; }
+.clientPortalDeliverable { padding: 13px; margin-top: 10px; border-radius: 13px; }
+.clientDeliverableIcon { width: 34px; height: 34px; border-radius: 10px; }
+.clientDeliverable a { padding: 8px 11px; }
+@media(max-width:700px) { .clientPortalHero { padding: 22px; }.clientPortalStudioLogo { height: 62px; }.clientPortalHeroTop > span { padding: 6px 9px; }.clientPortalCard { padding: 18px; }.clientPortalStats article { padding: 14px 16px; } }
 .error {
   margin-bottom: 12px;
   color: #ff8d98;
