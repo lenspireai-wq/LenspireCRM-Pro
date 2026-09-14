@@ -1185,14 +1185,14 @@ input:-webkit-autofill:active {
 /* Extra-compact event header. */
 .clientPortalHero { padding: 16px 22px; min-height: 0; }
 .clientPortalHeroGlow { width: 230px; height: 230px; right: -100px; top: -130px; }
-.clientPortalStudioLogo { height: 48px; }
+.clientPortalStudioLogo { height: 78px; }
 .clientPortalHeroTop > span { padding: 5px 8px; font-size: 9px; }
 .clientPortalHero small { margin-top: 8px; font-size: 9px; }
 .clientPortalHero h1 { margin: 3px 0; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.05; }
 .clientPortalHero p { font-size: 12px; }
 .clientPortalHeroFooter { margin-top: 10px; padding-top: 8px; font-size: 10px; }
 .clientPortalHeroFooter b { font-size: 9px; }
-@media(max-width:700px) { .clientPortalHero { padding: 16px; }.clientPortalStudioLogo { height: 44px; }.clientPortalHeroFooter { align-items: center; flex-direction: row; flex-wrap: wrap; } }
+@media(max-width:700px) { .clientPortalHero { padding: 16px; }.clientPortalStudioLogo { height: 62px; }.clientPortalHeroFooter { align-items: center; flex-direction: row; flex-wrap: wrap; } }
 
 /* Give the client-portal introduction more breathing room below the brand. */
 .clientAuthLenspireLogo { width: clamp(102px, 8vw, 125px); }
