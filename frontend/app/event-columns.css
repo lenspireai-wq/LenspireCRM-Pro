@@ -965,6 +965,34 @@
   }
 }
 
+/* Keep long Upcoming and Completed Event lists contained on phones too. This
+   keeps the horizontal scroll rail at the bottom of the visible table instead
+   of placing it after hundreds of event rows. */
+@media (max-width: 768px) {
+  :root .mainOperationsEvents .fitUpcomingColumns.upcomingEventsTableWrap {
+    height: calc(100dvh - 178px) !important;
+    max-height: calc(100dvh - 178px) !important;
+    min-height: 320px;
+    overflow: auto !important;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #7186a4 #142237;
+  }
+  :root .mainOperationsEvents .fitUpcomingColumns.upcomingEventsTableWrap::-webkit-scrollbar {
+    display: block;
+    width: 12px;
+    height: 12px;
+  }
+  :root .mainOperationsEvents .fitUpcomingColumns.upcomingEventsTableWrap::-webkit-scrollbar-track {
+    background: #142237;
+  }
+  :root .mainOperationsEvents .fitUpcomingColumns.upcomingEventsTableWrap::-webkit-scrollbar-thumb {
+    background: #7186a4;
+    border: 3px solid #142237;
+    border-radius: 8px;
+  }
+}
+
 /* Compact, right-aligned Operations actions. Labels remain visible while the
    small trailing icon makes the action type easy to scan. */
 .operationsDashboardControls .operationsActions .operationsActionButton {
