@@ -10404,6 +10404,30 @@ table > tbody > tr:has(td[colspan])::before {
     overflow: visible;
     overflow-wrap: normal;
   }
+  /* Client Ledger has the same ten-column structure.  Use readable fixed
+     columns and horizontal swipe on phones instead of compressing the ledger
+     details into narrow cells. */
+  .mainAccountsSticky .clientLedgerTable {
+    width: 1344px !important;
+    min-width: 1344px !important;
+    max-width: none !important;
+    table-layout: fixed !important;
+  }
+  .mainAccountsSticky .clientLedgerTable th:nth-child(1) { width: 48px !important; }
+  .mainAccountsSticky .clientLedgerTable th:nth-child(2) { width: 100px !important; }
+  .mainAccountsSticky .clientLedgerTable th:nth-child(3) { width: 160px !important; }
+  .mainAccountsSticky .clientLedgerTable th:nth-child(4),
+  .mainAccountsSticky .clientLedgerTable th:nth-child(5),
+  .mainAccountsSticky .clientLedgerTable th:nth-child(6) { width: 110px !important; }
+  .mainAccountsSticky .clientLedgerTable th:nth-child(7) { width: 350px !important; }
+  .mainAccountsSticky .clientLedgerTable th:nth-child(8) { width: 140px !important; }
+  .mainAccountsSticky .clientLedgerTable th:nth-child(9) { width: 86px !important; }
+  .mainAccountsSticky .clientLedgerTable th:nth-child(10) { width: 130px !important; }
+  .mainAccountsSticky .clientLedgerTable th,
+  .mainAccountsSticky .clientLedgerTable td {
+    overflow: visible;
+    overflow-wrap: normal;
+  }
 }
 
 @media (max-width: 359px) {
