@@ -332,6 +332,25 @@
   color: #d4a544 !important;
 }
 
+/* Give dates their full compact width again. The small amount required comes
+   evenly from the seven crew-assignment fields, preserving the one-page grid. */
+:root .fitUpcomingColumns.uniformEventColumns.operationsUpcomingTable .upcomingEventsTable col:nth-child(2),
+:root .fitUpcomingColumns.uniformEventColumns.operationsUpcomingTable .upcomingEventsTable :is(th, td):nth-child(2),
+:root .fitUpcomingColumns.uniformEventColumns.operationsCompletedTable .upcomingEventsTable col:nth-child(2),
+:root .fitUpcomingColumns.uniformEventColumns.operationsCompletedTable .upcomingEventsTable :is(th, td):nth-child(2) {
+  width: 5.555556% !important;
+  min-width: 0 !important;
+  max-width: 5.555556% !important;
+}
+:root .fitUpcomingColumns.uniformEventColumns.operationsUpcomingTable .upcomingEventsTable col:nth-child(n + 8):nth-child(-n + 14),
+:root .fitUpcomingColumns.uniformEventColumns.operationsUpcomingTable .upcomingEventsTable :is(th, td):nth-child(n + 8):nth-child(-n + 14),
+:root .fitUpcomingColumns.uniformEventColumns.operationsCompletedTable .upcomingEventsTable col:nth-child(n + 8):nth-child(-n + 14),
+:root .fitUpcomingColumns.uniformEventColumns.operationsCompletedTable .upcomingEventsTable :is(th, td):nth-child(n + 8):nth-child(-n + 14) {
+  width: 5.362% !important;
+  min-width: 0 !important;
+  max-width: 5.362% !important;
+}
+
 /* Completed Events is deliberately a full-page overview. Unlike Upcoming
    Events, its 18 fields must remain visible together instead of inheriting the
    2200px scroll-grid used for scheduling work. */
