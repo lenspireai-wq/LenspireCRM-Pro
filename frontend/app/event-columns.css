@@ -343,6 +343,20 @@
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
 }
+/* Reserve only a compact slot for the serial number, then use that reclaimed
+   width for the couple name—the field staff need most often while scanning. */
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable col:first-child,
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable :is(th, td):first-child {
+  width: 3% !important;
+  min-width: 0 !important;
+  max-width: 3% !important;
+}
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable col:nth-child(5),
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(5) {
+  width: 8.111112% !important;
+  min-width: 0 !important;
+  max-width: 8.111112% !important;
+}
 :root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .eventRowActions {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr));
