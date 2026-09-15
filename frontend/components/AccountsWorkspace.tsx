@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import { formatDate } from "@/lib/date-format";
@@ -586,14 +586,19 @@ export default function AccountsWorkspace({
       {!items.length && <div className="empty">No payments recorded.</div>}
     </div>
   );
-  const metrics = (labels: [string, string | number][]) => (
-    <section className="accountMetrics">
+  const metrics = (
+    labels: [string, string | number][],
+    className = "",
+    trailing?: ReactNode,
+  ) => (
+    <section className={`accountMetrics ${className}`.trim()}>
       {labels.map(([label, value]) => (
         <article key={label}>
           <span>{label}</span>
           <strong>{value}</strong>
         </article>
       ))}
+      {trailing}
     </section>
   );
   const breakdown = (
@@ -630,16 +635,6 @@ export default function AccountsWorkspace({
               </button>
             ))}
           </nav>
-          {view === "Reports & Analytics" ? (
-            <label className="accountReportMonth">
-              Report month
-              <input
-                type="month"
-                value={month}
-                onChange={(e) => setMonth(e.target.value)}
-              />
-            </label>
-          ) : null}
           {view === "Payment Dashboard" ? metrics([
             ["Collected", money(sum(paid))],
             ["Refunded", money(sum(payments.filter((p) => p.status === "Paid" && p.payment_type === "Refund")))],
@@ -655,12 +650,23 @@ export default function AccountsWorkspace({
             ["Total Closing", money(shown.reduce((n, a) => n + a.total, 0))],
             ["Total Received", money(shown.reduce((n, a) => n + a.received, 0))],
             ["Total Balance", money(shown.reduce((n, a) => n + a.balance, 0))],
-          ]) : metrics([
-            ["Collected", money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type !== "Refund")))],
-            ["Refunded", money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type === "Refund")))],
-            ["Pending", money(sum(reportPayments.filter((p) => p.status !== "Paid")))],
-            ["Payments", reportPayments.length],
-          ])}
+          ]) : metrics(
+            [
+              ["Collected", money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type !== "Refund")))],
+              ["Refunded", money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type === "Refund")))],
+              ["Pending", money(sum(reportPayments.filter((p) => p.status !== "Paid")))],
+              ["Payments", reportPayments.length],
+            ],
+            "reportsMetrics",
+            <label className="accountReportMonth">
+              <span>Report month</span>
+              <input
+                type="month"
+                value={month}
+                onChange={(e) => setMonth(e.target.value)}
+              />
+            </label>,
+          )}
         </div>
       ) : (
         <nav className="operationsTabs">

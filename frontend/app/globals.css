@@ -3302,14 +3302,23 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .clientLedgerView .accountMetrics article:nth-child(3) { border-top-color: #799462; }
 .clientLedgerView .accountMetrics article:nth-child(4) { border-top-color: #d3a044; }
 .reportsAnalyticsView .accountReportMonth {
-  width: fit-content;
-  padding: 7px 10px;
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 154px;
+  padding: 12px 14px;
   border: 1px solid #5f4d31;
   border-radius: 12px;
   background: #211d17;
   color: #d5c39e;
   font-size: 11px;
   font-weight: 750;
+}
+.reportsAnalyticsView .accountReportMonth span {
+  color: #cbbd9f;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 .reportsAnalyticsView .accountReportMonth input {
   padding: 6px 8px;
@@ -3373,6 +3382,7 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .reportsAnalyticsView .accountMetrics article:nth-child(2) { border-top-color: #b9823d; }
 .reportsAnalyticsView .accountMetrics article:nth-child(3) { border-top-color: #a95c50; }
 .reportsAnalyticsView .accountMetrics article:nth-child(4) { border-top-color: #799462; }
+.reportsMetrics { grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(154px, .8fr); }
 .reportsAnalyticsBreakdowns { margin: 14px 0; }
 .reportsAnalyticsView .accountBreakdown { border-color: #594a31; background: #211d17; }
 .reportsAnalyticsView .accountBreakdown h2 { color: #fff0cf; }
