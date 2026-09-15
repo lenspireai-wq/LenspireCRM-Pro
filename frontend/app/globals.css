@@ -3234,6 +3234,16 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .receivablesView .accountsScheduleTableWrap { border-color: #5f4d31; box-shadow: 0 14px 34px #0000001c; }
 .receivablesView .receivablesTable thead th { border-bottom-color: #5f4d31; background: #2a241b; color: #e9cb87; }
 .receivablesView .receivablesTable tbody tr:hover { background: #d3a4470d; }
+.receivablesView .accountMetrics {
+  margin: 8px 0;
+}
+.receivablesView .accountMetrics article {
+  min-height: 84px;
+  padding: 12px 16px;
+}
+.receivablesView .accountMetrics span {
+  margin-bottom: 4px;
+}
 @media (max-width: 800px) {
   .receivablesHero { grid-template-columns: 1fr; gap: 17px; padding: 22px 18px; }
   .receivablesSignals { width: 100%; }
