@@ -101,14 +101,12 @@ export default function AccountsWorkspace({
   view = "Payment Dashboard",
   setView,
   searchTerm = "",
-  onSearchChange,
 }: {
   onAddLead: () => void;
   readOnly?: boolean;
   view?: string;
   setView?: (value: string) => void;
   searchTerm?: string;
-  onSearchChange?: (value: string) => void;
 }) {
   const setViewSafe = setView ?? (() => {});
   const [accountsControlsHeight, setAccountsControlsHeight] = useState(176);
@@ -641,18 +639,7 @@ export default function AccountsWorkspace({
                 onChange={(e) => setMonth(e.target.value)}
               />
             </label>
-          ) : view !== "Payment Dashboard" && view !== "Receivables" ? <div className="receivablesTools">
-            <input
-              className="accountSearch"
-              aria-label="Search client accounts"
-              placeholder="Search client, couple, or booking…"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                onSearchChange?.(e.target.value);
-              }}
-            />
-          </div> : null}
+          ) : null}
           {view === "Payment Dashboard" ? metrics([
             ["Collected", money(sum(paid))],
             ["Refunded", money(sum(payments.filter((p) => p.status === "Paid" && p.payment_type === "Refund")))],

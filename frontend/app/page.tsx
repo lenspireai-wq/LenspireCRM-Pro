@@ -678,7 +678,6 @@ export default function Home() {
               view={accountsView}
               setView={setAccountsView}
               searchTerm={accountsSearch}
-              onSearchChange={setAccountsSearch}
               onAddLead={() => {
                 if (!canWrite(auth.user, "sales")) return;
                 setStartNewLead(true);
