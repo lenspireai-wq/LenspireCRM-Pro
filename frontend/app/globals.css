@@ -3105,6 +3105,10 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   .receivablesTools {
     flex-wrap: wrap;
   }
+  .collectionsHero { grid-template-columns: 1fr; gap: 17px; padding: 22px 18px; }
+  .collectionsSignals { width: 100%; }
+  .collectionsSignals span { min-width: 0; flex: 1; padding: 9px 6px; font-size: 8px; }
+  .collectionsSignals b { font-size: 16px; }
 }
 .paymentTable th:last-child {
   width: 22%;
@@ -3127,6 +3131,57 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   padding: var(--space-4);
   border-bottom: 1px solid var(--line);
 }
+.collectionsPanel { overflow: hidden; border-color: #6d5937; }
+.collectionsHero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(280px, 1.25fr) auto;
+  gap: 28px;
+  align-items: center;
+  overflow: hidden;
+  padding: 25px 28px;
+  border-bottom: 1px solid #5e4b31;
+  background:
+    radial-gradient(circle at 93% -42%, #d2a34942 0, transparent 46%),
+    radial-gradient(circle at 3% 125%, #b98b3a24 0, transparent 45%),
+    linear-gradient(120deg, #2a251e, #201d18 62%, #262018);
+}
+.collectionsHero::after {
+  position: absolute;
+  right: -62px;
+  bottom: -108px;
+  width: 220px;
+  height: 220px;
+  border: 1px solid #e3b86252;
+  border-radius: 50%;
+  box-shadow: 0 0 0 28px #e3b8620a;
+  content: "";
+  pointer-events: none;
+}
+.collectionsHero > div { position: relative; z-index: 1; }
+.collectionsHero small { color: #e6bc63; font-size: 10px; font-weight: 850; letter-spacing: .14em; }
+.collectionsHero h2 { margin: 7px 0; color: #fff3dc; font-size: clamp(24px, 2.8vw, 33px); letter-spacing: -.035em; }
+.collectionsHero p { max-width: 590px; margin: 0; color: #cbbda2; font-size: var(--font-sm); line-height: 1.55; }
+.collectionsSignals { display: flex; gap: 8px; }
+.collectionsSignals span {
+  display: grid;
+  min-width: 102px;
+  gap: 5px;
+  padding: 10px 12px;
+  border: 1px solid #84683a;
+  border-radius: 11px;
+  background: #17140eab;
+  color: #cdbd99;
+  font-size: 10px;
+  font-weight: 750;
+  text-align: center;
+  text-transform: uppercase;
+}
+.collectionsSignals b { color: #f6d17b; font-size: 20px; line-height: 1.1; }
+.collectionsPanel .collectionFilters { background: #211d18; border-bottom-color: #4f412c; }
+.collectionsPanel .collectionFilters :is(input, select) { border-color: #594a32; background: #181510; color: #ede3d1; }
+.collectionsPanel .paymentTable thead th { border-bottom-color: #5f4d31; background: #2a241b; color: #e9cb87; }
+.collectionsPanel .paymentTable tbody tr:hover { background: #d3a4470d; }
 .collectionFilters label {
   display: grid;
   gap: var(--space-1);

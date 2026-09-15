@@ -853,7 +853,19 @@ export default function AccountsWorkspace({
         </>
       )}
       {view === "Collections" && (
-        <section className="panel">
+        <section className="panel collectionsPanel">
+          <div className="collectionsHero">
+            <div>
+              <small>COLLECTIONS DESK</small>
+              <h2>Every receipt, beautifully accounted for.</h2>
+              <p>Review payments, follow up on dues, and keep the studio cashflow moving with confidence.</p>
+            </div>
+            <div className="collectionsSignals" aria-label="Collection summary">
+              <span><b>{collectionPayments.length}</b> entries</span>
+              <span><b>{collectionPayments.filter((payment) => payment.status === "Paid").length}</b> cleared</span>
+              <span><b>{money(sum(collectionPayments.filter((payment) => payment.status === "Paid" && payment.payment_type !== "Refund")))}</b> received</span>
+            </div>
+          </div>
           <div className="collectionFilters">
             <input
               aria-label="Search collections"
