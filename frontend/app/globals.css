@@ -3301,6 +3301,97 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .clientLedgerView .accountMetrics article:nth-child(2) { border-top-color: #c58e45; }
 .clientLedgerView .accountMetrics article:nth-child(3) { border-top-color: #799462; }
 .clientLedgerView .accountMetrics article:nth-child(4) { border-top-color: #d3a044; }
+.reportsAnalyticsView .accountReportMonth {
+  width: fit-content;
+  padding: 7px 10px;
+  border: 1px solid #5f4d31;
+  border-radius: 12px;
+  background: #211d17;
+  color: #d5c39e;
+  font-size: 11px;
+  font-weight: 750;
+}
+.reportsAnalyticsView .accountReportMonth input {
+  padding: 6px 8px;
+  border-color: #705b37;
+  border-radius: 8px;
+  background: #17140f;
+  color: #f5d589;
+}
+.reportsAnalyticsHero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(280px, 1.25fr) auto;
+  align-items: center;
+  gap: 24px;
+  overflow: hidden;
+  margin: 12px 0;
+  padding: 22px 26px;
+  border: 1px solid #6d5937;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 10% 116%, #d2a04a18 0 82px, transparent 83px),
+    radial-gradient(circle at 94% 10%, #d2a04a12 0 72px, transparent 73px),
+    linear-gradient(122deg, #29241f, #201d1a 62%, #251f19);
+  box-shadow: 0 14px 34px #00000024;
+}
+.reportsAnalyticsHero::after {
+  position: absolute;
+  right: -65px;
+  top: -124px;
+  width: 280px;
+  height: 280px;
+  border: 1px solid #c89b4a2e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 46px #c89b4a0a, 0 0 0 92px #c89b4a08;
+  content: "";
+  pointer-events: none;
+}
+.reportsAnalyticsHero > div { position: relative; z-index: 1; }
+.reportsAnalyticsHero small,
+.reportsAnalyticsTableHead small { color: #e6bc63; font-size: 10px; font-weight: 850; letter-spacing: .14em; }
+.reportsAnalyticsHero h2 { margin: 7px 0; color: #fff5df; font-size: clamp(24px, 2.8vw, 33px); letter-spacing: -.035em; }
+.reportsAnalyticsHero p { max-width: 590px; margin: 0; color: #cbbda2; font-size: var(--font-sm); line-height: 1.55; }
+.reportsAnalyticsSignals { display: flex; gap: 8px; }
+.reportsAnalyticsSignals span {
+  display: grid;
+  min-width: 110px;
+  gap: 5px;
+  padding: 11px 10px;
+  border: 1px solid #84683a;
+  border-radius: 12px;
+  background: #17140eab;
+  color: #cdbd99;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.reportsAnalyticsSignals b { color: #f6d17b; font-size: 18px; line-height: 1.15; letter-spacing: 0; text-transform: none; }
+.reportsAnalyticsView .accountMetrics article { border-top-color: #d3a044; }
+.reportsAnalyticsView .accountMetrics article:nth-child(2) { border-top-color: #b9823d; }
+.reportsAnalyticsView .accountMetrics article:nth-child(3) { border-top-color: #a95c50; }
+.reportsAnalyticsView .accountMetrics article:nth-child(4) { border-top-color: #799462; }
+.reportsAnalyticsBreakdowns { margin: 14px 0; }
+.reportsAnalyticsView .accountBreakdown { border-color: #594a31; background: #211d17; }
+.reportsAnalyticsView .accountBreakdown h2 { color: #fff0cf; }
+.reportsAnalyticsView .accountBreakdown > div { border-top-color: #4a3d2b; }
+.reportsAnalyticsView .accountBreakdown b { color: #efc66e; }
+.reportsAnalyticsTable { overflow: hidden; border-color: #5f4d31; background: #211d17; }
+.reportsAnalyticsTableHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 20px;
+  border-bottom: 1px solid #4a3d2b;
+  background: linear-gradient(100deg, #2a241b, #211d17);
+}
+.reportsAnalyticsTableHead h2 { margin: 4px 0 0; color: #fff0cf; font-size: var(--font-xl); }
+.reportsAnalyticsTableHead > span { padding: 6px 10px; border: 1px solid #705b37; border-radius: 999px; color: #e6bc63; font-size: 11px; font-weight: 750; }
+.reportsAnalyticsTable .paymentTable thead th { border-bottom-color: #5f4d31; background: #2a241b; color: #e9cb87; }
+.reportsAnalyticsTable .paymentTable tbody tr:hover { background: #d3a4470d; }
 @media (max-width: 800px) {
   .receivablesHero { grid-template-columns: 1fr; gap: 17px; padding: 22px 18px; }
   .receivablesSignals { width: 100%; }
@@ -3310,6 +3401,11 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   .clientLedgerSignals { width: 100%; }
   .clientLedgerSignals span { min-width: 0; flex: 1; padding: 9px 6px; font-size: 8px; }
   .clientLedgerSignals b { font-size: 15px; }
+  .reportsAnalyticsHero { grid-template-columns: 1fr; gap: 17px; padding: 22px 18px; }
+  .reportsAnalyticsSignals { width: 100%; }
+  .reportsAnalyticsSignals span { min-width: 0; flex: 1; padding: 9px 6px; font-size: 8px; }
+  .reportsAnalyticsSignals b { font-size: 15px; }
+  .reportsAnalyticsTableHead { padding: 15px 16px; }
 }
 .collectionFilters label {
   display: grid;

@@ -614,7 +614,7 @@ export default function AccountsWorkspace({
   );
   return (
     <div
-      className={`accountsWorkspace${view === "Client Ledger" ? " clientLedgerView" : view === "Receivables" ? " receivablesView" : view === "Payment Dashboard" ? " paymentDashboardView" : ""}`}
+      className={`accountsWorkspace${view === "Client Ledger" ? " clientLedgerView" : view === "Receivables" ? " receivablesView" : view === "Payment Dashboard" ? " paymentDashboardView" : view === "Reports & Analytics" ? " reportsAnalyticsView" : ""}`}
       style={{ "--accounts-controls-height": `${accountsControlsHeight}px` } as CSSProperties}
     >
       {(view === "Payment Dashboard" || view === "Receivables" || view === "Client Ledger" || view === "Reports & Analytics") ? (
@@ -997,7 +997,19 @@ export default function AccountsWorkspace({
       )}
       {view === "Reports & Analytics" && (
         <>
-          <div className="accountColumns">
+          <section className="reportsAnalyticsHero">
+            <div>
+              <small>FINANCIAL INTELLIGENCE</small>
+              <h2>Turn every collection into clarity.</h2>
+              <p>Explore this month’s studio payment story by mode and milestone, with the numbers that matter in one focused view.</p>
+            </div>
+            <div className="reportsAnalyticsSignals" aria-label="Report summary">
+              <span><b>{money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type !== "Refund")))}</b> collected</span>
+              <span><b>{money(sum(reportPayments.filter((p) => p.status !== "Paid")))}</b> pending</span>
+              <span><b>{reportPayments.length}</b> entries</span>
+            </div>
+          </section>
+          <div className="accountColumns reportsAnalyticsBreakdowns">
             {breakdown(
               "By Payment Mode",
               modes,
@@ -1013,7 +1025,16 @@ export default function AccountsWorkspace({
               reportPayments.filter((p) => p.status === "Paid"),
             )}
           </div>
-          <section className="panel">{paymentTable(reportPayments)}</section>
+          <section className="panel reportsAnalyticsTable">
+            <div className="reportsAnalyticsTableHead">
+              <div>
+                <small>MONTHLY TRANSACTIONS</small>
+                <h2>Payment Activity</h2>
+              </div>
+              <span>{reportPayments.length} entries</span>
+            </div>
+            {paymentTable(reportPayments)}
+          </section>
         </>
       )}
       {portalBooking && (
