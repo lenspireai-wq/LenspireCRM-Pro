@@ -304,6 +304,27 @@
   background: color-mix(in srgb, var(--brand) 5%, transparent) !important;
 }
 
+/* On phones, crew assignments must be scannable rather than forming a long
+   horizontal run. Each assigned photographer gets its own left-aligned line.
+   This is intentionally mobile-only: desktop keeps the compact table layout. */
+@media (max-width: 900px) {
+  :root .operationsWorkspace .fitUpcomingColumns .upcomingEventsTable .crewAssignments {
+    display: grid !important;
+    justify-items: start !important;
+    justify-content: start !important;
+    align-items: start !important;
+    gap: 4px !important;
+    width: 100%;
+  }
+  :root .operationsWorkspace .fitUpcomingColumns .upcomingEventsTable .crewAssignments span {
+    display: block !important;
+    width: max-content;
+    max-width: 100% !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+  }
+}
+
 /* The table deliberately remains readable on phones, so it scrolls sideways
    instead of compressing eighteen fields into illegible text. Make that
    interaction unmistakable without affecting the desktop workspace. */
