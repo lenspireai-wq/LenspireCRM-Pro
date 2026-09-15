@@ -3746,6 +3746,102 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   border-radius: var(--radius-md);
   background: #101b29;
 }
+.productionCommandDeck {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(260px, 1.25fr) minmax(330px, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  overflow: hidden;
+  margin-top: 20px;
+  padding: 28px 30px;
+  border: 1px solid #4a526d;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 88% 5%, #d0a04426 0, transparent 26%),
+    radial-gradient(circle at 3% 100%, #5978c42e 0, transparent 35%),
+    linear-gradient(125deg, #172238 0%, #131f30 50%, #1d1b24 100%);
+  box-shadow: 0 18px 44px #00000033;
+}
+.productionCommandDeck::after {
+  position: absolute;
+  top: -110px;
+  right: -80px;
+  width: 270px;
+  height: 270px;
+  border: 1px solid #e4bc6952;
+  border-radius: 50%;
+  box-shadow: 0 0 0 28px #e4bc6908, 0 0 0 58px #e4bc6906;
+  content: "";
+  pointer-events: none;
+}
+.productionDeckCopy,
+.productionDeckSignals,
+.productionDeckActions { position: relative; z-index: 1; }
+.productionDeckCopy small,
+.productionFocusPanel .panelHead small {
+  color: #e6bc55;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .14em;
+}
+.productionDeckCopy h2 {
+  max-width: 430px;
+  margin: 7px 0 8px;
+  color: #f5f1e9;
+  font-size: clamp(25px, 3vw, 36px);
+  line-height: 1.06;
+  letter-spacing: -.035em;
+}
+.productionDeckCopy p {
+  max-width: 450px;
+  margin: 0;
+  color: #afbacb;
+  font-size: var(--font-sm);
+  line-height: 1.55;
+}
+.productionDeckSignals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.productionDeckSignals span {
+  display: grid;
+  min-height: 92px;
+  padding: 13px 12px;
+  border: 1px solid #65728a70;
+  border-radius: 12px;
+  background: #07111b5c;
+  color: #aeb9c9;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  text-transform: uppercase;
+}
+.productionDeckSignals b {
+  align-self: end;
+  color: #f5f1e9;
+  font-size: 29px;
+  line-height: 1;
+}
+.productionDeckSignals .attention { border-color: #cc647077; color: #f2b2b9; }
+.productionDeckSignals .attention b { color: #ff9aa4; }
+.productionDeckSignals .clear { border-color: #438f7273; color: #a7d9c1; }
+.productionDeckSignals .clear b { color: #70dfad; }
+.productionDeckActions { display: grid; gap: 8px; min-width: 170px; }
+.productionDeckActions button {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #65728a;
+  border-radius: 10px;
+  background: #162437;
+  color: #dce7f6;
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+.productionDeckActions button:hover { border-color: #e6bc55; color: #ffe2a2; }
 .productionAlerts {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3764,6 +3860,18 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   background: #291722;
   color: #f1c4cb;
   text-align: left;
+}
+.productionAlerts button span { display: flex; align-items: center; gap: 9px; font-weight: 700; }
+.productionAlerts button i {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 900;
 }
 .productionAlerts button:last-child {
   border-color: #68552e;
@@ -3831,7 +3939,45 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 }
 .productionMetrics {
   margin-top: 20px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.productionMetrics article {
+  position: relative;
+  overflow: hidden;
+  border-color: #3a4960;
+  background: linear-gradient(135deg, #111d2b, #0d1723);
+}
+.productionMetrics article::after {
+  position: absolute;
+  right: -14px;
+  bottom: -24px;
+  color: #5e7cc438;
+  content: "✦";
+  font-size: 76px;
+  line-height: 1;
+}
+.productionMetrics article:nth-child(3) { border-color: #70414b; }
+.productionMetrics article:nth-child(3) strong { color: #ff9aa4; }
+.productionMetrics article:nth-child(4) { border-color: #2c7359; }
+.productionMetrics article:nth-child(4) strong { color: #70dfad; }
+.productionFocusPanel { overflow: hidden; border-color: #3a4960; }
+.productionFocusPanel .panelHead {
+  align-items: center;
+  padding: 20px 22px;
+  border-bottom: 1px solid #34445d;
+  background: linear-gradient(90deg, #172438, #101a28);
+}
+.productionFocusPanel .panelHead h2 { margin: 5px 0 3px; }
+.productionFocusPanel .panelHead p { margin: 0; color: var(--muted); font-size: var(--font-sm); }
+.productionFocusCount {
+  padding: 7px 10px;
+  border: 1px solid #3a7f65;
+  border-radius: 999px;
+  background: #2772561f;
+  color: #7de0b2;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
 }
 .productionTable th:last-child {
   width: 7%;
@@ -10496,6 +10642,22 @@ table > tbody > tr:has(td[colspan])::before {
   .clientPortalPayments .clientPortalRow > div { min-width: 0; }
   .clientPortalPayments .clientPortalRow strong { grid-column: 2; grid-row: 1; white-space: nowrap; }
   .clientPortalPayments .clientPortalRow em { grid-column: 2; grid-row: 2; justify-self: end; }
+  .productionCommandDeck {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 12px;
+    padding: 22px 18px;
+  }
+  .productionDeckCopy h2 { font-size: 28px; }
+  .productionDeckSignals { gap: 7px; }
+  .productionDeckSignals span { min-height: 78px; padding: 10px 6px; font-size: 8px; }
+  .productionDeckSignals b { font-size: 24px; }
+  .productionDeckActions { grid-template-columns: 1fr 1.25fr; min-width: 0; }
+  .productionDeckActions button { min-width: 0; padding-inline: 8px; font-size: 11px; }
+  .productionAlerts { grid-template-columns: 1fr; gap: 8px; margin-top: 12px; }
+  .productionAlerts button { min-height: 48px; padding: 10px 12px; }
+  .productionMetrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .productionFocusPanel .panelHead { align-items: flex-start; gap: 12px; padding: 16px; }
 }
 
 /* A statement has nine financial columns.  On a phone, preserve a real

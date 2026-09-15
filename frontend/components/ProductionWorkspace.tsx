@@ -642,9 +642,41 @@ export default function ProductionWorkspace({
 
       {view === "Dashboard" && (
         <>
-          <section className="productionAlerts">
+          <section className="productionCommandDeck">
+            <div className="productionDeckCopy">
+              <small>POST PRODUCTION · COMMAND CENTER</small>
+              <h2>Keep every final memory moving.</h2>
+              <p>
+                A live view of editing, approvals and deliveries across your studio.
+              </p>
+            </div>
+            <div className="productionDeckSignals" aria-label="Production summary">
+              <span>
+                <b>{active.length}</b>
+                In progress
+              </span>
+              <span>
+                <b>{readyForDelivery.length}</b>
+                Ready to deliver
+              </span>
+              <span className={overdue.length ? "attention" : "clear"}>
+                <b>{overdue.length}</b>
+                Need attention
+              </span>
+            </div>
+            <div className="productionDeckActions">
+              <button onClick={() => setView("Edit Queue")}>Open edit queue</button>
+              <button
+                className="primary"
+                onClick={() => setView("Overdue")}
+              >
+                Review attention items
+              </button>
+            </div>
+          </section>
+          <section className="productionAlerts" aria-label="Production alerts">
             <button onClick={() => setView("Overdue")}>
-              <span>Overdue jobs requiring attention</span>
+              <span><i>!</i> Overdue jobs requiring attention</span>
               <b>{jobs.filter((job) => job.overdue).length}</b>
             </button>
             <button
@@ -653,7 +685,7 @@ export default function ProductionWorkspace({
                 setView("Dashboard");
               }}
             >
-              <span>Jobs waiting for editor assignment</span>
+              <span><i>+</i> Jobs waiting for editor assignment</span>
               <b>{jobs.filter((job) => !job.editor).length}</b>
             </button>
           </section>
@@ -683,9 +715,14 @@ export default function ProductionWorkspace({
               <strong>{readyForDelivery.length}</strong>
             </article>
           </section>
-          <section className="panel">
+          <section className="panel productionFocusPanel">
             <div className="panelHead">
-              <h2>Active Production Jobs</h2>
+              <div>
+                <small>LIVE WORKFLOW</small>
+                <h2>Active Production Jobs</h2>
+                <p>Prioritised production work currently moving through your studio.</p>
+              </div>
+              <span className="productionFocusCount">{active.length} live</span>
             </div>
             <ProductionTable
               jobs={active.slice(0, 10)}
