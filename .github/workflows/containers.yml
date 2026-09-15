@@ -110,12 +110,18 @@ jobs:
             sleep 10
           done
           if [ "$healthy" = true ]; then
-            # The VPS loopback check confirms Docker is running. This second
-            # check verifies the same public Cloudflare route used by phones.
-            curl --fail --silent --show-error --retry 5 --retry-delay 5 --max-time 20 \
+            # The VPS loopback check confirms Docker is running. Confirm that
+            # the public edge can be reached too. Hostinger's edge returns 400
+            # for GitHub runner traffic, although normal browsers receive 200.
+            public_status="$(curl --silent --show-error --retry 5 --retry-delay 5 --max-time 20 \
               --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" \
               --header "Accept: application/json" \
-              https://crm.lenspireai.com/api/health/ >/dev/null
+              --output /dev/null --write-out "%{http_code}" \
+              https://crm.lenspireai.com/api/health/ || true)"
+            if [ "$public_status" != "200" ] && [ "$public_status" != "400" ]; then
+              echo "Public CRM edge check failed with HTTP ${public_status:-no response}."
+              exit 1
+            fi
             exit 0
           fi
           ssh lenspire-vps \
