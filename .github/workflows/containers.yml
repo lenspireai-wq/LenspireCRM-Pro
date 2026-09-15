@@ -113,6 +113,8 @@ jobs:
             # The VPS loopback check confirms Docker is running. This second
             # check verifies the same public Cloudflare route used by phones.
             curl --fail --silent --show-error --retry 5 --retry-delay 5 --max-time 20 \
+              --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" \
+              --header "Accept: application/json" \
               https://crm.lenspireai.com/api/health/ >/dev/null
             exit 0
           fi
