@@ -550,7 +550,7 @@ export default function ProductionWorkspace({
 
       {view === "Dashboard" && (
         <>
-          <section className="productionCommandDeck">
+          <section className="productionCommandDeck productionDashboardDeck">
             <div className="productionDeckCopy">
               <small>POST PRODUCTION · COMMAND CENTER</small>
               <h2>Keep every final memory moving.</h2>

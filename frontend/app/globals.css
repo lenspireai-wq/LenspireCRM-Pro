@@ -3851,6 +3851,7 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
     linear-gradient(125deg, #29241f 0%, #201d1a 50%, #251f19 100%);
   box-shadow: 0 18px 44px #00000033;
 }
+.productionDashboardDeck { margin-top: 0; }
 .productionCommandDeck::after {
   position: absolute;
   top: -110px;
@@ -11133,6 +11134,7 @@ table > tbody > tr:has(td[colspan])::before {
     margin-top: 12px;
     padding: 22px 18px;
   }
+  .productionDashboardDeck { margin-top: 0; }
   .productionDeckCopy h2 { font-size: 28px; }
   .productionDeckSignals { gap: 7px; }
   .productionDeckSignals span { min-height: 78px; padding: 10px 6px; font-size: 8px; }
