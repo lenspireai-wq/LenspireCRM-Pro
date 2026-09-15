@@ -2363,10 +2363,10 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 }
 .productionPageTabs {
   margin: 0;
-  padding: 6px 8px;
-  background: #111d2b;
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   gap: 2px;
 }
 .productionPageTabs button {
