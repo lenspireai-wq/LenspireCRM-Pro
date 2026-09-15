@@ -963,6 +963,11 @@ function EventTable({
           ))}
         </tbody>
       </table>
+      {fitPageClass === "operationsUpcomingTable" && (
+        <p className="mobileTableScrollHint" aria-live="polite">
+          ← Swipe the table to view all 18 columns →
+        </p>
+      )}
       {!events.length && <div className="empty">No events found.</div>}
     </div>
   );

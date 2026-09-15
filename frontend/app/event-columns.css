@@ -304,6 +304,26 @@
   background: color-mix(in srgb, var(--brand) 5%, transparent) !important;
 }
 
+/* The table deliberately remains readable on phones, so it scrolls sideways
+   instead of compressing eighteen fields into illegible text. Make that
+   interaction unmistakable without affecting the desktop workspace. */
+.mobileTableScrollHint {
+  display: none;
+}
+@media (max-width: 900px) {
+  :root .fitUpcomingColumns.operationsUpcomingTable .mobileTableScrollHint {
+    display: block;
+    margin: 6px 0 0;
+    padding: 7px 10px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .01em;
+    text-align: center;
+  }
+}
+
 /* Mobile Upcoming Events is a scrollable work list. Use one dependable width
    for each data field rather than squeezing all eighteen into a phone screen. */
 @media (max-width: 900px) {
