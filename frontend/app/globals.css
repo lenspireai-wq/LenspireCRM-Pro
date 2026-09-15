@@ -3755,12 +3755,12 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   overflow: hidden;
   margin-top: 20px;
   padding: 28px 30px;
-  border: 1px solid #4a526d;
+  border: 1px solid #6d5937;
   border-radius: 20px;
   background:
     radial-gradient(circle at 88% 5%, #d0a04426 0, transparent 26%),
-    radial-gradient(circle at 3% 100%, #5978c42e 0, transparent 35%),
-    linear-gradient(125deg, #172238 0%, #131f30 50%, #1d1b24 100%);
+    radial-gradient(circle at 3% 100%, #b88a3d22 0, transparent 35%),
+    linear-gradient(125deg, #29241f 0%, #201d1a 50%, #251f19 100%);
   box-shadow: 0 18px 44px #00000033;
 }
 .productionCommandDeck::after {
@@ -3788,7 +3788,7 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .productionDeckCopy h2 {
   max-width: 430px;
   margin: 7px 0 8px;
-  color: #f5f1e9;
+  color: #fff5df;
   font-size: clamp(25px, 3vw, 36px);
   line-height: 1.06;
   letter-spacing: -.035em;
@@ -3796,7 +3796,7 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .productionDeckCopy p {
   max-width: 450px;
   margin: 0;
-  color: #afbacb;
+  color: #c6b89f;
   font-size: var(--font-sm);
   line-height: 1.55;
 }
@@ -3809,10 +3809,10 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   display: grid;
   min-height: 92px;
   padding: 13px 12px;
-  border: 1px solid #65728a70;
+  border: 1px solid #8c714570;
   border-radius: 12px;
-  background: #07111b5c;
-  color: #aeb9c9;
+  background: #15130f91;
+  color: #c9bda7;
   font-size: 10px;
   font-weight: 700;
   line-height: 1.25;
@@ -3821,7 +3821,7 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 }
 .productionDeckSignals b {
   align-self: end;
-  color: #f5f1e9;
+  color: #fff5df;
   font-size: 29px;
   line-height: 1;
 }
@@ -3833,10 +3833,10 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .productionDeckActions button {
   min-height: 40px;
   padding: 8px 12px;
-  border: 1px solid #65728a;
+  border: 1px solid #80683f;
   border-radius: 10px;
-  background: #162437;
-  color: #dce7f6;
+  background: #2c261e;
+  color: #f2dfbc;
   font-size: 12px;
   font-weight: 750;
   white-space: nowrap;
@@ -3944,14 +3944,14 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .productionMetrics article {
   position: relative;
   overflow: hidden;
-  border-color: #3a4960;
-  background: linear-gradient(135deg, #111d2b, #0d1723);
+  border-color: #4e4230;
+  background: linear-gradient(135deg, #26211b, #1c1915);
 }
 .productionMetrics article::after {
   position: absolute;
   right: -14px;
   bottom: -24px;
-  color: #5e7cc438;
+  color: #cf9d4630;
   content: "✦";
   font-size: 76px;
   line-height: 1;
@@ -3960,12 +3960,12 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .productionMetrics article:nth-child(3) strong { color: #ff9aa4; }
 .productionMetrics article:nth-child(4) { border-color: #2c7359; }
 .productionMetrics article:nth-child(4) strong { color: #70dfad; }
-.productionFocusPanel { overflow: hidden; border-color: #3a4960; }
+.productionFocusPanel { overflow: hidden; border-color: #524530; }
 .productionFocusPanel .panelHead {
   align-items: center;
   padding: 20px 22px;
-  border-bottom: 1px solid #34445d;
-  background: linear-gradient(90deg, #172438, #101a28);
+  border-bottom: 1px solid #51442f;
+  background: linear-gradient(90deg, #2b251e, #201c17);
 }
 .productionFocusPanel .panelHead h2 { margin: 5px 0 3px; }
 .productionFocusPanel .panelHead p { margin: 0; color: var(--muted); font-size: var(--font-sm); }
