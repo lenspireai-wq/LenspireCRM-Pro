@@ -850,6 +850,20 @@ export default function AccountsWorkspace({
           {paymentTable(collectionPayments)}
         </section>
       )}
+      {view === "Receivables" && (
+        <section className="receivablesHero">
+          <div>
+            <small>FOLLOW-UP RADAR</small>
+            <h2>Outstanding, made actionable.</h2>
+            <p>See every due payment in one elegant view and bring the right client conversation forward at the right time.</p>
+          </div>
+          <div className="receivablesSignals" aria-label="Receivables summary">
+            <span><b>{money(accounts.reduce((total, account) => total + account.balance, 0))}</b> total due</span>
+            <span><b>{displayedAccounts.length}</b> client accounts</span>
+            <span><b>{ageingRows.filter((row) => row.category === "Not Scheduled").length}</b> not scheduled</span>
+          </div>
+        </section>
+      )}
       {(view === "Receivables" || view === "Client Ledger") && (
         <>
           <section className="panel table accountsScheduleTableWrap">

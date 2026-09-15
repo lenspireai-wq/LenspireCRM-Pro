@@ -3182,6 +3182,64 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .collectionsPanel .collectionFilters :is(input, select) { border-color: #594a32; background: #181510; color: #ede3d1; }
 .collectionsPanel .paymentTable thead th { border-bottom-color: #5f4d31; background: #2a241b; color: #e9cb87; }
 .collectionsPanel .paymentTable tbody tr:hover { background: #d3a4470d; }
+.receivablesHero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(280px, 1.25fr) auto;
+  gap: 28px;
+  align-items: center;
+  overflow: hidden;
+  margin: 14px 0;
+  padding: 25px 28px;
+  border: 1px solid #70533b;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 93% -35%, #cb8c6740 0, transparent 45%),
+    radial-gradient(circle at 5% 125%, #c7a34a1f 0, transparent 46%),
+    linear-gradient(122deg, #2c211d, #211b18 62%, #281d1a);
+  box-shadow: 0 14px 34px #00000024;
+}
+.receivablesHero::after {
+  position: absolute;
+  right: -62px;
+  bottom: -108px;
+  width: 220px;
+  height: 220px;
+  border: 1px solid #e5aa7652;
+  border-radius: 50%;
+  box-shadow: 0 0 0 28px #e5aa760a;
+  content: "";
+  pointer-events: none;
+}
+.receivablesHero > div { position: relative; z-index: 1; }
+.receivablesHero small { color: #e8a97a; font-size: 10px; font-weight: 850; letter-spacing: .14em; }
+.receivablesHero h2 { margin: 7px 0; color: #fff0e7; font-size: clamp(24px, 2.8vw, 33px); letter-spacing: -.035em; }
+.receivablesHero p { max-width: 590px; margin: 0; color: #d1b9a9; font-size: var(--font-sm); line-height: 1.55; }
+.receivablesSignals { display: flex; gap: 8px; }
+.receivablesSignals span {
+  display: grid;
+  min-width: 110px;
+  gap: 5px;
+  padding: 10px 12px;
+  border: 1px solid #8d6245;
+  border-radius: 11px;
+  background: #1a120fae;
+  color: #d3bbaa;
+  font-size: 10px;
+  font-weight: 750;
+  text-align: center;
+  text-transform: uppercase;
+}
+.receivablesSignals b { color: #f5c18f; font-size: 19px; line-height: 1.1; }
+.receivablesView .accountsScheduleTableWrap { border-color: #654b36; box-shadow: 0 14px 34px #0000001c; }
+.receivablesView .receivablesTable thead th { border-bottom-color: #664d37; background: #2b211c; color: #edbd8b; }
+.receivablesView .receivablesTable tbody tr:hover { background: #d8946710; }
+@media (max-width: 800px) {
+  .receivablesHero { grid-template-columns: 1fr; gap: 17px; padding: 22px 18px; }
+  .receivablesSignals { width: 100%; }
+  .receivablesSignals span { min-width: 0; flex: 1; padding: 9px 6px; font-size: 8px; }
+  .receivablesSignals b { font-size: 15px; }
+}
 .collectionFilters label {
   display: grid;
   gap: var(--space-1);
