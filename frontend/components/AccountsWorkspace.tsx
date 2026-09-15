@@ -686,7 +686,7 @@ export default function AccountsWorkspace({
   );
   return (
     <div
-      className={`accountsWorkspace${view === "Client Ledger" ? " clientLedgerView" : view === "Receivables" ? " receivablesView" : ""}`}
+      className={`accountsWorkspace${view === "Client Ledger" ? " clientLedgerView" : view === "Receivables" ? " receivablesView" : view === "Payment Dashboard" ? " paymentDashboardView" : ""}`}
       style={{ "--accounts-controls-height": `${accountsControlsHeight}px` } as CSSProperties}
     >
       {(view === "Payment Dashboard" || view === "Receivables" || view === "Client Ledger" || view === "Reports & Analytics") ? (
@@ -798,9 +798,25 @@ export default function AccountsWorkspace({
       )}
       {view === "Payment Dashboard" && (
         <>
-          <section className="panel">
+          <section className="accountsCommandDeck">
+            <div>
+              <small>FINANCE CONTROL ROOM</small>
+              <h2>Every payment, in perfect focus.</h2>
+              <p>Track collections, outstanding balances and client commitments from one polished financial workspace.</p>
+            </div>
+            <div className="accountsCommandSignals">
+              <span><b>{paid.filter((p) => p.payment_type !== "Refund").length}</b> received</span>
+              <span><b>{payments.filter((p) => p.status !== "Paid" && p.due_date && p.due_date < new Date().toISOString().slice(0, 10)).length}</b> attention</span>
+              <span><b>{accounts.filter((account) => account.balance === 0).length}</b> settled</span>
+            </div>
+          </section>
+          <section className="panel accountsRecentPaymentsPanel">
             <div className="panelHead">
-              <h2>Recent Payments</h2>
+              <div>
+                <small>LIVE COLLECTIONS</small>
+                <h2>Recent Payments</h2>
+                <p>Your latest studio collections, recorded in real time.</p>
+              </div>
               <button
                 className="iconOnlyAction viewAction"
                 title="View all payments"
