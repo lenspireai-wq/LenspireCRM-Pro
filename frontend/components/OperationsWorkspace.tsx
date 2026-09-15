@@ -757,6 +757,7 @@ function EventTable({
 }) {
   const labels = ["Sr. No.", "Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
   const completedColumnWidth = `${100 / labels.length}%`;
+  const plainUpcomingFields = fitPageClass === "operationsUpcomingTable";
   const crew = (value: any) => {
     const assignments = String(value || "")
       .split(/\s*;\s*|\s*\+(?!\s*\d)\s*/)
@@ -863,8 +864,8 @@ function EventTable({
           {events.map((row, index) => (
             <tr key={row.id}>
               <td className="srNo">{index + 1}</td>
-              <td className={row.date_status === "TBD Month" ? "tbdEventDate" : undefined}>
-                <span className="upcomingEventDate">{eventDateLabel(row)}</span>
+              <td className={!plainUpcomingFields && row.date_status === "TBD Month" ? "tbdEventDate" : undefined}>
+                {plainUpcomingFields ? eventDateLabel(row) : <span className="upcomingEventDate">{eventDateLabel(row)}</span>}
               </td>
               <td>
                 <b>{row.client_name || row.title}</b>
@@ -872,7 +873,7 @@ function EventTable({
               <td>{row.handled_by || "—"}</td>
               <td>{row.couple_name || "—"}</td>
               <td>{row.contact_no || "—"}</td>
-              <td><span className="upcomingEventType">{row.event_type}</span></td>
+              <td>{plainUpcomingFields ? row.event_type : <span className="upcomingEventType">{row.event_type}</span>}</td>
               <td>{crew(row.photo)}</td>
               <td>{crew(row.video)}</td>
               <td>{crew(row.candid)}</td>
