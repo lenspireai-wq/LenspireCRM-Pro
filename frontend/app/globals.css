@@ -7799,6 +7799,8 @@ body:has(.mainAccountsSticky) {
   letter-spacing: .07em;
   text-transform: uppercase;
 }
+.mainOperationsDashboard .photographersDetailsView .photographerTable thead .mobilePhotographerSerial,
+.mainOperationsDashboard .photographersDetailsView .photographerTable thead .photographerActionsHead { text-align: center; }
 .mainOperationsDashboard .photographersDetailsView .photographerTable tbody td {
   padding: 11px 14px;
   border-bottom-color: #423725;

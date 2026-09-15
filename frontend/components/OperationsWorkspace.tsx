@@ -1013,13 +1013,13 @@ function CrewTable({
         <table className="photographerTable">
           <thead>
             <tr>
-              <th className="mobilePhotographerSerial">Sr. No.</th>
-              <th>Name</th>
-              <th>Mobile</th>
-              <th>Based In</th>
-              <th>Work</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th className="mobilePhotographerSerial">No.</th>
+              <th>Photographer</th>
+              <th>Phone</th>
+              <th>Base</th>
+              <th>Speciality</th>
+              <th>Availability</th>
+              <th className="photographerActionsHead">Actions</th>
             </tr>
           </thead>
           <tbody>
