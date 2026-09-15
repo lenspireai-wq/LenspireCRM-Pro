@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import shutil
 from datetime import datetime, timezone
@@ -14,6 +15,9 @@ from rest_framework.views import APIView
 from apps.core.permissions import AdminAccessPermission
 from .tasks import create_scheduled_backup
 from .utils import BACKUP_FORMAT, create_backup_file, encrypted_snapshot, restore_snapshot
+
+
+logger = logging.getLogger(__name__)
 
 
 class BackupView(APIView):
@@ -65,7 +69,19 @@ class BackupCreateView(APIView):
     permission_classes = [AdminAccessPermission]
 
     def post(self, request):
-        path = create_backup_file()
+        try:
+            path = create_backup_file()
+        except Exception:
+            logger.exception("Could not create encrypted backup")
+            return JsonResponse(
+                {
+                    "detail": (
+                        "The server could not create the encrypted backup. "
+                        "Check the backup storage and encryption configuration."
+                    )
+                },
+                status=500,
+            )
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except Exception:
