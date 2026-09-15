@@ -321,6 +321,17 @@
 :root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypePreWedding { color: #ffd9e5 !important; }
 :root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypeNightWedding { color: #fff0ad !important; }
 
+/* TBD dates must be unmistakable when a schedule is still pending. */
+:root .fitUpcomingColumns .upcomingEventsTable td.eventDateTbd,
+:root .fitUpcomingColumns .upcomingEventsTable td.eventDateTbd :is(span, b) {
+  color: #a87914 !important;
+  font-weight: 800 !important;
+}
+:root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable td.eventDateTbd,
+:root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable td.eventDateTbd :is(span, b) {
+  color: #d4a544 !important;
+}
+
 /* Completed Events is deliberately a full-page overview. Unlike Upcoming
    Events, its 18 fields must remain visible together instead of inheriting the
    2200px scroll-grid used for scheduling work. */

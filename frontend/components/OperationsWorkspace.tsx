@@ -870,7 +870,7 @@ function EventTable({
           {events.map((row, index) => (
             <tr key={row.id}>
               <td className="srNo">{index + 1}</td>
-              <td className={!plainUpcomingFields && row.date_status === "TBD Month" ? "tbdEventDate" : undefined}>
+              <td className={String(eventDateLabel(row)).trim().toUpperCase().startsWith("TBD") ? "tbdEventDate eventDateTbd" : undefined}>
                 {plainUpcomingFields ? eventDateLabel(row) : <span className="upcomingEventDate">{eventDateLabel(row)}</span>}
               </td>
               <td>
