@@ -5,6 +5,8 @@ import "./studio-dark-modules.css";
 import "./studio-dark.css";
 import "./event-columns.css";
 import "./mobile-scroll.css";
+import "./studio-neon.css";
+import "./studio-blush.css";
 import { QueryProvider } from "@/components/QueryProvider";
 import { ThemeProvider } from "@/components/ThemeToggle";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
@@ -26,15 +28,15 @@ export const viewport: Viewport = {
 const themeBootstrap = `(() => {
   try {
     const stored = localStorage.getItem('lenspire-theme');
-    if (stored === 'light' || stored === 'dark') {
+    if (stored === 'light' || stored === 'dark' || stored === 'blush' || stored === 'neon') {
       document.documentElement.dataset.theme = stored;
-      document.documentElement.style.colorScheme = stored;
+      document.documentElement.style.colorScheme = stored === 'light' || stored === 'blush' ? 'light' : 'dark';
       return;
     }
     const host = window.location.hostname;
     const theme = host === 'crm.lenspireai.com' ? 'light' : 'dark';
     document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
+    document.documentElement.style.colorScheme = theme === 'light' ? 'light' : 'dark';
   } catch (e) {
     document.documentElement.dataset.theme = 'light';
     document.documentElement.style.colorScheme = 'light';

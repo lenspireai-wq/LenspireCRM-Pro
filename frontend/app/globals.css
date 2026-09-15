@@ -11020,6 +11020,25 @@ table > tbody > tr:has(td[colspan]) {
 table > tbody > tr:has(td[colspan])::before {
   display: none;
 }
+
+/* Payment tables carry an explicit serial-number cell so its header and
+   values align with Client, Amount, Type, Mode, Status, Date and Actions. */
+.paymentTable > :is(thead, tbody) > tr::before {
+  display: none;
+}
+.paymentTable .paymentSerial {
+  width: 42px;
+  min-width: 42px;
+  color: var(--muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.paymentTable thead th:first-child {
+  width: 42px;
+  min-width: 42px;
+  text-align: center;
+}
 :root[data-theme="light"] table > thead > tr::before {
   background: var(--surface-2);
   color: var(--text-strong);

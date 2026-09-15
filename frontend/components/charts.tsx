@@ -20,8 +20,9 @@ ChartJS.register(ArcElement, BarElement, CategoryScale, Filler, Legend, LineElem
 
 function useCartesianOptions(): BaseChartOptions<"line"> {
   const { theme } = useTheme();
-  const text = theme === "light" ? "#696780" : "#bcb1a1";
-  const grid = theme === "light" ? "#eee9f3" : "#40392f";
+  const isLightTheme = theme === "light" || theme === "blush";
+  const text = isLightTheme ? "#696780" : "#bcb1a1";
+  const grid = isLightTheme ? "#eee9f3" : "#40392f";
   return {
   responsive: true,
   maintainAspectRatio: false,
@@ -39,12 +40,14 @@ function useCartesianOptions(): BaseChartOptions<"line"> {
 export function RevenueLineChart({ labels, gross, net }: { labels: string[]; gross: number[]; net: number[] }) {
   const options = useCartesianOptions();
   const { theme } = useTheme();
-  const dark = theme === "dark";
+  const lightTheme = theme === "light" || theme === "blush";
+  const dark = !lightTheme;
+  const blush = theme === "blush";
   const data = {
     labels,
     datasets: [
-      { label: "Gross", data: gross, borderColor: dark ? "#d4b477" : "#7367f0", backgroundColor: dark ? "rgba(212,180,119,0.12)" : "rgba(115,103,240,0.15)", fill: true, tension: 0.3, pointRadius: 3 },
-      { label: "Net", data: net, borderColor: dark ? "#a9ba86" : "#22c55e", backgroundColor: dark ? "rgba(169,186,134,0.08)" : "rgba(34,197,94,0.12)", fill: true, tension: 0.3, pointRadius: 3 },
+      { label: "Gross", data: gross, borderColor: dark ? "#d4b477" : blush ? "#865bd8" : "#7367f0", backgroundColor: dark ? "rgba(212,180,119,0.12)" : blush ? "rgba(134,91,216,0.15)" : "rgba(115,103,240,0.15)", fill: true, tension: 0.3, pointRadius: 3 },
+      { label: "Net", data: net, borderColor: dark ? "#a9ba86" : blush ? "#e34791" : "#22c55e", backgroundColor: dark ? "rgba(169,186,134,0.08)" : blush ? "rgba(227,71,145,0.12)" : "rgba(34,197,94,0.12)", fill: true, tension: 0.3, pointRadius: 3 },
     ],
   };
   return <Line data={data} options={options} />;
@@ -52,8 +55,11 @@ export function RevenueLineChart({ labels, gross, net }: { labels: string[]; gro
 
 export function FunnelDoughnut({ rows }: { rows: { status: string; count: number }[] }) {
   const { theme } = useTheme();
-  const palette: Record<string, string> = theme === "dark" ? {
+  const lightTheme = theme === "light" || theme === "blush";
+  const palette: Record<string, string> = !lightTheme ? {
     New: "#d4b477", "Follow-up": "#c99a76", Confirmed: "#a9ba86", Booked: "#a396b5", Lost: "#c4827e",
+  } : theme === "blush" ? {
+    New: "#a464da", "Follow-up": "#f09a43", Confirmed: "#54c5d7", Booked: "#865bd8", Lost: "#e84b91",
   } : {
     New: "#a58adb",
     "Follow-up": "#edbd98",
@@ -67,7 +73,7 @@ export function FunnelDoughnut({ rows }: { rows: { status: string; count: number
       {
         data: rows.map((row) => row.count),
         backgroundColor: rows.map((row) => palette[row.status] || "#64748b"),
-        borderColor: theme === "light" ? "#fffefd" : "#262320",
+        borderColor: lightTheme ? "#ffffff" : "#262320",
         borderWidth: 2,
       },
     ],
@@ -75,7 +81,7 @@ export function FunnelDoughnut({ rows }: { rows: { status: string; count: number
   const options: BaseChartOptions<"doughnut"> = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { legend: { position: "right", labels: { color: theme === "light" ? "#696780" : "#bcb1a1", usePointStyle: true, boxWidth: 8 } } },
+    plugins: { legend: { position: "right", labels: { color: lightTheme ? "#696780" : "#bcb1a1", usePointStyle: true, boxWidth: 8 } } },
     cutout: "62%",
   };
   return <Doughnut data={data} options={options} />;
@@ -84,7 +90,7 @@ export function FunnelDoughnut({ rows }: { rows: { status: string; count: number
 export function CategoryBar({ labels, values, label, color = "#7367f0" }: { labels: string[]; values: number[]; label: string; color?: string }) {
   const options = useCartesianOptions() as BaseChartOptions<"bar">;
   const { theme } = useTheme();
-  const barColor = theme === "dark" ? (color === "#7367f0" ? "#d4b477" : color === "#ef4444" ? "#c4827e" : color) : color;
+  const barColor = theme !== "light" && theme !== "blush" ? (color === "#7367f0" ? "#d4b477" : color === "#ef4444" ? "#c4827e" : color) : theme === "blush" && color === "#7367f0" ? "#865bd8" : color;
   const data = {
     labels,
     datasets: [

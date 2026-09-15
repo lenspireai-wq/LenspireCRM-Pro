@@ -1,0 +1,166 @@
+/* Blush Light is a brighter, colorful dashboard option. It deliberately keeps
+   the information-dense CRM layout while giving it a calm paper-like canvas. */
+:root[data-theme="blush"] {
+  color-scheme: light;
+  --bg: #fdf0f6;
+  --panel: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #faf5fa;
+  --surface-strong: #f5ebf4;
+  --surface2: #faf5fa;
+  --line: #eee1ea;
+  --text: #51495a;
+  --text-strong: #2a2432;
+  --muted: #83778a;
+  --brand: #df3f89;
+  --brand-hover: #c92d75;
+  --brand-soft: #fde5ef;
+  --secondary: #835bd3;
+  --accent: #a464da;
+  --accent-warm: #efad38;
+  --card-gradient: linear-gradient(145deg, #ffffff, #fff7fb);
+  --shadow-card: 0 14px 34px rgb(132 66 111 / 9%);
+  --hover-overlay: #fff1f7;
+  --success: #269d6a;
+  --danger: #d14c70;
+  --warning: #bc7a17;
+  --info: #4da4c6;
+  --focus-ring: 0 0 0 3px rgb(223 63 137 / 18%);
+  --success-soft: #e0f5ea;
+  --danger-soft: #fde6ec;
+  --warning-soft: #fff0d6;
+  --on-brand: #ffffff;
+}
+
+:root[data-theme="blush"] body {
+  background: radial-gradient(circle at 90% -10%, #fbe2ef 0, transparent 28%), var(--bg);
+  color: var(--text);
+}
+
+:root[data-theme="blush"] :is(.shell, .workspaceChrome, .dashboardChrome, .salesChrome, .mainDashboard) {
+  background-color: transparent;
+  color: var(--text);
+}
+
+:root[data-theme="blush"] .shell aside {
+  background: linear-gradient(180deg, #ffffff 0%, #fff8fc 100%);
+  border-right-color: var(--line);
+  box-shadow: 8px 0 26px rgb(132 66 111 / 5%);
+}
+
+:root[data-theme="blush"] :is(.workspaceChrome, .dashboardChrome, .salesChrome) {
+  border-color: var(--line);
+  background: rgb(255 255 255 / 84%);
+  backdrop-filter: blur(14px);
+}
+
+:root[data-theme="blush"] :is(
+  .panel, .dashCard, .dashMetric, .salesPanel, .accountPanel, .productionPanel,
+  .ownerMetrics article, .clientPortalCard, .clientPortalHero, .clientPortalStats article,
+  .accountMetrics article, .productionTools, .myProductionTask, .productionTimeline,
+  .operationFormSection, .detailSummary div, .detailNotes, .activitySection, .attachmentSection,
+  .statementMetrics article, .statementSchedule article, .crewWorkPicker label
+) {
+  background: var(--panel);
+  border-color: var(--line);
+  color: var(--text);
+  box-shadow: var(--shadow-card);
+}
+
+:root[data-theme="blush"] :is(.panel, .dashCard, .dashMetric, .accountMetrics article):hover {
+  border-color: #efb8d1;
+  box-shadow: 0 18px 40px rgb(132 66 111 / 13%);
+}
+
+:root[data-theme="blush"] :is(input, select, textarea, .sidebarToggle, .chromeActions label, .chromeActions button) {
+  border-color: var(--line);
+  background: #ffffff;
+  color: var(--text);
+}
+
+:root[data-theme="blush"] :is(input, select, textarea):focus {
+  border-color: var(--brand);
+  box-shadow: var(--focus-ring);
+}
+
+:root[data-theme="blush"] :is(button.primary, .primaryButton, .loginSubmit, .createButton, .saveButton, .submitButton) {
+  background: linear-gradient(135deg, #e8428a, #8b5bd5);
+  color: #fff;
+  box-shadow: 0 10px 20px rgb(223 63 137 / 24%);
+}
+
+:root[data-theme="blush"] .shell aside nav button {
+  color: #756a7d;
+}
+
+:root[data-theme="blush"] .shell aside nav button:hover,
+:root[data-theme="blush"] .shell aside nav button.active,
+:root[data-theme="blush"] .navGroup.groupActive .navGroupLabel,
+:root[data-theme="blush"] .navSubmenu button.active {
+  color: #c83275;
+  background: linear-gradient(90deg, #fde3ee, #f4eaff);
+  box-shadow: inset 3px 0 #e8428a;
+}
+
+:root[data-theme="blush"] .mainDashboard .dashMetrics {
+  gap: 14px;
+}
+
+:root[data-theme="blush"] .mainDashboard .dashMetric {
+  position: relative;
+  overflow: hidden;
+  min-height: 104px;
+  border-top: 3px solid #e8428a;
+}
+
+:root[data-theme="blush"] .mainDashboard .dashMetric::after {
+  content: "";
+  position: absolute;
+  width: 74px;
+  height: 74px;
+  right: -22px;
+  bottom: -30px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: .1;
+}
+
+:root[data-theme="blush"] .mainDashboard .dashMetric:nth-child(2) { border-top-color: #895cd6; color: #6b51a8; }
+:root[data-theme="blush"] .mainDashboard .dashMetric:nth-child(3) { border-top-color: #51bdd8; color: #347f99; }
+:root[data-theme="blush"] .mainDashboard .dashMetric:nth-child(4) { border-top-color: #efa731; color: #9b6917; }
+:root[data-theme="blush"] .mainDashboard .dashMetric:nth-child(5) { border-top-color: #31a875; color: #287858; }
+:root[data-theme="blush"] .mainDashboard .dashMetric strong,
+:root[data-theme="blush"] .mainDashboard .dashCard h2 { color: var(--text-strong); }
+:root[data-theme="blush"] .mainDashboard .dashMetricLabel { color: var(--muted); }
+:root[data-theme="blush"] .mainDashboard .dashCard { border-top: 3px solid #eeddeb; }
+:root[data-theme="blush"] .mainDashboard .dashCard:nth-child(1) { border-top-color: #e8428a; }
+:root[data-theme="blush"] .mainDashboard .dashCard:nth-child(2) { border-top-color: #895cd6; }
+:root[data-theme="blush"] .mainDashboard .dashCard:nth-child(3) { border-top-color: #51bdd8; }
+
+:root[data-theme="blush"] :is(table, .dataTable, .tableShell) {
+  background: #ffffff;
+  color: var(--text);
+}
+:root[data-theme="blush"] :is(th, .dataTable thead td) {
+  background: #faf4f8;
+  color: #6c5c70;
+  border-color: var(--line);
+}
+:root[data-theme="blush"] :is(td, th) { border-color: var(--line); }
+:root[data-theme="blush"] tbody tr:hover { background: #fff4f8; }
+
+:root[data-theme="blush"] :is(.statusBadge, .tag, .pill, .chip) {
+  border-color: #ead8e3;
+  background: #fbf2f7;
+  color: #80516d;
+}
+:root[data-theme="blush"] :is(.modal, .operationModal, .eventMessageModal, .crewModal, .accountModal, .targetModal, .leadModal, .leadDetailModal) {
+  background: var(--panel);
+  border-color: var(--line);
+  color: var(--text);
+}
+
+@media (max-width: 760px) {
+  :root[data-theme="blush"] .shell aside { box-shadow: 10px 0 30px rgb(132 66 111 / 14%); }
+  :root[data-theme="blush"] .mainDashboard .dashMetric { min-height: 90px; }
+}

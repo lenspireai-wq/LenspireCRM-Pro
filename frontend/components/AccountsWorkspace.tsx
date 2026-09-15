@@ -518,6 +518,7 @@ export default function AccountsWorkspace({
         <thead>
           <tr>
             {[
+              "Sr. No.",
               "Client",
               "Amount",
               "Type",
@@ -532,7 +533,7 @@ export default function AccountsWorkspace({
           </tr>
         </thead>
         <tbody>
-          {items.map((p) => {
+          {items.map((p, index) => {
             const client = accounts.find((a) => a.id === p.booking)?.client || p.client_name || "—";
             const initials = String(client)
               .split(/\s+/)
@@ -542,6 +543,7 @@ export default function AccountsWorkspace({
               .join("")
               .toUpperCase() || "—";
             return <tr key={p.id}>
+              <td className="paymentSerial">{index + 1}</td>
               <td>
                 {variant ? <span className="reportPaymentClient"><i>{initials}</i><b>{client}</b></span> : client}
               </td>

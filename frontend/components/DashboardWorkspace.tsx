@@ -101,15 +101,6 @@ export default function DashboardWorkspace({ months, onMonthsChange }: { months:
           <div className="dashChart"><FunnelDoughnut rows={data.funnel.by_status} /></div>
         </div>
         <div className="dashCard">
-          <h2>Refunds vs gross</h2>
-          <div className="dashChart">
-            <CategoryBar labels={revenue.labels} values={grossValues} label="Gross" color="#7367f0" />
-          </div>
-          <div className="dashChart" style={{ marginTop: 12 }}>
-            <CategoryBar labels={revenue.labels} values={refundsValues} label="Refunds" color="#ef4444" />
-          </div>
-        </div>
-        <div className="dashCard">
           <h2>Today’s events</h2>
           {data.today.events.length === 0 ? (
             <p className="dashEmpty">No events scheduled for today.</p>
@@ -124,6 +115,15 @@ export default function DashboardWorkspace({ months, onMonthsChange }: { months:
               ))}
             </ul>
           )}
+        </div>
+        <div className="dashCard">
+          <h2>Refunds vs gross</h2>
+          <div className="dashChart">
+            <CategoryBar labels={revenue.labels} values={grossValues} label="Gross" color="#7367f0" />
+          </div>
+          <div className="dashChart" style={{ marginTop: 12 }}>
+            <CategoryBar labels={revenue.labels} values={refundsValues} label="Refunds" color="#ef4444" />
+          </div>
         </div>
         <div className="dashCard">
           <h2>Overdue production</h2>

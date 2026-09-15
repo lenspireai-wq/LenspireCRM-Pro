@@ -1,0 +1,1233 @@
+/* Neon Studio — a third, optional workspace theme inspired by the supplied
+   reference: deep ink surfaces, restrained violet light, and glassy panels.
+   It is variable-first so existing CRM data views keep their structure. */
+:root[data-theme="neon"] {
+  color-scheme: dark;
+  --bg: #080811;
+  --panel: #10101c;
+  --surface: #12121f;
+  --surface-strong: #1b1a2c;
+  --line: #2d2944;
+  --text: #f4f1ff;
+  --text-strong: #ffffff;
+  --muted: #aaa6c4;
+  --brand: #9d52ff;
+  --brand-hover: #b97aff;
+  --brand-soft: #2b1d4b;
+  --secondary: #7a6cff;
+  --success: #76d9ad;
+  --danger: #ff949e;
+  --warning: #f4c76f;
+  --info: #8f8bff;
+  --shadow-card: 0 18px 42px rgb(0 0 0 / 34%), 0 0 36px rgb(117 66 255 / 8%);
+  --hover-overlay: rgb(157 82 255 / 10%);
+  --focus-ring: 0 0 0 3px rgb(157 82 255 / 30%);
+  --theme-icon: "✦";
+}
+
+:root[data-theme="neon"] body {
+  background:
+    radial-gradient(circle at 85% -10%, rgb(126 77 255 / 17%), transparent 30rem),
+    radial-gradient(circle at 5% 110%, rgb(91 52 193 / 12%), transparent 28rem),
+    var(--bg);
+}
+
+:root[data-theme="neon"] .shell aside {
+  border-right-color: rgb(157 82 255 / 18%);
+  background:
+    linear-gradient(180deg, rgb(20 19 36 / 97%), rgb(9 9 17 / 98%));
+}
+
+:root[data-theme="neon"] :is(.workspaceChrome, .dashboardChrome, .salesChrome) {
+  border-color: rgb(157 82 255 / 18%);
+  background: rgb(12 12 22 / 84%);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 16%);
+  backdrop-filter: blur(14px);
+}
+
+:root[data-theme="neon"] :is(
+  .panel, .dashCard, .dashMetric, .salesPanel, .accountPanel, .productionPanel,
+  .adminPanel, .modalCard, .accountModal, .leadModal, .targetModal,
+  .productionModal, .adminUserModal, .table, .loginCard,
+  .metrics article, .salesKpi, .accountMetrics article, .productionMetrics article,
+  .adminMetrics article, .productionTools, .productionFilters, .permissionMatrix,
+  .receiptModal, .clientStatementModal, .backupRestoreCard
+) {
+  border-color: rgb(157 82 255 / 20%);
+  background:
+    linear-gradient(145deg, rgb(25 24 42 / 92%), rgb(14 14 25 / 96%));
+  box-shadow: 0 14px 30px rgb(0 0 0 / 18%);
+}
+
+:root[data-theme="neon"] :is(.panel, .dashCard, .dashMetric, .salesPanel, .accountPanel, .productionPanel):hover {
+  border-color: rgb(178 116 255 / 48%);
+  box-shadow: 0 16px 34px rgb(0 0 0 / 28%), 0 0 28px rgb(126 77 255 / 10%);
+}
+
+:root[data-theme="neon"] :is(.primary, .loginSubmit, .billBtn.primary, .operationsActionButton.primary) {
+  border-color: transparent;
+  background: linear-gradient(135deg, #b34dff, #685cff);
+  color: #fff;
+  box-shadow: 0 8px 20px rgb(126 77 255 / 25%);
+}
+
+:root[data-theme="neon"] :is(.primary, .loginSubmit, .billBtn.primary, .operationsActionButton.primary):hover {
+  background: linear-gradient(135deg, #c26cff, #7b6fff);
+  box-shadow: 0 10px 25px rgb(126 77 255 / 35%);
+}
+
+:root[data-theme="neon"] :is(input, select, textarea, .chromeActions label, .chromeActions button, .sidebarToggle) {
+  border-color: rgb(157 82 255 / 24%);
+  background-color: rgb(16 15 29 / 86%);
+  color: var(--text);
+}
+
+/* Forms and access controls have dedicated legacy styles, so they need their
+   own surfaces instead of inheriting the earlier dark-blue module palette. */
+:root[data-theme="neon"] :is(
+  .adminUserForm input, .adminUserForm select, .permissionMatrix header,
+  .permissionChoices button, .adminAuditAction, .adminUserActions button,
+  .operationsActions button, .operationsTabs button, .rowActions button,
+  .operationsCalendar button, .receivablesTools select, .receivablesTools button,
+  .collectionFilters input, .collectionFilters select, .accountSearch,
+  .accountReportMonth input, .productionToolActions button, .productionFilters select,
+  .productionFilters input, .productionFilters button
+) {
+  border-color: rgb(157 82 255 / 28%);
+  background: rgb(16 15 29 / 92%);
+  color: var(--text);
+}
+
+:root[data-theme="neon"] :is(.permissionMatrix, .permissionRow, .adminUsersTable td, .adminAuditTable td) {
+  border-color: rgb(157 82 255 / 18%);
+}
+
+:root[data-theme="neon"] .permissionMatrix header {
+  background: linear-gradient(135deg, rgb(48 31 84 / 66%), rgb(19 17 34 / 96%));
+}
+
+:root[data-theme="neon"] .permissionChoices button.selected.none {
+  border-color: rgb(255 148 158 / 58%);
+  background: rgb(255 148 158 / 12%);
+  color: var(--danger);
+}
+
+:root[data-theme="neon"] .permissionChoices button.selected.read,
+:root[data-theme="neon"] .permissionBadges .read {
+  border-color: rgb(244 199 111 / 56%);
+  background: rgb(244 199 111 / 13%);
+  color: var(--warning);
+}
+
+:root[data-theme="neon"] .permissionChoices button.selected.full,
+:root[data-theme="neon"] .permissionBadges .full,
+:root[data-theme="neon"] .userActive {
+  border-color: rgb(118 217 173 / 56%);
+  background: rgb(118 217 173 / 13%);
+  color: var(--success);
+}
+
+:root[data-theme="neon"] .userInactive {
+  border-color: rgb(255 148 158 / 56%);
+  background: rgb(255 148 158 / 13%);
+  color: var(--danger);
+}
+
+:root[data-theme="neon"] :is(.adminUsersTable, .adminAuditTable, .productionTable, .productionActivityTable, .paymentTable, .ledgerTable table) {
+  background: rgb(14 14 25 / 94%);
+  color: var(--text);
+}
+
+/* Post-production previously owned a standalone brown/gold design system.
+   Map its bespoke dashboards, queue and delivery surfaces into Neon Studio. */
+:root[data-theme="neon"] :is(
+  .productionCommandDeck, .productionOverdueHero, .productionDeliveryHero,
+  .productionActivityHero, .productionJobHeader, .editQueueOverview
+) {
+  border-color: rgb(157 82 255 / 34%);
+  background:
+    radial-gradient(circle at 88% 4%, rgb(157 82 255 / 23%), transparent 28rem),
+    radial-gradient(circle at 6% 100%, rgb(104 92 255 / 14%), transparent 26rem),
+    linear-gradient(135deg, rgb(29 22 48 / 98%), rgb(14 14 26 / 98%));
+}
+
+:root[data-theme="neon"] :is(.productionCommandDeck, .productionOverdueHero, .productionDeliveryHero, .productionActivityHero, .productionJobHeader)::after {
+  border-color: rgb(190 132 255 / 35%);
+  box-shadow: 0 0 0 28px rgb(157 82 255 / 7%), 0 0 0 58px rgb(104 92 255 / 5%);
+}
+
+:root[data-theme="neon"] :is(.productionDeckCopy, .productionOverdueHero, .productionDeliveryHero, .productionActivityHero, .productionJobHeader, .editQueueOverview) :is(small, h2, h3, p) {
+  color: var(--text);
+}
+
+:root[data-theme="neon"] :is(.productionDeckCopy small, .productionOverdueHero small, .productionDeliveryHero small, .productionActivityHero small, .productionJobHeader small) {
+  color: #c9a5ff;
+}
+
+:root[data-theme="neon"] :is(.productionDeckSignals span, .productionOverdueStats span, .productionDeliveryStats span, .productionActivityStats span, .editQueueStats span) {
+  border-color: rgb(157 82 255 / 30%);
+  background: rgb(12 12 24 / 68%);
+  color: var(--muted);
+}
+
+:root[data-theme="neon"] :is(.productionDeckSignals b, .productionOverdueStats b, .productionDeliveryStats b, .productionActivityStats b, .editQueueStats b) {
+  color: var(--text-strong);
+}
+
+:root[data-theme="neon"] :is(.productionDeckActions button, .productionMetrics :is(article, button), .productionFocusPanel .panelHead, .editQueuePanel > .panelHead) {
+  border-color: rgb(157 82 255 / 30%);
+  background: linear-gradient(135deg, rgb(29 23 47 / 95%), rgb(14 14 25 / 98%));
+  color: var(--text);
+}
+
+:root[data-theme="neon"] .productionDeckActions button:hover {
+  border-color: rgb(190 132 255 / 70%);
+  background: rgb(157 82 255 / 18%);
+  color: #fff;
+}
+
+:root[data-theme="neon"] .productionMetrics button {
+  border-top-color: var(--brand);
+}
+
+:root[data-theme="neon"] .productionMetrics :is(article, button)::after {
+  color: rgb(183 98 255 / 18%);
+}
+
+:root[data-theme="neon"] .productionMetrics :is(article, button):nth-child(3) {
+  border-color: rgb(255 148 158 / 48%);
+}
+
+:root[data-theme="neon"] .productionMetrics :is(article, button):nth-child(4) {
+  border-color: rgb(118 217 173 / 48%);
+}
+
+:root[data-theme="neon"] .productionMetrics button:hover {
+  border-color: rgb(190 132 255 / 70%);
+  box-shadow: 0 16px 30px rgb(2 1 10 / 30%), 0 0 24px rgb(157 82 255 / 14%);
+}
+
+:root[data-theme="neon"] .productionMetrics button small { color: var(--muted); }
+
+:root[data-theme="neon"] .productionAlerts button {
+  border-color: rgb(255 148 158 / 45%);
+  border-left-color: var(--danger);
+  background: linear-gradient(90deg, rgb(80 31 56 / 72%), rgb(28 18 38 / 94%));
+  color: #ffc3cd;
+}
+
+:root[data-theme="neon"] .productionAlerts button:last-child {
+  border-color: rgb(244 199 111 / 44%);
+  border-left-color: var(--warning);
+  background: linear-gradient(90deg, rgb(62 48 30 / 72%), rgb(28 22 36 / 94%));
+  color: #ffe0a4;
+}
+
+:root[data-theme="neon"] .productionFocusPanel {
+  border-color: rgb(157 82 255 / 30%);
+  background: rgb(14 14 25 / 94%);
+}
+
+:root[data-theme="neon"] .productionFocusPanel .panelHead {
+  border-bottom-color: rgb(157 82 255 / 24%);
+  background: linear-gradient(90deg, rgb(44 30 75 / 92%), rgb(18 16 31 / 94%));
+}
+
+:root[data-theme="neon"] .productionFocusPanel .panelHead small { color: #c9a5ff; }
+
+:root[data-theme="neon"] .productionFocusCount {
+  border-color: rgb(118 217 173 / 48%);
+  background: rgb(118 217 173 / 12%);
+  color: #a9efc9;
+}
+
+:root[data-theme="neon"] .productionFocusPanel .productionTable thead th {
+  border-bottom-color: rgb(157 82 255 / 28%);
+  background: rgb(31 27 51 / 86%);
+  color: #d8c4ff;
+}
+
+:root[data-theme="neon"] .productionFocusPanel .productionTable tbody td {
+  border-bottom-color: rgb(157 82 255 / 14%);
+}
+
+:root[data-theme="neon"] .productionFocusPanel .productionTable tbody tr:hover {
+  background: linear-gradient(90deg, rgb(157 82 255 / 16%), rgb(104 92 255 / 5%));
+  box-shadow: inset 3px 0 var(--brand);
+}
+
+:root[data-theme="neon"] :is(.productionOverduePanel, .productionDeliveryPanel, .productionActivityPanel, .editQueuePanel, .productionFocusPanel) {
+  border-color: rgb(157 82 255 / 26%);
+}
+
+:root[data-theme="neon"] :is(.productionOverduePanel, .productionDeliveryPanel, .productionActivityPanel, .editQueuePanel) .productionTable thead th,
+:root[data-theme="neon"] .editQueueTable thead th {
+  border-bottom-color: rgb(157 82 255 / 28%);
+  background: rgb(31 27 51 / 86%);
+  color: #d8c4ff;
+}
+
+/* Post-production › Edit Queue */
+:root[data-theme="neon"] .editQueuePanel {
+  border-color: rgb(157 82 255 / 30%);
+  background: rgb(14 14 25 / 94%);
+}
+
+:root[data-theme="neon"] .editQueueExperience { background: rgb(14 13 25 / 92%); }
+
+:root[data-theme="neon"] .editQueueOverview {
+  border-bottom-color: rgb(157 82 255 / 22%);
+  background:
+    radial-gradient(circle at 92% -50%, rgb(157 82 255 / 24%), transparent 46%),
+    linear-gradient(100deg, rgb(35 26 58 / 96%), rgb(16 15 29 / 98%));
+}
+
+:root[data-theme="neon"] .editQueueOverview small { color: #c9a5ff; }
+:root[data-theme="neon"] .editQueueOverview h3 { color: var(--text-strong); }
+:root[data-theme="neon"] .editQueueOverview p { color: var(--muted); }
+
+:root[data-theme="neon"] .editQueueStats span {
+  border-color: rgb(157 82 255 / 30%);
+  background: rgb(13 12 26 / 76%);
+  color: var(--muted);
+}
+
+:root[data-theme="neon"] .editQueueStats b { color: #e1d0ff; }
+
+:root[data-theme="neon"] .editQueueStageRail {
+  border-bottom-color: rgb(157 82 255 / 23%);
+  background: rgb(157 82 255 / 20%);
+}
+
+:root[data-theme="neon"] .editQueueStage,
+:root[data-theme="neon"] .editQueueStage.stage2,
+:root[data-theme="neon"] .editQueueStage.stage3,
+:root[data-theme="neon"] .editQueueStage.stage4 {
+  background: linear-gradient(145deg, rgb(28 24 47 / 98%), rgb(17 16 30 / 98%));
+}
+
+:root[data-theme="neon"] .editQueueStage i {
+  border-color: rgb(190 132 255 / 42%);
+  background: rgb(157 82 255 / 13%);
+  color: #dec8ff;
+}
+
+:root[data-theme="neon"] .editQueueStage small { color: var(--muted); }
+:root[data-theme="neon"] .editQueueStage b { color: var(--text-strong); }
+:root[data-theme="neon"] .editQueueStage strong { color: #ddc8ff; }
+
+:root[data-theme="neon"] .editQueueStage.stage4 i {
+  border-color: rgb(118 217 173 / 50%);
+  background: rgb(118 217 173 / 12%);
+  color: #a9efc9;
+}
+
+:root[data-theme="neon"] .editQueueStage.stage4 strong { color: #a9efc9; }
+
+/* Keep the workflow rail lively without losing the controlled Neon Studio
+   palette: each step gets one subtle, meaningful accent. */
+:root[data-theme="neon"] .editQueueStage.stage1 {
+  background: linear-gradient(145deg, rgb(43 29 75 / 98%), rgb(20 16 37 / 98%));
+  box-shadow: inset 3px 0 #b575ff;
+}
+
+:root[data-theme="neon"] .editQueueStage.stage1 i {
+  border-color: rgb(190 132 255 / 56%);
+  background: rgb(157 82 255 / 22%);
+  color: #eadcff;
+}
+
+:root[data-theme="neon"] .editQueueStage.stage1 strong { color: #d9c2ff; }
+
+:root[data-theme="neon"] .editQueueStage.stage2 {
+  background: linear-gradient(145deg, rgb(23 43 70 / 92%), rgb(15 20 34 / 98%));
+  box-shadow: inset 3px 0 #75bfff;
+}
+
+:root[data-theme="neon"] .editQueueStage.stage2 i {
+  border-color: rgb(117 191 255 / 52%);
+  background: rgb(117 191 255 / 14%);
+  color: #bce2ff;
+}
+
+:root[data-theme="neon"] .editQueueStage.stage2 strong { color: #a8d8ff; }
+
+:root[data-theme="neon"] .editQueueStage.stage3 {
+  background: linear-gradient(145deg, rgb(65 47 29 / 88%), rgb(28 22 33 / 98%));
+  box-shadow: inset 3px 0 #f4c76f;
+}
+
+:root[data-theme="neon"] .editQueueStage.stage3 i {
+  border-color: rgb(244 199 111 / 55%);
+  background: rgb(244 199 111 / 14%);
+  color: #ffe0a4;
+}
+
+:root[data-theme="neon"] .editQueueStage.stage3 strong { color: #ffdc92; }
+
+:root[data-theme="neon"] .editQueueStage.stage4 {
+  background: linear-gradient(145deg, rgb(28 67 51 / 88%), rgb(15 25 30 / 98%));
+  box-shadow: inset 3px 0 #76d9ad;
+}
+
+:root[data-theme="neon"] .editQueueTable tbody td { border-bottom-color: rgb(157 82 255 / 14%); }
+:root[data-theme="neon"] .editQueueTable tbody tr:nth-child(even) { background: rgb(157 82 255 / 3%); }
+:root[data-theme="neon"] .editQueueTable tbody tr:hover {
+  background: linear-gradient(90deg, rgb(157 82 255 / 16%), rgb(104 92 255 / 5%));
+  box-shadow: inset 3px 0 var(--brand);
+}
+
+:root[data-theme="neon"] .workflowBadge {
+  background: rgb(157 82 255 / 16%);
+  color: #dec8ff;
+}
+
+:root[data-theme="neon"] .workflowBadge.client-approved {
+  background: rgb(118 217 173 / 13%);
+  color: #a9efc9;
+}
+
+:root[data-theme="neon"] .workflowBadge.revision-required {
+  background: rgb(255 148 158 / 13%);
+  color: #ffc3cd;
+}
+
+:root[data-theme="neon"] .workflowBadge.in-progress,
+:root[data-theme="neon"] .workflowBadge.assigned {
+  background: rgb(244 199 111 / 13%);
+  color: #ffe0a4;
+}
+
+:root[data-theme="neon"] .openWorkflowAction {
+  border-color: rgb(93 198 255 / 58%);
+  background: linear-gradient(135deg, rgb(47 121 168 / 42%), rgb(25 57 92 / 72%));
+  color: #c9efff;
+}
+
+:root[data-theme="neon"] .openWorkflowAction:hover {
+  border-color: rgb(137 220 255 / 82%);
+  background: linear-gradient(135deg, rgb(59 147 196 / 58%), rgb(31 75 116 / 82%));
+  color: #fff;
+  box-shadow: 0 0 18px rgb(93 198 255 / 18%);
+}
+
+/* Main Dashboard — give the new theme a calmer card rhythm and reliable
+   breathing room around the KPI row and dashboard panels. */
+:root[data-theme="neon"] .mainDashboard .dashboard {
+  gap: 16px;
+}
+
+:root[data-theme="neon"] .mainDashboard .dashMetrics {
+  gap: 12px;
+  padding: 2px 0;
+}
+
+:root[data-theme="neon"] .mainDashboard .dashMetric {
+  min-height: 82px;
+  padding: 11px 16px;
+  border-color: rgb(157 82 255 / 27%);
+  border-left-color: #9d52ff;
+  background: linear-gradient(135deg, rgb(31 27 51 / 94%), rgb(15 14 27 / 96%));
+}
+
+:root[data-theme="neon"] .mainDashboard .dashMetric:nth-child(2) { border-left-color: #75bfff; }
+:root[data-theme="neon"] .mainDashboard .dashMetric:nth-child(3) { border-left-color: #f4c76f; }
+:root[data-theme="neon"] .mainDashboard .dashMetric:nth-child(4) { border-left-color: #ff949e; }
+:root[data-theme="neon"] .mainDashboard .dashMetric:nth-child(5) { border-left-color: #76d9ad; }
+
+:root[data-theme="neon"] .mainDashboard .dashMetric:hover {
+  border-color: rgb(190 132 255 / 58%);
+  box-shadow: 0 15px 30px rgb(2 1 10 / 28%), 0 0 24px rgb(157 82 255 / 12%);
+}
+
+:root[data-theme="neon"] .mainDashboard .dashMetric strong { color: var(--text-strong); }
+:root[data-theme="neon"] .mainDashboard .dashMetricLabel { color: #c9a5ff; }
+
+:root[data-theme="neon"] .mainDashboard .dashGrid {
+  gap: 14px;
+  padding-bottom: 8px;
+}
+
+:root[data-theme="neon"] .mainDashboard .dashCard {
+  min-height: 250px;
+  padding: 20px;
+  border-color: rgb(157 82 255 / 24%);
+  background: linear-gradient(145deg, rgb(24 23 40 / 94%), rgb(14 14 25 / 97%));
+}
+
+:root[data-theme="neon"] .mainDashboard .dashCard h2 { color: var(--text-strong); }
+
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(4),
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(5),
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(6) {
+  min-width: 0;
+  min-height: 0;
+  padding: 16px;
+}
+
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(4) {
+  align-self: start;
+}
+
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(4) .dashChart {
+  height: 128px;
+}
+
+/* The two list panels share a row with the taller refunds chart. Let their
+   lists use that available card height instead of leaving a blank lower half. */
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(5),
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(6) {
+  align-self: stretch;
+  min-height: 0;
+}
+
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(5) .dashList,
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(6) .dashList {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  padding-right: 2px;
+  overflow-y: auto;
+}
+
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(5) .dashList li,
+:root[data-theme="neon"] .mainDashboard .dashCard:nth-child(6) .dashList li {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  min-height: 0;
+  overflow: visible;
+}
+
+/* Operations › Upcoming Events */
+:root[data-theme="neon"] .operationsUpcomingTable.upcomingEventsTableWrap {
+  border-color: rgb(157 82 255 / 34%);
+  border-top-color: rgb(255 148 158 / 48%);
+  background: rgb(13 12 24 / 96%);
+  box-shadow: inset 4px 0 var(--danger), 0 16px 36px rgb(2 1 10 / 28%);
+  scrollbar-color: #8d65d8 #12101f;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar-track {
+  background: #12101f;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar-thumb {
+  border-color: #12101f;
+  background: linear-gradient(#b575ff, #7052c9);
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable th {
+  border-right-color: rgb(157 82 255 / 18%);
+  border-bottom-color: rgb(157 82 255 / 38%);
+  background: linear-gradient(180deg, rgb(49 34 83 / 96%), rgb(27 22 47 / 98%));
+  color: #dfceff;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable td {
+  border-bottom-color: rgb(157 82 255 / 14%);
+  color: var(--text);
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable tbody tr:nth-child(even) {
+  background: rgb(157 82 255 / 4%);
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable tbody tr:hover {
+  background: linear-gradient(90deg, rgb(157 82 255 / 16%), rgb(104 92 255 / 5%));
+  box-shadow: inset 3px 0 var(--brand);
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .srNo { color: #d3b8ff; }
+
+:root[data-theme="neon"] .operationsUpcomingTable .upcomingEventDate {
+  border-color: rgb(157 82 255 / 30%);
+  background: rgb(157 82 255 / 10%);
+  color: #dfceff;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .tbdEventDate .upcomingEventDate {
+  border-color: rgb(244 199 111 / 52%);
+  background: rgb(244 199 111 / 13%);
+  color: #ffe0a4;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .upcomingEventsTable td:nth-child(3) b { color: var(--text-strong); }
+
+:root[data-theme="neon"] .operationsUpcomingTable .upcomingEventType {
+  border-color: rgb(190 132 255 / 38%);
+  background: rgb(157 82 255 / 12%);
+  color: #dec8ff;
+}
+
+:root[data-theme="neon"] .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypePreWedding,
+:root[data-theme="neon"] .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypePreWedding :is(.upcomingEventType, b, span) {
+  color: #ffc4dc !important;
+}
+
+:root[data-theme="neon"] .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypeNightWedding,
+:root[data-theme="neon"] .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypeNightWedding :is(.upcomingEventType, b, span) {
+  color: #ffe5a3 !important;
+}
+
+:root[data-theme="neon"] .fitUpcomingColumns .upcomingEventsTable td.eventDateTbd,
+:root[data-theme="neon"] .fitUpcomingColumns .upcomingEventsTable td.eventDateTbd :is(span, b) {
+  color: #f4c76f !important;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .crewAssignments span {
+  border-color: rgb(157 82 255 / 28%);
+  background: rgb(23 19 39 / 92%);
+  color: #ddd7ef;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .crewAssignments span.crewAssigned {
+  border-color: rgb(118 217 173 / 54%);
+  background: rgb(35 79 58 / 54%);
+  color: #a9efc9;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .crewAssignments.multipleCrew {
+  border-color: rgb(190 132 255 / 55%);
+  background: linear-gradient(135deg, rgb(157 82 255 / 22%), rgb(104 92 255 / 12%));
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .crewAssignments.multipleCrew::before { color: #dec8ff; }
+
+:root[data-theme="neon"] .operationsUpcomingTable .crewAssignments span.crewAssignedMultiple {
+  border-color: rgb(190 132 255 / 55%);
+  background: rgb(112 71 216 / 42%);
+  color: #eadcff;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .crewAssignments span.crewAssignedMultiple:nth-of-type(even) {
+  border-color: rgb(190 132 255 / 55%);
+  background: rgb(112 71 216 / 42%);
+  color: #eadcff;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .crewAssignments span.crewX,
+:root[data-theme="neon"] .operationsUpcomingTable .crewAssignments span.crewXX {
+  border-color: rgb(244 199 111 / 58%);
+  background: rgb(244 199 111 / 16%);
+  color: #ffe29a;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .crewAssignments span.crewNA {
+  border-color: rgb(255 148 158 / 55%);
+  background: rgb(255 148 158 / 13%);
+  color: #ffc3cd;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .eventRowActions button {
+  border-color: rgb(190 132 255 / 38%);
+  background: rgb(23 19 39 / 92%);
+  color: #d9c4ff;
+}
+
+:root[data-theme="neon"] .operationsUpcomingTable .eventRowActions button:hover {
+  border-color: rgb(190 132 255 / 72%);
+  background: rgb(157 82 255 / 20%);
+  color: #fff;
+}
+
+@media (min-width: 1100px) {
+  :root[data-theme="neon"] .mainDashboard .dashGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  :root[data-theme="neon"] .mainDashboard .dashCard:nth-child(5),
+  :root[data-theme="neon"] .mainDashboard .dashCard:nth-child(6) {
+    align-self: start;
+    height: 356px;
+  }
+}
+
+@media (max-width: 700px) {
+  :root[data-theme="neon"] .mainDashboard .dashboard { gap: 10px; }
+  :root[data-theme="neon"] .mainDashboard .dashMetrics { gap: 10px; padding: 0; }
+  :root[data-theme="neon"] .mainDashboard .dashMetric { min-height: 82px; padding: 11px 12px; }
+  :root[data-theme="neon"] .mainDashboard .dashGrid { gap: 10px; padding-bottom: 0; }
+  :root[data-theme="neon"] .mainDashboard .dashCard { min-height: 220px; padding: 16px; }
+}
+
+/* Operations › Photographers uses a compact, custom roster rather than the
+   standard table primitives. Give every roster surface the same Neon Studio
+   treatment while preserving the green/red availability meaning. */
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
+  border-color: rgb(157 82 255 / 32%);
+  background: rgb(14 14 25 / 96%);
+  box-shadow: 0 14px 34px rgb(0 0 0 / 28%), 0 0 28px rgb(126 77 255 / 7%);
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerTable thead th {
+  border-bottom-color: rgb(157 82 255 / 38%);
+  background: linear-gradient(180deg, rgb(48 31 84 / 92%), rgb(26 21 45 / 96%));
+  color: #d8c4ff;
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerSerialSort:hover {
+  border-color: rgb(190 132 255 / 60%);
+  background: rgb(157 82 255 / 16%);
+  color: #eadcff;
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView :is(.photographerSerialSort span, .mobilePhotographerSerial) {
+  color: #c9a5ff;
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody td {
+  border-bottom-color: rgb(157 82 255 / 14%);
+  color: var(--text);
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody td + td {
+  border-left-color: rgb(157 82 255 / 10%);
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:nth-child(even) {
+  background: rgb(157 82 255 / 3%);
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:hover {
+  background: linear-gradient(90deg, rgb(157 82 255 / 16%), rgb(104 92 255 / 5%));
+  box-shadow: inset 3px 0 var(--brand);
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerIdentity i {
+  border-color: rgb(190 132 255 / 44%);
+  background: linear-gradient(135deg, rgb(82 45 139 / 64%), rgb(26 20 44 / 96%));
+  color: #dec8ff;
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerIdentity b {
+  color: var(--text-strong);
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerMobile,
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerWork {
+  border-color: rgb(157 82 255 / 30%);
+  background: rgb(23 19 39 / 92%);
+  color: var(--text);
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerWork {
+  border-color: rgb(190 132 255 / 42%);
+  background: rgb(157 82 255 / 13%);
+  color: #dec8ff;
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions button {
+  border-color: rgb(190 132 255 / 38%);
+  background: rgb(23 19 39 / 92%);
+  color: #d9c4ff;
+}
+
+:root[data-theme="neon"] .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions button:hover {
+  border-color: var(--brand);
+  background: rgb(157 82 255 / 18%);
+}
+
+/* Accounts › Payment Dashboard has its own finance-control composition.
+   Replace the older bronze dashboard surfaces with the Neon Studio system. */
+:root[data-theme="neon"] .paymentDashboardView .accountMetrics article {
+  border-color: rgb(157 82 255 / 30%);
+  border-top-color: var(--brand);
+  background: linear-gradient(135deg, rgb(29 23 47 / 96%), rgb(14 14 25 / 98%));
+}
+
+:root[data-theme="neon"] .paymentDashboardView .accountMetrics article::after {
+  color: rgb(183 98 255 / 16%);
+}
+
+:root[data-theme="neon"] .paymentDashboardView .accountMetrics article:nth-child(2),
+:root[data-theme="neon"] .paymentDashboardView .accountMetrics article:nth-child(3) {
+  border-top-color: #b46cff;
+}
+
+:root[data-theme="neon"] .paymentDashboardView .accountMetrics strong,
+:root[data-theme="neon"] .paymentDashboardView .accountMetrics article:nth-child(2) strong {
+  color: var(--text-strong);
+}
+
+:root[data-theme="neon"] .accountsCommandDeck {
+  border-color: rgb(157 82 255 / 36%);
+  background:
+    radial-gradient(circle at 90% -25%, rgb(157 82 255 / 25%), transparent 44%),
+    radial-gradient(circle at 7% 120%, rgb(104 92 255 / 15%), transparent 48%),
+    linear-gradient(115deg, rgb(31 23 52 / 98%), rgb(15 14 27 / 98%) 64%, rgb(25 18 43 / 98%));
+}
+
+:root[data-theme="neon"] .accountsCommandDeck::after {
+  border-color: rgb(190 132 255 / 36%);
+  box-shadow: 0 0 0 30px rgb(157 82 255 / 7%);
+}
+
+:root[data-theme="neon"] .accountsCommandDeck small,
+:root[data-theme="neon"] .accountsRecentPaymentsPanel .panelHead small {
+  color: #c9a5ff;
+}
+
+:root[data-theme="neon"] .accountsCommandDeck h2,
+:root[data-theme="neon"] .paymentDashboardView .accountBreakdown h2 {
+  color: var(--text-strong);
+}
+
+:root[data-theme="neon"] .accountsCommandDeck p,
+:root[data-theme="neon"] .accountsRecentPaymentsPanel .panelHead p {
+  color: var(--muted);
+}
+
+:root[data-theme="neon"] .accountsCommandSignals span {
+  border-color: rgb(157 82 255 / 32%);
+  background: rgb(12 12 24 / 68%);
+  color: var(--muted);
+}
+
+:root[data-theme="neon"] .accountsCommandSignals b {
+  color: var(--text-strong);
+}
+
+:root[data-theme="neon"] :is(.accountsRecentPaymentsPanel, .paymentDashboardView .accountBreakdown) {
+  border-color: rgb(157 82 255 / 27%);
+  background: rgb(14 14 25 / 96%);
+}
+
+:root[data-theme="neon"] .accountsRecentPaymentsPanel .panelHead {
+  border-bottom-color: rgb(157 82 255 / 24%);
+  background: linear-gradient(90deg, rgb(37 27 62 / 92%), rgb(15 14 27 / 98%));
+}
+
+:root[data-theme="neon"] .paymentDashboardView .accountBreakdown > div {
+  border-top-color: rgb(157 82 255 / 17%);
+}
+
+:root[data-theme="neon"] .paymentDashboardView .accountBreakdown b {
+  color: #d9c4ff;
+}
+
+/* Accounts › Collections */
+:root[data-theme="neon"] .collectionsPanel {
+  border-color: rgb(157 82 255 / 28%);
+  background: rgb(14 14 25 / 96%);
+}
+
+:root[data-theme="neon"] .collectionsHero {
+  border-bottom-color: rgb(157 82 255 / 28%);
+  background:
+    radial-gradient(circle at 93% -42%, rgb(157 82 255 / 24%), transparent 46%),
+    radial-gradient(circle at 3% 125%, rgb(104 92 255 / 14%), transparent 45%),
+    linear-gradient(120deg, rgb(31 23 52 / 98%), rgb(15 14 27 / 98%) 62%, rgb(25 18 43 / 98%));
+}
+
+:root[data-theme="neon"] .collectionsHero::after {
+  border-color: rgb(190 132 255 / 36%);
+  box-shadow: 0 0 0 28px rgb(157 82 255 / 7%);
+}
+
+:root[data-theme="neon"] .collectionsHero small { color: #c9a5ff; }
+:root[data-theme="neon"] .collectionsHero h2 { color: var(--text-strong); }
+:root[data-theme="neon"] .collectionsHero p { color: var(--muted); }
+
+:root[data-theme="neon"] .collectionsSignals span {
+  border-color: rgb(157 82 255 / 32%);
+  background: rgb(12 12 24 / 68%);
+  color: var(--muted);
+}
+
+:root[data-theme="neon"] .collectionsSignals b { color: var(--text-strong); }
+
+:root[data-theme="neon"] .collectionsPanel .collectionFilters {
+  border-bottom-color: rgb(157 82 255 / 19%);
+  background: rgb(18 16 31 / 94%);
+}
+
+:root[data-theme="neon"] .collectionsPanel .collectionFilters :is(input, select) {
+  border-color: rgb(157 82 255 / 28%);
+  background: rgb(12 12 24 / 92%);
+  color: var(--text);
+}
+
+:root[data-theme="neon"] .collectionsPanel .paymentTable thead th {
+  border-bottom-color: rgb(157 82 255 / 28%);
+  background: rgb(31 27 51 / 86%);
+  color: #d8c4ff;
+}
+
+:root[data-theme="neon"] .collectionsPanel .collectionPaymentActivity .paymentTable tbody td {
+  border-bottom-color: rgb(157 82 255 / 14%);
+}
+
+:root[data-theme="neon"] .collectionsPanel .collectionPaymentActivity .paymentTable tbody tr:hover {
+  background: linear-gradient(90deg, rgb(157 82 255 / 16%), rgb(104 92 255 / 5%));
+  box-shadow: inset 3px 0 var(--brand);
+}
+
+:root[data-theme="neon"] .collectionsPanel .collectionPaymentActivity .reportPaymentClient i {
+  border-color: rgb(190 132 255 / 44%);
+  background: linear-gradient(135deg, rgb(82 45 139 / 64%), rgb(26 20 44 / 96%));
+  color: #dec8ff;
+}
+
+:root[data-theme="neon"] .collectionsPanel .collectionPaymentActivity .reportPaymentClient b,
+:root[data-theme="neon"] .collectionsPanel .collectionPaymentActivity .reportPaymentAmount {
+  color: var(--text-strong);
+}
+
+:root[data-theme="neon"] .collectionsPanel .collectionPaymentActivity :is(.reportPaymentType, .reportPaymentMode, .reportPaymentStatus) {
+  border-color: rgb(157 82 255 / 30%);
+  background: rgb(23 19 39 / 92%);
+  color: var(--text);
+}
+
+:root[data-theme="neon"] .collectionsPanel .collectionPaymentActivity .reportPaymentType {
+  border-color: rgb(190 132 255 / 42%);
+  background: rgb(157 82 255 / 13%);
+  color: #dec8ff;
+}
+
+/* Accounts › Receivables */
+:root[data-theme="neon"] .receivablesHero {
+  border-color: rgb(157 82 255 / 38%);
+  background:
+    radial-gradient(circle at 92% -30%, rgb(157 82 255 / 27%), transparent 46%),
+    radial-gradient(circle at 3% 125%, rgb(104 92 255 / 16%), transparent 48%),
+    linear-gradient(122deg, rgb(31 23 52 / 98%), rgb(15 14 27 / 98%) 62%, rgb(25 18 43 / 98%));
+  box-shadow: 0 16px 38px rgb(2 1 10 / 42%);
+}
+
+:root[data-theme="neon"] .receivablesHero::after {
+  border-color: rgb(190 132 255 / 24%);
+  box-shadow: 0 0 0 48px rgb(157 82 255 / 5%), 0 0 0 96px rgb(157 82 255 / 3%);
+}
+
+:root[data-theme="neon"] .receivablesHero small { color: #c9a5ff; }
+:root[data-theme="neon"] .receivablesHero h2 { color: var(--text-strong); }
+:root[data-theme="neon"] .receivablesHero p { color: var(--muted); }
+
+:root[data-theme="neon"] .receivablesSignals span {
+  border-color: rgb(157 82 255 / 34%);
+  background: rgb(13 12 26 / 76%);
+  color: #bcb6d7;
+}
+
+:root[data-theme="neon"] .receivablesSignals b { color: #e1d0ff; }
+
+:root[data-theme="neon"] .receivablesView .accountMetrics article {
+  border-color: rgb(157 82 255 / 27%);
+  border-top-color: rgb(190 132 255 / 72%);
+  background: linear-gradient(135deg, rgb(31 27 51 / 94%), rgb(15 14 27 / 96%));
+}
+
+:root[data-theme="neon"] .receivablesView .accountMetrics article:nth-child(2) { border-top-color: #9d52ff; }
+:root[data-theme="neon"] .receivablesView .accountMetrics article:nth-child(3) { border-top-color: #8d79ff; }
+:root[data-theme="neon"] .receivablesView .accountMetrics article:nth-child(4) { border-top-color: #c478ff; }
+
+:root[data-theme="neon"] .receivablesView .accountsScheduleTableWrap {
+  border-color: rgb(157 82 255 / 32%);
+  background: rgb(14 13 25 / 88%);
+  box-shadow: 0 16px 36px rgb(2 1 10 / 32%);
+}
+
+:root[data-theme="neon"] .receivablesView .receivablesTable thead th {
+  border-bottom-color: rgb(157 82 255 / 34%);
+  background: rgb(31 27 51 / 92%);
+  color: #dac7ff;
+}
+
+:root[data-theme="neon"] .receivablesView .receivablesTable tbody td {
+  border-bottom-color: rgb(157 82 255 / 14%);
+}
+
+:root[data-theme="neon"] .receivablesView .receivablesTable tbody tr:nth-child(even) {
+  background: rgb(157 82 255 / 3%);
+}
+
+:root[data-theme="neon"] .receivablesView .receivablesTable tbody tr:hover {
+  background: linear-gradient(90deg, rgb(157 82 255 / 16%), rgb(104 92 255 / 5%));
+  box-shadow: inset 3px 0 var(--brand);
+}
+
+:root[data-theme="neon"] .receivablesView .receivablesTable td:nth-child(1),
+:root[data-theme="neon"] .receivablesView .receivablesTable td:nth-child(4),
+:root[data-theme="neon"] .receivablesView .receivablesTable td:nth-child(6) { color: #d9c2ff; }
+
+:root[data-theme="neon"] .receivablesView .receivablesTable td:nth-child(2),
+:root[data-theme="neon"] .receivablesView .receivablesTable td:nth-child(3) small,
+:root[data-theme="neon"] .receivablesView .receivablesTable .accountPlan > span small,
+:root[data-theme="neon"] .receivablesView .receivablesTable .accountPlan .milestoneDue { color: var(--muted); }
+
+:root[data-theme="neon"] .receivablesView .receivablesTable td:nth-child(3) b { color: var(--text-strong); }
+
+:root[data-theme="neon"] .receivablesView .receivablesTable .accountPlan > span {
+  border-color: rgb(157 82 255 / 26%);
+  background: rgb(23 19 39 / 90%);
+}
+
+:root[data-theme="neon"] .receivablesView .receivablesTable .accountPlan > span b { color: #ddc8ff; }
+
+:root[data-theme="neon"] .receivablesView .receivablesTable .accountPlan > span.paid {
+  border-color: rgb(87 182 134 / 55%);
+  background: rgb(35 79 58 / 46%);
+}
+
+:root[data-theme="neon"] .receivablesView .receivablesTable .accountPlan > span.paid b { color: #a9efc9; }
+
+/* Accounts › Client Ledger */
+:root[data-theme="neon"] .clientLedgerHero {
+  border-color: rgb(157 82 255 / 38%);
+  background:
+    radial-gradient(circle at 92% -30%, rgb(157 82 255 / 27%), transparent 46%),
+    radial-gradient(circle at 3% 125%, rgb(104 92 255 / 16%), transparent 48%),
+    linear-gradient(122deg, rgb(31 23 52 / 98%), rgb(15 14 27 / 98%) 62%, rgb(25 18 43 / 98%));
+  box-shadow: 0 16px 38px rgb(2 1 10 / 42%);
+}
+
+:root[data-theme="neon"] .clientLedgerHero::after {
+  border-color: rgb(190 132 255 / 24%);
+  box-shadow: 0 0 0 48px rgb(157 82 255 / 5%), 0 0 0 96px rgb(157 82 255 / 3%);
+}
+
+:root[data-theme="neon"] .clientLedgerHero small { color: #c9a5ff; }
+:root[data-theme="neon"] .clientLedgerHero h2 { color: var(--text-strong); }
+:root[data-theme="neon"] .clientLedgerHero p { color: var(--muted); }
+
+:root[data-theme="neon"] .clientLedgerSignals span {
+  border-color: rgb(157 82 255 / 34%);
+  background: rgb(13 12 26 / 76%);
+  color: #bcb6d7;
+}
+
+:root[data-theme="neon"] .clientLedgerSignals b { color: #e1d0ff; }
+
+:root[data-theme="neon"] .clientLedgerView .accountMetrics article {
+  border-color: rgb(157 82 255 / 27%);
+  border-top-color: rgb(190 132 255 / 72%);
+  background: linear-gradient(135deg, rgb(31 27 51 / 94%), rgb(15 14 27 / 96%));
+}
+
+:root[data-theme="neon"] .clientLedgerView .accountMetrics article:nth-child(2) { border-top-color: #9d52ff; }
+:root[data-theme="neon"] .clientLedgerView .accountMetrics article:nth-child(3) { border-top-color: #78d5a2; }
+:root[data-theme="neon"] .clientLedgerView .accountMetrics article:nth-child(4) { border-top-color: #c478ff; }
+
+:root[data-theme="neon"] .clientLedgerView .accountsScheduleTableWrap {
+  border-color: rgb(157 82 255 / 32%);
+  background: rgb(14 13 25 / 88%);
+  box-shadow: 0 16px 36px rgb(2 1 10 / 32%);
+}
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable thead th {
+  border-bottom-color: rgb(157 82 255 / 34%);
+  background: rgb(31 27 51 / 92%);
+  color: #dac7ff;
+}
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable tbody td {
+  border-bottom-color: rgb(157 82 255 / 14%);
+}
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable tbody tr:nth-child(even) {
+  background: rgb(157 82 255 / 3%);
+}
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable tbody tr:hover {
+  background: linear-gradient(90deg, rgb(157 82 255 / 16%), rgb(104 92 255 / 5%));
+  box-shadow: inset 3px 0 var(--brand);
+}
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable td:nth-child(1),
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable td:nth-child(4),
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable td:nth-child(6) { color: #d9c2ff; }
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable td:nth-child(2),
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable td:nth-child(3) small,
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable .accountPlan > span small,
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable .accountPlan .milestoneDue { color: var(--muted); }
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable td:nth-child(3) b { color: var(--text-strong); }
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable .accountPlan > span {
+  border-color: rgb(157 82 255 / 26%);
+  background: rgb(23 19 39 / 90%);
+}
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable .accountPlan > span b { color: #ddc8ff; }
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable .accountPlan > span.paid {
+  border-color: rgb(87 182 134 / 55%);
+  background: rgb(35 79 58 / 46%);
+}
+
+:root[data-theme="neon"] .clientLedgerView .clientLedgerTable .accountPlan > span.paid b { color: #a9efc9; }
+
+/* Accounts › Reports & Analytics */
+:root[data-theme="neon"] .reportsAnalyticsHero {
+  border-color: rgb(157 82 255 / 38%);
+  background:
+    radial-gradient(circle at 92% -30%, rgb(157 82 255 / 27%), transparent 46%),
+    radial-gradient(circle at 3% 125%, rgb(104 92 255 / 16%), transparent 48%),
+    linear-gradient(122deg, rgb(31 23 52 / 98%), rgb(15 14 27 / 98%) 62%, rgb(25 18 43 / 98%));
+  box-shadow: 0 16px 38px rgb(2 1 10 / 42%);
+}
+
+:root[data-theme="neon"] .reportsAnalyticsHero::after {
+  border-color: rgb(190 132 255 / 24%);
+  box-shadow: 0 0 0 48px rgb(157 82 255 / 5%), 0 0 0 96px rgb(157 82 255 / 3%);
+}
+
+:root[data-theme="neon"] :is(.reportsAnalyticsHero, .reportsAnalyticsTableHead) small { color: #c9a5ff; }
+:root[data-theme="neon"] .reportsAnalyticsHero h2 { color: var(--text-strong); }
+:root[data-theme="neon"] .reportsAnalyticsHero p { color: var(--muted); }
+
+:root[data-theme="neon"] .reportsAnalyticsSignals span {
+  border-color: rgb(157 82 255 / 34%);
+  background: rgb(13 12 26 / 76%);
+  color: #bcb6d7;
+}
+
+:root[data-theme="neon"] .reportsAnalyticsSignals b { color: #e1d0ff; }
+
+:root[data-theme="neon"] .reportsAnalyticsView .reportsMetrics article,
+:root[data-theme="neon"] .reportsAnalyticsView .reportsMetrics .accountReportMonth {
+  border-color: rgb(157 82 255 / 28%);
+  background: linear-gradient(135deg, rgb(31 27 51 / 94%), rgb(15 14 27 / 96%));
+  box-shadow: 0 12px 28px rgb(2 1 10 / 30%);
+}
+
+:root[data-theme="neon"] .reportsAnalyticsView .reportsMetrics article { border-top-color: #c58cff; }
+:root[data-theme="neon"] .reportsAnalyticsView .reportsMetrics article:nth-child(2) { border-top-color: #9d52ff; }
+:root[data-theme="neon"] .reportsAnalyticsView .reportsMetrics article:nth-child(3) { border-top-color: #e9a4cc; }
+:root[data-theme="neon"] .reportsAnalyticsView .reportsMetrics article:nth-child(4) { border-top-color: #78d5a2; }
+
+:root[data-theme="neon"] .reportsAnalyticsView .reportKpiHeader i {
+  border-color: rgb(190 132 255 / 42%);
+  background: rgb(157 82 255 / 16%);
+  color: #dec8ff;
+}
+
+:root[data-theme="neon"] .reportsAnalyticsView .reportsMetrics article:nth-child(2) .reportKpiHeader i {
+  border-color: rgb(157 82 255 / 42%);
+  background: rgb(104 92 255 / 18%);
+  color: #cfb5ff;
+}
+
+:root[data-theme="neon"] .reportsAnalyticsView .reportsMetrics article:nth-child(3) .reportKpiHeader i {
+  border-color: rgb(233 164 204 / 36%);
+  background: rgb(233 164 204 / 13%);
+  color: #ffc3e5;
+}
+
+:root[data-theme="neon"] .reportsAnalyticsView .reportsMetrics article:nth-child(4) .reportKpiHeader i {
+  border-color: rgb(120 213 162 / 42%);
+  background: rgb(35 79 58 / 46%);
+  color: #a9efc9;
+}
+
+:root[data-theme="neon"] .reportsAnalyticsView .reportsMetrics .accountReportMonth {
+  border-color: rgb(190 132 255 / 42%);
+}
+
+:root[data-theme="neon"] .reportsAnalyticsView .accountReportMonth span { color: #c9a5ff; }
+:root[data-theme="neon"] .reportsAnalyticsView .accountReportMonth input {
+  border-color: rgb(157 82 255 / 36%);
+  background: rgb(12 12 24 / 92%);
+  color: var(--text-strong);
+}
+
+:root[data-theme="neon"] .reportsAnalyticsView .accountBreakdown,
+:root[data-theme="neon"] .reportsAnalyticsTable {
+  border-color: rgb(157 82 255 / 30%);
+  background: rgb(18 16 31 / 92%);
+}
+
+:root[data-theme="neon"] .reportsAnalyticsView .accountBreakdownTitle,
+:root[data-theme="neon"] .reportsAnalyticsTableHead {
+  border-bottom-color: rgb(157 82 255 / 24%);
+  background: linear-gradient(100deg, rgb(35 29 58 / 92%), rgb(18 16 31 / 94%));
+}
+
+:root[data-theme="neon"] .reportsAnalyticsView :is(.accountBreakdown h2, .reportsAnalyticsTableHead h2) { color: var(--text-strong); }
+
+:root[data-theme="neon"] .reportsAnalyticsView .accountBreakdownTitle > span,
+:root[data-theme="neon"] .reportsAnalyticsTableHead > span {
+  border-color: rgb(157 82 255 / 36%);
+  background: rgb(157 82 255 / 12%);
+  color: #d8c4ff;
+}
+
+:root[data-theme="neon"] .reportsAnalyticsView .accountBreakdown > div { border-top-color: rgb(157 82 255 / 16%); }
+:root[data-theme="neon"] .reportsAnalyticsView .accountBreakdown b,
+:root[data-theme="neon"] .reportsAnalyticsView .reportsBreakdown .reportBreakdownRow > b { color: #ddc8ff; }
+
+:root[data-theme="neon"] .reportsAnalyticsView .reportsBreakdown .reportBreakdownRow { color: var(--text); }
+:root[data-theme="neon"] .reportsAnalyticsView .reportsBreakdown .reportBreakdownRow:hover { background: rgb(157 82 255 / 10%); }
+:root[data-theme="neon"] .reportsAnalyticsView .reportsBreakdown .reportBreakdownRow small { color: var(--muted); }
+:root[data-theme="neon"] .reportsAnalyticsView .reportsBreakdown .reportBreakdownRow > em { background: rgb(6 6 15 / 82%); }
+:root[data-theme="neon"] .reportsAnalyticsView .reportsBreakdown .reportBreakdownRow > em > u {
+  background: linear-gradient(90deg, #7047d8, #c58cff);
+}
+
+:root[data-theme="neon"] .reportsAnalyticsTable .paymentTable thead th {
+  border-bottom-color: rgb(157 82 255 / 30%);
+  background: rgb(31 27 51 / 92%);
+  color: #dac7ff;
+}
+
+:root[data-theme="neon"] .reportsAnalyticsTable .paymentTable tbody td { border-bottom-color: rgb(157 82 255 / 14%); }
+
+:root[data-theme="neon"] .reportsAnalyticsTable .paymentTable tbody tr:hover {
+  background: linear-gradient(90deg, rgb(157 82 255 / 16%), rgb(104 92 255 / 5%));
+  box-shadow: inset 3px 0 var(--brand);
+}
+
+:root[data-theme="neon"] .reportsAnalyticsTable .reportPaymentClient i {
+  border-color: rgb(190 132 255 / 44%);
+  background: linear-gradient(135deg, rgb(82 45 139 / 64%), rgb(26 20 44 / 96%));
+  color: #dec8ff;
+}
+
+:root[data-theme="neon"] .reportsAnalyticsTable :is(.reportPaymentClient b, .reportPaymentAmount) { color: var(--text-strong); }
+
+:root[data-theme="neon"] .reportsAnalyticsTable :is(.reportPaymentType, .reportPaymentMode, .reportPaymentStatus) {
+  border-color: rgb(157 82 255 / 30%);
+  background: rgb(23 19 39 / 92%);
+  color: var(--text);
+}
+
+:root[data-theme="neon"] .reportsAnalyticsTable .reportPaymentType {
+  border-color: rgb(190 132 255 / 42%);
+  background: rgb(157 82 255 / 13%);
+  color: #dec8ff;
+}
+
+:root[data-theme="neon"] :is(input, select, textarea):focus {
+  border-color: var(--brand);
+  box-shadow: var(--focus-ring);
+}
+
+:root[data-theme="neon"] .shell aside nav button.active,
+:root[data-theme="neon"] .shell aside nav button:hover,
+:root[data-theme="neon"] .navGroup.groupActive .navGroupLabel,
+:root[data-theme="neon"] .navSubmenu button.active {
+  border-color: rgb(179 95 255 / 52%);
+  background: linear-gradient(90deg, rgb(157 82 255 / 22%), rgb(104 92 255 / 9%));
+  color: #fff;
+}
+
+:root[data-theme="neon"] :is(.operationsTabs button.active, .billTabs button.active, .productionPageTabs button.active) {
+  border-color: rgb(184 109 255 / 64%);
+  background: linear-gradient(135deg, rgb(157 82 255 / 28%), rgb(104 92 255 / 17%));
+  color: #fff;
+  box-shadow: inset 0 -2px #bc78ff;
+}
+
+:root[data-theme="neon"] table :is(th, td) { border-color: rgb(157 82 255 / 14%); }
+:root[data-theme="neon"] table th { background: rgb(31 27 51 / 78%); color: #d8c4ff; }
+:root[data-theme="neon"] table tbody tr:hover { background: rgb(157 82 255 / 8%); }
+
+:root[data-theme="neon"] .themeToggle[data-theme-state="neon"] {
+  border-color: rgb(189 120 255 / 68%);
+  background: linear-gradient(135deg, rgb(157 82 255 / 30%), rgb(104 92 255 / 18%));
+  color: #fff;
+  box-shadow: 0 0 20px rgb(157 82 255 / 18%);
+}
