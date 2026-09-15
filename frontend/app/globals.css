@@ -3297,6 +3297,74 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .clientLedgerView .accountsScheduleTableWrap { border-color: #5f4d31; box-shadow: 0 14px 34px #0000001c; }
 .clientLedgerView .clientLedgerTable thead th { border-bottom-color: #5f4d31; background: #2a241b; color: #e9cb87; }
 .clientLedgerView .clientLedgerTable tbody tr:hover { background: #d3a4470d; }
+.clientLedgerTableHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #4a3d2b;
+  background:
+    radial-gradient(circle at 92% 0%, #d2a04a16 0 58px, transparent 59px),
+    linear-gradient(100deg, #2a241b, #211d17);
+}
+.clientLedgerTableHead small { color: #e6bc63; font-size: 10px; font-weight: 850; letter-spacing: .14em; }
+.clientLedgerTableHead h2 { margin: 5px 0 3px; color: #fff0cf; font-size: var(--font-xl); }
+.clientLedgerTableHead p { margin: 0; color: #c6b89e; font-size: var(--font-sm); }
+.clientLedgerTableHead > span {
+  display: grid;
+  gap: 3px;
+  min-width: 102px;
+  padding: 8px 10px;
+  border: 1px solid #705b37;
+  border-radius: 11px;
+  background: #17140eab;
+  color: #cbbd9f;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.clientLedgerTableHead > span b { color: #f2ca73; font-size: 18px; line-height: 1.1; letter-spacing: 0; }
+.clientLedgerView .clientLedgerTable { border-collapse: separate; border-spacing: 0; }
+.clientLedgerView .clientLedgerTable thead th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  color: #e9cb87;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+.clientLedgerView .clientLedgerTable tbody td { padding-top: 13px; padding-bottom: 13px; border-bottom-color: #423725; }
+.clientLedgerView .clientLedgerTable tbody tr { transition: background 150ms ease, box-shadow 150ms ease; }
+.clientLedgerView .clientLedgerTable tbody tr:hover { box-shadow: inset 3px 0 #d9ad52; }
+.clientLedgerView .clientLedgerTable td:nth-child(1) {
+  color: #e8c16a;
+  font-size: 11px;
+  font-weight: 850;
+  text-align: center;
+}
+.clientLedgerView .clientLedgerTable td:nth-child(2) { color: #d4c5a9; font-size: 11px; font-variant-numeric: tabular-nums; }
+.clientLedgerView .clientLedgerTable td:nth-child(3) b { color: #f6ead0; font-size: var(--font-sm); }
+.clientLedgerView .clientLedgerTable td:nth-child(3) small { margin-top: 3px; color: #b9aa8d; }
+.clientLedgerView .clientLedgerTable td:nth-child(4) { color: #f0d292; font-weight: 750; font-variant-numeric: tabular-nums; }
+.clientLedgerView .clientLedgerTable td:nth-child(5) { color: #b9dc9e; font-weight: 750; font-variant-numeric: tabular-nums; }
+.clientLedgerView .clientLedgerTable td:nth-child(6) { color: #f0c970; font-weight: 850; font-variant-numeric: tabular-nums; }
+.clientLedgerView .clientLedgerTable .accountPlan { gap: 5px; }
+.clientLedgerView .clientLedgerTable .accountPlan > span {
+  min-height: 58px;
+  padding: 7px 6px;
+  border-color: #54442c;
+  border-radius: 9px;
+  background: #19150f;
+}
+.clientLedgerView .clientLedgerTable .accountPlan > span.paid { border-color: #506b45; background: #182518; }
+.clientLedgerView .clientLedgerTable .accountPlan > span small { color: #bdad8f; }
+.clientLedgerView .clientLedgerTable .accountPlan > span b { color: #f0cd77; }
+.clientLedgerView .clientLedgerTable .accountPlan > span.paid b { color: #b8d99f; }
+.clientLedgerView .clientLedgerTable .accountPlan .milestoneDue { color: #cdbd9f; }
 .clientLedgerView .accountMetrics article { border-top-color: #d3a044; }
 .clientLedgerView .accountMetrics article:nth-child(2) { border-top-color: #c58e45; }
 .clientLedgerView .accountMetrics article:nth-child(3) { border-top-color: #799462; }
