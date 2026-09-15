@@ -311,7 +311,7 @@
   background: color-mix(in srgb, var(--brand) 8%, transparent);
 }
 :root[data-theme="dark"] .productionPageTabs {
-  background: var(--surface);
+  background: transparent;
 }
 :root[data-theme="dark"] .productionPageTabs button.active {
   color: var(--brand);
