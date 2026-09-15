@@ -754,7 +754,7 @@ function EventTable({
   const labels = ["Sr. No.", "Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
   // A uniform fixed grid keeps completed-event details within the desktop page
   // while making every column visually consistent.
-  const completedColumnWidths = labels.map(() => "4%");
+  const completedColumnWidths = labels.map(() => "3%");
   const crew = (value: any) => {
     const assignments = String(value || "")
       .split(/\s*;\s*|\s*\+(?!\s*\d)\s*/)
