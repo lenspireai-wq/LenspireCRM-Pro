@@ -606,15 +606,31 @@ export default function AccountsWorkspace({
     keys: string[],
     field: string,
     items: Row[],
+    className = "",
   ) => (
-    <section className="panel accountBreakdown">
-      <h2>{title}</h2>
-      {keys.map((key) => (
-        <div key={key}>
-          <span>{key}</span>
-          <b>{money(sum(items.filter((p) => p[field] === key)))}</b>
-        </div>
-      ))}
+    <section className={`panel accountBreakdown ${className}`.trim()}>
+      <div className="accountBreakdownTitle">
+        <h2>{title}</h2>
+        {className && <span>{items.length} entries</span>}
+      </div>
+      {keys.map((key, index) => {
+        const amount = sum(items.filter((p) => p[field] === key));
+        const total = sum(items);
+        const percentage = total ? Math.round((amount / total) * 100) : 0;
+        return (
+          <div key={key} className={className ? "reportBreakdownRow" : ""}>
+            {className ? (
+              <span>
+                <i>{String(index + 1).padStart(2, "0")}</i>
+                <strong>{key}</strong>
+                <small>{percentage}% of collected value</small>
+              </span>
+            ) : <span>{key}</span>}
+            <b>{money(amount)}</b>
+            {className && <em aria-hidden="true"><u style={{ width: `${percentage}%` }} /></em>}
+          </div>
+        );
+      })}
     </section>
   );
   return (
@@ -1023,12 +1039,14 @@ export default function AccountsWorkspace({
               reportPayments.filter(
                 (p) => p.status === "Paid" && p.payment_type !== "Refund",
               ),
+              "reportsBreakdown",
             )}
             {breakdown(
               "By Payment Milestone",
               types,
               "payment_type",
               reportPayments.filter((p) => p.status === "Paid"),
+              "reportsBreakdown",
             )}
           </div>
           <section className="panel reportsAnalyticsTable">
