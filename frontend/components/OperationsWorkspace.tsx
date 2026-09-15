@@ -752,10 +752,9 @@ function EventTable({
   fitPage?: boolean;
 }) {
   const labels = ["Sr. No.", "Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
-  // Completed events deliberately uses a fixed percentage grid. This keeps all
-  // operational columns inside a desktop viewport instead of letting long names
-  // widen the entire table.
-  const completedColumnWidths = ["3%", "5%", "9%", "6%", "9%", "7%", "7%", "4%", "4%", "4%", "4%", "4%", "4%", "4%", "8%", "4%", "9%", "5%"];
+  // A uniform fixed grid keeps completed-event details within the desktop page
+  // while making every column visually consistent.
+  const completedColumnWidths = labels.map(() => `${100 / labels.length}%`);
   const crew = (value: any) => {
     const assignments = String(value || "")
       .split(/\s*;\s*|\s*\+(?!\s*\d)\s*/)
