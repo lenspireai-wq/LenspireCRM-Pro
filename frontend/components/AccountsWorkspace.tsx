@@ -1198,6 +1198,19 @@ export default function AccountsWorkspace({
                   </button>
                 </div>
               </section>
+              <section className="clientAccessSection clientPortalPreview">
+                <div>
+                  <h3>View Client Portal</h3>
+                  <p>Open the exact client view in read-only mode. This does not change or replace the client&apos;s link.</p>
+                </div>
+                {portalInfo?.preview_url ? (
+                  <a href={portalInfo.preview_url} target="_blank" rel="noopener noreferrer">
+                    ↗ Open Client View
+                  </a>
+                ) : (
+                  <small>A preview is available while the Client Portal link is active.</small>
+                )}
+              </section>
               <section className="clientAccessSection">
                 <h3>WhatsApp Message Center</h3>
                 <div className="whatsappComposer">

@@ -7,6 +7,7 @@ from urllib.parse import quote
 
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
+from django.core import signing
 from django.db.models import F, Q, Sum
 from django.utils import timezone
 from rest_framework import status
@@ -54,6 +55,17 @@ def ensure_portal_access(booking):
         defaults={"organization": booking.organization, "token_hash": token_hash(secrets.token_urlsafe(32)), "expires_at": timezone.now() + timedelta(days=3650)},
     )
     return access
+
+
+def staff_preview_url(access):
+    """Create a short-lived, read-only Studio preview of an active portal."""
+    token = signing.dumps(
+        {"access_id": access.pk, "purpose": "staff-preview"},
+        salt="client-portal-staff-preview",
+        compress=True,
+    )
+    base = getattr(settings, "CLIENT_PORTAL_BASE_URL", "http://127.0.0.1:3000").rstrip("/")
+    return f"{base}/client-portal/{token}"
 
 
 def deliverable_thumbnail_url(item):
@@ -159,12 +171,14 @@ class ClientPortalManageView(APIView):
         if not booking:
             return Response({"detail": "Booking not found."}, status=404)
         access = ClientPortalAccess.objects.filter(booking=booking).first()
+        portal_status = access_status(access)
         return Response({
-            "status": access_status(access),
+            "status": portal_status,
             "expires_at": access.expires_at if access else None,
             "last_accessed_at": access.last_accessed_at if access else None,
             "access_count": access.access_count if access else 0,
             "client_id": booking.booking_code,
+            "preview_url": staff_preview_url(access) if portal_status == "Active" else "",
             "activities": list(access.activities.values("action", "detail", "created_at")[:25]) if access else [],
             "portal_users": list(booking.portal_users.values("id", "name", "email", "mobile", "active", "last_login_at", "invite_expires_at")),
         })
@@ -412,15 +426,29 @@ class ClientPortalPublicView(APIView):
     authentication_classes = ()
 
     def access(self, token):
+        try:
+            preview = signing.loads(
+                token,
+                salt="client-portal-staff-preview",
+                max_age=15 * 60,
+            )
+            if preview.get("purpose") == "staff-preview":
+                access = ClientPortalAccess.objects.select_related(
+                    "booking__customer", "booking__lead", "organization"
+                ).filter(pk=preview.get("access_id")).first()
+                if access:
+                    return access, False, True
+        except signing.BadSignature:
+            pass
         hashed = token_hash(token)
         access = ClientPortalAccess.objects.select_related("booking__customer", "booking__lead", "organization").filter(token_hash=hashed).first()
         if access:
-            return access, False
+            return access, False, False
         user = ClientPortalUser.objects.select_related("booking__customer", "booking__lead", "organization").filter(session_token_hash=hashed, session_expires_at__gt=timezone.now(), active=True).first()
-        return (ensure_portal_access(user.booking), True) if user else (None, False)
+        return (ensure_portal_access(user.booking), True, False) if user else (None, False, False)
 
     def get(self, request, token):
-        access, permanent = self.access(token)
+        access, permanent, preview = self.access(token)
         if not access or not organization_available(access.organization) or access.closed_at or (not permanent and access_status(access) != "Active"):
             return Response({"detail": "This Client Portal link is invalid, expired, or revoked."}, status=401)
         access.last_accessed_at = timezone.now(); access.access_count = F("access_count") + 1
@@ -435,6 +463,7 @@ class ClientPortalPublicView(APIView):
         ClientPortalActivity.objects.create(organization=access.organization, access=access, booking=booking, action="Portal Opened", detail="Client opened the secure portal.")
         return Response({
             "studio": {"name": access.organization.name, "phone": access.organization.contact_phone, "email": access.organization.contact_email, "logo_url": access.organization.logo_url},
+            "read_only_preview": preview,
             "booking": {"id": booking.id, "code": booking.booking_code, "client_name": booking.customer.name, "couple_name": getattr(booking.lead, "couple_name", "") if booking.lead else "", "event_type": booking.event_type, "event_date": booking.event_date, "total": booking.quoted_amount, "received": received, "balance": max(booking.quoted_amount - received, 0)},
             "events": [
                 {
@@ -456,9 +485,11 @@ class ClientPortalPublicView(APIView):
         })
 
     def post(self, request, token):
-        access, permanent = self.access(token)
+        access, permanent, preview = self.access(token)
         if not access or not organization_available(access.organization) or access.closed_at or (not permanent and access_status(access) != "Active"):
             return Response({"detail": "This Client Portal link is invalid, expired, or revoked."}, status=401)
+        if preview:
+            return Response({"detail": "Studio previews are read-only."}, status=403)
         deliverable = ProductionDeliverable.objects.filter(pk=request.data.get("deliverable"), organization=access.organization, job__booking=access.booking).first()
         if not deliverable:
             return Response({"detail": "Deliverable not found."}, status=404)
