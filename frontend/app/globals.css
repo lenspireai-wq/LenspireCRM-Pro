@@ -3366,11 +3366,16 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .receivablesView .receivablesTable td:nth-child(6) { color: #f0c970; font-weight: 850; font-variant-numeric: tabular-nums; }
 .receivablesView .receivablesTable .accountPlan { gap: 5px; }
 .receivablesView .receivablesTable .accountPlan > span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-height: 58px;
   padding: 7px 6px;
   border-color: #54442c;
   border-radius: 9px;
   background: #19150f;
+  text-align: center;
 }
 .receivablesView .receivablesTable .accountPlan > span.paid { border-color: #506b45; background: #182518; }
 .receivablesView .receivablesTable .accountPlan > span small { color: #bdad8f; }
