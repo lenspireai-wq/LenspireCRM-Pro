@@ -4334,6 +4334,36 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   background: #7056252a;
   color: #efd082;
 }
+
+/* Keep the timeline on the standard Post Production charcoal-and-gold palette. */
+.productionActivityPanel .productionActivityHero {
+  border-bottom-color: #59482f;
+  background:
+    radial-gradient(circle at 91% -35%, #d4a34b43 0, transparent 45%),
+    radial-gradient(circle at 7% 120%, #b88a3d22 0, transparent 48%),
+    linear-gradient(115deg, #2b251e, #201c17 64%, #252016);
+}
+.productionActivityPanel .productionActivityStats span {
+  border-color: #80663a;
+  background: #17140eaa;
+  color: #cfbd94;
+}
+.productionActivityPanel .productionActivityStats b { color: #f6d27f; }
+.productionActivityPanel .productionActivityType,
+.productionActivityPanel .productionActiveRow .productionActivityType {
+  border-color: #7d653c;
+  background: #7056252a;
+  color: #efd082;
+}
+.productionActivityPanel .productionReminderRow .productionActivityType {
+  border-color: #8e6730;
+  background: #7a552622;
+  color: #f0c46d;
+}
+.productionActivityPanel .productionDescriptionInfo,
+.productionActivityPanel .productionDescriptionTeal {
+  color: #dec38a;
+}
 .activityHistoryPanel .panelHead {
   min-height: 52px;
   box-sizing: border-box;
