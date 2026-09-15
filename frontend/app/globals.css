@@ -2565,10 +2565,10 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   box-shadow: 0 14px 30px #00000024;
 }
 .operationsCompletedTable.upcomingEventsTableWrap .upcomingEventsTable {
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  table-layout: fixed !important;
+  width: max-content !important;
+  min-width: 100% !important;
+  max-width: none !important;
+  table-layout: auto !important;
 }
 .operationsCompletedTable.upcomingEventsTableWrap .upcomingEventsTable th {
   height: 34px;
@@ -2591,7 +2591,7 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .operationsCompletedTable.upcomingEventsTableWrap .upcomingEventsTable tbody tr:nth-child(even) { background: #241f19; }
 .operationsCompletedTable.upcomingEventsTableWrap .upcomingEventsTable tbody tr:hover { background: linear-gradient(90deg, #d3a44717, #d3a44706); box-shadow: inset 3px 0 #d9ad52; }
 @media (min-width: 901px) {
-  .operationsCompletedTable.upcomingEventsTableWrap { overflow-x: hidden !important; }
+  .operationsCompletedTable.upcomingEventsTableWrap { overflow-x: auto !important; }
 }
 @media (min-width: 901px) {
   .operationsUpcomingTable.upcomingEventsTableWrap {

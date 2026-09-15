@@ -752,9 +752,6 @@ function EventTable({
   fitPage?: boolean;
 }) {
   const labels = ["Sr. No.", "Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
-  // A uniform fixed grid keeps completed-event details within the desktop page
-  // while making every column visually consistent.
-  const completedColumnWidths = labels.map(() => "3%");
   const crew = (value: any) => {
     const assignments = String(value || "")
       .split(/\s*;\s*|\s*\+(?!\s*\d)\s*/)
@@ -843,15 +840,7 @@ function EventTable({
     );
   return (
     <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns" : ""}${fitPage ? " operationsCompletedTable" : fitColumns ? " operationsUpcomingTable" : ""}${uniformColumns ? " uniformEventColumns" : ""}`}>
-      <table
-        className="upcomingEventsTable"
-        style={fitPage ? { width: "100%", minWidth: 0, maxWidth: "100%", tableLayout: "fixed" } : undefined}
-      >
-        {fitPage && (
-          <colgroup>
-            {completedColumnWidths.map((width, index) => <col key={labels[index]} style={{ width }} />)}
-          </colgroup>
-        )}
+      <table className="upcomingEventsTable">
         <thead>
           <tr>
             {labels.map((label) => <th key={label} scope="col">{label}</th>)}
