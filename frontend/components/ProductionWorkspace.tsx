@@ -928,7 +928,7 @@ export default function ProductionWorkspace({
       {draft && (
         <div className="modalBackdrop">
           <form className="accountModal productionModal" onSubmit={save}>
-            <div className="modalHeader">
+            <div className="modalHeader productionJobHeader">
               <div>
                 <small>PRODUCTION JOB</small>
                 <h2>{draft.client_name || draft.booking_code}</h2>
