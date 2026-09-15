@@ -397,6 +397,40 @@
   min-width: 0 !important;
   max-width: 6.911112% !important;
 }
+/* Completed Events uses the same 18-field overview, so preserve the same
+   scan-friendly priorities as Upcoming Events. */
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable col:first-child,
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):first-child {
+  width: 3% !important;
+  min-width: 0 !important;
+  max-width: 3% !important;
+}
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable col:nth-child(2),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(2),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable col:nth-child(4),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(4),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable col:nth-child(16),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(16) {
+  width: 4.2% !important;
+  min-width: 0 !important;
+  max-width: 4.2% !important;
+}
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable col:nth-child(3),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(3),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable col:nth-child(7),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(7),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable col:nth-child(15),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(15) {
+  width: 6.911112% !important;
+  min-width: 0 !important;
+  max-width: 6.911112% !important;
+}
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable col:nth-child(5),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(5) {
+  width: 8.111112% !important;
+  min-width: 0 !important;
+  max-width: 8.111112% !important;
+}
 :root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .eventRowActions {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr));
