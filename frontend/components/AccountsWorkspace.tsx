@@ -190,10 +190,6 @@ export default function AccountsWorkspace({
   const [reminder, setReminder] = useState<Row | null>(null);
   const [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
-  const [collectionQuery, setCollectionQuery] = useState("");
-  const [collectionStatus, setCollectionStatus] = useState("All");
-  const [collectionFrom, setCollectionFrom] = useState("");
-  const [collectionTo, setCollectionTo] = useState("");
   const [ageingFilter, setAgeingFilter] = useState("All");
   const [month, setMonth] = useState(() =>
     new Date().toISOString().slice(0, 7),
@@ -369,22 +365,7 @@ export default function AccountsWorkspace({
       .toLowerCase()
       .includes(query.toLowerCase()),
   );
-  const collectionPayments = payments.filter((payment) => {
-    const account = accounts.find((item) => item.id === payment.booking);
-    const paymentDate = date(
-      payment.paid_at || payment.due_date || payment.created_at,
-    );
-    const matchesQuery =
-      `${account?.client || payment.client_name || ""} ${account?.booking_code || payment.booking_code || ""} ${payment.payment_type || ""} ${payment.payment_mode || ""} ${payment.received_by || ""}`
-        .toLowerCase()
-        .includes(collectionQuery.trim().toLowerCase());
-    return (
-      matchesQuery &&
-      (collectionStatus === "All" || payment.status === collectionStatus) &&
-      (!collectionFrom || paymentDate >= collectionFrom) &&
-      (!collectionTo || paymentDate <= collectionTo)
-    );
-  });
+  const collectionPayments = payments;
   const ageingRows = accounts.flatMap((account) =>
     account.stages
       .filter((stage: Row) => stage.remaining > 0)
@@ -865,54 +846,6 @@ export default function AccountsWorkspace({
               <span><b>{collectionPayments.filter((payment) => payment.status === "Paid").length}</b> cleared</span>
               <span><b>{money(sum(collectionPayments.filter((payment) => payment.status === "Paid" && payment.payment_type !== "Refund")))}</b> received</span>
             </div>
-          </div>
-          <div className="collectionFilters">
-            <input
-              aria-label="Search collections"
-              placeholder="Search client, booking, type, mode…"
-              value={collectionQuery}
-              onChange={(event) => setCollectionQuery(event.target.value)}
-            />
-            <select
-              aria-label="Filter collection status"
-              value={collectionStatus}
-              onChange={(event) => setCollectionStatus(event.target.value)}
-            >
-              <option>All</option>
-              <option>Paid</option>
-              <option>Pending</option>
-              <option>Overdue</option>
-            </select>
-            <label>
-              From
-              <input
-                type="date"
-                value={collectionFrom}
-                onChange={(event) => setCollectionFrom(event.target.value)}
-              />
-            </label>
-            <label>
-              To
-              <input
-                type="date"
-                value={collectionTo}
-                onChange={(event) => setCollectionTo(event.target.value)}
-              />
-            </label>
-            <button
-              type="button"
-              className="iconOnlyAction clearAction"
-              title="Clear filters"
-              aria-label="Clear filters"
-              onClick={() => {
-                setCollectionQuery("");
-                setCollectionStatus("All");
-                setCollectionFrom("");
-                setCollectionTo("");
-              }}
-            >
-              ↺
-            </button>
           </div>
           {paymentTable(collectionPayments)}
         </section>
