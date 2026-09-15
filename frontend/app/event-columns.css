@@ -304,6 +304,42 @@
   background: color-mix(in srgb, var(--brand) 5%, transparent) !important;
 }
 
+/* Completed Events is deliberately a full-page overview. Unlike Upcoming
+   Events, its 18 fields must remain visible together instead of inheriting the
+   2200px scroll-grid used for scheduling work. */
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+}
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):first-child,
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(n + 2):nth-child(-n + 17),
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .upcomingEventsTable :is(th, td):last-child {
+  width: 5.555556% !important;
+  min-width: 0 !important;
+  max-width: 5.555556% !important;
+  padding-inline: 2px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .eventRowActions {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px !important;
+  min-width: 0 !important;
+}
+:root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .eventRowActions :is(button, a) {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 22px;
+  min-height: 22px;
+  padding: 0 !important;
+  font-size: 8px;
+}
+
 /* Final mobile Operations table standard.  This is intentionally last because
    older Operations styles above use several overlapping table selectors. */
 @media (max-width: 900px) {
