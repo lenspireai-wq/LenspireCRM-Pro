@@ -325,6 +325,81 @@
   }
 }
 
+/* A compact mobile-only crew directory: the wide table remains easy to pan,
+   while its fixed leading columns read as a polished roster instead of a
+   dense spreadsheet. Desktop Photographer Details is deliberately untouched. */
+@media (max-width: 900px) {
+  :root .photographersDetailsView .photographerTablePanel {
+    border: 1px solid color-mix(in srgb, var(--brand) 44%, var(--line)) !important;
+    border-radius: 16px !important;
+    background:
+      radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--brand) 13%, transparent), transparent 32%),
+      var(--surface) !important;
+    box-shadow: 0 16px 30px rgb(0 0 0 / 14%);
+  }
+  :root .photographersDetailsView .photographerTable thead th {
+    height: 34px !important;
+    padding-inline: 8px !important;
+    border-bottom: 1px solid color-mix(in srgb, var(--brand) 56%, var(--line)) !important;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--brand) 22%, var(--surface)), var(--surface)) !important;
+    color: color-mix(in srgb, var(--brand) 72%, var(--text)) !important;
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    letter-spacing: .08em !important;
+  }
+  :root .photographersDetailsView .photographerTable tbody td {
+    height: 52px !important;
+    padding-inline: 8px !important;
+    border-bottom-color: color-mix(in srgb, var(--line) 82%, transparent) !important;
+  }
+  :root .photographersDetailsView .photographerTable tbody tr:nth-child(even) {
+    background: color-mix(in srgb, var(--brand) 4%, var(--surface)) !important;
+  }
+  :root .photographersDetailsView .photographerTable tbody tr:hover {
+    background: color-mix(in srgb, var(--brand) 9%, var(--surface)) !important;
+    box-shadow: inset 3px 0 0 var(--brand) !important;
+  }
+  :root .photographersDetailsView .photographerTable .mobilePhotographerSerial {
+    color: var(--brand) !important;
+    font-size: 11px !important;
+    font-weight: 850 !important;
+  }
+  :root .photographersDetailsView .photographerIdentity {
+    gap: 8px !important;
+    text-align: left !important;
+  }
+  :root .photographersDetailsView .photographerIdentity i {
+    width: 30px !important;
+    height: 30px !important;
+    border-color: color-mix(in srgb, var(--brand) 64%, var(--line)) !important;
+    border-radius: 9px !important;
+    background: color-mix(in srgb, var(--brand) 16%, var(--surface)) !important;
+    color: var(--brand) !important;
+  }
+  :root .photographersDetailsView .photographerIdentity b {
+    color: var(--text) !important;
+    font-size: 11px !important;
+    font-weight: 780 !important;
+    text-align: left !important;
+  }
+  :root .photographersDetailsView :is(.photographerMobile, .photographerWork, .statusPill) {
+    min-height: 24px !important;
+    padding: 3px 7px !important;
+    border-radius: 8px !important;
+    font-size: 9px !important;
+    font-weight: 760 !important;
+  }
+  :root .photographersDetailsView .photographerTable .rowActions button {
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
+    border-radius: 8px !important;
+    border-color: color-mix(in srgb, var(--brand) 44%, var(--line)) !important;
+    background: color-mix(in srgb, var(--brand) 8%, var(--surface)) !important;
+    color: var(--brand) !important;
+  }
+}
+
 /* The table deliberately remains readable on phones, so it scrolls sideways
    instead of compressing eighteen fields into illegible text. Make that
    interaction unmistakable without affecting the desktop workspace. */
