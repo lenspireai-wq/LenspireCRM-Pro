@@ -2546,10 +2546,17 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   border-radius: 14px;
   background: #1d1915;
   box-shadow: 0 14px 34px #00000022;
+  overflow: auto !important;
+  overscroll-behavior: contain;
   scrollbar-color: #b58d42 #1b1712;
 }
+.operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable {
+  min-width: 1800px;
+  table-layout: fixed !important;
+}
+.operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar { width: 11px; height: 11px; }
 .operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar-track { background: #1b1712; }
-.operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar-thumb { border-color: #1b1712; background: #b58d42; }
+.operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar-thumb { border: 2px solid #1b1712; background: #b58d42; border-radius: 999px; }
 .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable th {
   height: 34px;
   border-right-color: #5a492f;
