@@ -29,6 +29,7 @@ import {
   canWrite,
   isAdministrator,
   type Department,
+  type SessionUser,
 } from "@/lib/permissions";
 const sections = [
   "Dashboard",
@@ -81,20 +82,24 @@ const sectionDepartments: Partial<Record<Section, Department>> = {
   Settings: "sales",
 };
 
-const defaultSectionForRole = (role?: string): Section => {
-  switch (role?.trim().toLowerCase()) {
-    case "editor":
-    case "post production":
-      return "Production";
-    case "operations":
-      return "Operations";
-    case "accounts & finance":
-      return "Accounts";
-    case "sales & marketing":
-      return "Sales";
-    default:
-      return "Dashboard";
-  }
+const defaultSectionForUser = (user: SessionUser): Section => {
+  // The administrator starts at the operational command centre. It provides
+  // the fastest studio-wide view of today's work immediately after sign-in.
+  if (isAdministrator(user)) return "Operations";
+
+  const role = user.role?.trim().toLowerCase() || "";
+  if (/editor|post[ -]?production|retouch|album/.test(role)) return "Production";
+  if (/operations?|photographer|coordinator|crew/.test(role)) return "Operations";
+  if (/accounts?|finance|billing|cashier/.test(role)) return "Accounts";
+  if (/sales|marketing|lead|business development/.test(role)) return "Sales";
+
+  // For custom designations, use the first enabled department instead of
+  // sending the user to a generic dashboard they may not be allowed to use.
+  if (canAccess(user, "operations")) return "Operations";
+  if (canAccess(user, "sales")) return "Sales";
+  if (canAccess(user, "accounts")) return "Accounts";
+  if (canAccess(user, "production")) return "Production";
+  return "Dashboard";
 };
 
 function Login({
@@ -421,7 +426,7 @@ export default function Home() {
       return;
     }
 
-    const preferredSection = defaultSectionForRole(auth.user.role);
+    const preferredSection = defaultSectionForUser(auth.user);
     setSection(
       visibleSections.includes(preferredSection)
         ? preferredSection
