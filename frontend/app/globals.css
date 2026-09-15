@@ -4172,6 +4172,44 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   text-transform: uppercase;
 }
 .editQueueStats b { color: #fff0ca; font-size: 20px; line-height: 1; }
+.editQueueStageRail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  padding: 1px;
+  border-bottom: 1px solid #4a3e2b;
+  background: #4a3e2b;
+}
+.editQueueStage {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 72px;
+  padding: 12px 14px;
+  background: #211d17;
+}
+.editQueueStage i {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid #745e3d;
+  border-radius: 50%;
+  color: #e6bc66;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 850;
+}
+.editQueueStage span { display: grid; min-width: 0; gap: 2px; }
+.editQueueStage small { color: #ad9b7b; font-size: 9px; font-weight: 700; text-transform: uppercase; }
+.editQueueStage b { color: #fff0d1; font-size: 13px; }
+.editQueueStage strong { color: #f1c86f; font-size: 24px; line-height: 1; }
+.editQueueStage.stage2 { background: #252016; }
+.editQueueStage.stage3 { background: #282117; }
+.editQueueStage.stage4 { background: #232017; }
+.editQueueStage.stage4 i { border-color: #3f8766; color: #82ddb2; }
+.editQueueStage.stage4 strong { color: #82ddb2; }
 .editQueueTableWrap { margin: 0; border: 0; border-radius: 0; background: transparent; }
 .editQueueTable thead th {
   padding-top: 13px;
@@ -11021,6 +11059,12 @@ table > tbody > tr:has(td[colspan])::before {
   .editQueueOverview h3 { font-size: 20px; }
   .editQueueStats { width: 100%; }
   .editQueueStats span { min-width: 0; flex: 1; padding: 9px 6px; font-size: 8px; }
+  .editQueueStageRail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .editQueueStage { min-height: 62px; grid-template-columns: 25px minmax(0, 1fr) auto; gap: 7px; padding: 10px 9px; }
+  .editQueueStage i { width: 23px; height: 23px; font-size: 8px; }
+  .editQueueStage small { font-size: 8px; }
+  .editQueueStage b { font-size: 12px; }
+  .editQueueStage strong { font-size: 20px; }
   .editQueueTableWrap { overflow-x: auto; }
   .productionOverdueHero { grid-template-columns: 1fr; gap: 17px; padding: 22px 18px; }
   .productionOverdueHero h2 { font-size: 28px; }

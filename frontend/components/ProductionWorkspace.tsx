@@ -1286,6 +1286,12 @@ function EditQueueTable({
   const inReview = jobs.filter((job) =>
     ["Submitted for Review", "Quality Check"].includes(workflowStatus(job)),
   ).length;
+  const workflowStages = [
+    { label: "Setup", note: "Needs editor", count: jobs.filter((job) => workflowEditors(job) === "Unassigned").length },
+    { label: "Editing", note: "In motion", count: jobs.filter((job) => ["Assigned", "In Progress"].includes(workflowStatus(job))).length },
+    { label: "Review", note: "Quality check", count: inReview },
+    { label: "Final", note: "Client approved", count: jobs.filter((job) => workflowStatus(job) === "Client Approved").length },
+  ];
   return (
     <div className="editQueueExperience">
       <section className="editQueueOverview">
@@ -1299,6 +1305,15 @@ function EditQueueTable({
           <span><b>{assigned}</b> assigned</span>
           <span><b>{inReview}</b> in review</span>
         </div>
+      </section>
+      <section className="editQueueStageRail" aria-label="Workflow stages">
+        {workflowStages.map((stage, index) => (
+          <div key={stage.label} className={`editQueueStage stage${index + 1}`}>
+            <i>{String(index + 1).padStart(2, "0")}</i>
+            <span><small>{stage.note}</small><b>{stage.label}</b></span>
+            <strong>{stage.count}</strong>
+          </div>
+        ))}
       </section>
     <div className="table editQueueTableWrap">
       <table className="editQueueTable">
