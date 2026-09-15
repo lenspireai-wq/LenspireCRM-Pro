@@ -357,6 +357,20 @@
   min-width: 0 !important;
   max-width: 8.111112% !important;
 }
+/* Dates remain easy to read in a compact column; use their remaining space
+   for the more descriptive client name field. */
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable col:nth-child(2),
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(2) {
+  width: 4.2% !important;
+  min-width: 0 !important;
+  max-width: 4.2% !important;
+}
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable col:nth-child(3),
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(3) {
+  width: 6.911112% !important;
+  min-width: 0 !important;
+  max-width: 6.911112% !important;
+}
 :root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .eventRowActions {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr));
