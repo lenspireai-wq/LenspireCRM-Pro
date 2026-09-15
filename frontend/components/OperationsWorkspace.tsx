@@ -505,6 +505,8 @@ export default function OperationsWorkspace({
           events={upcoming}
           fitColumns
           uniformColumns
+          fitPage
+          fitPageClass="operationsUpcomingTable"
           edit={readOnly ? undefined : setEventDraft}
           onMessage={setMessageEvent}
           onDuplicate={readOnly ? undefined : duplicateEvent}
@@ -740,6 +742,7 @@ function EventTable({
   fitColumns = false,
   uniformColumns = false,
   fitPage = false,
+  fitPageClass = "operationsCompletedTable",
 }: {
   events: Row[];
   edit?: (row: Row) => void;
@@ -750,6 +753,7 @@ function EventTable({
   fitColumns?: boolean;
   uniformColumns?: boolean;
   fitPage?: boolean;
+  fitPageClass?: "operationsCompletedTable" | "operationsUpcomingTable";
 }) {
   const labels = ["Sr. No.", "Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
   const completedColumnWidth = `${100 / labels.length}%`;
@@ -840,7 +844,7 @@ function EventTable({
       </div>
     );
   return (
-    <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns" : ""}${fitPage ? " operationsCompletedTable" : fitColumns ? " operationsUpcomingTable" : ""}${uniformColumns ? " uniformEventColumns" : ""}`}>
+    <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns" : ""}${fitPage ? ` ${fitPageClass}` : fitColumns ? " operationsUpcomingTable" : ""}${uniformColumns ? " uniformEventColumns" : ""}`}>
       <table
         className="upcomingEventsTable"
         style={fitPage ? { width: "100%", minWidth: 0, maxWidth: "100%", tableLayout: "fixed" } : undefined}
