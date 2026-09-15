@@ -908,11 +908,17 @@ export default function ProductionWorkspace({
       )}
 
       {view === "Activity History" && (
-        <section className="panel activityHistoryPanel">
-          <div className="panelHead">
+        <section className="panel activityHistoryPanel productionActivityPanel">
+          <div className="productionActivityHero">
             <div>
-              <h2>Production Activity History</h2>
-              <p>Complete record of job updates and overdue reminders.</p>
+              <small>PRODUCTION TIMELINE</small>
+              <h2>Every update, beautifully traceable.</h2>
+              <p>Follow edits, reviews, approvals and reminders across every client story.</p>
+            </div>
+            <div className="productionActivityStats">
+              <span><b>{filteredActivities.length}</b> total updates</span>
+              <span><b>{filteredActivities.filter((item) => item.activity_type === "Submitted for Review").length}</b> in review</span>
+              <span><b>{filteredActivities.filter((item) => item.activity_type === "Client Portal Feedback").length}</b> client feedback</span>
             </div>
           </div>
           <ActivityTable activities={filteredActivities} />
