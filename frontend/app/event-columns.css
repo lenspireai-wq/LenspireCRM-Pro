@@ -312,11 +312,32 @@
      rule set it to overflow: visible, which made a wide table impossible
      to swipe despite its visible overflow. */
   :root .mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
-    overflow-x: auto !important;
-    overflow-y: auto !important;
-    touch-action: pan-x pan-y pinch-zoom !important;
+    overflow-x: scroll !important;
+    overflow-y: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    flex: 0 0 auto !important;
+    touch-action: pan-x pan-y !important;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-inline: contain;
+    scrollbar-width: auto !important;
+    scrollbar-color: var(--brand) var(--surface) !important;
+  }
+  :root .shell > main.mainOperationsDashboard:has(.photographersDetailsView),
+  :root .mainOperationsDashboard .operationsWorkspace.photographersDetailsView {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100dvh !important;
+    overflow-y: visible !important;
+  }
+  :root .mainOperationsDashboard .photographersDetailsView .photographerTablePanel::-webkit-scrollbar {
+    display: block !important;
+    height: 9px !important;
+  }
+  :root .mainOperationsDashboard .photographersDetailsView .photographerTablePanel::-webkit-scrollbar-thumb {
+    background: var(--brand) !important;
+    border: 2px solid var(--surface) !important;
+    border-radius: 999px;
   }
   /* Keep the whole roster moving together on phones; no frozen columns or
      sticky header in this table. */
