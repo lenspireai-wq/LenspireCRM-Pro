@@ -8,7 +8,7 @@ import { formatDate } from "@/lib/date-format";
 import { exportFilename } from "@/lib/download-filename";
 
 type Row = Record<string, any>;
-type View =
+export type ProductionView =
   "Dashboard" | "Edit Queue" | "My Work" | "Overdue" | "Activity History" | "Delivery";
 type Filters = {
   search: string;
@@ -30,7 +30,7 @@ const emptyFilters: Filters = {
   activityType: "",
 };
 
-const views: View[] = [
+const views: ProductionView[] = [
   "Dashboard",
   "Edit Queue",
   "Overdue",
@@ -161,12 +161,16 @@ const workflowDueDate = (job: Row) => {
 
 export default function ProductionWorkspace({
   readOnly = false,
+  onViewChange,
+  headerSearch = "",
 }: {
   readOnly?: boolean;
+  onViewChange?: (view: ProductionView) => void;
+  headerSearch?: string;
 }) {
   const user = useAuthStore((state) => state.user);
   const isEditor = user?.role?.trim().toLowerCase() === "editor";
-  const [view, setView] = useState<View>("Dashboard");
+  const [view, setView] = useState<ProductionView>("Dashboard");
   const [draft, setDraft] = useState<Row | null>(null);
   const [editors, setEditors] = useState<Row[]>([]);
   const [reminderJob, setReminderJob] = useState<Row | null>(null);
@@ -177,10 +181,18 @@ export default function ProductionWorkspace({
   const [driveLinks, setDriveLinks] = useState<Record<number, string>>({});
   const [thumbnailLinks, setThumbnailLinks] = useState<Record<number, string>>({});
   const today = new Date().toISOString().slice(0, 10);
-  const availableViews: View[] = isEditor ? ["My Work"] : views;
+  const availableViews: ProductionView[] = isEditor ? ["My Work"] : views;
   useEffect(() => {
     if (isEditor) setView("My Work");
   }, [isEditor]);
+  useEffect(() => {
+    onViewChange?.(view);
+  }, [onViewChange, view]);
+  useEffect(() => {
+    setFilters((current) =>
+      current.search === headerSearch ? current : { ...current, search: headerSearch },
+    );
+  }, [headerSearch]);
 
   const productionQuery = useApiQuery<{ results: Row[]; count: number }>(
     queryKeys.production({ isEditor }),

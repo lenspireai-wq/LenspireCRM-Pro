@@ -8,7 +8,7 @@ import HeaderSearch from "@/components/HeaderSearch";
 import SalesWorkspace from "@/components/SalesWorkspace";
 import OperationsWorkspace, { type View as OperationsView } from "@/components/OperationsWorkspace";
 import AccountsWorkspace from "@/components/AccountsWorkspace";
-import ProductionWorkspace from "@/components/ProductionWorkspace";
+import ProductionWorkspace, { type ProductionView } from "@/components/ProductionWorkspace";
 import OwnerPortal from "@/components/OwnerPortal";
 import DashboardWorkspace from "@/components/DashboardWorkspace";
 import ReportsWorkspace from "@/components/ReportsWorkspace";
@@ -296,6 +296,8 @@ export default function Home() {
     [salesView, setSalesView] = useState<"Dashboard" | "Lead Management">("Dashboard"),
     [eventSearch, setEventSearch] = useState(""),
     [accountsSearch, setAccountsSearch] = useState(""),
+    [productionView, setProductionView] = useState<ProductionView>("Dashboard"),
+    [productionSearch, setProductionSearch] = useState(""),
     [operationsView, setOperationsView] = useState<OperationsView>("Dashboard"),
     [accountsView, setAccountsView] = useState<string>("Payment Dashboard"),
     [isFullscreen, setIsFullscreen] = useState(false),
@@ -358,6 +360,9 @@ export default function Home() {
   }, [section]);
   useEffect(() => {
     if (section !== "Accounts") setAccountsView("Payment Dashboard");
+  }, [section]);
+  useEffect(() => {
+    if (section !== "Production") setProductionView("Dashboard");
   }, [section]);
   useEffect(() => {
     if ((section !== "Dashboard" && section !== "Sales" && !(section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details")) && !(section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Collections" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics"))) || !dashboardChromeRef.current) return;
@@ -604,8 +609,8 @@ export default function Home() {
             <>
               <div className="sectionHeader">
                 <div>
-                  <h1>Post Production</h1>
-                  <p>Review, edit, and deliver your studio’s work.</p>
+                  <h1>{productionView}</h1>
+                  <p>Post Production · Review, edit, and deliver your studio’s work.</p>
                 </div>
               </div>
             </>
@@ -639,7 +644,7 @@ export default function Home() {
           ) : (
             <div><h1>{section}</h1><span>Your studio at a glance</span></div>
           )}
-          <div className="chromeActions"><HeaderSearch onNavigate={setSection} onEventSearch={setEventSearch} onAccountsSearch={setAccountsSearch} scope={section === "Operations" && (operationsView === "Upcoming Events" || operationsView === "Completed Events") ? "events" : section === "Sales" && salesView === "Lead Management" ? "lead-management" : section === "Accounts" && (accountsView === "Receivables" || accountsView === "Client Ledger") ? "accounts-table" : "global"} /><NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
+          <div className="chromeActions"><HeaderSearch onNavigate={setSection} onEventSearch={setEventSearch} onAccountsSearch={setAccountsSearch} onProductionSearch={setProductionSearch} productionView={productionView} scope={section === "Production" ? "production-table" : section === "Operations" && (operationsView === "Upcoming Events" || operationsView === "Completed Events") ? "events" : section === "Sales" && salesView === "Lead Management" ? "lead-management" : section === "Accounts" && (accountsView === "Receivables" || accountsView === "Client Ledger") ? "accounts-table" : "global"} /><NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
         </div>
         {readOnly && (
           <div className="readOnlyNotice">
@@ -683,7 +688,7 @@ export default function Home() {
           </ErrorBoundary>
         ) : section === "Production" ? (
           <ErrorBoundary label="Production">
-            <ProductionWorkspace readOnly={readOnly} />
+            <ProductionWorkspace readOnly={readOnly} onViewChange={setProductionView} headerSearch={productionSearch} />
           </ErrorBoundary>
         ) : section === "Billing" ? (
           <ErrorBoundary label="Billing">
