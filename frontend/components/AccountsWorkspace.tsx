@@ -800,7 +800,7 @@ export default function AccountsWorkspace({
               <span><b>{money(sum(collectionPayments.filter((payment) => payment.status === "Paid" && payment.payment_type !== "Refund")))}</b> received</span>
             </div>
           </div>
-          {paymentTable(collectionPayments)}
+          {paymentTable(collectionPayments, "collectionPaymentActivity")}
         </section>
       )}
       {view === "Receivables" && (
