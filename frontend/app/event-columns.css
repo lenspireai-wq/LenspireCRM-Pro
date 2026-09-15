@@ -371,6 +371,19 @@
   min-width: 0 !important;
   max-width: 6.911112% !important;
 }
+/* The handler is usually a short name; favour the longer event description. */
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable col:nth-child(4),
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(4) {
+  width: 4.2% !important;
+  min-width: 0 !important;
+  max-width: 4.2% !important;
+}
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable col:nth-child(7),
+:root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(7) {
+  width: 6.911112% !important;
+  min-width: 0 !important;
+  max-width: 6.911112% !important;
+}
 :root .fitUpcomingColumns.operationsCompletedTable.uniformEventColumns .eventRowActions {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr));
