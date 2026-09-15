@@ -7801,6 +7801,20 @@ body:has(.mainAccountsSticky) {
 }
 .mainOperationsDashboard .photographersDetailsView .photographerTable thead .mobilePhotographerSerial,
 .mainOperationsDashboard .photographersDetailsView .photographerTable thead .photographerActionsHead { text-align: center; }
+.mainOperationsDashboard .photographersDetailsView .photographerSerialSort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.mainOperationsDashboard .photographersDetailsView .photographerSerialSort:hover { border-color: #806438; background: #3a2c17; color: #f4d182; }
+.mainOperationsDashboard .photographersDetailsView .photographerSerialSort span { color: #f1c970; font-size: 12px; }
 .mainOperationsDashboard .photographersDetailsView .photographerTable tbody td {
   padding: 11px 14px;
   border-bottom-color: #423725;

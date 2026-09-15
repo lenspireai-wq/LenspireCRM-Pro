@@ -1007,13 +1007,25 @@ function CrewTable({
       return unique;
     }, new Map<string, Row>()).values(),
   );
+  const [serialOrder, setSerialOrder] = useState<"asc" | "desc">("asc");
+  const displayedRows = serialOrder === "asc" ? visibleRows : [...visibleRows].reverse();
 
   return (
     <section className="photographerTablePanel">
         <table className="photographerTable">
           <thead>
             <tr>
-              <th className="mobilePhotographerSerial">No.</th>
+              <th className="mobilePhotographerSerial">
+                <button
+                  type="button"
+                  className="photographerSerialSort"
+                  onClick={() => setSerialOrder((order) => order === "asc" ? "desc" : "asc")}
+                  aria-label={`Sort serial number ${serialOrder === "asc" ? "descending" : "ascending"}`}
+                  title={`Sort ${serialOrder === "asc" ? "descending" : "ascending"}`}
+                >
+                  No. <span aria-hidden="true">{serialOrder === "asc" ? "↑" : "↓"}</span>
+                </button>
+              </th>
               <th>Photographer</th>
               <th>Phone</th>
               <th>Base</th>
@@ -1023,7 +1035,7 @@ function CrewTable({
             </tr>
           </thead>
           <tbody>
-            {visibleRows.map((row, index) => {
+            {displayedRows.map((row, index) => {
               const initials = String(row.name || "—")
                 .split(/\s+/)
                 .filter(Boolean)
