@@ -77,18 +77,46 @@ jobs:
             if ssh lenspire-vps '
               systemctl is-active --quiet docker || systemctl start docker
               cd /docker/lenspire-crm-django
+              base_compose="$(find . -maxdepth 1 -type f \( -name compose.yml -o -name compose.yaml -o -name docker-compose.yml -o -name docker-compose.yaml \) -print -quit)"
+              [ -n "$base_compose" ] || { echo "No Docker Compose file found"; exit 1; }
+              printf "%s\\n" \
+                "services:" \
+                "  api:" \
+                "    environment:" \
+                "      BACKUP_ROOT: /var/lib/lenspirecrm/backups" \
+                "    volumes:" \
+                "      - lenspirecrm_backups:/var/lib/lenspirecrm/backups" \
+                "  worker:" \
+                "    environment:" \
+                "      BACKUP_ROOT: /var/lib/lenspirecrm/backups" \
+                "    volumes:" \
+                "      - lenspirecrm_backups:/var/lib/lenspirecrm/backups" \
+                "  beat:" \
+                "    environment:" \
+                "      BACKUP_ROOT: /var/lib/lenspirecrm/backups" \
+                "    volumes:" \
+                "      - lenspirecrm_backups:/var/lib/lenspirecrm/backups" \
+                "volumes:" \
+                "  lenspirecrm_backups:" > docker-compose.backups.yml
+              if ! grep -q "^BACKUP_ENCRYPTION_KEY=." .env; then
+                umask 077
+                backup_key="$(openssl rand -base64 48 | tr -d "\\n")"
+                printf "BACKUP_ENCRYPTION_KEY=%s\\n" "$backup_key" >> .env
+                unset backup_key
+              fi
+              compose() { docker compose -f "$base_compose" -f docker-compose.backups.yml "$@"; }
               pulled=false
               for pull_attempt in 1 2 3; do
-                if docker compose pull; then
+                if compose pull; then
                   pulled=true
                   break
                 fi
                 sleep $((pull_attempt * 15))
               done
               [ "$pulled" = true ] || exit 1
-              docker compose up -d --remove-orphans
-              docker compose exec -T api python manage.py migrate --noinput
-              docker compose ps
+              compose up -d --remove-orphans
+              compose exec -T api python manage.py migrate --noinput
+              compose ps
               (docker image prune -af || echo "Docker cleanup already running; skipped for this release.")
             '; then
               exit 0
