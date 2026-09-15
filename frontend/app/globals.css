@@ -4011,6 +4011,82 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   table-layout: fixed;
   min-width: 980px;
 }
+.editQueuePanel { overflow: hidden; border-color: #5a4a32; }
+.editQueuePanel > .panelHead {
+  padding: 22px 24px;
+  border-bottom: 1px solid #52442f;
+  background: linear-gradient(90deg, #2b251e, #201c17);
+}
+.editQueuePanel > .panelHead h2 { margin: 4px 0; }
+.editQueuePanel > .panelHead p { margin: 0; color: #c4b79f; }
+.editQueueExperience { background: #1d1a16; }
+.editQueueOverview {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  padding: 22px 24px;
+  border-bottom: 1px solid #493d2b;
+  background:
+    radial-gradient(circle at 93% -60%, #d1a04538 0, transparent 47%),
+    linear-gradient(100deg, #241f19, #1d1b17);
+}
+.editQueueOverview small {
+  color: #e6bc55;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .14em;
+}
+.editQueueOverview h3 {
+  margin: 7px 0 5px;
+  color: #fff5df;
+  font-size: 22px;
+  letter-spacing: -.02em;
+}
+.editQueueOverview p { max-width: 580px; margin: 0; color: #c6b89f; font-size: var(--font-sm); line-height: 1.5; }
+.editQueueStats { display: flex; gap: 8px; }
+.editQueueStats span {
+  display: grid;
+  min-width: 92px;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid #725b38;
+  border-radius: 10px;
+  background: #17130ef0;
+  color: #c8b48b;
+  font-size: 10px;
+  font-weight: 750;
+  text-align: center;
+  text-transform: uppercase;
+}
+.editQueueStats b { color: #fff0ca; font-size: 20px; line-height: 1; }
+.editQueueTableWrap { margin: 0; border: 0; border-radius: 0; background: transparent; }
+.editQueueTable thead th {
+  padding-top: 13px;
+  padding-bottom: 13px;
+  border-bottom-color: #5a4a31;
+  background: #29231c;
+  color: #e7ce99;
+  font-size: 10px;
+}
+.editQueueTable tbody tr { transition: background 160ms ease; }
+.editQueueTable tbody tr:nth-child(even) { background: #ffffff03; }
+.editQueueTable tbody tr:hover { background: #d8ab4a0f; }
+.editQueueTable td { border-bottom-color: #40372a; }
+.editQueueTable .editQueueIndex {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  margin: auto;
+  place-items: center;
+  border: 1px solid #745e3d;
+  border-radius: 50%;
+  color: #f1cc78;
+  font-size: 10px;
+  font-weight: 850;
+}
+.editQueueTable .editQueueRow.client-approved .editQueueIndex { border-color: #34775e; color: #79dfb4; }
+.editQueueTable .editQueueRow.revision-required .editQueueIndex { border-color: #944654; color: #ff9daa; }
 .editQueueTable th,
 .editQueueTable td {
   padding: var(--space-2) var(--space-3);
@@ -4065,22 +4141,23 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 }
 .workflowBadge.in-progress,
 .workflowBadge.assigned {
-  background: #235b9b55;
-  color: #8dc1ff;
+  background: #70552655;
+  color: #f4ca72;
 }
 .openWorkflowAction {
   min-height: 34px;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid #6259bd;
+  border: 1px solid #b88935;
   border-radius: var(--radius-sm);
-  background: #292451;
-  color: #dedbff;
+  background: #332715;
+  color: #ffe1a0;
   font-size: var(--font-xs);
   font-weight: 700;
   white-space: nowrap;
 }
 .openWorkflowAction:hover {
-  background: #393270;
+  border-color: #f0c669;
+  background: #4b381b;
 }
 .productionTable td,
 .productionTable th {
@@ -10683,6 +10760,12 @@ table > tbody > tr:has(td[colspan])::before {
   .productionAlerts button { min-height: 48px; padding: 10px 12px; }
   .productionMetrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .productionFocusPanel .panelHead { align-items: flex-start; gap: 12px; padding: 16px; }
+  .editQueuePanel > .panelHead { padding: 16px; }
+  .editQueueOverview { grid-template-columns: 1fr; gap: 16px; padding: 18px 16px; }
+  .editQueueOverview h3 { font-size: 20px; }
+  .editQueueStats { width: 100%; }
+  .editQueueStats span { min-width: 0; flex: 1; padding: 9px 6px; font-size: 8px; }
+  .editQueueTableWrap { overflow-x: auto; }
 }
 
 /* A statement has nine financial columns.  On a phone, preserve a real

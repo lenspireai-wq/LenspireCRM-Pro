@@ -760,7 +760,7 @@ export default function ProductionWorkspace({
       )}
 
       {view === "Edit Queue" && (
-        <section className="panel">
+        <section className="panel editQueuePanel">
           <div className="panelHead">
             <div>
               <h2>Edit Queue</h2>
@@ -1264,8 +1264,25 @@ function EditQueueTable({
   jobs: Row[];
   edit?: (job: Row) => void;
 }) {
+  const assigned = jobs.filter((job) => workflowEditors(job) !== "Unassigned").length;
+  const inReview = jobs.filter((job) =>
+    ["Submitted for Review", "Quality Check"].includes(workflowStatus(job)),
+  ).length;
   return (
-    <div className="table">
+    <div className="editQueueExperience">
+      <section className="editQueueOverview">
+        <div>
+          <small>WORKFLOW PULSE</small>
+          <h3>Every story, moving toward its final cut.</h3>
+          <p>Open a job to assign deliverables, editors and due dates in one focused workflow.</p>
+        </div>
+        <div className="editQueueStats">
+          <span><b>{jobs.length}</b> in queue</span>
+          <span><b>{assigned}</b> assigned</span>
+          <span><b>{inReview}</b> in review</span>
+        </div>
+      </section>
+    <div className="table editQueueTableWrap">
       <table className="editQueueTable">
         <thead>
           <tr>
@@ -1282,8 +1299,8 @@ function EditQueueTable({
           {jobs.map((job, index) => {
             const status = workflowStatus(job);
             return (
-              <tr key={job.id}>
-                <td>{index + 1}</td>
+              <tr key={job.id} className={`editQueueRow ${status.toLowerCase().replaceAll(" ", "-")}`}>
+                <td><span className="editQueueIndex">{String(index + 1).padStart(2, "0")}</span></td>
                 <td>
                   <b>{job.couple_name || job.client_name || "—"}</b>
                 </td>
@@ -1320,6 +1337,7 @@ function EditQueueTable({
         </tbody>
       </table>
       {!jobs.length && <div className="empty">No production jobs found.</div>}
+    </div>
     </div>
   );
 }
