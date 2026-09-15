@@ -778,6 +778,20 @@ export default function AccountsWorkspace({
           </div>
         </section>
       )}
+      {view === "Client Ledger" && (
+        <section className="clientLedgerHero">
+          <div>
+            <small>CLIENT ACCOUNT BOOK</small>
+            <h2>Every client balance, beautifully clear.</h2>
+            <p>Review booking value, collections and upcoming milestones from one refined financial ledger.</p>
+          </div>
+          <div className="clientLedgerSignals" aria-label="Client ledger summary">
+            <span><b>{shown.length}</b> accounts</span>
+            <span><b>{money(shown.reduce((total, account) => total + account.balance, 0))}</b> outstanding</span>
+            <span><b>{accounts.filter((account) => account.balance === 0).length}</b> settled</span>
+          </div>
+        </section>
+      )}
       {(view === "Receivables" || view === "Client Ledger") && (
         <>
           <section className="panel table accountsScheduleTableWrap">
