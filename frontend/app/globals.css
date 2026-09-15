@@ -4073,42 +4073,25 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .editQueueTable tbody tr:nth-child(even) { background: #ffffff03; }
 .editQueueTable tbody tr:hover { background: #d8ab4a0f; }
 .editQueueTable td { border-bottom-color: #40372a; }
-.editQueueTable .editQueueIndex {
-  display: grid;
-  width: 30px;
-  height: 30px;
-  margin: auto;
-  place-items: center;
-  border: 1px solid #745e3d;
-  border-radius: 50%;
-  color: #f1cc78;
-  font-size: 10px;
-  font-weight: 850;
-}
-.editQueueTable .editQueueRow.client-approved .editQueueIndex { border-color: #34775e; color: #79dfb4; }
-.editQueueTable .editQueueRow.revision-required .editQueueIndex { border-color: #944654; color: #ff9daa; }
 .editQueueTable th,
 .editQueueTable td {
   padding: var(--space-2) var(--space-3);
   text-align: center;
   vertical-align: middle;
 }
-.editQueueTable th:first-child {
-  width: 5%;
-}
-.editQueueTable th:nth-child(2) {
+.editQueueTable th:nth-child(1) {
   width: 16%;
 }
-.editQueueTable th:nth-child(3) {
+.editQueueTable th:nth-child(2) {
   width: 13%;
 }
-.editQueueTable th:nth-child(4) {
+.editQueueTable th:nth-child(3) {
   width: 17%;
 }
-.editQueueTable th:nth-child(5) {
+.editQueueTable th:nth-child(4) {
   width: 23%;
 }
-.editQueueTable th:nth-child(6) {
+.editQueueTable th:nth-child(5) {
   width: 12%;
 }
 .editQueueTable th:last-child {

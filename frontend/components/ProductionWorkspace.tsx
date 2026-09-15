@@ -761,12 +761,6 @@ export default function ProductionWorkspace({
 
       {view === "Edit Queue" && (
         <section className="panel editQueuePanel">
-          <div className="panelHead">
-            <div>
-              <h2>Edit Queue</h2>
-              <p>Open a workflow and assign every committed deliverable.</p>
-            </div>
-          </div>
           <EditQueueTable
             jobs={filteredJobs}
             edit={readOnly ? undefined : openWorkflow}
@@ -1286,7 +1280,6 @@ function EditQueueTable({
       <table className="editQueueTable">
         <thead>
           <tr>
-            <th>Sr.</th>
             <th>Couple Name</th>
             <th>Event &amp; Date</th>
             <th>Workflow</th>
@@ -1296,11 +1289,10 @@ function EditQueueTable({
           </tr>
         </thead>
         <tbody>
-          {jobs.map((job, index) => {
+          {jobs.map((job) => {
             const status = workflowStatus(job);
             return (
               <tr key={job.id} className={`editQueueRow ${status.toLowerCase().replaceAll(" ", "-")}`}>
-                <td><span className="editQueueIndex">{String(index + 1).padStart(2, "0")}</span></td>
                 <td>
                   <b>{job.couple_name || job.client_name || "—"}</b>
                 </td>
