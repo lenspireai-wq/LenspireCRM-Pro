@@ -752,6 +752,10 @@ function EventTable({
   fitPage?: boolean;
 }) {
   const labels = ["Sr. No.", "Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
+  // Completed events deliberately uses a fixed percentage grid. This keeps all
+  // operational columns inside a desktop viewport instead of letting long names
+  // widen the entire table.
+  const completedColumnWidths = ["3%", "5%", "9%", "6%", "9%", "7%", "7%", "4%", "4%", "4%", "4%", "4%", "4%", "4%", "8%", "4%", "9%", "5%"];
   const crew = (value: any) => {
     const assignments = String(value || "")
       .split(/\s*;\s*|\s*\+(?!\s*\d)\s*/)
@@ -840,7 +844,15 @@ function EventTable({
     );
   return (
     <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns" : ""}${fitPage ? " operationsCompletedTable" : fitColumns ? " operationsUpcomingTable" : ""}${uniformColumns ? " uniformEventColumns" : ""}`}>
-      <table className="upcomingEventsTable">
+      <table
+        className="upcomingEventsTable"
+        style={fitPage ? { width: "100%", minWidth: 0, maxWidth: "100%", tableLayout: "fixed" } : undefined}
+      >
+        {fitPage && (
+          <colgroup>
+            {completedColumnWidths.map((width, index) => <col key={labels[index]} style={{ width }} />)}
+          </colgroup>
+        )}
         <thead>
           <tr>
             {labels.map((label) => <th key={label} scope="col">{label}</th>)}
