@@ -1361,10 +1361,10 @@
   border-color: #ef5b6755;
 }
 :root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable th {
-  border-right-color: var(--line) !important;
-  border-bottom-color: var(--line) !important;
-  background: var(--surface) !important;
-  color: var(--text) !important;
+  border-right-color: color-mix(in srgb, var(--brand) 34%, var(--line)) !important;
+  border-bottom-color: color-mix(in srgb, var(--brand) 46%, var(--line)) !important;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--brand) 26%, var(--surface)), color-mix(in srgb, var(--brand) 16%, var(--surface))) !important;
+  color: #fff0c8 !important;
 }
 :root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable td {
   border-right-color: var(--line) !important;
