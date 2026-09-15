@@ -607,6 +607,33 @@ export default function AccountsWorkspace({
       {trailing}
     </section>
   );
+  const reportsMetrics = () => {
+    const cards = [
+      ["Collected", money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type !== "Refund"))), "↗"],
+      ["Refunded", money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type === "Refund"))), "↩"],
+      ["Pending", money(sum(reportPayments.filter((p) => p.status !== "Paid"))), "◷"],
+      ["Payments", reportPayments.length, "▤"],
+    ];
+    return <section className="accountMetrics reportsMetrics">
+      {cards.map(([label, value, icon]) => (
+        <article key={label}>
+          <div className="reportKpiHeader">
+            <i aria-hidden="true">{icon}</i>
+            <span>{label}</span>
+          </div>
+          <strong>{value}</strong>
+        </article>
+      ))}
+      <label className="accountReportMonth">
+        <span>Report month</span>
+        <input
+          type="month"
+          value={month}
+          onChange={(e) => setMonth(e.target.value)}
+        />
+      </label>
+    </section>;
+  };
   const breakdown = (
     title: string,
     keys: string[],
@@ -672,23 +699,7 @@ export default function AccountsWorkspace({
             ["Total Closing", money(shown.reduce((n, a) => n + a.total, 0))],
             ["Total Received", money(shown.reduce((n, a) => n + a.received, 0))],
             ["Total Balance", money(shown.reduce((n, a) => n + a.balance, 0))],
-          ]) : metrics(
-            [
-              ["Collected", money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type !== "Refund")))],
-              ["Refunded", money(sum(reportPayments.filter((p) => p.status === "Paid" && p.payment_type === "Refund")))],
-              ["Pending", money(sum(reportPayments.filter((p) => p.status !== "Paid")))],
-              ["Payments", reportPayments.length],
-            ],
-            "reportsMetrics",
-            <label className="accountReportMonth">
-              <span>Report month</span>
-              <input
-                type="month"
-                value={month}
-                onChange={(e) => setMonth(e.target.value)}
-              />
-            </label>,
-          )}
+          ]) : reportsMetrics()}
         </div>
       ) : (
         <nav className="operationsTabs">

@@ -3390,26 +3390,13 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   position: relative;
   min-height: 104px;
   overflow: hidden;
-  padding: 19px 18px 18px 62px;
+  padding: 17px 18px 18px;
   border-color: #5f4d31;
   background: linear-gradient(135deg, #29231b, #201c17);
   box-shadow: 0 10px 24px #00000020;
 }
 .reportsAnalyticsView .reportsMetrics article::before {
-  position: absolute;
-  top: 21px;
-  left: 18px;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid #806438;
-  border-radius: 9px;
-  background: #392d19;
-  color: #f0c970;
-  font-size: 14px;
-  font-weight: 850;
-  content: "↗";
+  content: none;
 }
 .reportsAnalyticsView .reportsMetrics article::after {
   position: absolute;
@@ -3421,9 +3408,32 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   border-radius: 50%;
   content: "";
 }
-.reportsAnalyticsView .reportsMetrics article:nth-child(2)::before { border-color: #805d37; background: #392818; color: #e8bb6c; content: "↩"; }
-.reportsAnalyticsView .reportsMetrics article:nth-child(3)::before { border-color: #82534d; background: #38211e; color: #e7aba1; content: "◷"; }
-.reportsAnalyticsView .reportsMetrics article:nth-child(4)::before { border-color: #607550; background: #243020; color: #b4d99c; content: "▤"; }
+.reportsAnalyticsView .reportKpiHeader {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 30px;
+  margin-bottom: 9px;
+}
+.reportsAnalyticsView .reportKpiHeader i {
+  display: grid;
+  flex: 0 0 30px;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #806438;
+  border-radius: 9px;
+  background: #392d19;
+  color: #f0c970;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 850;
+}
+.reportsAnalyticsView .reportsMetrics article:nth-child(2) .reportKpiHeader i { border-color: #805d37; background: #392818; color: #e8bb6c; }
+.reportsAnalyticsView .reportsMetrics article:nth-child(3) .reportKpiHeader i { border-color: #82534d; background: #38211e; color: #e7aba1; }
+.reportsAnalyticsView .reportsMetrics article:nth-child(4) .reportKpiHeader i { border-color: #607550; background: #243020; color: #b4d99c; }
 .reportsAnalyticsView .reportsMetrics article span {
   position: relative;
   z-index: 1;
@@ -3436,6 +3446,11 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   font-weight: 800;
   letter-spacing: .08em;
   text-transform: uppercase;
+}
+.reportsAnalyticsView .reportsMetrics .reportKpiHeader span {
+  display: block;
+  min-height: 0;
+  margin: 0;
 }
 .reportsAnalyticsView .reportsMetrics article strong {
   position: relative;
