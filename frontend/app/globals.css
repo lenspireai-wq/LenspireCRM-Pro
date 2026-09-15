@@ -4007,6 +4007,65 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .productionTable th:last-child {
   width: 7%;
 }
+.productionOverduePanel { overflow: hidden; border-color: #71404a; }
+.productionOverdueHero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) auto;
+  gap: 28px;
+  align-items: center;
+  overflow: hidden;
+  padding: 27px 28px;
+  border-bottom: 1px solid #70414a;
+  background:
+    radial-gradient(circle at 90% -35%, #e77b6542 0, transparent 44%),
+    radial-gradient(circle at 7% 120%, #c58b3230 0, transparent 45%),
+    linear-gradient(115deg, #30201e, #241a18 65%, #2b1e1a);
+}
+.productionOverdueHero::after {
+  position: absolute;
+  right: -60px;
+  bottom: -105px;
+  width: 230px;
+  height: 230px;
+  border: 1px solid #e9957761;
+  border-radius: 50%;
+  box-shadow: 0 0 0 30px #e9957709;
+  content: "";
+  pointer-events: none;
+}
+.productionOverdueHero > div { position: relative; z-index: 1; }
+.productionOverdueHero small { color: #ffc08d; font-size: 10px; font-weight: 850; letter-spacing: .14em; }
+.productionOverdueHero h2 { margin: 7px 0 7px; color: #fff1df; font-size: clamp(25px, 3vw, 34px); letter-spacing: -.035em; }
+.productionOverdueHero p { max-width: 570px; margin: 0; color: #dbb8ad; font-size: var(--font-sm); line-height: 1.55; }
+.productionOverdueStats { display: flex; gap: 8px; }
+.productionOverdueStats span {
+  display: grid;
+  min-width: 96px;
+  gap: 5px;
+  padding: 11px 12px;
+  border: 1px solid #96515a;
+  border-radius: 11px;
+  background: #1a1010a8;
+  color: #deb7ac;
+  font-size: 10px;
+  font-weight: 750;
+  text-align: center;
+  text-transform: uppercase;
+}
+.productionOverdueStats b { color: #ffad9f; font-size: 22px; line-height: 1; }
+.productionOverduePanel .productionTable thead th {
+  border-bottom-color: #65414a;
+  background: #2a1c1c;
+  color: #f2c0b3;
+}
+.productionOverduePanel .productionTable tbody tr:hover { background: #dc6e7410; }
+.productionOverduePanel .productionOverdueRow { box-shadow: inset 4px 0 #ef6e78; }
+.productionOverduePanel .productionRowActions .reminderAction {
+  border-color: #bf5864;
+  background: #482028;
+  color: #ffadb5;
+}
 .editQueueTable {
   table-layout: fixed;
   min-width: 980px;
@@ -10822,6 +10881,10 @@ table > tbody > tr:has(td[colspan])::before {
   .editQueueStats { width: 100%; }
   .editQueueStats span { min-width: 0; flex: 1; padding: 9px 6px; font-size: 8px; }
   .editQueueTableWrap { overflow-x: auto; }
+  .productionOverdueHero { grid-template-columns: 1fr; gap: 17px; padding: 22px 18px; }
+  .productionOverdueHero h2 { font-size: 28px; }
+  .productionOverdueStats { width: 100%; }
+  .productionOverdueStats span { min-width: 0; flex: 1; padding: 9px 6px; font-size: 8px; }
 }
 
 /* A statement has nine financial columns.  On a phone, preserve a real

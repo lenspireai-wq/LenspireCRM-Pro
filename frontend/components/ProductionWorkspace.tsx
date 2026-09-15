@@ -886,7 +886,19 @@ export default function ProductionWorkspace({
       )}
 
       {view === "Overdue" && (
-        <section className="panel">
+        <section className="panel productionOverduePanel">
+          <div className="productionOverdueHero">
+            <div>
+              <small>ATTENTION DESK</small>
+              <h2>Keep delayed stories moving.</h2>
+              <p>Review overdue work, follow up with the team, and bring each delivery back on track.</p>
+            </div>
+            <div className="productionOverdueStats">
+              <span><b>{overdue.length}</b> overdue jobs</span>
+              <span><b>{overdue.filter((job) => !job.editor).length}</b> unassigned</span>
+              <span><b>{overdue.filter((job) => job.client_approval_status !== "Approved").length}</b> awaiting approval</span>
+            </div>
+          </div>
           <ProductionTable
             jobs={overdue}
             edit={readOnly ? undefined : openWorkflow}
