@@ -321,6 +321,26 @@ export default function ProductionWorkspace({
 
   const changeFilter = (name: keyof Filters, value: string) =>
     setFilters((current) => ({ ...current, [name]: value }));
+  const openDashboardKpi = (target: "all" | "active" | "overdue" | "delivered" | "approval" | "ready") => {
+    if (target === "overdue") {
+      setFilters({ ...emptyFilters, status: "overdue" });
+      setView("Overdue");
+      return;
+    }
+    if (target === "delivered" || target === "ready") {
+      setFilters(emptyFilters);
+      setView("Delivery");
+      return;
+    }
+    setFilters(
+      target === "active"
+        ? { ...emptyFilters, status: "active" }
+        : target === "approval"
+          ? { ...emptyFilters, stage: "Quality Check" }
+          : emptyFilters,
+    );
+    setView("Edit Queue");
+  };
   const exportExcel = async () => {
     setExporting(true);
     setError("");
@@ -690,30 +710,36 @@ export default function ProductionWorkspace({
             </button>
           </section>
           <section className="accountMetrics productionMetrics">
-            <article>
+            <button type="button" onClick={() => openDashboardKpi("all")} title="Open all production jobs">
               <span>Total Jobs</span>
               <strong>{jobs.length}</strong>
-            </article>
-            <article>
+              <small>View queue ↗</small>
+            </button>
+            <button type="button" onClick={() => openDashboardKpi("active")} title="Open active production jobs">
               <span>Active</span>
               <strong>{active.length}</strong>
-            </article>
-            <article>
+              <small>View active work ↗</small>
+            </button>
+            <button type="button" onClick={() => openDashboardKpi("overdue")} title="Open overdue production jobs">
               <span>Overdue</span>
               <strong>{overdue.length}</strong>
-            </article>
-            <article>
+              <small>Needs attention ↗</small>
+            </button>
+            <button type="button" onClick={() => openDashboardKpi("delivered")} title="Open delivered production jobs">
               <span>Delivered</span>
               <strong>{delivered.length}</strong>
-            </article>
-            <article>
+              <small>Open delivery ↗</small>
+            </button>
+            <button type="button" onClick={() => openDashboardKpi("approval")} title="Open jobs awaiting client approval">
               <span>Pending Approval</span>
               <strong>{pendingApproval.length}</strong>
-            </article>
-            <article>
+              <small>Review queue ↗</small>
+            </button>
+            <button type="button" onClick={() => openDashboardKpi("ready")} title="Open jobs ready for delivery">
               <span>Ready for Delivery</span>
               <strong>{readyForDelivery.length}</strong>
-            </article>
+              <small>Open delivery ↗</small>
+            </button>
           </section>
           <section className="panel productionFocusPanel">
             <div className="panelHead">
