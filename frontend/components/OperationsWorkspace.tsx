@@ -836,7 +836,7 @@ function EventTable({
       </div>
     );
   return (
-    <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns" : ""}${uniformColumns ? " uniformEventColumns" : ""}`}>
+    <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns operationsUpcomingTable" : ""}${uniformColumns ? " uniformEventColumns" : ""}`}>
       <table className="upcomingEventsTable">
         <thead>
           <tr>
@@ -848,7 +848,7 @@ function EventTable({
             <tr key={row.id}>
               <td className="srNo">{index + 1}</td>
               <td className={row.date_status === "TBD Month" ? "tbdEventDate" : undefined}>
-                {eventDateLabel(row)}
+                <span className="upcomingEventDate">{eventDateLabel(row)}</span>
               </td>
               <td>
                 <b>{row.client_name || row.title}</b>
@@ -856,7 +856,7 @@ function EventTable({
               <td>{row.handled_by || "—"}</td>
               <td>{row.couple_name || "—"}</td>
               <td>{row.contact_no || "—"}</td>
-              <td>{row.event_type}</td>
+              <td><span className="upcomingEventType">{row.event_type}</span></td>
               <td>{crew(row.photo)}</td>
               <td>{crew(row.video)}</td>
               <td>{crew(row.candid)}</td>
