@@ -5,7 +5,6 @@ import "./studio-dark-modules.css";
 import "./studio-dark.css";
 import "./event-columns.css";
 import "./mobile-scroll.css";
-import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { QueryProvider } from "@/components/QueryProvider";
 import { ThemeProvider } from "@/components/ThemeToggle";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
@@ -56,7 +55,6 @@ export default function RootLayout({
         <GlobalErrorBoundary>
           <QueryProvider>
             <ThemeProvider>
-              <ServiceWorkerRegister />
               {children}
             </ThemeProvider>
           </QueryProvider>

@@ -9,6 +9,29 @@ export type PathResponse<T extends keyof import("./api-types").paths> =
 
 export const api = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api" });
 
+/** A clear, safe explanation for sign-in failures on phones and desktops. */
+export function getSignInErrorMessage(error: unknown): string {
+  const problem = error as AxiosError<{ detail?: string; offline?: boolean }>;
+  const status = problem.response?.status;
+  const detail = problem.response?.data?.detail;
+
+  if (status === 429) {
+    return "Too many sign-in attempts. Please wait one minute, then try once.";
+  }
+  if (status === 503 || problem.response?.data?.offline) {
+    return "CRM is temporarily unreachable. Check your internet connection, then try again.";
+  }
+  if (!problem.response) {
+    return navigator.onLine
+      ? "Unable to reach CRM. Please try again in a moment."
+      : "You appear to be offline. Connect to the internet and try again.";
+  }
+  if (status && status >= 500) {
+    return "CRM is temporarily unavailable. Please try again in a moment.";
+  }
+  return detail || "Could not sign in. Please check your details and try again.";
+}
+
 let refreshing: Promise<string> | null = null;
 
 // Rate limit retry state

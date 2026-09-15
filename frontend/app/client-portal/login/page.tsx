@@ -1,7 +1,7 @@
 "use client";
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { api } from "@/lib/api";
+import { api, getSignInErrorMessage } from "@/lib/api";
 
 function ClientLoginForm() {
   const router = useRouter(),
@@ -23,8 +23,8 @@ function ClientLoginForm() {
         password,
       });
       router.replace(data.portal_url);
-    } catch (problem: any) {
-      setError(problem.response?.data?.detail || "Could not sign in.");
+    } catch (problem: unknown) {
+      setError(getSignInErrorMessage(problem));
     } finally {
       setBusy(false);
     }

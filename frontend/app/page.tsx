@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import { api } from "@/lib/api";
+import { api, getSignInErrorMessage } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import { formatDate } from "@/lib/date-format";
 import { queryClient, queryKeys } from "@/lib/query";
@@ -138,8 +138,8 @@ function Login({
       }
       setSession(data.access, data.refresh, data.user);
       authenticated(ownerMode);
-    } catch (err: any) {
-      setError(err.response?.data?.detail || "Could not sign in");
+    } catch (err: unknown) {
+      setError(getSignInErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
