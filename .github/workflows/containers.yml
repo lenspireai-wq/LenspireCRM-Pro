@@ -83,16 +83,19 @@ jobs:
                 "services:" \
                 "  api:" \
                 "    environment:" \
+                "      BACKUP_ENCRYPTION_KEY: \${BACKUP_ENCRYPTION_KEY}" \
                 "      BACKUP_ROOT: /var/lib/lenspirecrm/backups" \
                 "    volumes:" \
                 "      - lenspirecrm_backups:/var/lib/lenspirecrm/backups" \
                 "  worker:" \
                 "    environment:" \
+                "      BACKUP_ENCRYPTION_KEY: \${BACKUP_ENCRYPTION_KEY}" \
                 "      BACKUP_ROOT: /var/lib/lenspirecrm/backups" \
                 "    volumes:" \
                 "      - lenspirecrm_backups:/var/lib/lenspirecrm/backups" \
                 "  beat:" \
                 "    environment:" \
+                "      BACKUP_ENCRYPTION_KEY: \${BACKUP_ENCRYPTION_KEY}" \
                 "      BACKUP_ROOT: /var/lib/lenspirecrm/backups" \
                 "    volumes:" \
                 "      - lenspirecrm_backups:/var/lib/lenspirecrm/backups" \
