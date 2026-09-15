@@ -37,7 +37,9 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: `${process.env.API_INTERNAL_URL || "http://api:8000/api"}/:path*`,
+        // Django's API endpoints use trailing slashes.  The catch-all parameter
+        // omits the original final slash, so add it back before proxying.
+        destination: `${process.env.API_INTERNAL_URL || "http://api:8000/api"}/:path*/`,
       },
     ];
   },
