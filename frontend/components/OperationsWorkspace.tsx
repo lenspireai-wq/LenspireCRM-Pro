@@ -70,6 +70,29 @@ const eventDateLabel = (event: Row) => {
   }
   return dateLabel(event.start_date);
 };
+const isMonthTbd = (event: Row) =>
+  event.date_status === "TBD Month" && Boolean(event.tbd_month);
+const upcomingEventSort = (left: Row, right: Row) => {
+  const sortDate = (event: Row) => {
+    if (event.start_date) return String(event.start_date);
+    // A month-only event belongs after every confirmed date in that month.
+    if (isMonthTbd(event)) return `${event.tbd_month}-99`;
+    // No date or month selected: retain these at the end of the full list.
+    return "9999-12-31";
+  };
+  const dateOrder = sortDate(left).localeCompare(sortDate(right));
+  if (dateOrder) return dateOrder;
+
+  // Within a TBD month, keep like events—such as all Pre-wedding shoots—
+  // together, then use the client name as a predictable tie-breaker.
+  if (isMonthTbd(left) && isMonthTbd(right)) {
+    const typeOrder = String(left.event_type || "").localeCompare(String(right.event_type || ""));
+    if (typeOrder) return typeOrder;
+  }
+  const nameOrder = String(left.client_name || left.title || "").localeCompare(String(right.client_name || right.title || ""));
+  if (nameOrder) return nameOrder;
+  return String(left.start_time || "").localeCompare(String(right.start_time || "")) || Number(left.id) - Number(right.id);
+};
 const crewMessageValue = (value: any) =>
   String(value || "")
     .split("; ")
@@ -230,7 +253,7 @@ export default function OperationsWorkspace({
     });
   }, [events, searchTerm]);
   const upcoming = useMemo(
-    () => matchingEvents.filter((e) => upcomingStatuses.has(e.status)),
+    () => matchingEvents.filter((e) => upcomingStatuses.has(e.status)).sort(upcomingEventSort),
     [matchingEvents],
   );
   const completed = useMemo(
