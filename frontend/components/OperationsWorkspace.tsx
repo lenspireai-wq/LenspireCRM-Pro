@@ -758,6 +758,12 @@ function EventTable({
   const labels = ["Sr. No.", "Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
   const completedColumnWidth = `${100 / labels.length}%`;
   const plainUpcomingFields = fitPageClass === "operationsUpcomingTable";
+  const eventTypeTone = (eventType: unknown) => {
+    const value = String(eventType || "").trim().toLowerCase();
+    if (value.includes("pre-wedding") || value.includes("pre wedding")) return "eventTypePreWedding";
+    if (value.includes("night wedding")) return "eventTypeNightWedding";
+    return "";
+  };
   const crew = (value: any) => {
     const assignments = String(value || "")
       .split(/\s*;\s*|\s*\+(?!\s*\d)\s*/)
@@ -873,7 +879,7 @@ function EventTable({
               <td>{row.handled_by || "—"}</td>
               <td>{row.couple_name || "—"}</td>
               <td>{row.contact_no || "—"}</td>
-              <td>{plainUpcomingFields ? row.event_type : <span className="upcomingEventType">{row.event_type}</span>}</td>
+              <td className={`eventTypeCell ${eventTypeTone(row.event_type)}`.trim()}>{plainUpcomingFields ? row.event_type : <span className="upcomingEventType">{row.event_type}</span>}</td>
               <td>{crew(row.photo)}</td>
               <td>{crew(row.video)}</td>
               <td>{crew(row.candid)}</td>

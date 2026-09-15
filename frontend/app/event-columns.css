@@ -304,6 +304,23 @@
   background: color-mix(in srgb, var(--brand) 5%, transparent) !important;
 }
 
+/* Event-type cues make special shoots easy to spot without changing any data. */
+:root .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypePreWedding {
+  background: linear-gradient(135deg, rgba(255, 174, 198, .22), rgba(255, 174, 198, .10)) !important;
+  color: #8c3053 !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 190, 211, .32);
+}
+:root .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypeNightWedding {
+  background: linear-gradient(135deg, rgba(255, 226, 126, .25), rgba(255, 226, 126, .11)) !important;
+  color: #775c00 !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 226, 126, .38);
+}
+:root .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell :is(.upcomingEventType, b, span) {
+  color: inherit !important;
+}
+:root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypePreWedding { color: #ffd9e5 !important; }
+:root[data-theme="dark"] .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypeNightWedding { color: #fff0ad !important; }
+
 /* Completed Events is deliberately a full-page overview. Unlike Upcoming
    Events, its 18 fields must remain visible together instead of inheriting the
    2200px scroll-grid used for scheduling work. */
