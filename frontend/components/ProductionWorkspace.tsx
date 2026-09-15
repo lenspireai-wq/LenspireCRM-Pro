@@ -926,11 +926,17 @@ export default function ProductionWorkspace({
       )}
 
       {view === "Delivery" && (
-        <section className="panel">
-          <div className="panelHead">
+        <section className="panel productionDeliveryPanel">
+          <div className="productionDeliveryHero">
             <div>
-              <h2>Delivery</h2>
-              <p>Jobs ready for delivery or already delivered.</p>
+              <small>FINAL HANDOFF</small>
+              <h2>Bring every story home beautifully.</h2>
+              <p>Review delivery-ready work, confirm handoffs, and celebrate every completed client journey.</p>
+            </div>
+            <div className="productionDeliveryStats">
+              <span><b>{readyForDelivery.length}</b> ready now</span>
+              <span><b>{delivered.length}</b> delivered</span>
+              <span><b>{jobs.filter((job) => job.delivery_status === "Ready").length}</b> awaiting handoff</span>
             </div>
           </div>
           <ProductionTable
