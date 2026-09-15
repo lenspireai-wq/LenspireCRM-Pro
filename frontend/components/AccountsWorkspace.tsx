@@ -3,7 +3,6 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import { formatDate } from "@/lib/date-format";
-import { exportFilename } from "@/lib/download-filename";
 
 type Row = Record<string, any>;
 const views = [
@@ -190,7 +189,6 @@ export default function AccountsWorkspace({
   const [reminder, setReminder] = useState<Row | null>(null);
   const [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
-  const [ageingFilter, setAgeingFilter] = useState("All");
   const [month, setMonth] = useState(() =>
     new Date().toISOString().slice(0, 7),
   );
@@ -380,15 +378,7 @@ export default function AccountsWorkspace({
       .filter((row) => row.category === category)
       .reduce((total, row) => total + Number(row.stage.remaining || 0), 0);
   const displayedAccounts = shown.filter(
-    (account) =>
-      view !== "Receivables" ||
-      (account.balance > 0 &&
-        (ageingFilter === "All" ||
-          account.stages.some(
-            (stage: Row) =>
-              stage.remaining > 0 &&
-              ageingCategory(stage.due_date) === ageingFilter,
-          ))),
+    (account) => view !== "Receivables" || account.balance > 0,
   );
   if (view === "Receivables") {
     const today = new Date().toISOString().slice(0, 10);
@@ -409,47 +399,6 @@ export default function AccountsWorkspace({
       return String(first.client || "").localeCompare(String(second.client || ""));
     });
   }
-  const exportAgeing = () => {
-    const safe = (value: any) => {
-      const text = String(value ?? "");
-      const protectedText = /^[=+\-@]/.test(text) ? `'${text}` : text;
-      return `"${protectedText.replaceAll('"', '""')}"`;
-    };
-    const reportRows = [
-      [
-        "Client",
-        "Booking",
-        "Contact",
-        "Milestone",
-        "Due Date",
-        "Ageing",
-        "Amount Due",
-        "Total Outstanding",
-      ],
-      ...ageingRows.map((row) => [
-        row.account.client,
-        row.account.booking_code,
-        row.account.contact,
-        row.stage.label,
-        row.stage.due_date || "Not set",
-        row.category,
-        row.stage.remaining,
-        row.account.balance,
-      ]),
-    ];
-    const blob = new Blob(
-      [
-        `\uFEFF${reportRows.map((row) => row.map(safe).join(",")).join("\r\n")}`,
-      ],
-      { type: "text/csv;charset=utf-8" },
-    );
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = exportFilename("Receivables-Ageing", "csv");
-    link.click();
-    URL.revokeObjectURL(url);
-  };
   const reportPayments = payments.filter((p) =>
     String(p.paid_at || p.created_at).startsWith(month),
   );
@@ -692,7 +641,7 @@ export default function AccountsWorkspace({
                 onChange={(e) => setMonth(e.target.value)}
               />
             </label>
-          ) : view !== "Payment Dashboard" ? <div className="receivablesTools">
+          ) : view !== "Payment Dashboard" && view !== "Receivables" ? <div className="receivablesTools">
             <input
               className="accountSearch"
               aria-label="Search client accounts"
@@ -703,28 +652,6 @@ export default function AccountsWorkspace({
                 onSearchChange?.(e.target.value);
               }}
             />
-            {view === "Receivables" && <select
-              aria-label="Filter receivables ageing"
-              value={ageingFilter}
-              onChange={(event) => setAgeingFilter(event.target.value)}
-            >
-              <option>All</option>
-              <option>Due Soon</option>
-              <option>Overdue 1–30 Days</option>
-              <option>Overdue 31–60 Days</option>
-              <option>Overdue 60+ Days</option>
-              <option>Scheduled Later</option>
-              <option>Not Scheduled</option>
-            </select>}
-            {view === "Receivables" && <button
-              type="button"
-              className="iconOnlyAction exportAction"
-              title="Export receivables ageing"
-              aria-label="Export receivables ageing"
-              onClick={exportAgeing}
-            >
-              ⇩
-            </button>}
           </div> : null}
           {view === "Payment Dashboard" ? metrics([
             ["Collected", money(sum(paid))],
