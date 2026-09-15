@@ -518,6 +518,7 @@ export default function OperationsWorkspace({
           events={completed}
           fitColumns
           uniformColumns
+          fitPage
           edit={readOnly ? undefined : setEventDraft}
           onMessage={setMessageEvent}
           onDuplicate={readOnly ? undefined : duplicateEvent}
@@ -738,6 +739,7 @@ function EventTable({
   compact = false,
   fitColumns = false,
   uniformColumns = false,
+  fitPage = false,
 }: {
   events: Row[];
   edit?: (row: Row) => void;
@@ -747,6 +749,7 @@ function EventTable({
   compact?: boolean;
   fitColumns?: boolean;
   uniformColumns?: boolean;
+  fitPage?: boolean;
 }) {
   const labels = ["Sr. No.", "Date", "Client Name", "Handled By", "Couple Name", "Contact No.", "Event", "Photo", "Video", "Candid", "Cinematic", "Drone", "Assistant", "BTS", "Venue", "Time", "Notes", "Action"];
   const crew = (value: any) => {
@@ -836,7 +839,7 @@ function EventTable({
       </div>
     );
   return (
-    <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns operationsUpcomingTable" : ""}${uniformColumns ? " uniformEventColumns" : ""}`}>
+    <div className={`table upcomingEventsTableWrap${fitColumns ? " fitUpcomingColumns" : ""}${fitPage ? " operationsCompletedTable" : fitColumns ? " operationsUpcomingTable" : ""}${uniformColumns ? " uniformEventColumns" : ""}`}>
       <table className="upcomingEventsTable">
         <thead>
           <tr>

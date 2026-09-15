@@ -2558,6 +2558,41 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar { width: 11px; height: 11px; }
 .operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar-track { background: #1b1712; }
 .operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar-thumb { border: 2px solid #1b1712; background: #b58d42; border-radius: 999px; }
+.operationsCompletedTable.upcomingEventsTableWrap {
+  border: 1px solid #5f4d31;
+  border-radius: 14px;
+  background: #1d1915;
+  box-shadow: 0 14px 30px #00000024;
+}
+.operationsCompletedTable.upcomingEventsTableWrap .upcomingEventsTable {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+}
+.operationsCompletedTable.upcomingEventsTableWrap .upcomingEventsTable th {
+  height: 34px;
+  padding: 0 4px;
+  border-right-color: #5a492f;
+  border-bottom-color: #806438;
+  background: linear-gradient(180deg, #3a2f1f, #282016);
+  color: #f1cf88;
+  font-size: clamp(7px, .62vw, 9px);
+  letter-spacing: .035em;
+}
+.operationsCompletedTable.upcomingEventsTableWrap .upcomingEventsTable td {
+  height: 40px;
+  padding: 3px 4px;
+  border-bottom-color: #3d3325;
+  border-right-color: #332b20;
+  color: #d8cbb4;
+  font-size: clamp(7px, .62vw, 9px);
+}
+.operationsCompletedTable.upcomingEventsTableWrap .upcomingEventsTable tbody tr:nth-child(even) { background: #241f19; }
+.operationsCompletedTable.upcomingEventsTableWrap .upcomingEventsTable tbody tr:hover { background: linear-gradient(90deg, #d3a44717, #d3a44706); box-shadow: inset 3px 0 #d9ad52; }
+@media (min-width: 901px) {
+  .operationsCompletedTable.upcomingEventsTableWrap { overflow-x: hidden !important; }
+}
 @media (min-width: 901px) {
   .operationsUpcomingTable.upcomingEventsTableWrap {
     overflow: scroll !important;
