@@ -304,6 +304,47 @@
   background: color-mix(in srgb, var(--brand) 5%, transparent) !important;
 }
 
+/* Mobile Upcoming Events is a scrollable work list. Use one dependable width
+   for each data field rather than squeezing all eighteen into a phone screen. */
+@media (max-width: 900px) {
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns.upcomingEventsTableWrap {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    scrollbar-gutter: stable;
+  }
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable {
+    width: 2200px !important;
+    min-width: 2200px !important;
+    max-width: none !important;
+    table-layout: fixed !important;
+  }
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable col:first-child,
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable :is(th, td):first-child {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+  }
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable col:nth-child(n + 2):nth-child(-n + 17),
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable :is(th, td):nth-child(n + 2):nth-child(-n + 17) {
+    width: 124px !important;
+    min-width: 124px !important;
+    max-width: 124px !important;
+  }
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable col:last-child,
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable :is(th, td):last-child {
+    width: 160px !important;
+    min-width: 160px !important;
+    max-width: 160px !important;
+  }
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14),
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14) .crewAssignments,
+  :root .fitUpcomingColumns.operationsUpcomingTable.uniformEventColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14) .crewAssignments span {
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+}
+
 /* Event-type cues make special shoots easy to spot without changing any data. */
 :root .fitUpcomingColumns .upcomingEventsTable td.eventTypeCell.eventTypePreWedding {
   background: linear-gradient(135deg, rgba(255, 174, 198, .12), rgba(255, 174, 198, .045)) !important;

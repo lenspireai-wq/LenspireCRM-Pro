@@ -66,7 +66,12 @@ const rows = (value: any): Row[] =>
 const dateLabel = (value?: string) => formatDate(value, "TBD");
 const eventDateLabel = (event: Row) => {
   if (event.date_status === "TBD Month" && event.tbd_month) {
-    return `TBD · ${formatDate(`${event.tbd_month}-01`)}`;
+    const [year, month] = String(event.tbd_month).split("-").map(Number);
+    const monthLabel = new Date(year, month - 1, 1).toLocaleDateString("en-IN", {
+      month: "short",
+      year: "numeric",
+    });
+    return `TBD · ${monthLabel}`;
   }
   return dateLabel(event.start_date);
 };
