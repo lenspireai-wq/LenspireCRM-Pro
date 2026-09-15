@@ -7844,6 +7844,8 @@ body:has(.mainAccountsSticky) {
 }
 .mainOperationsDashboard .photographersDetailsView .photographerWork { border-color: #806438; background: #342913; color: #f0c974; }
 .mainOperationsDashboard .photographersDetailsView .photographerTable .statusPill { border-color: #58714b; background: #1c2b1a; color: #b6d99e; }
+.mainOperationsDashboard .photographersDetailsView .photographerTable .statusPill.status-in-house { border-color: #58714b; background: #1c2b1a; color: #b6d99e; }
+.mainOperationsDashboard .photographersDetailsView .photographerTable .statusPill.status-outside { border-color: #8a5250; background: #321b1b; color: #e6aaa4; }
 .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions { justify-content: center; }
 .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions button { border-color: #705b37; background: #211b14; color: #efc66e; }
 .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions button:hover { border-color: #d3a044; background: #3a2c17; }
