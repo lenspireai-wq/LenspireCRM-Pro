@@ -75,19 +75,20 @@ function plan(
       (entry) => entry.payment_type === types[index] && entry.status !== "Paid",
     );
     const dueDate = scheduledDates[types[index]] || pendingPayment?.due_date || "";
+    const remaining = Math.max(0, amount - covered);
     const today = new Date().toISOString().slice(0, 10);
     const upcomingLimit = new Date();
     upcomingLimit.setDate(upcomingLimit.getDate() + 7);
     const timing =
-      dueDate && dueDate < today
+      remaining > 0 && dueDate && dueDate < today
         ? "overdue"
-        : dueDate && dueDate <= upcomingLimit.toISOString().slice(0, 10)
+        : remaining > 0 && dueDate && dueDate <= upcomingLimit.toISOString().slice(0, 10)
           ? "upcoming"
           : "";
     return {
       label: types[index],
       percent,
-      remaining: Math.max(0, amount - covered),
+      remaining,
       due_date: dueDate,
       timing,
       pendingPayment,
