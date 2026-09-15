@@ -2880,6 +2880,10 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   border-color: #287054;
   background: #16372d;
 }
+.statementSchedule article.unscheduled {
+  border-color: #5e6878;
+  background: #1b2635;
+}
 .statementSchedule article.overdue {
   border-color: #8b3541;
   background: #3a1c25;

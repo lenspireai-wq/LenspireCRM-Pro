@@ -1457,7 +1457,7 @@ export default function AccountsWorkspace({
                   {selectedLedger.stages.map((stage: Row) => (
                     <article
                       key={stage.label}
-                      className={`${stage.remaining ? "" : "paid"} ${stage.timing || ""}`}
+                      className={`${stage.remaining ? stage.due_date ? "" : "unscheduled" : "paid"} ${stage.timing || ""}`}
                     >
                       <span>
                         {stage.label} · {stage.percent}%
