@@ -3487,7 +3487,45 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
 .reportsAnalyticsTableHead h2 { margin: 4px 0 0; color: #fff0cf; font-size: var(--font-xl); }
 .reportsAnalyticsTableHead > span { padding: 6px 10px; border: 1px solid #705b37; border-radius: 999px; color: #e6bc63; font-size: 11px; font-weight: 750; }
 .reportsAnalyticsTable .paymentTable thead th { border-bottom-color: #5f4d31; background: #2a241b; color: #e9cb87; }
-.reportsAnalyticsTable .paymentTable tbody tr:hover { background: #d3a4470d; }
+.reportsAnalyticsTable .paymentTable tbody td { padding-top: 13px; padding-bottom: 13px; border-bottom-color: #423725; }
+.reportsAnalyticsTable .paymentTable tbody tr { transition: background 150ms ease, box-shadow 150ms ease; }
+.reportsAnalyticsTable .paymentTable tbody tr:hover { background: linear-gradient(90deg, #d3a44714, #d3a44705); box-shadow: inset 3px 0 #d9ad52; }
+.reportsAnalyticsTable .reportPaymentClient { display: inline-flex; align-items: center; gap: 9px; min-width: 140px; }
+.reportsAnalyticsTable .reportPaymentClient i {
+  display: grid;
+  flex: 0 0 30px;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #806438;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #4a3920, #241e15);
+  color: #f2ca73;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+.reportsAnalyticsTable .reportPaymentClient b { color: #f4e7cc; font-size: var(--font-sm); font-weight: 750; }
+.reportsAnalyticsTable .reportPaymentAmount { color: #f2ca73; font-weight: 850; font-variant-numeric: tabular-nums; }
+.reportsAnalyticsTable :is(.reportPaymentType, .reportPaymentMode, .reportPaymentStatus) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  padding: 4px 8px;
+  border: 1px solid #5b4b31;
+  border-radius: 999px;
+  background: #19150f;
+  color: #d8c7a6;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+.reportsAnalyticsTable .reportPaymentType { border-color: #806438; color: #f0c974; background: #342913; }
+.reportsAnalyticsTable .reportPaymentStatus.paid { border-color: #58714b; color: #b6d99e; background: #1c2b1a; }
+.reportsAnalyticsTable .reportPaymentStatus.pending { border-color: #83663b; color: #edc668; background: #332914; }
+.reportsAnalyticsTable .reportPaymentStatus.refund { border-color: #8a5250; color: #e6aaa4; background: #321b1b; }
 @media (max-width: 800px) {
   .receivablesHero { grid-template-columns: 1fr; gap: 17px; padding: 22px 18px; }
   .receivablesSignals { width: 100%; }

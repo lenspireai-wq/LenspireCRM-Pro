@@ -512,8 +512,8 @@ export default function AccountsWorkspace({
       setError("Could not delete payment.");
     }
   };
-  const paymentTable = (items: Row[]) => (
-    <div className="table">
+  const paymentTable = (items: Row[], variant = "") => (
+    <div className={`table ${variant}`.trim()}>
       <table className="paymentTable">
         <thead>
           <tr>
@@ -532,17 +532,23 @@ export default function AccountsWorkspace({
           </tr>
         </thead>
         <tbody>
-          {items.map((p) => (
-            <tr key={p.id}>
+          {items.map((p) => {
+            const client = accounts.find((a) => a.id === p.booking)?.client || p.client_name || "—";
+            const initials = String(client)
+              .split(/\s+/)
+              .filter(Boolean)
+              .slice(0, 2)
+              .map((part) => part[0])
+              .join("")
+              .toUpperCase() || "—";
+            return <tr key={p.id}>
               <td>
-                {accounts.find((a) => a.id === p.booking)?.client ||
-                  p.client_name ||
-                  "—"}
+                {variant ? <span className="reportPaymentClient"><i>{initials}</i><b>{client}</b></span> : client}
               </td>
-              <td>{money(p.amount)}</td>
-              <td>{p.payment_type}</td>
-              <td>{p.payment_mode || "—"}</td>
-              <td>{p.status}</td>
+              <td className={variant ? "reportPaymentAmount" : ""}>{money(p.amount)}</td>
+              <td>{variant ? <span className="reportPaymentType">{p.payment_type}</span> : p.payment_type}</td>
+              <td>{variant ? <span className="reportPaymentMode">{p.payment_mode || "—"}</span> : p.payment_mode || "—"}</td>
+              <td>{variant ? <span className={`reportPaymentStatus ${String(p.status).toLowerCase()}`}>{p.status}</span> : p.status}</td>
               <td>{date(p.paid_at || p.due_date || p.created_at)}</td>
               <td>{p.received_by || "—"}</td>
               <td>
@@ -579,8 +585,8 @@ export default function AccountsWorkspace({
                   )}
                 </div>
               </td>
-            </tr>
-          ))}
+            </tr>;
+          })}
         </tbody>
       </table>
       {!items.length && <div className="empty">No payments recorded.</div>}
@@ -1057,7 +1063,7 @@ export default function AccountsWorkspace({
               </div>
               <span>{reportPayments.length} entries</span>
             </div>
-            {paymentTable(reportPayments)}
+            {paymentTable(reportPayments, "reportPaymentActivity")}
           </section>
         </>
       )}
