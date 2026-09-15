@@ -1023,15 +1023,22 @@ function CrewTable({
             </tr>
           </thead>
           <tbody>
-            {visibleRows.map((row, index) => (
-              <tr key={row.id}>
+            {visibleRows.map((row, index) => {
+              const initials = String(row.name || "—")
+                .split(/\s+/)
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((part) => part[0])
+                .join("")
+                .toUpperCase();
+              return <tr key={row.id}>
                 <td className="mobilePhotographerSerial">{index + 1}</td>
                 <td>
-                  <b>{row.name}</b>
+                  <span className="photographerIdentity"><i>{initials}</i><b>{row.name}</b></span>
                 </td>
-                <td>{row.mobile || "—"}</td>
+                <td><span className="photographerMobile">{row.mobile || "—"}</span></td>
                 <td>{row.living_in || "—"}</td>
-                <td>{row.work || "—"}</td>
+                <td><span className="photographerWork">{row.work || "—"}</span></td>
                 <td>
                   <span className={`statusPill status-${String(row.status || "").toLowerCase().replaceAll(" ", "-")}`}>{row.status}</span>
                 </td>
@@ -1060,8 +1067,8 @@ function CrewTable({
                     {!edit && !remove && <small>View only</small>}
                   </div>
                 </td>
-              </tr>
-            ))}
+              </tr>;
+            })}
           </tbody>
         </table>
         {!visibleRows.length && <div className="empty">No photographers yet.</div>}

@@ -7777,6 +7777,74 @@ body:has(.mainAccountsSticky) {
   background: var(--surface);
   box-shadow: inset 0 -1px 0 var(--border);
 }
+.mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
+  overflow: hidden;
+  border: 1px solid #5f4d31;
+  border-radius: 15px;
+  background: #1d1915;
+  box-shadow: 0 14px 34px #00000022;
+}
+.mainOperationsDashboard .photographersDetailsView .photographerTable {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.mainOperationsDashboard .photographersDetailsView .photographerTable thead th {
+  height: 40px;
+  padding: 0 14px;
+  border-bottom-color: #806438;
+  background: linear-gradient(180deg, #352d21, #272116);
+  color: #efcf88;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.mainOperationsDashboard .photographersDetailsView .photographerTable tbody td {
+  padding: 11px 14px;
+  border-bottom-color: #423725;
+  color: #d8cbb4;
+  font-size: var(--font-sm);
+}
+.mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr { transition: background 150ms ease, box-shadow 150ms ease; }
+.mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:nth-child(even) { background: #ffffff03; }
+.mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:hover { background: linear-gradient(90deg, #d3a44717, #d3a44706); box-shadow: inset 3px 0 #d9ad52; }
+.mainOperationsDashboard .photographersDetailsView .photographerTable tbody td + td { border-left: 1px solid #ffffff08; }
+.mainOperationsDashboard .photographersDetailsView .mobilePhotographerSerial { color: #e6bc63; font-size: 11px; font-weight: 850; text-align: center; }
+.mainOperationsDashboard .photographersDetailsView .photographerIdentity { display: inline-flex; align-items: center; gap: 9px; }
+.mainOperationsDashboard .photographersDetailsView .photographerIdentity i {
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  border: 1px solid #806438;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #4a3920, #241e15);
+  color: #f2ca73;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+.mainOperationsDashboard .photographersDetailsView .photographerIdentity b { color: #f4e7cc; font-size: var(--font-sm); }
+.mainOperationsDashboard .photographersDetailsView .photographerMobile,
+.mainOperationsDashboard .photographersDetailsView .photographerWork {
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  padding: 4px 8px;
+  border: 1px solid #5b4b31;
+  border-radius: 999px;
+  background: #19150f;
+  color: #d8c7a6;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.mainOperationsDashboard .photographersDetailsView .photographerWork { border-color: #806438; background: #342913; color: #f0c974; }
+.mainOperationsDashboard .photographersDetailsView .photographerTable .statusPill { border-color: #58714b; background: #1c2b1a; color: #b6d99e; }
+.mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions { justify-content: center; }
+.mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions button { border-color: #705b37; background: #211b14; color: #efc66e; }
+.mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions button:hover { border-color: #d3a044; background: #3a2c17; }
 .mainAccountsSticky .accountsViewSticky {
   position: sticky;
   top: var(--workspace-chrome-height, 68px);
