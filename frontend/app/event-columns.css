@@ -1247,6 +1247,26 @@
 .photographerTable :is(th, td):nth-child(5) { width: 13%; }
 .photographerTable :is(th, td):nth-child(6) { width: 17%; }
 
+/* Desktop Photographer Details must use its real serial-number cell. The
+   generic table pseudo-column looks different and cannot be clicked to sort. */
+@media (min-width: 901px) {
+  .mainOperationsDashboard .photographersDetailsView .photographerTable > :is(thead, tbody) > tr::before {
+    display: none !important;
+  }
+  .mainOperationsDashboard .photographersDetailsView .photographerTable .mobilePhotographerSerial {
+    display: table-cell !important;
+    width: 6% !important;
+    min-width: 0 !important;
+    max-width: 6% !important;
+  }
+  .mainOperationsDashboard .photographersDetailsView .photographerTable :is(th, td):nth-child(2) { width: 24% !important; }
+  .mainOperationsDashboard .photographersDetailsView .photographerTable :is(th, td):nth-child(3) { width: 13% !important; }
+  .mainOperationsDashboard .photographersDetailsView .photographerTable :is(th, td):nth-child(4) { width: 11% !important; }
+  .mainOperationsDashboard .photographersDetailsView .photographerTable :is(th, td):nth-child(5) { width: 25% !important; }
+  .mainOperationsDashboard .photographersDetailsView .photographerTable :is(th, td):nth-child(6) { width: 12% !important; }
+  .mainOperationsDashboard .photographersDetailsView .photographerTable :is(th, td):nth-child(7) { width: 9% !important; }
+}
+
 /* Let the photographer list run as one full table in the Operations view
    rather than trapping it inside a second scroll container. */
 .mainOperationsDashboard .photographersDetailsView {
