@@ -308,6 +308,23 @@
    horizontal run. Each assigned photographer gets its own left-aligned line.
    This is intentionally mobile-only: desktop keeps the compact table layout. */
 @media (max-width: 900px) {
+  /* This is the actual horizontal scroll surface. A later generic mobile
+     rule set it to overflow: visible, which made a wide table impossible
+     to swipe despite its visible overflow. */
+  :root .mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    touch-action: pan-x pan-y pinch-zoom !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
+  }
+  /* Keep the whole roster moving together on phones; no frozen columns or
+     sticky header in this table. */
+  :root .mainOperationsDashboard .operationsWorkspace.photographersDetailsView .photographerTable :is(th, td) {
+    position: static !important;
+    left: auto !important;
+    box-shadow: none !important;
+  }
   :root .operationsWorkspace .fitUpcomingColumns .upcomingEventsTable .crewAssignments {
     display: grid !important;
     justify-items: start !important;
@@ -383,6 +400,13 @@
   :root .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:nth-child(even) :is(td:first-child, td:nth-child(2)) {
     background: color-mix(in srgb, var(--brand) 4%, var(--surface)) !important;
   }
+  /* Do not freeze any part of the table: every column scrolls together. */
+  :root .mainOperationsDashboard .operationsWorkspace.photographersDetailsView .photographerTable :is(th, td) {
+    position: static !important;
+    left: auto !important;
+    z-index: auto !important;
+    box-shadow: none !important;
+  }
   :root .photographersDetailsView .photographerTable .photographerIdentity b {
     white-space: normal !important;
     overflow: visible !important;
@@ -413,16 +437,11 @@
     font-weight: 850 !important;
   }
   :root .photographersDetailsView .photographerIdentity {
-    gap: 8px !important;
+    gap: 0 !important;
     text-align: left !important;
   }
   :root .photographersDetailsView .photographerIdentity i {
-    width: 30px !important;
-    height: 30px !important;
-    border-color: color-mix(in srgb, var(--brand) 64%, var(--line)) !important;
-    border-radius: 9px !important;
-    background: color-mix(in srgb, var(--brand) 16%, var(--surface)) !important;
-    color: var(--brand) !important;
+    display: none !important;
   }
   :root .photographersDetailsView .photographerIdentity b {
     color: var(--text) !important;
@@ -436,6 +455,21 @@
     border-radius: 8px !important;
     font-size: 9px !important;
     font-weight: 760 !important;
+  }
+  :root .photographersDetailsView :is(.photographerMobile, .photographerWork) {
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: var(--text) !important;
+  }
+  :root .photographersDetailsView .statusPill {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 74px;
+    text-align: center !important;
   }
   :root .photographersDetailsView .photographerTable .rowActions button {
     width: 28px !important;
