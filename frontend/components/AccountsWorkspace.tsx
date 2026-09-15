@@ -834,16 +834,6 @@ export default function AccountsWorkspace({
       {(view === "Receivables" || view === "Client Ledger") && (
         <>
           <section className="panel table accountsScheduleTableWrap">
-            {view === "Client Ledger" && (
-              <div className="clientLedgerTableHead">
-                <div>
-                  <small>CLIENT ACCOUNT REGISTER</small>
-                  <h2>Account Ledger</h2>
-                  <p>Every booking balance, payment stage and reminder in one clear financial view.</p>
-                </div>
-                <span><b>{displayedAccounts.length}</b> client accounts</span>
-              </div>
-            )}
             <table
               className={`accountsScheduleTable ${
                 view === "Receivables"
