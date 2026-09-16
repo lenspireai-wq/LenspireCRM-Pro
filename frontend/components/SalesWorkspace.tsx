@@ -922,7 +922,7 @@ function LeadTable({
             <th>Client Name</th>
             <th>Sales Person</th>
             <th>Couple Name</th>
-            <th>Mobile Number</th>
+            <th>Mobile</th>
             <th>Event</th>
             <th>Event Date</th>
             <th>Source</th>
