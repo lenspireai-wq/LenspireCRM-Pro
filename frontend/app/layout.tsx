@@ -33,10 +33,8 @@ const themeBootstrap = `(() => {
       document.documentElement.style.colorScheme = stored === 'light' || stored === 'blush' ? 'light' : 'dark';
       return;
     }
-    const host = window.location.hostname;
-    const theme = host === 'crm.lenspireai.com' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme === 'light' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = 'light';
+    document.documentElement.style.colorScheme = 'light';
   } catch (e) {
     document.documentElement.dataset.theme = 'light';
     document.documentElement.style.colorScheme = 'light';

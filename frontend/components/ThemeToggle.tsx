@@ -30,18 +30,17 @@ const preferredTheme = (): Theme => {
   if (stored) return stored;
   const current = activeTheme();
   if (current) return current;
-  return typeof window !== "undefined" && window.location.hostname === "crm.lenspireai.com" ? "light" : "dark";
+  return "light";
 };
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    const host = window.location.hostname;
-    const initial = (stored === "light" || stored === "dark" || stored === "blush" || stored === "neon") ? stored : (host === "crm.lenspireai.com" ? "light" : "dark");
+    const initial = (stored === "light" || stored === "dark" || stored === "blush" || stored === "neon") ? stored : "light";
     setTheme(initial);
     apply(initial);
     setMounted(true);

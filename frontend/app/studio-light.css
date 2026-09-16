@@ -42,6 +42,38 @@
     linear-gradient(90deg, rgb(248 246 253 / 96%) 0%, rgb(241 236 250 / 82%) 50%, rgb(241 236 250 / 24%) 100%),
     url("/login/studio-camera.png") right center / cover no-repeat;
 }
+
+/* Keep every primary icon and label identical in the live command rail. */
+@media (min-width: 901px) {
+  :root[data-theme="light"] .shell aside nav .navTopItem,
+  :root[data-theme="light"] .shell aside nav .navGroupLabel,
+  :root[data-theme="light"] .shell aside nav .navUtility button {
+    height: 64px !important;
+    min-height: 64px !important;
+    padding-left: 11px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    letter-spacing: -.018em !important;
+  }
+
+  :root[data-theme="light"] .shell aside nav .navTopItem .navIcon,
+  :root[data-theme="light"] .shell aside nav .navGroupLabel i,
+  :root[data-theme="light"] .shell aside nav .navUtility button .navIcon {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    flex: 0 0 42px !important;
+    border-radius: 14px !important;
+    font-size: 18px !important;
+  }
+
+  :root[data-theme="light"] .shell aside nav .navTopItem,
+  :root[data-theme="light"] .shell aside nav .navGroupLabel,
+  :root[data-theme="light"] .shell aside nav .navUtility button {
+    column-gap: 14px !important;
+  }
+}
 :root[data-theme="light"] .loginHeroCopy h1 {
   color: var(--text-strong);
   font-family: Inter, "Segoe UI", sans-serif;
@@ -805,4 +837,1333 @@
 :root[data-theme="light"] :is(input, select, textarea):focus {
   border-color: var(--brand);
   box-shadow: var(--focus-ring);
+}
+
+/* LenspireCRM Pro — premium SaaS system.
+   This final layer deliberately uses existing component hooks so it updates every
+   permission-aware workspace without replacing its API, forms, or workflow UI. */
+:root[data-theme="light"] {
+  --bg: #f7f8ff;
+  --panel: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f7f8ff;
+  --surface-strong: #eff1ff;
+  --line: #e8eaf4;
+  --text: #151a35;
+  --text-strong: #151a35;
+  --muted: #737b98;
+  --brand: #4f46e5;
+  --brand-hover: #4338ca;
+  --brand-soft: #eef0ff;
+  --secondary: #7c3aed;
+  --success: #22b573;
+  --warning: #f5a623;
+  --danger: #ef5350;
+  --info: #2563eb;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --shadow-card: 0 8px 24px rgb(35 40 88 / 6%);
+  --focus-ring: 0 0 0 3px rgb(79 70 229 / 16%);
+}
+
+:root[data-theme="light"] body {
+  background: radial-gradient(900px 460px at 100% -8%, rgb(124 58 237 / 10%), transparent 65%), #f7f8ff;
+  color: var(--text);
+  font-family: Inter, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root[data-theme="light"] .shell { background: transparent; }
+:root[data-theme="light"] .shell aside {
+  background: linear-gradient(180deg, #101d4f 0%, #111a43 100%);
+  border-right: 1px solid rgb(255 255 255 / 8%);
+  box-shadow: 12px 0 30px rgb(16 29 79 / 10%);
+}
+:root[data-theme="light"] .shell aside .brand { min-height: 92px; padding: 18px 18px 14px; border-bottom: 1px solid rgb(255 255 255 / 10%); }
+:root[data-theme="light"] .studioMark { background: rgb(255 255 255 / 12%); border: 1px solid rgb(255 255 255 / 16%); }
+:root[data-theme="light"] .studioMark img { filter: brightness(0) invert(1); }
+:root[data-theme="light"] .studioIdentity b { color: #fff; font-weight: 750; }
+:root[data-theme="light"] .studioIdentity small { color: #aab5df; }
+:root[data-theme="light"] .shell aside nav { padding: 16px 12px; }
+:root[data-theme="light"] .shell aside nav button.navTopItem,
+:root[data-theme="light"] .shell aside nav .navGroupCard .navGroup button.navGroupLabel,
+:root[data-theme="light"] .shell aside nav .navSubmenu button,
+:root[data-theme="light"] .shell aside nav .navUtility button {
+  min-height: 42px; border: 0; border-radius: 11px; background: transparent; color: #bac5e5; font-size: 12px;
+}
+:root[data-theme="light"] .shell aside nav button.navTopItem.active,
+:root[data-theme="light"] .shell aside nav .navGroupCard .navGroup.groupActive button.navGroupLabel,
+:root[data-theme="light"] .shell aside nav .navSubmenu button.active {
+  background: linear-gradient(100deg, #4f46e5, #7c3aed); color: #fff; box-shadow: 0 8px 18px rgb(79 70 229 / 28%);
+}
+:root[data-theme="light"] .shell aside nav button:hover,
+:root[data-theme="light"] .navTopItem:hover,
+:root[data-theme="light"] .navGroupLabel:hover { background: rgb(255 255 255 / 9%); color: #fff; }
+:root[data-theme="light"] .navGroupLabel i, :root[data-theme="light"] .navGroupLabel b { color: inherit; }
+:root[data-theme="light"] .studioSidebarNote { display: grid; color: #aab5df; padding: 14px 24px 20px; }
+:root[data-theme="light"] .studioSidebarNote > span { color: #fff; font: 600 20px/1.25 Inter, sans-serif; }
+:root[data-theme="light"] .profile { margin: 0 12px 14px; background: rgb(255 255 255 / 8%); border: 1px solid rgb(255 255 255 / 10%); border-radius: 14px; }
+:root[data-theme="light"] .profileIdentity b { color: #fff; }
+:root[data-theme="light"] .profileIdentity small, :root[data-theme="light"] .profileIdentity time { color: #aab5df; }
+:root[data-theme="light"] .profile button.profilePower { background: rgb(255 255 255 / 10%); color: #fff; }
+
+:root[data-theme="light"] .shell main { padding: 26px 30px 38px; }
+:root[data-theme="light"] .workspaceChrome { min-height: 74px; margin-bottom: 20px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 16px; background: rgb(255 255 255 / 88%); box-shadow: 0 5px 18px rgb(35 40 88 / 4%); }
+:root[data-theme="light"] :is(.workspaceChrome h1, .sectionHeader h1, .dashHeader h1, .salesChrome .salesHeader h1) { font-family: Inter, "Segoe UI", sans-serif; font-weight: 750; letter-spacing: -.035em; }
+:root[data-theme="light"] .chromeActions label, :root[data-theme="light"] .chromeActions button, :root[data-theme="light"] .sidebarToggle { border-radius: 10px; box-shadow: none; }
+
+:root[data-theme="light"] :is(.panel, .dashCard, .salesPanel, .accountPanel, .productionPanel, .adminPanel, .metrics article, .salesKpi, .accountMetrics article, .productionMetrics article, .adminMetrics article) { background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-card); }
+:root[data-theme="light"] :is(.panel, .dashCard, .salesPanel, .accountPanel, .productionPanel, .adminPanel, .metrics article, .salesKpi, .accountMetrics article, .productionMetrics article, .adminMetrics article):hover { transform: translateY(-1px); border-color: #dce0f3; box-shadow: 0 12px 28px rgb(35 40 88 / 8%); }
+:root[data-theme="light"] .dashMetrics { gap: 14px; margin-bottom: 18px; }
+:root[data-theme="light"] .dashMetric { min-height: 112px; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: #fff; box-shadow: var(--shadow-card); }
+:root[data-theme="light"] .dashMetricIcon { width: 38px; height: 38px; flex-basis: 38px; border-radius: 12px; color: var(--brand); background: #eef0ff; }
+:root[data-theme="light"] .dashMetricLabel { color: var(--muted); font-size: 11px; font-weight: 650; }
+:root[data-theme="light"] .dashMetric strong { font-size: clamp(18px, 1.55vw, 25px); color: var(--text-strong); }
+:root[data-theme="light"] .dashGrid { gap: 16px; }
+:root[data-theme="light"] .dashCard { padding: 20px; }
+:root[data-theme="light"] .dashCard h2 { font-family: Inter, "Segoe UI", sans-serif; font-size: 15px; font-weight: 700; }
+:root[data-theme="light"] .dashCard h2::before { background: linear-gradient(#2563eb, #7c3aed); }
+
+:root[data-theme="light"] :is(.primary, .loginSubmit, .billBtn.primary) { min-height: 42px; border-radius: 11px; background: linear-gradient(135deg, #4f46e5, #7c3aed); box-shadow: 0 9px 18px rgb(79 70 229 / 22%); }
+:root[data-theme="light"] :is(.secondary, .btnSecondary, .billBtn:not(.primary)) { min-height: 40px; border-radius: 11px; }
+:root[data-theme="light"] :is(input, select, textarea) { border-radius: 10px; }
+:root[data-theme="light"] :is(table, .leadTable, .paymentTable, .productionTable) { border-color: var(--line); }
+:root[data-theme="light"] :is(th, .leadTable th, .paymentTable th, .productionTable th) { background: #f7f8ff; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .035em; text-transform: uppercase; }
+:root[data-theme="light"] :is(td, .leadTable td, .paymentTable td, .productionTable td) { border-color: var(--line); }
+:root[data-theme="light"] :is(.leadTable tbody tr:hover, .paymentTable tbody tr:hover, .productionTable tbody tr:hover, .upcomingEventsTable tbody tr:hover) { background: #f7f8ff; }
+
+@media (max-width: 900px) {
+  :root[data-theme="light"] .shell main { padding: 76px 16px 30px; }
+  :root[data-theme="light"] .workspaceChrome { margin: 0 0 16px; border-radius: 14px; }
+}
+
+/* Blue atmospheric variation — the primary LenspireCRM light experience.
+   Kept at the end to supersede legacy studio palettes without touching workspace logic. */
+:root[data-theme="light"] {
+  --bg: #f8fbff;
+  --panel: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f5faff;
+  --surface-strong: #edf6ff;
+  --line: #dceaff;
+  --text: #172033;
+  --text-strong: #172033;
+  --muted: #65738a;
+  --brand: #246bfd;
+  --brand-hover: #174ea6;
+  --brand-soft: #eaf2ff;
+  --secondary: #7657ff;
+  --success: #22b573;
+  --warning: #f6a623;
+  --info: #19a7f2;
+  --shadow-card: 0 12px 30px rgb(28 83 156 / 7%);
+  --focus-ring: 0 0 0 3px rgb(36 107 253 / 18%);
+}
+
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(700px 420px at 94% -4%, rgb(25 167 242 / 12%), transparent 65%),
+    radial-gradient(560px 320px at 4% 88%, rgb(36 107 253 / 6%), transparent 72%),
+    var(--bg);
+}
+:root[data-theme="light"] .shell aside {
+  background: linear-gradient(180deg, rgb(255 255 255 / 96%), #f6faff);
+  border-right: 1px solid var(--line);
+  box-shadow: 8px 0 22px rgb(35 95 170 / 4%);
+}
+:root[data-theme="light"] .shell aside .brand { border-bottom-color: var(--line); }
+:root[data-theme="light"] .studioMark { background: #eaf2ff; border-color: #d7e7ff; }
+:root[data-theme="light"] .studioMark img { filter: none; }
+:root[data-theme="light"] .studioIdentity b, :root[data-theme="light"] .profileIdentity b { color: var(--text-strong); }
+:root[data-theme="light"] .studioIdentity small, :root[data-theme="light"] .profileIdentity small, :root[data-theme="light"] .profileIdentity time { color: var(--muted); }
+:root[data-theme="light"] .shell aside nav button.navTopItem,
+:root[data-theme="light"] .shell aside nav .navGroupCard .navGroup button.navGroupLabel,
+:root[data-theme="light"] .shell aside nav .navSubmenu button,
+:root[data-theme="light"] .shell aside nav .navUtility button { color: #3e5270; }
+:root[data-theme="light"] .shell aside nav button.navTopItem.active,
+:root[data-theme="light"] .shell aside nav .navGroupCard .navGroup.groupActive button.navGroupLabel,
+:root[data-theme="light"] .shell aside nav .navSubmenu button.active {
+  color: #174ea6; background: linear-gradient(90deg, #e8f2ff, #f1f7ff); box-shadow: inset 3px 0 #246bfd;
+}
+:root[data-theme="light"] .shell aside nav button:hover,
+:root[data-theme="light"] .navTopItem:hover,
+:root[data-theme="light"] .navGroupLabel:hover { background: #f0f7ff; color: #174ea6; }
+:root[data-theme="light"] .studioSidebarNote { color: var(--muted); }
+:root[data-theme="light"] .studioSidebarNote > span { color: #174ea6; font-weight: 650; }
+:root[data-theme="light"] .profile { background: #fff; border-color: var(--line); box-shadow: 0 6px 18px rgb(35 95 170 / 5%); }
+:root[data-theme="light"] .profile button.profilePower { background: #eaf2ff; color: #246bfd; }
+
+:root[data-theme="light"] .workspaceChrome {
+  background: rgb(255 255 255 / 82%); border-color: #dceaff; box-shadow: 0 8px 24px rgb(35 95 170 / 5%); backdrop-filter: blur(12px);
+}
+:root[data-theme="light"] .chromeActions label, :root[data-theme="light"] .chromeActions button, :root[data-theme="light"] .sidebarToggle { border-color: var(--line); color: #246bfd; background: #fff; }
+:root[data-theme="light"] :is(.panel, .dashCard, .salesPanel, .accountPanel, .productionPanel, .adminPanel, .metrics article, .salesKpi, .accountMetrics article, .productionMetrics article, .adminMetrics article, .dashMetric) {
+  border-color: var(--line); border-radius: 20px; background: #fff; box-shadow: var(--shadow-card);
+}
+:root[data-theme="light"] :is(.panel, .dashCard, .salesPanel, .accountPanel, .productionPanel, .adminPanel, .metrics article, .salesKpi, .accountMetrics article, .productionMetrics article, .adminMetrics article, .dashMetric):hover { border-color: #c8e0ff; box-shadow: 0 16px 34px rgb(35 95 170 / 10%); }
+:root[data-theme="light"] .dashMetric { border-top: 2px solid #d6e7ff; }
+:root[data-theme="light"] .dashMetric:nth-child(2) { border-top-color: #c8f0dc; }
+:root[data-theme="light"] .dashMetric:nth-child(3) { border-top-color: #dcd4ff; }
+:root[data-theme="light"] .dashMetric:nth-child(4) { border-top-color: #ffe0b0; }
+:root[data-theme="light"] .dashMetricIcon { color: #246bfd; background: #eaf2ff; }
+:root[data-theme="light"] .dashMetric:nth-child(2) .dashMetricIcon { color: #148151; background: #e4f8ed; }
+:root[data-theme="light"] .dashMetric:nth-child(3) .dashMetricIcon { color: #7657ff; background: #eeebff; }
+:root[data-theme="light"] .dashMetric:nth-child(4) .dashMetricIcon { color: #d98207; background: #fff3df; }
+:root[data-theme="light"] .dashCard h2::before { background: linear-gradient(#246bfd, #19a7f2); }
+:root[data-theme="light"] :is(.primary, .loginSubmit, .billBtn.primary) { background: linear-gradient(135deg, #246bfd, #19a7f2); box-shadow: 0 10px 20px rgb(36 107 253 / 20%); }
+:root[data-theme="light"] :is(.primary, .loginSubmit, .billBtn.primary):hover { background: linear-gradient(135deg, #174ea6, #246bfd); }
+:root[data-theme="light"] :is(input, select, textarea) { border-color: var(--line); background: #fff; }
+:root[data-theme="light"] :is(th, .leadTable th, .paymentTable th, .productionTable th) { background: #f5faff; color: #65738a; }
+:root[data-theme="light"] :is(.leadTable tbody tr:hover, .paymentTable tbody tr:hover, .productionTable tbody tr:hover, .upcomingEventsTable tbody tr:hover) { background: #f5faff; }
+
+/* Live workspace refinements: compact controls and information-dense screens
+   retain the same light, layered language as the dashboard. */
+:root[data-theme="light"] .operationsTabs,
+:root[data-theme="light"] .billTabs {
+  display: inline-flex; flex-wrap: wrap; gap: 4px; margin: 0 0 14px; padding: 4px;
+  border: 1px solid var(--line); border-radius: 14px; background: rgb(255 255 255 / 82%); box-shadow: 0 5px 16px rgb(35 95 170 / 4%);
+}
+:root[data-theme="light"] .operationsTabs button,
+:root[data-theme="light"] .billTabs button {
+  min-height: 34px; padding: 6px 12px; border: 1px solid transparent; border-radius: 10px;
+  color: var(--muted); background: transparent; font-weight: 650;
+}
+:root[data-theme="light"] .operationsTabs button.active,
+:root[data-theme="light"] .billTabs button.active {
+  border-color: #cfe2ff; background: linear-gradient(135deg, #eaf3ff, #f5f9ff); color: #174ea6; box-shadow: 0 2px 8px rgb(36 107 253 / 8%);
+}
+:root[data-theme="light"] .operationsWorkspace .salesKpis article {
+  position: relative; min-height: 112px; overflow: hidden; border: 1px solid var(--line); border-top: 2px solid #cfe4ff; border-radius: 18px; background: linear-gradient(135deg, #fff, #f9fcff); box-shadow: var(--shadow-card);
+}
+:root[data-theme="light"] .operationsWorkspace .salesKpis article::after {
+  content: ""; position: absolute; width: 96px; height: 96px; top: -50px; right: -38px; border: 1px solid #b9dcff; border-radius: 50%; box-shadow: 0 0 0 17px rgb(36 107 253 / 3%); pointer-events: none;
+}
+:root[data-theme="light"] .operationsWorkspace .salesKpis article:nth-child(2) { border-top-color: #ffdc9d; }
+:root[data-theme="light"] .operationsWorkspace .salesKpis article:nth-child(3) { border-top-color: #bdebd5; }
+:root[data-theme="light"] .operationsWorkspace .salesKpis article:nth-child(4) { border-top-color: #d6ceff; }
+:root[data-theme="light"] .operationsWorkspace .salesKpis article b { color: var(--text-strong); }
+:root[data-theme="light"] :is(.operationModal, .eventMessageModal, .crewModal, .accountModal, .targetModal, .leadModal, .leadDetailModal, .productionModal, .adminUserModal) {
+  border-color: #cfe2ff; border-radius: 20px; box-shadow: 0 24px 60px rgb(20 75 150 / 18%);
+}
+
+/* Lenspire Violet Command Center — original CRM adaptation of the selected
+   AI-dashboard direction. Data views stay real and dense; the visual layer
+   provides the dark command rail, lavender depth, and compact card rhythm. */
+:root[data-theme="light"] {
+  --bg: #f7f7ff;
+  --panel: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f8f7ff;
+  --surface-strong: #f0edff;
+  --line: #e5e3f4;
+  --text: #151a35;
+  --text-strong: #111633;
+  --muted: #737b98;
+  --brand: #5b45e7;
+  --brand-hover: #4b35d5;
+  --brand-soft: #edeaff;
+  --secondary: #8758f4;
+  --info: #4786ff;
+  --success: #22b573;
+  --warning: #f5a623;
+  --shadow-card: 0 12px 26px rgb(57 45 120 / 7%);
+  --focus-ring: 0 0 0 3px rgb(91 69 231 / 18%);
+}
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(820px 500px at 96% -5%, rgb(127 91 245 / 17%), transparent 63%),
+    radial-gradient(560px 400px at 20% 100%, rgb(88 103 255 / 10%), transparent 72%),
+    #f7f7ff;
+}
+:root[data-theme="light"] .shell aside {
+  background: linear-gradient(180deg, #111d50 0%, #13265e 58%, #0c1842 100%);
+  border-right: 1px solid rgb(255 255 255 / 8%);
+  box-shadow: 14px 0 34px rgb(21 28 72 / 14%);
+}
+:root[data-theme="light"] .shell aside .brand { min-height: 104px; border-bottom-color: rgb(255 255 255 / 9%); }
+:root[data-theme="light"] .studioMark { background: linear-gradient(145deg, #6453ed, #8b5cf6); border-color: rgb(255 255 255 / 18%); box-shadow: 0 9px 18px rgb(31 21 115 / 30%); }
+:root[data-theme="light"] .studioMark img { filter: brightness(0) invert(1); }
+:root[data-theme="light"] .studioIdentity b, :root[data-theme="light"] .profileIdentity b { color: #fff; }
+:root[data-theme="light"] .studioIdentity small, :root[data-theme="light"] .profileIdentity small, :root[data-theme="light"] .profileIdentity time { color: #aeb9e6; }
+:root[data-theme="light"] .shell aside nav { padding: 18px 12px; }
+:root[data-theme="light"] .shell aside nav button.navTopItem,
+:root[data-theme="light"] .shell aside nav .navGroupCard .navGroup button.navGroupLabel,
+:root[data-theme="light"] .shell aside nav .navSubmenu button,
+:root[data-theme="light"] .shell aside nav .navUtility button { min-height: 43px; color: #b9c4e7; border-radius: 10px; }
+:root[data-theme="light"] .shell aside nav button.navTopItem.active,
+:root[data-theme="light"] .shell aside nav .navGroupCard .navGroup.groupActive button.navGroupLabel,
+:root[data-theme="light"] .shell aside nav .navSubmenu button.active {
+  background: linear-gradient(100deg, #5142d8, #7b55ee); color: #fff; box-shadow: 0 9px 20px rgb(66 47 207 / 34%); border: 0;
+}
+:root[data-theme="light"] .shell aside nav button:hover,
+:root[data-theme="light"] .navTopItem:hover,
+:root[data-theme="light"] .navGroupLabel:hover { background: rgb(255 255 255 / 8%); color: #fff; }
+:root[data-theme="light"] .studioSidebarNote { color: #aeb9e6; padding-top: 20px; }
+:root[data-theme="light"] .studioSidebarNote > span { color: #fff; font: 600 20px/1.25 Inter, "Segoe UI", sans-serif; }
+:root[data-theme="light"] .profile { background: rgb(255 255 255 / 8%); border-color: rgb(255 255 255 / 10%); box-shadow: none; }
+:root[data-theme="light"] .profile button.profilePower { background: rgb(255 255 255 / 10%); color: #fff; }
+
+:root[data-theme="light"] .shell main { padding: 24px 28px 36px; }
+:root[data-theme="light"] .workspaceChrome { min-height: 70px; padding: 13px 18px; border-radius: 17px; border-color: #e6e4f4; background: rgb(255 255 255 / 78%); box-shadow: 0 10px 28px rgb(61 45 135 / 6%); }
+:root[data-theme="light"] .chromeActions label, :root[data-theme="light"] .chromeActions button, :root[data-theme="light"] .sidebarToggle { color: #5b45e7; border-color: #e5e1f5; background: #fff; }
+:root[data-theme="light"] :is(.panel, .dashCard, .salesPanel, .accountPanel, .productionPanel, .adminPanel, .metrics article, .salesKpi, .accountMetrics article, .productionMetrics article, .adminMetrics article, .dashMetric) {
+  border-color: #e5e3f4; border-radius: 16px; background: linear-gradient(145deg, #fff, #fcfbff); box-shadow: 0 10px 24px rgb(57 45 120 / 6%);
+}
+:root[data-theme="light"] :is(.panel, .dashCard, .salesPanel, .accountPanel, .productionPanel, .adminPanel, .metrics article, .salesKpi, .accountMetrics article, .productionMetrics article, .adminMetrics article, .dashMetric):hover { border-color: #d7cffb; box-shadow: 0 14px 28px rgb(57 45 120 / 10%); }
+:root[data-theme="light"] .operationsTabs, :root[data-theme="light"] .billTabs { border-color: #e5e3f4; background: rgb(255 255 255 / 75%); }
+:root[data-theme="light"] .operationsTabs button.active, :root[data-theme="light"] .billTabs button.active { border-color: #d6cffc; background: linear-gradient(135deg, #eeeaff, #f8f6ff); color: #5640d7; }
+:root[data-theme="light"] .operationsWorkspace .salesKpis article { border-top-color: #cfc7ff; background: linear-gradient(145deg, #fff, #faf9ff); }
+:root[data-theme="light"] .operationsWorkspace .salesKpis article::after { border-color: #d8d1ff; box-shadow: 0 0 0 17px rgb(91 69 231 / 3%); }
+:root[data-theme="light"] .dashMetric { min-height: 106px; border-top: 2px solid #d6cfff; }
+:root[data-theme="light"] .dashMetricIcon { color: #5b45e7; background: linear-gradient(145deg, #e9e5ff, #f4f2ff); }
+:root[data-theme="light"] .dashCard h2::before { background: linear-gradient(#4b7eff, #8258f1); }
+:root[data-theme="light"] :is(.primary, .loginSubmit, .billBtn.primary) { background: linear-gradient(135deg, #5544dc, #8058ef); box-shadow: 0 10px 21px rgb(84 68 220 / 27%); }
+:root[data-theme="light"] :is(.primary, .loginSubmit, .billBtn.primary):hover { background: linear-gradient(135deg, #4734cc, #7045e6); }
+
+@media (max-width: 900px) {
+  :root[data-theme="light"] .shell main { padding: 74px 16px 30px; }
+}
+
+/* Signature sidebar treatment: original Lenspire command rail, built from
+   existing navigation markup so every permission-aware route stays intact. */
+:root[data-theme="light"] .shell aside {
+  /* Retain the app shell's fixed rail behavior; relative positioning pushes
+     the workspace below a full-height sidebar. */
+  position: fixed; overflow: hidden;
+  background:
+    radial-gradient(260px 220px at 115% 18%, rgb(126 93 255 / 30%), transparent 68%),
+    radial-gradient(210px 180px at -24% 78%, rgb(54 133 255 / 20%), transparent 72%),
+    linear-gradient(180deg, #20336f 0%, #2a4183 55%, #1b2f68 100%);
+}
+:root[data-theme="light"] .shell aside::before {
+  content: ""; position: absolute; width: 210px; height: 210px; right: -138px; top: 120px;
+  border: 1px solid rgb(184 169 255 / 24%); border-radius: 50%;
+  box-shadow: 0 0 0 24px rgb(130 108 255 / 4%), 0 0 0 52px rgb(130 108 255 / 3%); pointer-events: none;
+}
+:root[data-theme="light"] .shell aside .brand { position: relative; z-index: 1; padding: 20px 18px 17px; }
+:root[data-theme="light"] .shell aside .brand::after {
+  content: "LENSPIRE COMMAND"; display: block; position: absolute; left: 19px; bottom: 7px;
+  color: #95a7e3; font-size: 8px; font-weight: 800; letter-spacing: .16em;
+}
+:root[data-theme="light"] .studioMark { position: relative; overflow: visible; }
+:root[data-theme="light"] .studioMark::after {
+  content: ""; position: absolute; width: 7px; height: 7px; right: -3px; top: -3px; border: 2px solid #2a4183;
+  border-radius: 50%; background: #39d793; box-shadow: 0 0 0 4px rgb(57 215 147 / 13%);
+}
+:root[data-theme="light"] .shell aside nav { position: relative; z-index: 1; padding: 23px 12px 14px; }
+:root[data-theme="light"] .shell aside nav button.navTopItem,
+:root[data-theme="light"] .shell aside nav .navGroupCard .navGroup button.navGroupLabel,
+:root[data-theme="light"] .shell aside nav .navSubmenu button,
+:root[data-theme="light"] .shell aside nav .navUtility button { position: relative; gap: 11px; padding: 0 11px; font-weight: 600; }
+:root[data-theme="light"] .shell aside .navIcon {
+  display: grid; place-items: center; width: 26px; height: 26px; flex-basis: 26px; border-radius: 8px;
+  color: #c8d3ff; background: rgb(255 255 255 / 7%); font-size: 14px; transition: transform .18s ease, background .18s ease;
+}
+:root[data-theme="light"] .shell aside nav button:hover .navIcon { transform: rotate(-4deg) translateY(-1px); background: rgb(255 255 255 / 14%); }
+:root[data-theme="light"] .shell aside nav button.navTopItem.active .navIcon,
+:root[data-theme="light"] .shell aside .navGroup.groupActive .navGroupLabel .navIcon,
+:root[data-theme="light"] .shell aside .navSubmenu button.active .navIcon { background: rgb(255 255 255 / 18%); color: #fff; }
+:root[data-theme="light"] .shell aside nav button.navTopItem.active::after,
+:root[data-theme="light"] .shell aside .navGroup.groupActive .navGroupLabel::after {
+  content: ""; position: absolute; width: 5px; height: 5px; right: 12px; border-radius: 50%; background: #c7bcff; box-shadow: 0 0 10px #c7bcff;
+}
+:root[data-theme="light"] .studioSidebarNote {
+  position: relative; z-index: 1; margin: auto 14px 14px; padding: 16px 15px 15px; border: 1px solid rgb(255 255 255 / 11%); border-radius: 16px;
+  background: linear-gradient(145deg, rgb(119 93 238 / 18%), rgb(255 255 255 / 4%)); box-shadow: inset 0 1px rgb(255 255 255 / 8%);
+}
+:root[data-theme="light"] .studioSidebarNote > span { font-size: 16px; letter-spacing: -.03em; }
+:root[data-theme="light"] .studioSidebarNote small { color: #b0bee9; line-height: 1.5; }
+:root[data-theme="light"] .profile { position: relative; z-index: 1; margin: 0 14px 16px; border-radius: 16px; background: linear-gradient(135deg, rgb(255 255 255 / 12%), rgb(255 255 255 / 5%)); }
+
+/* Keep content typography confident and neutral; color is reserved for actions,
+   status, and selected navigation rather than ordinary labels or data. */
+:root[data-theme="light"] {
+  --text: #101218;
+  --text-strong: #080a0f;
+  --muted: #5f6675;
+}
+:root[data-theme="light"] :is(
+  .workspaceChrome, .workspace, .panel, .dashCard, .salesPanel, .accountPanel,
+  .productionPanel, .adminPanel, .metrics, .salesKpis, .accountMetrics,
+  .productionMetrics, .adminMetrics, table, .modalCard
+) { color: var(--text); }
+:root[data-theme="light"] .shell main :is(
+  h1, h2, h3, h4, h5, strong, b, th, td, label, .dashMetric strong,
+  .operationsWorkspace .salesKpis article b
+) { color: var(--text-strong); }
+:root[data-theme="light"] .shell main :is(p, small, .dashMetricLabel, .operationsWorkspace .salesKpis article span, .operationsWorkspace .salesKpis article small) { color: var(--muted); }
+
+/* Operations tables use the same calm, single-surface treatment as Lead
+   Management. Content, filters, pagination, and row actions are untouched. */
+:root[data-theme="light"] :is(.nextShootsTable, .upcomingEventsTable, .photographerTable) {
+  background: #fff; color: var(--text);
+}
+:root[data-theme="light"] :is(.nextShootsTable, .upcomingEventsTable, .photographerTable) thead tr,
+:root[data-theme="light"] :is(.nextShootsTable, .upcomingEventsTable, .photographerTable) th {
+  background: #fafbff; color: #5f6675; border-color: #e5e7ef;
+}
+:root[data-theme="light"] :is(.nextShootsTable, .upcomingEventsTable, .photographerTable) tbody tr,
+:root[data-theme="light"] :is(.nextShootsTable, .upcomingEventsTable, .photographerTable) tbody tr:nth-child(even) {
+  background: #fff !important; color: var(--text);
+}
+:root[data-theme="light"] :is(.nextShootsTable, .upcomingEventsTable, .photographerTable) td {
+  background: transparent; border-color: #e5e7ef; color: var(--text);
+}
+:root[data-theme="light"] :is(.nextShootsTable, .upcomingEventsTable, .photographerTable) tbody tr:hover {
+  background: #f7f8ff !important;
+}
+
+/* The dedicated Upcoming Events page previously retained its old dark-gold
+   Operations skin through more specific selectors in globals.css. Keep this
+   list deliberately neutral, matching Lead Management without touching data
+   or the event actions. */
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap {
+  background: #fff !important;
+  border-color: #dceaff !important;
+  box-shadow: 0 10px 28px rgba(31, 77, 154, .07) !important;
+  scrollbar-color: #b9cce8 #f4f8ff;
+}
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar-track {
+  background: #f4f8ff;
+}
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap::-webkit-scrollbar-thumb {
+  background: #b9cce8;
+  border-color: #f4f8ff;
+}
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable,
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable tbody,
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable tbody tr,
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable tbody tr:nth-child(even),
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable tbody td {
+  background: #fff !important;
+  background-image: none !important;
+  color: #172033 !important;
+  border-color: #e5edf8 !important;
+  box-shadow: none !important;
+}
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable thead tr,
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable th {
+  background: #f7faff !important;
+  color: #65738a !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable tbody tr:hover,
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable tbody tr:hover td {
+  background: #f7faff !important;
+  box-shadow: none !important;
+}
+:root[data-theme="light"] .operationsUpcomingTable .srNo,
+:root[data-theme="light"] .operationsUpcomingTable .upcomingEventsTable td:nth-child(3) b {
+  color: #172033 !important;
+}
+:root[data-theme="light"] .operationsUpcomingTable .upcomingEventDate,
+:root[data-theme="light"] .operationsUpcomingTable .tbdEventDate .upcomingEventDate,
+:root[data-theme="light"] .operationsUpcomingTable .upcomingEventType,
+:root[data-theme="light"] .operationsUpcomingTable .crewAssignments,
+:root[data-theme="light"] .operationsUpcomingTable .crewAssignments span,
+:root[data-theme="light"] .operationsUpcomingTable .crewAssignments span.crewAssigned,
+:root[data-theme="light"] .operationsUpcomingTable .crewAssignments.multipleCrew {
+  background: #f7faff !important;
+  color: #34445f !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] .operationsUpcomingTable .eventRowActions button {
+  background: #fff !important;
+  color: #246bfd !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] .operationsUpcomingTable .eventRowActions button:hover {
+  background: #f1f6ff !important;
+  border-color: #9fc2ff !important;
+}
+
+/* Completed Events follows the identical calm, single-surface pattern. */
+:root[data-theme="light"] .operationsCompletedTable.upcomingEventsTableWrap {
+  background: #fff !important;
+  border-color: #dceaff !important;
+  box-shadow: 0 10px 28px rgba(31, 77, 154, .07) !important;
+}
+:root[data-theme="light"] .operationsCompletedTable .upcomingEventsTable,
+:root[data-theme="light"] .operationsCompletedTable .upcomingEventsTable tbody,
+:root[data-theme="light"] .operationsCompletedTable .upcomingEventsTable tbody tr,
+:root[data-theme="light"] .operationsCompletedTable .upcomingEventsTable tbody tr:nth-child(even),
+:root[data-theme="light"] .operationsCompletedTable .upcomingEventsTable tbody td {
+  background: #fff !important;
+  background-image: none !important;
+  color: #172033 !important;
+  border-color: #e5edf8 !important;
+  box-shadow: none !important;
+}
+:root[data-theme="light"] .operationsCompletedTable .upcomingEventsTable thead tr,
+:root[data-theme="light"] .operationsCompletedTable .upcomingEventsTable th {
+  background: #f7faff !important;
+  color: #65738a !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] .operationsCompletedTable .upcomingEventsTable tbody tr:hover,
+:root[data-theme="light"] .operationsCompletedTable .upcomingEventsTable tbody tr:hover td {
+  background: #f7faff !important;
+  box-shadow: none !important;
+}
+:root[data-theme="light"] .operationsCompletedTable .srNo,
+:root[data-theme="light"] .operationsCompletedTable .upcomingEventsTable td:nth-child(3) b {
+  color: #172033 !important;
+}
+:root[data-theme="light"] .operationsCompletedTable .eventRowActions button {
+  background: #fff !important;
+  color: #246bfd !important;
+  border-color: #dceaff !important;
+}
+
+/* Calendar uses the same airy cards and crisp navy text as Operations lists. */
+:root[data-theme="light"] .calendar {
+  background: transparent;
+}
+:root[data-theme="light"] .calNav strong,
+:root[data-theme="light"] .calCellHead span,
+:root[data-theme="light"] .calSidePanel h2,
+:root[data-theme="light"] .calSidePanel li strong {
+  color: #172033 !important;
+}
+:root[data-theme="light"] .calHeader span,
+:root[data-theme="light"] .calCellHead small,
+:root[data-theme="light"] .calSidePanel li span,
+:root[data-theme="light"] .calSidePanel li small,
+:root[data-theme="light"] .calDetail p {
+  color: #65738a !important;
+}
+:root[data-theme="light"] .calCell {
+  background: #fff !important;
+  border-color: #dceaff !important;
+  border-radius: 12px;
+  box-shadow: 0 5px 14px rgba(31, 77, 154, .045);
+}
+:root[data-theme="light"] .calCell:hover {
+  background: #f7faff !important;
+  border-color: #bcd5ff !important;
+}
+:root[data-theme="light"] .calCell.muted { opacity: .62; background: #f9fbff !important; }
+:root[data-theme="light"] .calCell.today { border-color: #246bfd !important; box-shadow: inset 0 0 0 1px #246bfd, 0 5px 14px rgba(31, 77, 154, .06); }
+:root[data-theme="light"] .calCell.selected { background: #eff5ff !important; border-color: #8bb8ff !important; }
+:root[data-theme="light"] .calCell li { background: #f7faff !important; border: 1px solid #e4eefc; border-left-width: 3px; border-radius: 8px; }
+:root[data-theme="light"] .calCell li strong { color: #172033 !important; }
+:root[data-theme="light"] .calCell li span,
+:root[data-theme="light"] .calCell li.calMore { color: #65738a !important; }
+:root[data-theme="light"] .calSidePanel {
+  background: #fff !important;
+  border-color: #dceaff !important;
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(31, 77, 154, .07);
+}
+:root[data-theme="light"] .calSidePanel li {
+  background: #fff;
+  border-color: #e5edf8 !important;
+}
+
+/* Match Upcoming Events to the Completed Events layout as well as its colours. */
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap {
+  overflow-x: hidden !important;
+}
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+}
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable th {
+  height: 34px;
+  padding: 0 4px;
+}
+:root[data-theme="light"] .operationsUpcomingTable.upcomingEventsTableWrap .upcomingEventsTable td {
+  height: 40px;
+  padding: 3px 4px;
+}
+
+/* Photographers Details: remove the remaining legacy dark-gold Operations skin. */
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
+  background: #fff !important;
+  border-color: #dceaff !important;
+  box-shadow: 0 10px 28px rgba(31, 77, 154, .07) !important;
+}
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable,
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody,
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr,
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:nth-child(even),
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody td {
+  background: #fff !important;
+  background-image: none !important;
+  color: #172033 !important;
+  border-color: #e5edf8 !important;
+  box-shadow: none !important;
+}
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable thead th {
+  background: #f7faff !important;
+  color: #65738a !important;
+  border-color: #dceaff !important;
+  box-shadow: inset 0 -1px 0 #dceaff !important;
+}
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:hover,
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:hover td {
+  background: #f7faff !important;
+  box-shadow: none !important;
+}
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView :is(.mobilePhotographerSerial, .photographerSerialSort, .photographerSerialSort span, .photographerIdentity strong) {
+  color: #172033 !important;
+}
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerSerialSort:hover {
+  background: #f1f6ff !important;
+  border-color: #bcd5ff !important;
+}
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView :is(.photographerWork, .photographerTable .statusPill, .photographerTable .statusPill.status-in-house, .photographerTable .statusPill.status-outside) {
+  background: #f7faff !important;
+  color: #34445f !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions button {
+  background: #fff !important;
+  color: #246bfd !important;
+  border-color: #dceaff !important;
+}
+
+/* Accounts: replace the remaining dark-gold finance skin with a bright,
+   polished command-centre treatment. All amounts, statuses and actions stay intact. */
+:root[data-theme="light"] .accountsWorkspace {
+  background:
+    radial-gradient(circle at 88% 3%, rgba(25, 167, 242, .09), transparent 25rem),
+    radial-gradient(circle at 15% 25%, rgba(118, 87, 255, .06), transparent 22rem),
+    #f8fbff;
+}
+:root[data-theme="light"] .accountMetrics article,
+:root[data-theme="light"] .paymentDashboardView .accountMetrics article {
+  background: linear-gradient(145deg, #fff 0%, #f7fbff 100%) !important;
+  border-color: #dceaff !important;
+  border-top: 3px solid #246bfd !important;
+  box-shadow: 0 9px 24px rgba(31, 77, 154, .07) !important;
+}
+:root[data-theme="light"] .accountMetrics article:nth-child(2) { border-top-color: #7657ff !important; }
+:root[data-theme="light"] .accountMetrics article:nth-child(3) { border-top-color: #f6a623 !important; }
+:root[data-theme="light"] .accountMetrics article:nth-child(4) { border-top-color: #22b573 !important; }
+:root[data-theme="light"] .accountMetrics :is(span, strong) { color: #172033 !important; }
+:root[data-theme="light"] .accountMetrics span { color: #65738a !important; }
+:root[data-theme="light"] :is(.accountsCommandDeck, .collectionsHero, .receivablesHero, .clientLedgerHero, .reportsAnalyticsHero) {
+  background:
+    radial-gradient(circle at 92% 18%, rgba(25, 167, 242, .22), transparent 12rem),
+    radial-gradient(circle at 70% 120%, rgba(118, 87, 255, .14), transparent 17rem),
+    linear-gradient(135deg, #ffffff, #eff7ff) !important;
+  border: 1px solid #dceaff !important;
+  box-shadow: 0 14px 34px rgba(31, 77, 154, .10) !important;
+}
+:root[data-theme="light"] :is(.accountsCommandDeck, .collectionsHero, .receivablesHero, .clientLedgerHero, .reportsAnalyticsHero)::after { opacity: .35; }
+:root[data-theme="light"] :is(.accountsCommandDeck, .collectionsHero, .receivablesHero, .clientLedgerHero, .reportsAnalyticsHero) small { color: #246bfd !important; }
+:root[data-theme="light"] :is(.accountsCommandDeck, .collectionsHero, .receivablesHero, .clientLedgerHero, .reportsAnalyticsHero) h2 { color: #172033 !important; }
+:root[data-theme="light"] :is(.accountsCommandDeck, .collectionsHero, .receivablesHero, .clientLedgerHero, .reportsAnalyticsHero) p { color: #65738a !important; }
+:root[data-theme="light"] :is(.accountsCommandSignals, .collectionsSignals, .receivablesSignals, .clientLedgerSignals, .reportsAnalyticsSignals) span {
+  background: rgba(255,255,255,.82) !important;
+  border-color: #cfe2ff !important;
+  color: #65738a !important;
+  box-shadow: 0 5px 12px rgba(31, 77, 154, .06);
+}
+:root[data-theme="light"] :is(.accountsCommandSignals, .collectionsSignals, .receivablesSignals, .clientLedgerSignals, .reportsAnalyticsSignals) b { color: #172033 !important; }
+:root[data-theme="light"] :is(.accountsRecentPaymentsPanel, .collectionsPanel, .accountBreakdown, .accountsScheduleTableWrap, .reportsAnalyticsTable) {
+  background: #fff !important;
+  border-color: #dceaff !important;
+  box-shadow: 0 10px 28px rgba(31, 77, 154, .07) !important;
+}
+:root[data-theme="light"] :is(.accountsWorkspace .paymentTable, .accountsWorkspace .receivablesTable, .accountsWorkspace .clientLedgerTable) :is(thead tr, th) {
+  background: #f5faff !important;
+  color: #65738a !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] :is(.accountsWorkspace .paymentTable, .accountsWorkspace .receivablesTable, .accountsWorkspace .clientLedgerTable) :is(tbody tr, tbody tr:nth-child(even), tbody td) {
+  background: #fff !important;
+  color: #172033 !important;
+  border-color: #e5edf8 !important;
+  box-shadow: none !important;
+}
+:root[data-theme="light"] :is(.accountsWorkspace .paymentTable, .accountsWorkspace .receivablesTable, .accountsWorkspace .clientLedgerTable) tbody tr:hover,
+:root[data-theme="light"] :is(.accountsWorkspace .paymentTable, .accountsWorkspace .receivablesTable, .accountsWorkspace .clientLedgerTable) tbody tr:hover td {
+  background: #f7faff !important;
+  box-shadow: none !important;
+}
+:root[data-theme="light"] .paymentDashboardView .accountBreakdown :is(h2, b) { color: #172033 !important; }
+
+/* Client Ledger milestone cells are readable, light status cards—not dark tiles. */
+:root[data-theme="light"] :is(.clientLedgerView, .receivablesView) .accountPlan > span,
+:root[data-theme="light"] :is(.clientLedgerView, .receivablesView) .accountPlan > span.paid {
+  background: #f7faff !important;
+  border-color: #dceaff !important;
+  color: #34445f !important;
+}
+:root[data-theme="light"] :is(.clientLedgerView, .receivablesView) .accountPlan > span.paid {
+  background: #f0fbf6 !important;
+  border-color: #bce8d2 !important;
+}
+:root[data-theme="light"] :is(.clientLedgerView, .receivablesView) .accountPlan :is(small, b, .milestoneDue) { color: #34445f !important; }
+:root[data-theme="light"] :is(.clientLedgerView, .receivablesView) .accountPlan > span.paid b { color: #158553 !important; }
+
+/* Reports & Analytics: replace every legacy dark report card with the shared light system. */
+:root[data-theme="light"] .reportsAnalyticsView .reportsMetrics article,
+:root[data-theme="light"] .reportsAnalyticsView .reportsMetrics .accountReportMonth,
+:root[data-theme="light"] .reportsAnalyticsView .accountBreakdown,
+:root[data-theme="light"] .reportsAnalyticsView .reportsAnalyticsTable {
+  background: #fff !important;
+  border-color: #dceaff !important;
+  box-shadow: 0 10px 28px rgba(31, 77, 154, .07) !important;
+}
+:root[data-theme="light"] .reportsAnalyticsView :is(.reportsMetrics article, .reportsMetrics .accountReportMonth)::after { opacity: .2; }
+:root[data-theme="light"] .reportsAnalyticsView :is(.reportsMetrics article, .reportsMetrics .accountReportMonth) :is(span, strong) { color: #172033 !important; }
+:root[data-theme="light"] .reportsAnalyticsView .accountReportMonth input {
+  background: #fff !important;
+  color: #172033 !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] .reportsAnalyticsView :is(.accountBreakdownTitle, .reportsAnalyticsTableHead) {
+  background: #f5faff !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] .reportsAnalyticsView :is(.accountBreakdownTitle h2, .reportsAnalyticsTableHead h2, .reportsBreakdown .reportBreakdownRow > span, .reportsBreakdown .reportBreakdownRow > b) { color: #172033 !important; }
+:root[data-theme="light"] .reportsAnalyticsView :is(.accountBreakdownTitle > span, .reportsAnalyticsTableHead > span) {
+  background: #eef5ff !important;
+  color: #246bfd !important;
+  border-color: #cfe2ff !important;
+}
+:root[data-theme="light"] .reportsAnalyticsView .reportsBreakdown .reportBreakdownRow:hover { background: #f7faff !important; }
+:root[data-theme="light"] .reportsAnalyticsView .reportsBreakdown .reportBreakdownRow small { color: #65738a !important; }
+:root[data-theme="light"] .reportsAnalyticsView .reportsBreakdown .reportBreakdownRow > em { background: #e6eefb !important; }
+:root[data-theme="light"] .reportsAnalyticsView .reportsBreakdown .reportBreakdownRow > em > u { background: linear-gradient(90deg, #246bfd, #19a7f2) !important; }
+:root[data-theme="light"] .reportsAnalyticsView :is(.reportPaymentType, .reportPaymentMode, .reportPaymentStatus) {
+  background: #f7faff !important;
+  color: #34445f !important;
+  border-color: #dceaff !important;
+}
+
+/* Post Production keeps its urgency signals, but moves from dark-gold to a clear light command centre. */
+:root[data-theme="light"] .productionWorkspace {
+  background:
+    radial-gradient(circle at 92% 2%, rgba(25,167,242,.10), transparent 24rem),
+    radial-gradient(circle at 18% 30%, rgba(118,87,255,.06), transparent 21rem),
+    #f8fbff;
+}
+:root[data-theme="light"] .productionCommandDeck {
+  background:
+    radial-gradient(circle at 90% 18%, rgba(25,167,242,.22), transparent 12rem),
+    radial-gradient(circle at 70% 120%, rgba(118,87,255,.13), transparent 17rem),
+    linear-gradient(135deg, #fff, #eff7ff) !important;
+  border-color: #dceaff !important;
+  box-shadow: 0 14px 34px rgba(31,77,154,.10) !important;
+}
+:root[data-theme="light"] .productionDeckCopy small,
+:root[data-theme="light"] .productionFocusPanel .panelHead small { color: #246bfd !important; }
+:root[data-theme="light"] .productionDeckCopy h2 { color: #172033 !important; }
+:root[data-theme="light"] .productionDeckCopy p { color: #65738a !important; }
+:root[data-theme="light"] .productionDeckSignals span {
+  background: rgba(255,255,255,.85) !important;
+  border-color: #cfe2ff !important;
+  color: #65738a !important;
+  box-shadow: 0 5px 12px rgba(31,77,154,.06);
+}
+:root[data-theme="light"] .productionDeckSignals b { color: #172033 !important; }
+:root[data-theme="light"] .productionDeckSignals .attention { border-color: #ffc8cd !important; color: #b94854 !important; }
+:root[data-theme="light"] .productionDeckSignals .attention b { color: #c73f4e !important; }
+:root[data-theme="light"] .productionDeckSignals .clear { border-color: #bce8d2 !important; color: #158553 !important; }
+:root[data-theme="light"] .productionDeckSignals .clear b { color: #158553 !important; }
+:root[data-theme="light"] .productionDeckActions button {
+  background: #fff !important;
+  color: #246bfd !important;
+  border-color: #cfe2ff !important;
+}
+:root[data-theme="light"] .productionDeckActions button:hover { background: #f1f6ff !important; border-color: #9fc2ff !important; }
+:root[data-theme="light"] .productionAlerts button {
+  background: #fff7f8 !important;
+  border-color: #ffc8cd !important;
+  border-left-color: #ef5b67 !important;
+  color: #9b3542 !important;
+  box-shadow: 0 6px 16px rgba(182, 62, 78, .07);
+}
+:root[data-theme="light"] .productionAlerts button:last-child {
+  background: #fffaf0 !important;
+  border-color: #ffe1a8 !important;
+  border-left-color: #f6a623 !important;
+  color: #9a6712 !important;
+}
+:root[data-theme="light"] :is(.productionMetrics article, .productionFocusPanel, .productionOverduePanel, .productionDeliveryPanel, .editQueuePanel) {
+  background: #fff !important;
+  border-color: #dceaff !important;
+  box-shadow: 0 10px 28px rgba(31,77,154,.07) !important;
+}
+:root[data-theme="light"] .productionMetrics article { border-top: 3px solid #246bfd !important; }
+:root[data-theme="light"] .productionMetrics article:nth-child(3n + 2) { border-top-color: #7657ff !important; }
+:root[data-theme="light"] .productionMetrics article:nth-child(3n) { border-top-color: #22b573 !important; }
+:root[data-theme="light"] .productionMetrics button {
+  background: linear-gradient(145deg, #fff, #f7fbff) !important;
+  color: #172033 !important;
+  border: 1px solid #dceaff !important;
+  border-top: 3px solid #246bfd !important;
+  box-shadow: 0 9px 24px rgba(31,77,154,.07) !important;
+}
+:root[data-theme="light"] .productionMetrics button:nth-child(3n + 2) { border-top-color: #7657ff !important; }
+:root[data-theme="light"] .productionMetrics button:nth-child(3n) { border-top-color: #22b573 !important; }
+:root[data-theme="light"] .productionMetrics button:nth-child(3) { border-top-color: #ef5b67 !important; }
+:root[data-theme="light"] .productionMetrics button :is(span, strong, small) { color: #172033 !important; }
+:root[data-theme="light"] .productionMetrics button small { color: #65738a !important; }
+:root[data-theme="light"] :is(.productionTable, .productionActivityTable) :is(thead tr, th) {
+  background: #f5faff !important;
+  color: #65738a !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] :is(.productionTable, .productionActivityTable) :is(tbody tr, tbody tr:nth-child(even), tbody td) {
+  background: #fff !important;
+  color: #172033 !important;
+  border-color: #e5edf8 !important;
+  box-shadow: none !important;
+}
+:root[data-theme="light"] :is(.productionTable, .productionActivityTable) tbody tr:hover,
+:root[data-theme="light"] :is(.productionTable, .productionActivityTable) tbody tr:hover td { background: #f7faff !important; box-shadow: none !important; }
+
+/* Administration and settings retain their controls while gaining the shared clean command-centre finish. */
+:root[data-theme="light"] .adminWorkspace,
+:root[data-theme="light"] :is(.notificationsWorkspace, .backupWorkspace, .rateLimitWorkspace, .shortcutsWorkspace) {
+  background:
+    radial-gradient(circle at 90% 2%, rgba(25,167,242,.09), transparent 22rem),
+    radial-gradient(circle at 15% 28%, rgba(118,87,255,.055), transparent 20rem),
+    #f8fbff;
+}
+:root[data-theme="light"] .adminMetrics article {
+  background: linear-gradient(145deg, #fff, #f7fbff) !important;
+  border-color: #dceaff !important;
+  border-top: 3px solid #246bfd !important;
+  box-shadow: 0 9px 24px rgba(31,77,154,.07) !important;
+}
+:root[data-theme="light"] .adminMetrics article:nth-child(2) { border-top-color: #7657ff !important; }
+:root[data-theme="light"] .adminMetrics article:nth-child(3) { border-top-color: #f6a623 !important; }
+:root[data-theme="light"] .adminMetrics article:nth-child(4) { border-top-color: #22b573 !important; }
+:root[data-theme="light"] :is(.adminUsersPanel, .adminAuditPanel, .permissionMatrix, .rateLimitStat, .rateLimitBucket, .shortcutTile, .shortcutsHero, .backupRestoreSummary) {
+  background: #fff !important;
+  border-color: #dceaff !important;
+  box-shadow: 0 10px 28px rgba(31,77,154,.07) !important;
+}
+:root[data-theme="light"] :is(.adminUsersTable, .adminAuditTable, .auditTable) :is(thead tr, th) {
+  background: #f5faff !important;
+  color: #65738a !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] :is(.adminUsersTable, .adminAuditTable, .auditTable) :is(tbody tr, tbody tr:nth-child(even), tbody td) {
+  background: #fff !important;
+  color: #172033 !important;
+  border-color: #e5edf8 !important;
+}
+:root[data-theme="light"] :is(.adminUsersTable, .adminAuditTable, .auditTable) tbody tr:hover,
+:root[data-theme="light"] :is(.adminUsersTable, .adminAuditTable, .auditTable) tbody tr:hover td { background: #f7faff !important; }
+:root[data-theme="light"] .permissionMatrix header { background: #f5faff !important; border-color: #dceaff !important; }
+:root[data-theme="light"] .permissionRow { border-color: #e5edf8 !important; }
+:root[data-theme="light"] .permissionChoices button { background: #fff !important; border-color: #dceaff !important; color: #34445f !important; }
+:root[data-theme="light"] .permissionChoices button.selected.read { background: #eef5ff !important; color: #246bfd !important; }
+:root[data-theme="light"] .permissionChoices button.selected.full { background: #f0fbf6 !important; color: #158553 !important; }
+:root[data-theme="light"] :is(.rateLimitStat, .rateLimitBucket, .shortcutTile) { border-top: 3px solid #246bfd !important; }
+:root[data-theme="light"] :is(.rateLimitStat, .rateLimitBucket, .shortcutTile):nth-child(3n + 2) { border-top-color: #7657ff !important; }
+:root[data-theme="light"] :is(.rateLimitStat, .rateLimitBucket, .shortcutTile):nth-child(3n) { border-top-color: #22b573 !important; }
+:root[data-theme="light"] .shortcutsHero > div { background: #f5faff !important; border-color: #dceaff !important; }
+:root[data-theme="light"] .backupBannerInfo { background: #eef5ff !important; color: #246bfd !important; border-color: #cfe2ff !important; }
+
+/* Remaining Post Production workspaces: one consistent light workflow language. */
+:root[data-theme="light"] :is(.editQueuePanel, .productionOverduePanel, .productionActivityPanel, .productionDeliveryPanel) {
+  background: #fff !important;
+  border-color: #dceaff !important;
+  box-shadow: 0 10px 28px rgba(31,77,154,.08) !important;
+}
+:root[data-theme="light"] :is(.editQueueOverview, .productionOverdueHero, .productionActivityHero, .productionDeliveryHero) {
+  background:
+    radial-gradient(circle at 90% 18%, rgba(25,167,242,.18), transparent 12rem),
+    linear-gradient(135deg, #fff, #eff7ff) !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] :is(.editQueueOverview, .productionOverdueHero, .productionActivityHero, .productionDeliveryHero) :is(small, h2, h3, p) { color: #172033 !important; }
+:root[data-theme="light"] :is(.editQueueOverview, .productionOverdueHero, .productionActivityHero, .productionDeliveryHero) small,
+:root[data-theme="light"] :is(.editQueueOverview, .productionOverdueHero, .productionActivityHero, .productionDeliveryHero) p { color: #65738a !important; }
+:root[data-theme="light"] :is(.productionOverdueStats, .productionActivityStats, .productionDeliveryStats, .editQueueStats) span {
+  background: rgba(255,255,255,.86) !important;
+  border-color: #cfe2ff !important;
+  color: #65738a !important;
+  box-shadow: 0 5px 12px rgba(31,77,154,.06);
+}
+:root[data-theme="light"] :is(.productionOverdueStats, .productionActivityStats, .productionDeliveryStats, .editQueueStats) b { color: #172033 !important; }
+:root[data-theme="light"] .editQueueStage {
+  background: #f7faff !important;
+  border-color: #dceaff !important;
+  color: #34445f !important;
+}
+:root[data-theme="light"] .editQueueStage :is(small, strong, b) { color: #34445f !important; }
+:root[data-theme="light"] .editQueueTable,
+:root[data-theme="light"] .editQueueTable tbody,
+:root[data-theme="light"] .editQueueTable tbody tr,
+:root[data-theme="light"] .editQueueTable tbody tr:nth-child(even),
+:root[data-theme="light"] .editQueueTable tbody td {
+  background: #fff !important;
+  color: #172033 !important;
+  border-color: #e5edf8 !important;
+}
+:root[data-theme="light"] .editQueueTable :is(thead tr, th) { background: #f5faff !important; color: #65738a !important; border-color: #dceaff !important; }
+:root[data-theme="light"] .editQueueTable tbody tr:hover,
+:root[data-theme="light"] .editQueueTable tbody tr:hover td { background: #f7faff !important; }
+:root[data-theme="light"] .editQueueTable :is(.editQueueWorkflow, .editQueueEditor, .editQueueEvent) {
+  background: #f7faff !important;
+  color: #34445f !important;
+  border-color: #dceaff !important;
+}
+:root[data-theme="light"] :is(.editQueuePanel, .productionOverduePanel, .productionDeliveryPanel) .productionRowActions button,
+:root[data-theme="light"] .editQueueTable button {
+  background: #fff !important;
+  color: #246bfd !important;
+  border-color: #cfe2ff !important;
+}
+:root[data-theme="light"] .productionActivityPanel .productionActivityType {
+  background: #eef5ff !important;
+  color: #246bfd !important;
+  border-color: #cfe2ff !important;
+}
+:root[data-theme="light"] .nextShootsTable th { background: #fff; color: #4f5563; }
+:root[data-theme="light"] .nextShootsTable .shootDateCard,
+:root[data-theme="light"] .nextShootsTable .statusPill {
+  border-color: #e1e4ea; background: #fff; color: #22252d; box-shadow: none;
+}
+:root[data-theme="light"] .nextShootsTable .shootDateCard :is(span, b, small),
+:root[data-theme="light"] .nextShootsTable .shootClient :is(b, small),
+:root[data-theme="light"] .nextShootsTable .shootVenue :is(b, small),
+:root[data-theme="light"] .nextShootsTable .coverageMeter span,
+:root[data-theme="light"] .nextShootsTable .statusPill { color: #22252d; }
+:root[data-theme="light"] .nextShootsTable .shootNumber { color: #626a76; }
+:root[data-theme="light"] .nextShootsTable .coverageMeter i { background: #eceef2; }
+:root[data-theme="light"] .nextShootsTable .coverageMeter i em { background: #747b86; }
+:root[data-theme="light"] .nextShootsTable .statusPill i { color: #747b86; }
+/* Lenspire Command Rail — full-height brand navigation */
+@media (min-width: 901px) {
+  :root[data-theme="light"] .shell:not(.sidebarHidden) {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+
+  :root[data-theme="light"] .shell:not(.sidebarHidden) > main {
+    margin-left: 260px;
+  }
+
+  :root[data-theme="light"] .shell:not(.sidebarHidden) .sidebarToggle {
+    left: 232px;
+  }
+}
+
+:root[data-theme="light"] .shell aside {
+  isolation: isolate;
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 40;
+  width: 260px;
+  min-width: 260px;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  color: #f8fbff;
+  background:
+    radial-gradient(250px 220px at 115% 10%, rgb(112 151 255 / 58%), transparent 70%),
+    radial-gradient(220px 200px at -26% 73%, rgb(104 229 255 / 25%), transparent 72%),
+    linear-gradient(165deg, #25599b 0%, #214b8a 43%, #193a76 100%);
+  border-right: 1px solid rgb(174 211 255 / 36%);
+  box-shadow: 14px 0 36px rgb(19 60 127 / 15%);
+}
+
+:root[data-theme="light"] .shell aside::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 250px;
+  height: 250px;
+  right: -142px;
+  top: 168px;
+  border: 1px solid rgb(216 240 255 / 20%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 26px rgb(217 241 255 / 5%), 0 0 0 52px rgb(217 241 255 / 4%);
+}
+
+:root[data-theme="light"] .shell aside::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto;
+  height: 152px;
+  background: linear-gradient(180deg, rgb(255 255 255 / 13%), transparent);
+  pointer-events: none;
+}
+
+:root[data-theme="light"] .shell aside .brand {
+  position: relative;
+  flex: 0 0 116px;
+  min-height: 116px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 22px 17px 18px;
+  border-bottom: 1px solid rgb(229 244 255 / 18%);
+}
+
+:root[data-theme="light"] .studioMark {
+  flex: 0 0 57px;
+  width: 57px;
+  height: 57px;
+  padding: 7px;
+  border: 1px solid rgb(255 255 255 / 42%);
+  border-radius: 19px;
+  background: linear-gradient(145deg, rgb(255 255 255 / 31%), rgb(207 228 255 / 10%));
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / 30%), 0 10px 24px rgb(13 44 106 / 28%);
+}
+
+:root[data-theme="light"] .studioMark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+:root[data-theme="light"] .studioIdentity {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+:root[data-theme="light"] .studioIdentity b {
+  overflow: hidden;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -.035em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:root[data-theme="light"] .studioIdentity small {
+  color: rgb(226 241 255 / 88%);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+:root[data-theme="light"] .shell aside nav {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 17px 13px 14px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+:root[data-theme="light"] .shell aside nav::-webkit-scrollbar { display: none; }
+
+:root[data-theme="light"] .navGroupCard {
+  position: relative;
+  display: grid;
+  gap: 5px;
+  padding-top: 21px;
+}
+
+:root[data-theme="light"] .navGroupCard::before {
+  content: "STUDIO WORKSPACE";
+  position: absolute;
+  top: 0;
+  left: 11px;
+  color: rgb(215 237 255 / 72%);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .14em;
+}
+
+:root[data-theme="light"] .navTopItem,
+:root[data-theme="light"] .navGroupLabel,
+:root[data-theme="light"] .navUtility button,
+:root[data-theme="light"] .navSubmenu button {
+  position: relative;
+  min-height: 43px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  color: rgb(245 250 255 / 92%);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  transition: transform .18s ease, background .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+:root[data-theme="light"] .navTopItem:hover,
+:root[data-theme="light"] .navGroupLabel:hover,
+:root[data-theme="light"] .navUtility button:hover,
+:root[data-theme="light"] .navSubmenu button:hover {
+  transform: translateX(2px);
+  background: rgb(255 255 255 / 12%);
+  border-color: rgb(238 248 255 / 15%);
+}
+
+:root[data-theme="light"] .navTopItem.active,
+:root[data-theme="light"] .navGroup.groupActive > .navGroupLabel.direct,
+:root[data-theme="light"] .navSubmenu button.active,
+:root[data-theme="light"] .navUtility button.active {
+  color: #fff;
+  border-color: rgb(224 239 255 / 28%);
+  background: linear-gradient(105deg, #4a8dff, #6874ff 58%, #8867ef);
+  box-shadow: 0 9px 20px rgb(17 52 141 / 31%), inset 0 1px 0 rgb(255 255 255 / 25%);
+}
+
+:root[data-theme="light"] .navTopItem.active::after,
+:root[data-theme="light"] .navSubmenu button.active::after,
+:root[data-theme="light"] .navUtility button.active::after {
+  content: "";
+  position: absolute;
+  right: 11px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px rgb(255 255 255 / 85%);
+}
+
+:root[data-theme="light"] .navIcon,
+:root[data-theme="light"] .navGroupLabel i {
+  display: inline-grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  flex: 0 0 29px;
+  color: #e7f4ff;
+  border: 1px solid rgb(238 248 255 / 14%);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 11%);
+}
+
+:root[data-theme="light"] .navTopItem.active .navIcon,
+:root[data-theme="light"] .navSubmenu button.active .navIcon,
+:root[data-theme="light"] .navUtility button.active .navIcon {
+  color: #fff;
+  border-color: rgb(255 255 255 / 24%);
+  background: rgb(255 255 255 / 16%);
+}
+
+:root[data-theme="light"] .navGroupLabel b {
+  color: rgb(224 241 255 / 70%);
+  font-size: 15px;
+  transition: transform .18s ease;
+}
+
+:root[data-theme="light"] .navGroup.open > .navGroupLabel b { transform: rotate(180deg); }
+
+:root[data-theme="light"] .navGroup.open > .navGroupLabel,
+:root[data-theme="light"] .navGroup.groupActive > .navGroupLabel:not(.direct) {
+  background: rgb(255 255 255 / 8%);
+}
+
+:root[data-theme="light"] .navSubmenu {
+  margin: 3px 0 4px 14px;
+  padding: 5px 0 5px 13px;
+  border-left: 1px solid rgb(220 240 255 / 22%);
+}
+
+:root[data-theme="light"] .navSubmenu button {
+  min-height: 38px;
+  margin: 2px 0;
+  padding-left: 8px;
+  font-size: 11px;
+}
+
+:root[data-theme="light"] .navSubmenu .navIcon {
+  width: 25px;
+  height: 25px;
+  flex-basis: 25px;
+  border-radius: 8px;
+}
+
+:root[data-theme="light"] .navUtility {
+  display: grid;
+  gap: 5px;
+  padding-top: 11px;
+  border-top: 1px solid rgb(228 244 255 / 16%);
+}
+
+:root[data-theme="light"] .studioSidebarNote {
+  position: relative;
+  flex: 0 0 auto;
+  margin: 0 13px 12px;
+  padding: 15px 15px 13px;
+  overflow: hidden;
+  color: #fff;
+  border: 1px solid rgb(229 244 255 / 24%);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgb(129 205 255 / 21%), rgb(141 112 255 / 20%));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 14%), 0 10px 20px rgb(15 47 111 / 16%);
+}
+
+:root[data-theme="light"] .studioSidebarNote::after {
+  content: "✦";
+  position: absolute;
+  right: 13px;
+  top: 8px;
+  color: rgb(208 239 255 / 70%);
+  font-size: 24px;
+}
+
+:root[data-theme="light"] .studioSidebarNote span {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.16;
+  letter-spacing: -.025em;
+}
+
+:root[data-theme="light"] .studioSidebarNote small {
+  display: block;
+  max-width: 170px;
+  margin-top: 8px;
+  color: rgb(222 241 255 / 82%);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+:root[data-theme="light"] .profile {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 76px;
+  margin: 0;
+  padding: 12px 14px;
+  color: #fff;
+  border-top: 1px solid rgb(227 244 255 / 20%);
+  background: rgb(9 41 99 / 19%);
+}
+
+:root[data-theme="light"] .profileAvatar {
+  width: 39px;
+  height: 39px;
+  flex: 0 0 39px;
+  border: 2px solid rgb(227 245 255 / 55%);
+  box-shadow: 0 4px 12px rgb(11 44 103 / 26%);
+}
+
+:root[data-theme="light"] .profileIdentity { min-width: 0; }
+:root[data-theme="light"] .profileIdentity b { color: #fff; font-size: 11px; }
+:root[data-theme="light"] .profileIdentity small,
+:root[data-theme="light"] .profileIdentity time { color: rgb(219 239 255 / 78%); }
+:root[data-theme="light"] .profileIdentity small i { background: #65e7ac; box-shadow: 0 0 0 3px rgb(101 231 172 / 13%); }
+
+:root[data-theme="light"] .profilePower {
+  width: 31px;
+  height: 31px;
+  color: #eaf6ff;
+  border: 1px solid rgb(235 248 255 / 21%);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 10%);
+}
+
+:root[data-theme="light"] .profilePower:hover {
+  color: #fff;
+  background: rgb(255 255 255 / 19%);
+}
+
+/* Command rail readability pass: colorful icons and high-contrast labels. */
+:root[data-theme="light"] .navTopItem,
+:root[data-theme="light"] .navGroupLabel,
+:root[data-theme="light"] .navUtility button,
+:root[data-theme="light"] .navSubmenu button {
+  color: #f8fbff;
+  text-shadow: 0 1px 1px rgb(10 39 92 / 18%);
+}
+
+:root[data-theme="light"] .navTopItem,
+:root[data-theme="light"] .navGroupLabel,
+:root[data-theme="light"] .navUtility button {
+  min-height: 46px;
+  padding-right: 10px;
+  background: rgb(255 255 255 / 5%);
+}
+
+:root[data-theme="light"] .navTopItem:hover,
+:root[data-theme="light"] .navGroupLabel:hover,
+:root[data-theme="light"] .navUtility button:hover,
+:root[data-theme="light"] .navGroup.open > .navGroupLabel,
+:root[data-theme="light"] .navGroup.groupActive > .navGroupLabel:not(.direct) {
+  color: #fff;
+  background: rgb(255 255 255 / 16%);
+  border-color: rgb(240 248 255 / 24%);
+}
+
+:root[data-theme="light"] .navGroupCard > .navTopItem .navIcon { color: #fff; background: linear-gradient(135deg, #48a5ff, #526bff); }
+:root[data-theme="light"] .navGroup:nth-child(2) .navGroupLabel i { color: #fff; background: linear-gradient(135deg, #8e72ff, #bd67fa); }
+:root[data-theme="light"] .navGroup:nth-child(3) .navGroupLabel i { color: #fff; background: linear-gradient(135deg, #16c9c1, #2389eb); }
+:root[data-theme="light"] .navGroup:nth-child(4) .navGroupLabel i { color: #fff; background: linear-gradient(135deg, #ffb443, #f67a38); }
+:root[data-theme="light"] .navGroup:nth-child(5) .navGroupLabel i { color: #fff; background: linear-gradient(135deg, #f46db0, #896aff); }
+:root[data-theme="light"] .navGroup:nth-child(6) .navGroupLabel i { color: #fff; background: linear-gradient(135deg, #22bd89, #25a6c9); }
+:root[data-theme="light"] .navGroup:nth-child(7) .navGroupLabel i { color: #fff; background: linear-gradient(135deg, #7b9aff, #4e65c7); }
+
+:root[data-theme="light"] .navGroupLabel i,
+:root[data-theme="light"] .navIcon {
+  box-shadow: 0 5px 12px rgb(11 42 107 / 22%);
+}
+
+:root[data-theme="light"] .navGroupLabel span,
+:root[data-theme="light"] .navTopItem > span:last-child,
+:root[data-theme="light"] .navUtility button > span:last-child {
+  color: inherit;
+  opacity: 1;
+}
+
+:root[data-theme="light"] .navTopItem.active,
+:root[data-theme="light"] .navGroup.groupActive > .navGroupLabel.direct,
+:root[data-theme="light"] .navSubmenu button.active,
+:root[data-theme="light"] .navUtility button.active {
+  font-weight: 800;
+  background: linear-gradient(105deg, #2c91ff, #6570ff 57%, #9b5eea);
+  box-shadow: 0 10px 23px rgb(17 52 141 / 42%), inset 0 1px 0 rgb(255 255 255 / 30%);
+}
+
+/* Let the desktop navigation occupy the command rail from top to bottom. */
+@media (min-width: 901px) {
+  :root[data-theme="light"] .shell aside nav {
+    gap: 10px;
+    padding-top: 19px;
+    padding-bottom: 16px;
+  }
+
+  :root[data-theme="light"] .navGroupCard {
+    flex: 1 1 auto;
+    align-content: start;
+    row-gap: 8px;
+    grid-auto-rows: min-content;
+    min-height: 0;
+  }
+
+  :root[data-theme="light"] .navTopItem,
+  :root[data-theme="light"] .navGroupLabel,
+  :root[data-theme="light"] .navUtility button {
+    min-height: 61px;
+    border-radius: 17px;
+    font-size: 14px;
+  }
+
+  :root[data-theme="light"] .navIcon,
+  :root[data-theme="light"] .navGroupLabel i {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    border-radius: 13px;
+  }
+
+  :root[data-theme="light"] .navSubmenu {
+    margin-top: 5px;
+    margin-bottom: 6px;
+  }
+
+  :root[data-theme="light"] .navSubmenu button {
+    min-height: 43px;
+    font-size: 12px;
+  }
 }

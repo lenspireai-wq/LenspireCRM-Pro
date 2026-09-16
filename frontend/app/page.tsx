@@ -112,9 +112,10 @@ function Login({
   authenticated: (owner: boolean) => void;
 }) {
   useLayoutEffect(() => {
-    document.documentElement.dataset.theme = "dark";
-    document.documentElement.style.colorScheme = "dark";
-    window.localStorage.setItem("lenspire-theme", "dark");
+    // Keep authentication visually continuous with the primary CRM workspace.
+    document.documentElement.dataset.theme = "light";
+    document.documentElement.style.colorScheme = "light";
+    window.localStorage.setItem("lenspire-theme", "light");
   }, []);
 
   const setSession = useAuthStore((s) => s.setSession),
@@ -486,8 +487,8 @@ export default function Home() {
     <div className={`shell ${sidebarHidden ? "sidebarHidden" : ""}`}>
       <aside aria-hidden={sidebarHidden ? true : undefined}>
         <div className="brand">
-          <span className="studioMark" aria-hidden="true"><img src="/ankit-studios-logo.png" alt="" /></span>
-          <span className="studioIdentity"><b>Ankit Studios</b><small>Powered by LenspireCRM</small></span>
+          <span className="studioMark" aria-hidden="true"><img src="/lenspire-logo-premium.png" alt="" /></span>
+          <span className="studioIdentity"><b>LenspireCRM Pro</b><small>Studio command center</small></span>
         </div>
         <nav aria-label="Primary navigation">
           <div className="navGroupCard">
