@@ -73,7 +73,9 @@ function plan(
     const pendingPayment = entries.find(
       (entry) => entry.payment_type === types[index] && entry.status !== "Paid",
     );
-    const dueDate = scheduledDates[types[index]] || pendingPayment?.due_date || "";
+    // A studio-set milestone due date must take precedence over the suggested
+    // event date; otherwise an edited date is saved but never displayed.
+    const dueDate = pendingPayment?.due_date || scheduledDates[types[index]] || "";
     const remaining = Math.max(0, amount - covered);
     const today = new Date().toISOString().slice(0, 10);
     const upcomingLimit = new Date();
@@ -913,7 +915,9 @@ export default function AccountsWorkspace({
                                         amount: s.remaining,
                                         payment_type: s.label,
                                         status: "Pending",
-                                        due_date: "",
+                                        // Start with the suggested event date so it can
+                                        // be reviewed or adjusted instead of showing blank.
+                                        due_date: s.due_date || "",
                                       },
                                     )
                                   }
