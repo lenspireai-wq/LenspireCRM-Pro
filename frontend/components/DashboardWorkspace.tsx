@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
 import { CategoryBar, FunnelDoughnut, RevenueLineChart } from "@/components/charts";
 import { useAuthStore } from "@/stores/auth";
@@ -24,7 +24,7 @@ const formatINR = (value: string | number) => {
 };
 
 const MetricCard = ({ label, value, hint, accent }: { label: string; value: string; hint?: string; accent?: string }) => (
-  <div className="dashMetric">
+  <div className="dashMetric" style={{ "--metric-accent": accent || "#246bfd" } as CSSProperties}>
     <span className="dashMetricIcon" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         {label.startsWith("Revenue") || label === "Outstanding" ? <><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M3 10h18M7 15h4" /></> : label === "MoM Growth" ? <><path d="m4 17 6-6 4 3 6-9M15 5h5v5" /></> : label.startsWith("Leads") ? <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5" /></> : <><rect x="4" y="5" width="16" height="16" rx="3" /><path d="M8 3v4M16 3v4M4 11h16m-12 5 2 2 5-4" /></>}

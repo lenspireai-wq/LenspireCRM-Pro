@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { api } from "@/lib/api";
 import { useApiMutation, useApiQuery, queryKeys, queryClient } from "@/lib/query";
 import { useAuthStore } from "@/stores/auth";
@@ -53,6 +53,18 @@ type SalesTarget = {
   target_amount: string;
   target_bookings: number;
 };
+
+const SalesKpiIcon = ({ kind }: { kind: string }) => (
+  <span className="dashMetricIcon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      {kind === "green" ? <><path d="m5 12 4 4L19 6" /><circle cx="12" cy="12" r="9" /></>
+        : kind === "amber" ? <><path d="M12 3v9l4 2" /><circle cx="12" cy="12" r="9" /></>
+        : kind === "red" ? <><path d="M8 8l8 8m0-8-8 8" /><circle cx="12" cy="12" r="9" /></>
+        : kind === "purple" ? <><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M3 10h18M7 15h4" /></>
+        : <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-3-5" /></>}
+    </svg>
+  </span>
+);
 type Activity = {
   id: number;
   activity_type: string;
@@ -417,14 +429,18 @@ export default function SalesWorkspace({
             <button
               key={String(label)}
               className={`salesKpi ${kind}`}
+              style={{ "--metric-accent": "var(--sales-tone)" } as CSSProperties}
               onClick={() => {
                 setStatus(String(filter));
                 setViewSafe("Lead Management");
               }}
             >
-              <span>{label}</span>
-              <b>{value}</b>
-              <small>{sub}</small>
+              <SalesKpiIcon kind={String(kind)} />
+              <span className="dashMetricCopy">
+                <span className="dashMetricLabel">{label}</span>
+                <b>{value}</b>
+                <small>{sub}</small>
+              </span>
             </button>
           ))}
           </div>
@@ -434,7 +450,6 @@ export default function SalesWorkspace({
             <div className="panelTitle">
               <div>
                 <h3>Recent Leads</h3>
-                <p>Latest sales opportunities</p>
               </div>
             </div>
             <LeadTable leads={leads.slice(0, 15)} onOpen={setDetail} />

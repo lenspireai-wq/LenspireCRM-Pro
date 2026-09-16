@@ -93,6 +93,307 @@
   }
 }
 
+/* Sales Dashboard — an elevated command centre for the live pipeline. */
+:root[data-theme="light"] .mainSalesDashboard .salesPage {
+  padding: 4px clamp(14px, 2vw, 28px) 32px;
+  background:
+    radial-gradient(760px 380px at 100% -120px, rgb(142 114 255 / 9%), transparent 68%),
+    radial-gradient(640px 320px at 0% 0%, rgb(36 107 253 / 8%), transparent 67%);
+}
+:root[data-theme="light"] .mainSalesDashboard .salesDashboardSticky {
+  padding: 12px;
+  border: 1px solid #dceaff;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 66%);
+  box-shadow: 0 13px 30px rgb(39 91 164 / 7%);
+  backdrop-filter: blur(16px);
+}
+:root[data-theme="light"] .mainSalesDashboard .salesDashboardSticky .operationsTabs {
+  margin-bottom: 12px;
+  padding: 5px;
+  border: 1px solid #e1eaff;
+  border-radius: 13px;
+  background: rgb(246 250 255 / 86%);
+}
+:root[data-theme="light"] .mainSalesDashboard .salesDashboardSticky .operationsTabs button.active {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(115deg, #246bfd, #7657ff);
+  box-shadow: 0 7px 15px rgb(68 88 225 / 23%);
+}
+:root[data-theme="light"] .mainSalesDashboard .salesKpis {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+:root[data-theme="light"] .mainSalesDashboard .salesKpi {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 88px;
+  padding: 10px;
+  gap: 6px;
+  overflow: hidden;
+  border: 1px solid #dceaff;
+  border-top: 1px solid color-mix(in srgb, var(--metric-accent) 36%, #fff);
+  border-radius: 19px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--metric-accent) 19%, #fff) 0%, color-mix(in srgb, var(--metric-accent) 10%, #fff) 100%);
+  box-shadow: 0 10px 28px rgb(39 91 164 / 7%);
+}
+:root[data-theme="light"] .mainSalesDashboard .salesKpi::after {
+  content: "";
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  right: -38px;
+  bottom: -50px;
+  border: 1px solid color-mix(in srgb, var(--metric-accent) 26%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 19px color-mix(in srgb, var(--metric-accent) 4%, transparent);
+}
+:root[data-theme="light"] .mainSalesDashboard .salesKpi:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--metric-accent) 42%, #dceaff);
+  box-shadow: 0 18px 34px rgb(39 91 164 / 13%);
+}
+:root[data-theme="light"] .mainSalesDashboard .salesKpi .dashMetricIcon {
+  display: grid; place-items: center; width: 28px; height: 28px; flex: 0 0 28px;
+  border: 1px solid color-mix(in srgb, var(--metric-accent) 32%, #fff); border-radius: 9px;
+  background: color-mix(in srgb, var(--metric-accent) 18%, #fff); color: var(--metric-accent);
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--metric-accent) 15%, transparent);
+}
+:root[data-theme="light"] .mainSalesDashboard .salesKpi .dashMetricIcon svg { width: 15px; height: 15px; }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi .dashMetricCopy { min-width: 0; display: grid; gap: 2px; }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi .dashMetricLabel { color: #65738a; font: 650 10px/1.15 Inter, "Segoe UI", sans-serif; letter-spacing: .02em; }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi b { color: #172033; font: 750 clamp(14px, 1vw, 17px)/1.05 Inter, "Segoe UI", sans-serif; letter-spacing: -.04em; white-space: nowrap; }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi small { color: #65738a; font: 550 9px/1.15 Inter, "Segoe UI", sans-serif; }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi.blue { --sales-tone: #246bfd; }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi.green { --sales-tone: #22b573; }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi.amber { --sales-tone: #f6a623; }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi.red { --sales-tone: #ef6b73; }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi.purple { --sales-tone: #7657ff; }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi.blue { background: linear-gradient(145deg, #dcecff 0%, #edf6ff 100%); }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi.green { background: linear-gradient(145deg, #d9f5e7 0%, #edfdf4 100%); }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi.amber { background: linear-gradient(145deg, #fff0d6 0%, #fff9ed 100%); }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi.red { background: linear-gradient(145deg, #ffe3e8 0%, #fff3f5 100%); }
+:root[data-theme="light"] .mainSalesDashboard .salesKpi.purple { background: linear-gradient(145deg, #e9e3ff 0%, #f5f1ff 100%); }
+:root[data-theme="light"] .leadStatus.confirmed {
+  border-color: #22b573;
+  background: #22b573;
+  color: #fff;
+  box-shadow: 0 3px 8px rgb(34 181 115 / 22%);
+}
+/* The KPI controls are sticky. Keep their shell opaque so table rows never
+   show through them while the lead list scrolls underneath. */
+:root[data-theme="light"] .mainSalesDashboard .salesDashboardSticky {
+  isolation: isolate;
+  z-index: 40;
+  margin-bottom: 18px;
+  background: #f8fbff;
+  backdrop-filter: none;
+}
+:root[data-theme="light"] .mainSalesDashboard .salesDashboardGrid {
+  position: relative;
+  z-index: 1;
+  gap: 16px;
+  margin-top: 0;
+}
+
+/* Match the light workspace chrome: a quiet blue-to-lilac canvas, with color
+   reserved for navigation state rather than a dark decorative rail. */
+:root[data-theme="light"] .shell aside {
+  background:
+    radial-gradient(260px 150px at 90% -25%, rgb(118 87 255 / 13%), transparent 72%),
+    linear-gradient(112deg, #eef7ff 0%, #e5f3ff 52%, #f2eeff 100%);
+  border-right-color: #cfe2ff;
+}
+:root[data-theme="light"] .shell aside::before {
+  border-color: rgb(36 107 253 / 14%);
+  box-shadow: 0 0 0 24px rgb(36 107 253 / 3%), 0 0 0 52px rgb(118 87 255 / 3%);
+}
+:root[data-theme="light"] .shell aside .brand::after { color: #65738a; }
+:root[data-theme="light"] .shell aside nav button.navTopItem,
+:root[data-theme="light"] .shell aside nav .navGroupCard .navGroup button.navGroupLabel,
+:root[data-theme="light"] .shell aside nav .navSubmenu button,
+:root[data-theme="light"] .shell aside nav .navUtility button { color: #172033; }
+:root[data-theme="light"] .shell aside .navIcon {
+  color: #246bfd;
+  background: rgb(255 255 255 / 78%);
+  box-shadow: 0 3px 9px rgb(36 107 253 / 7%);
+}
+:root[data-theme="light"] .shell aside nav button:hover { color: #174ea6; }
+:root[data-theme="light"] .shell aside nav button:hover .navIcon { background: #ddecff; }
+:root[data-theme="light"] .shell aside nav button.navTopItem.active,
+:root[data-theme="light"] .shell aside .navGroup.groupActive .navGroupLabel,
+:root[data-theme="light"] .shell aside .navSubmenu button.active {
+  color: #174ea6;
+  background: linear-gradient(100deg, #dceeff, #ece6ff);
+  box-shadow: inset 3px 0 #246bfd, 0 7px 16px rgb(36 107 253 / 10%);
+}
+:root[data-theme="light"] .shell aside nav button.navTopItem.active .navIcon,
+:root[data-theme="light"] .shell aside .navGroup.groupActive .navGroupLabel .navIcon,
+:root[data-theme="light"] .shell aside .navSubmenu button.active .navIcon { color: #fff; background: #246bfd; }
+:root[data-theme="light"] .shell aside nav button.navTopItem.active::after,
+:root[data-theme="light"] .shell aside .navGroup.groupActive .navGroupLabel::after { background: #246bfd; box-shadow: 0 0 10px rgb(36 107 253 / 45%); }
+:root[data-theme="light"] .studioSidebarNote {
+  border-color: #cfe2ff;
+  background: rgb(255 255 255 / 60%);
+  box-shadow: inset 0 1px rgb(255 255 255 / 88%), 0 8px 20px rgb(36 107 253 / 6%);
+}
+:root[data-theme="light"] .studioSidebarNote > span { color: #174ea6; }
+:root[data-theme="light"] .studioSidebarNote small { color: #65738a; }
+:root[data-theme="light"] .profile { background: rgb(255 255 255 / 68%); border-color: #cfe2ff; }
+:root[data-theme="light"] .mainSalesDashboard .salesPanel {
+  border: 1px solid #dceaff;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 62%);
+  box-shadow: 0 11px 27px rgb(39 91 164 / 6%);
+  backdrop-filter: blur(12px);
+}
+:root[data-theme="light"] .mainSalesDashboard .salesPanel:hover { border-color: #c6ddff; box-shadow: 0 16px 31px rgb(39 91 164 / 10%); }
+:root[data-theme="light"] .mainSalesDashboard .panelTitle { border-bottom-color: #eaf1fb; }
+:root[data-theme="light"] .mainSalesDashboard .panelTitle h3 { color: #172033; font: 720 15px/1.2 Inter, "Segoe UI", sans-serif; letter-spacing: -.02em; }
+:root[data-theme="light"] .mainSalesDashboard .panelTitle p { color: #65738a; }
+:root[data-theme="light"] .mainSalesDashboard .pipelinePanel { background: radial-gradient(230px 160px at 100% 0%, rgb(118 87 255 / 13%), transparent 72%); }
+:root[data-theme="light"] .mainSalesDashboard .pipelineTotal b { color: #246bfd; }
+:root[data-theme="light"] .mainSalesDashboard .pipelineRow i { background: #e7effa; }
+:root[data-theme="light"] .mainSalesDashboard .pipelineRow em { border-radius: 99px; background: linear-gradient(90deg, #246bfd, #7657ff); }
+:root[data-theme="light"] .mainSalesDashboard .followPanel { background: radial-gradient(230px 160px at 100% 0%, rgb(34 181 115 / 13%), transparent 72%); }
+:root[data-theme="light"] .mainSalesDashboard .followRow { margin: 6px 10px; width: calc(100% - 20px); border: 1px solid #e4f0eb; border-radius: 12px; background: rgb(34 181 115 / 5%); }
+:root[data-theme="light"] .mainSalesDashboard .followRow:hover { background: rgb(34 181 115 / 10%); border-color: #bce9d2; }
+:root[data-theme="light"] .mainSalesDashboard .reportPanel { background: linear-gradient(145deg, rgb(255 255 255 / 74%), rgb(245 250 255 / 58%)); }
+
+@media (max-width: 900px) {
+  :root[data-theme="light"] .mainSalesDashboard .salesPage { padding: 4px 12px 24px; }
+  :root[data-theme="light"] .mainSalesDashboard .salesDashboardSticky {
+    padding: 9px;
+    margin-bottom: 14px;
+    border-radius: 16px;
+  }
+  :root[data-theme="light"] .mainSalesDashboard .salesKpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+  :root[data-theme="light"] .mainSalesDashboard .salesKpi { min-height: 82px; padding: 9px; gap: 5px; border-radius: 16px; }
+  :root[data-theme="light"] .mainSalesDashboard .salesKpi .dashMetricIcon { width: 26px; height: 26px; flex-basis: 26px; border-radius: 8px; }
+  :root[data-theme="light"] .mainSalesDashboard .salesKpi .dashMetricIcon svg { width: 14px; height: 14px; }
+  :root[data-theme="light"] .mainSalesDashboard .salesKpi b { font-size: 14px; }
+  :root[data-theme="light"] .mainSalesDashboard .salesKpi.purple b { font-size: 12px; }
+  :root[data-theme="light"] .mainSalesDashboard .salesKpi .dashMetricLabel { font-size: 9px; }
+  :root[data-theme="light"] .mainSalesDashboard .salesKpi:nth-child(5) { grid-column: span 2; }
+}
+
+/* Sales header — a concise, branded command banner. */
+:root[data-theme="light"] .mainSalesDashboard .workspaceChrome.salesChrome {
+  position: relative;
+  overflow: hidden;
+  min-height: 84px;
+  margin-bottom: 10px;
+  border-color: #cfe2ff;
+  background:
+    radial-gradient(260px 150px at 90% -25%, rgb(118 87 255 / 13%), transparent 72%),
+    linear-gradient(112deg, #eef7ff 0%, #e5f3ff 52%, #f2eeff 100%);
+  box-shadow: 0 11px 26px rgb(36 107 253 / 10%);
+}
+:root[data-theme="light"] .mainSalesDashboard .workspaceChrome.salesChrome::after {
+  content: "";
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  right: 18%;
+  top: -142px;
+  border: 1px solid rgb(36 107 253 / 15%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 24px rgb(36 107 253 / 4%), 0 0 0 50px rgb(118 87 255 / 3%);
+  pointer-events: none;
+}
+:root[data-theme="light"] .mainSalesDashboard .salesChrome .salesHeader { position: relative; z-index: 1; }
+:root[data-theme="light"] .mainSalesDashboard .salesChrome .salesHeader h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #172033;
+  font-size: clamp(19px, 2vw, 26px);
+  text-shadow: none;
+}
+:root[data-theme="light"] .mainSalesDashboard .salesChrome .salesHeader h1::before {
+  content: "↗";
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgb(36 107 253 / 18%);
+  border-radius: 11px;
+  background: rgb(255 255 255 / 68%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 78%);
+  color: #246bfd;
+  font-size: 18px;
+}
+:root[data-theme="light"] .mainSalesDashboard .salesChrome .salesHeader p { color: #65738a; font-size: 11px; }
+:root[data-theme="light"] .mainSalesDashboard .salesChrome .salesHeader .secondary {
+  min-height: 34px;
+  padding: 7px 11px;
+  color: #246bfd;
+  border-color: rgb(36 107 253 / 20%);
+  background: rgb(255 255 255 / 68%);
+  box-shadow: none;
+}
+:root[data-theme="light"] .mainSalesDashboard .salesChrome .salesHeader .secondary:hover { background: #fff; }
+:root[data-theme="light"] .mainSalesDashboard .salesChrome .chromeActions { position: relative; z-index: 1; }
+:root[data-theme="light"] .mainSalesDashboard .salesChrome .chromeActions :is(label, button) {
+  color: #246bfd;
+  border-color: rgb(36 107 253 / 18%);
+  background: rgb(255 255 255 / 66%);
+  box-shadow: none;
+}
+@media (max-width: 700px) {
+  :root[data-theme="light"] .mainSalesDashboard .workspaceChrome.salesChrome { min-height: 76px; border-radius: 16px; }
+  :root[data-theme="light"] .mainSalesDashboard .salesChrome .salesHeader h1 { font-size: 17px; }
+  :root[data-theme="light"] .mainSalesDashboard .salesChrome .salesHeader h1::before { width: 27px; height: 27px; border-radius: 9px; font-size: 15px; }
+}
+
+/* Main Dashboard header — match the clean light sales header treatment. */
+:root[data-theme="light"] .mainDashboard .workspaceChrome.dashboardChrome {
+  position: relative;
+  overflow: hidden;
+  min-height: 84px;
+  margin-bottom: 10px;
+  border-color: #cfe2ff;
+  background:
+    radial-gradient(260px 150px at 90% -25%, rgb(118 87 255 / 11%), transparent 72%),
+    linear-gradient(112deg, #eef7ff 0%, #e5f3ff 52%, #f2eeff 100%);
+  box-shadow: 0 11px 26px rgb(36 107 253 / 10%);
+}
+:root[data-theme="light"] .mainDashboard .workspaceChrome.dashboardChrome::after {
+  content: "";
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  right: 18%;
+  top: -142px;
+  border: 1px solid rgb(36 107 253 / 15%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 24px rgb(36 107 253 / 4%), 0 0 0 50px rgb(118 87 255 / 3%);
+  pointer-events: none;
+}
+:root[data-theme="light"] .mainDashboard .dashboardChrome .dashHeader,
+:root[data-theme="light"] .mainDashboard .dashboardChrome .dashSelect,
+:root[data-theme="light"] .mainDashboard .dashboardChrome .chromeActions { position: relative; z-index: 1; }
+:root[data-theme="light"] .mainDashboard .dashboardChrome .dashHeader h1 { color: #172033; }
+:root[data-theme="light"] .mainDashboard .dashboardChrome .dashHeader p,
+:root[data-theme="light"] .mainDashboard .dashboardChrome .dashHeader small,
+:root[data-theme="light"] .mainDashboard .dashboardChrome .dashSelect { color: #65738a; }
+:root[data-theme="light"] .mainDashboard .dashboardChrome .dashSelect select {
+  border-color: rgb(36 107 253 / 18%);
+  background: rgb(255 255 255 / 68%);
+  color: #246bfd;
+}
+:root[data-theme="light"] .mainDashboard .dashboardChrome .chromeActions :is(label, button) {
+  color: #246bfd;
+  border-color: rgb(36 107 253 / 18%);
+  background: rgb(255 255 255 / 66%);
+  box-shadow: none;
+}
+@media (max-width: 700px) {
+  :root[data-theme="light"] .mainDashboard .workspaceChrome.dashboardChrome { min-height: 76px; border-radius: 16px; }
+}
+
 /* Ankit Studios owns the studio workspace: show its supplied logo plainly at the rail top. */
 :root[data-theme="light"] .shell aside .brand.ankitSidebarBrand {
   flex: 0 0 130px;
@@ -1251,6 +1552,267 @@
 :root[data-theme="light"] :is(.primary, .loginSubmit, .billBtn.primary) { background: linear-gradient(135deg, #5544dc, #8058ef); box-shadow: 0 10px 21px rgb(84 68 220 / 27%); }
 :root[data-theme="light"] :is(.primary, .loginSubmit, .billBtn.primary):hover { background: linear-gradient(135deg, #4734cc, #7045e6); }
 
+/* Main Dashboard — a distinct executive view: composed, luminous and easy to scan. */
+:root[data-theme="light"] .mainDashboard {
+  background:
+    radial-gradient(900px 420px at 100% -120px, rgb(36 107 253 / 9%), transparent 65%),
+    radial-gradient(680px 340px at 5% 0%, rgb(25 167 242 / 7%), transparent 68%),
+    #f8fbff;
+}
+:root[data-theme="light"] .mainDashboard .dashboard {
+  gap: 20px;
+  padding: 4px clamp(16px, 2vw, 30px) 32px;
+}
+:root[data-theme="light"] .mainDashboard .dashMetrics {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+:root[data-theme="light"] .mainDashboard .dashMetric {
+  position: relative;
+  isolation: isolate;
+  min-height: 106px;
+  padding: 13px;
+  gap: 9px;
+  overflow: hidden;
+  border: 1px solid #dceaff;
+  border-top: 1px solid color-mix(in srgb, var(--metric-accent) 36%, #fff);
+  border-radius: 19px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--metric-accent) 12%, #fff) 0%, color-mix(in srgb, var(--metric-accent) 6%, #fff) 100%);
+  box-shadow: 0 10px 28px rgb(39 91 164 / 7%);
+}
+:root[data-theme="light"] .mainDashboard .dashMetric::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 110px;
+  height: 110px;
+  right: -52px;
+  bottom: -64px;
+  border: 1px solid color-mix(in srgb, var(--metric-accent) 26%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 19px color-mix(in srgb, var(--metric-accent) 4%, transparent);
+}
+:root[data-theme="light"] .mainDashboard .dashMetric:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--metric-accent) 42%, #dceaff);
+  box-shadow: 0 18px 34px rgb(39 91 164 / 13%);
+}
+:root[data-theme="light"] .mainDashboard .dashMetricIcon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border: 1px solid color-mix(in srgb, var(--metric-accent) 23%, #fff);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--metric-accent) 12%, #fff);
+  color: var(--metric-accent);
+  box-shadow: 0 7px 16px color-mix(in srgb, var(--metric-accent) 12%, transparent);
+}
+:root[data-theme="light"] .mainDashboard .dashMetricIcon svg { width: 20px; height: 20px; }
+:root[data-theme="light"] .mainDashboard .dashMetricCopy { min-width: 0; display: grid; gap: 5px; }
+:root[data-theme="light"] .mainDashboard .dashMetricLabel {
+  color: #65738a;
+  font: 650 11px/1.2 Inter, "Segoe UI", sans-serif;
+  letter-spacing: .025em;
+}
+:root[data-theme="light"] .mainDashboard .dashMetric strong {
+  color: #172033;
+  font: 750 clamp(15px, 1.1vw, 19px)/1.1 Inter, "Segoe UI", sans-serif;
+  letter-spacing: -.045em;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+:root[data-theme="light"] .mainDashboard .dashMetric small {
+  color: #65738a;
+  font: 550 10px/1.25 Inter, "Segoe UI", sans-serif;
+}
+:root[data-theme="light"] .mainDashboard .dashMetric:nth-child(1) { --metric-accent: #246bfd !important; }
+:root[data-theme="light"] .mainDashboard .dashMetric:nth-child(2) { --metric-accent: #22b573 !important; }
+:root[data-theme="light"] .mainDashboard .dashMetric:nth-child(3) { --metric-accent: #7657ff !important; }
+:root[data-theme="light"] .mainDashboard .dashMetric:nth-child(4) { --metric-accent: #f6a623 !important; }
+:root[data-theme="light"] .mainDashboard .dashMetric:nth-child(5) { --metric-accent: #19a7f2 !important; }
+:root[data-theme="light"] .mainDashboard .dashMetric:nth-child(6) { --metric-accent: #ef6b73 !important; }
+:root[data-theme="light"] .mainDashboard .dashGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+:root[data-theme="light"] .mainDashboard .dashCard {
+  min-height: 258px;
+  padding: 21px;
+  border: 1px solid #dceaff;
+  border-radius: 20px;
+  background: linear-gradient(150deg, #fff, #fbfdff);
+  box-shadow: 0 12px 30px rgb(39 91 164 / 7%);
+}
+:root[data-theme="light"] .mainDashboard .dashCard h2 {
+  color: #172033;
+  font: 700 16px/1.25 Inter, "Segoe UI", sans-serif;
+  letter-spacing: -.02em;
+}
+:root[data-theme="light"] .mainDashboard .dashCard h2::before {
+  width: 7px;
+  height: 16px;
+  margin-right: 10px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #246bfd, #19a7f2);
+  box-shadow: 0 3px 8px rgb(36 107 253 / 22%);
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(1),
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(2) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(1) {
+  border-color: #cbdfff;
+  background: radial-gradient(280px 180px at 100% 0%, rgb(25 167 242 / 14%), transparent 72%);
+  box-shadow: none;
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(2) {
+  border-color: #ddd4ff;
+  background: radial-gradient(260px 180px at 100% 0%, rgb(118 87 255 / 13%), transparent 70%);
+  box-shadow: none;
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(3),
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(4) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-shadow: none;
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(3) {
+  border-color: #bfead5;
+  background:
+    radial-gradient(260px 180px at 100% 0%, rgb(34 181 115 / 15%), transparent 70%),
+    radial-gradient(circle at 18px 18px, rgb(34 181 115 / 12%) 1px, transparent 1.5px);
+  background-size: auto, 17px 17px;
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(4) {
+  border-color: #ffe0b0;
+  background: radial-gradient(280px 180px at 100% 0%, rgb(246 166 35 / 16%), transparent 70%);
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(5),
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(6) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-shadow: none;
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(5) {
+  border-color: #ffd1d6;
+  background: radial-gradient(280px 190px at 100% 0%, rgb(239 107 115 / 15%), transparent 71%);
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(6) {
+  border-color: #c7e9ff;
+  background:
+    radial-gradient(260px 190px at 100% 0%, rgb(25 167 242 / 15%), transparent 70%),
+    linear-gradient(120deg, transparent 0 48%, rgb(36 107 253 / 4%) 48% 49%, transparent 49% 100%);
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(5)::after,
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(6)::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 166px;
+  height: 166px;
+  right: -84px;
+  bottom: -98px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: .14;
+  box-shadow: 0 0 0 22px currentColor;
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(5)::after { color: #ef6b73; }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(6)::after { color: #19a7f2; }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(5) h2::before { background: linear-gradient(#ef6b73, #f6a623); }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(6) h2::before { background: linear-gradient(#246bfd, #19a7f2); }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(5) .dashList { gap: 8px; }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(5) .dashList li {
+  padding: 10px 12px;
+  border: 1px solid rgb(239 107 115 / 17%);
+  border-radius: 12px;
+  background: rgb(239 107 115 / 7%);
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(5) .dashList li:hover {
+  border-color: rgb(239 107 115 / 30%);
+  background: rgb(239 107 115 / 11%);
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(6) .dashList { gap: 8px; }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(6) .dashList li {
+  padding: 10px 12px;
+  border: 1px solid rgb(25 167 242 / 18%);
+  border-radius: 12px;
+  background: rgb(25 167 242 / 7%);
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(6) .dashList li:hover {
+  border-color: rgb(25 167 242 / 31%);
+  background: rgb(25 167 242 / 11%);
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(3)::after,
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(4)::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 164px;
+  height: 164px;
+  right: -88px;
+  bottom: -94px;
+  border: 1px solid currentColor;
+  border-radius: 38% 62% 58% 42% / 46% 39% 61% 54%;
+  opacity: .15;
+  box-shadow: 0 0 0 22px currentColor;
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(3)::after { color: #22b573; }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(4)::after { color: #f6a623; }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(3) h2::before { background: linear-gradient(#22b573, #19a7f2); }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(4) h2::before { background: linear-gradient(#f6a623, #ef7e48); }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(1)::after,
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(2)::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 170px;
+  height: 170px;
+  right: -92px;
+  bottom: -102px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: .14;
+  box-shadow: 0 0 0 23px currentColor;
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(1)::after { color: #19a7f2; }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(2)::after { color: #7657ff; }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(1) h2::before { background: linear-gradient(#246bfd, #19a7f2); }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(2) h2::before { background: linear-gradient(#7657ff, #a98cff); }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(1) .dashChart,
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(2) .dashChart {
+  background: transparent;
+  filter: saturate(1.08);
+}
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(1) .dashChart canvas,
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(2) .dashChart canvas { background: transparent !important; }
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(4) .dashChart,
+:root[data-theme="light"] .mainDashboard .dashCard:nth-child(4) .dashChart canvas { background: transparent !important; }
+:root[data-theme="light"] .mainDashboard .dashList li { padding: 11px 0; border-bottom-color: #edf3fc; }
+:root[data-theme="light"] .mainDashboard .dashList li:hover { background: transparent; transform: none; }
+:root[data-theme="light"] .mainDashboard .dashList li strong { color: #172033; font-size: 13px; }
+:root[data-theme="light"] .mainDashboard .dashList li :is(span, small, em) { color: #65738a; }
+
+@media (max-width: 1250px) {
+  :root[data-theme="light"] .mainDashboard .dashMetrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  :root[data-theme="light"] .mainDashboard .dashboard { padding: 4px 12px 24px; gap: 14px; }
+  :root[data-theme="light"] .mainDashboard .dashMetrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  :root[data-theme="light"] .mainDashboard .dashMetric { min-height: 94px; padding: 11px; gap: 8px; border-radius: 16px; }
+  :root[data-theme="light"] .mainDashboard .dashMetricIcon { width: 36px; height: 36px; flex-basis: 36px; border-radius: 12px; }
+  :root[data-theme="light"] .mainDashboard .dashMetric strong { font-size: 15px; }
+  :root[data-theme="light"] .mainDashboard .dashMetric:nth-child(4) strong { font-size: 13px; }
+  :root[data-theme="light"] .mainDashboard .dashMetricLabel { font-size: 10px; }
+  :root[data-theme="light"] .mainDashboard .dashGrid { grid-template-columns: 1fr; gap: 12px; }
+  :root[data-theme="light"] .mainDashboard .dashCard { min-height: 225px; padding: 17px; border-radius: 17px; }
+}
+
 @media (max-width: 900px) {
   :root[data-theme="light"] .shell main { padding: 74px 16px 30px; }
 }
@@ -2230,6 +2792,34 @@
 
 :root[data-theme="light"] .navGroupCard > .navTopItem .navIcon { color: #fff; background: linear-gradient(135deg, #48a5ff, #526bff); }
 :root[data-theme="light"] .navGroup:nth-child(2) .navGroupLabel i { color: #fff; background: linear-gradient(135deg, #8e72ff, #bd67fa); }
+:root[data-theme="light"] .navGroup:nth-child(2) > .navGroupLabel {
+  border-color: rgb(189 103 250 / 18%);
+  background: linear-gradient(100deg, rgb(142 114 255 / 13%), rgb(189 103 250 / 7%));
+}
+:root[data-theme="light"] .navGroup:nth-child(2) > .navGroupLabel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 11px;
+  bottom: 11px;
+  width: 3px;
+  border-radius: 0 999px 999px 0;
+  background: linear-gradient(#bd67fa, #8e72ff);
+  box-shadow: 0 0 11px rgb(189 103 250 / 48%);
+}
+:root[data-theme="light"] .navGroup:nth-child(2).open > .navGroupLabel,
+:root[data-theme="light"] .navGroup:nth-child(2).groupActive > .navGroupLabel {
+  border-color: rgb(209 181 255 / 46%);
+  background: linear-gradient(105deg, rgb(142 114 255 / 34%), rgb(189 103 250 / 23%));
+  box-shadow: 0 9px 20px rgb(83 57 171 / 18%), inset 0 1px 0 rgb(255 255 255 / 16%);
+}
+:root[data-theme="light"] .navGroup:nth-child(2) .navSubmenu { border-left-color: rgb(202 158 255 / 43%); }
+:root[data-theme="light"] .navGroup:nth-child(2) .navSubmenu button:hover,
+:root[data-theme="light"] .navGroup:nth-child(2) .navSubmenu button.active {
+  color: #fff;
+  background: linear-gradient(100deg, rgb(142 114 255 / 41%), rgb(189 103 250 / 26%));
+  border-color: rgb(216 192 255 / 31%);
+}
 :root[data-theme="light"] .navGroup:nth-child(3) .navGroupLabel i { color: #fff; background: linear-gradient(135deg, #16c9c1, #2389eb); }
 :root[data-theme="light"] .navGroup:nth-child(4) .navGroupLabel i { color: #fff; background: linear-gradient(135deg, #ffb443, #f67a38); }
 :root[data-theme="light"] .navGroup:nth-child(5) .navGroupLabel i { color: #fff; background: linear-gradient(135deg, #f46db0, #896aff); }
