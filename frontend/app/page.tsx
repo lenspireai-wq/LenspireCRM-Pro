@@ -486,9 +486,8 @@ export default function Home() {
   return (
     <div className={`shell ${sidebarHidden ? "sidebarHidden" : ""}`}>
       <aside aria-hidden={sidebarHidden ? true : undefined}>
-        <div className="brand">
-          <span className="studioMark" aria-hidden="true"><img src="/lenspire-logo-premium.png" alt="" /></span>
-          <span className="studioIdentity"><b>LenspireCRM Pro</b><small>Studio command center</small></span>
+        <div className="brand ankitSidebarBrand">
+          <img className="ankitSidebarLogo" src="/ankit-studios-logo.png" alt="Ankit Studios" />
         </div>
         <nav aria-label="Primary navigation">
           <div className="navGroupCard">

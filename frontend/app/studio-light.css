@@ -92,6 +92,48 @@
     column-gap: 14px !important;
   }
 }
+
+/* Ankit Studios owns the studio workspace: show its supplied logo plainly at the rail top. */
+:root[data-theme="light"] .shell aside .brand.ankitSidebarBrand {
+  flex: 0 0 130px;
+  min-height: 130px;
+  justify-content: center;
+  padding: 8px 18px 10px;
+}
+
+:root[data-theme="light"] .ankitSidebarLogo {
+  display: block;
+  width: min(100%, 190px);
+  height: 112px;
+  object-fit: contain;
+  filter: drop-shadow(0 7px 10px rgb(7 29 74 / 28%));
+}
+
+:root[data-theme="light"] .shell aside .brand.ankitSidebarBrand {
+  display: grid;
+  place-items: center;
+}
+
+:root[data-theme="light"] .navGroupCard {
+  padding-top: 0;
+}
+
+:root[data-theme="light"] .navGroupCard::before {
+  content: none;
+}
+
+@media (max-width: 900px) {
+  :root[data-theme="light"] .shell aside .brand.ankitSidebarBrand {
+    flex: 0 0 126px;
+    min-height: 126px;
+    padding: 7px 12px 8px;
+  }
+
+  :root[data-theme="light"] .ankitSidebarLogo {
+    width: min(100%, 170px);
+    height: 108px;
+  }
+}
 :root[data-theme="light"] .loginHeroCopy h1 {
   color: var(--text-strong);
   font-family: Inter, "Segoe UI", sans-serif;
@@ -1194,8 +1236,9 @@
 }
 :root[data-theme="light"] .shell aside .brand { position: relative; z-index: 1; padding: 20px 18px 17px; }
 :root[data-theme="light"] .shell aside .brand::after {
-  content: "LENSPIRE COMMAND"; display: block; position: absolute; left: 19px; bottom: 7px;
+  content: "CAPTURING TIMELESS STORIES"; display: block; position: absolute; right: 0; bottom: 7px; left: 0;
   color: #95a7e3; font-size: 8px; font-weight: 800; letter-spacing: .16em;
+  text-align: center;
 }
 :root[data-theme="light"] .studioMark { position: relative; overflow: visible; }
 :root[data-theme="light"] .studioMark::after {
