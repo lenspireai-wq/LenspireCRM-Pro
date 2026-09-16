@@ -11797,6 +11797,19 @@ table > tbody > tr:has(td[colspan])::before {
 }
 
 @media (max-width: 900px) {
+  /* The drawer must sit above its click-to-close backdrop on touch screens. */
+  .shell:not(.sidebarHidden) aside {
+    z-index: 80 !important;
+    pointer-events: auto !important;
+  }
+  .shell:not(.sidebarHidden) .sidebarBackdrop {
+    z-index: 70;
+  }
+  .sidebarToggle,
+  .sidebarHidden .sidebarToggle {
+    z-index: 90;
+  }
+
   .shell aside,
   .shell.sidebarHidden aside {
     width: min(204px, 68vw);
