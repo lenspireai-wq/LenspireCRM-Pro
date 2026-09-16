@@ -3138,3 +3138,15 @@
   border-bottom-color: #cfe2ff;
   background: linear-gradient(180deg, #edf6ff, #f7fbff);
 }
+
+/* Keep the dashboard controls airy: only the tabs and KPI cards are surfaced. */
+:root[data-theme="light"] .mainSalesDashboard .salesDashboardSticky {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+:root[data-theme="light"] .mainSalesDashboard .salesPage {
+  background: transparent;
+}
