@@ -45,6 +45,24 @@
 
 /* Keep every primary icon and label identical in the live command rail. */
 @media (min-width: 901px) {
+  :root[data-theme="light"] .shell aside nav button.navTopItem {
+    display: grid !important;
+    grid-template-columns: 42px minmax(0, 1fr) !important;
+    align-items: center !important;
+    column-gap: 14px !important;
+  }
+
+  :root[data-theme="light"] .shell aside nav button.navGroupLabel {
+    display: grid !important;
+    grid-template-columns: 42px minmax(0, 1fr) 16px !important;
+    align-items: center !important;
+    column-gap: 14px !important;
+  }
+
+  :root[data-theme="light"] .shell aside nav button.navGroupLabel.direct {
+    grid-template-columns: 42px minmax(0, 1fr) !important;
+  }
+
   :root[data-theme="light"] .shell aside nav .navTopItem,
   :root[data-theme="light"] .shell aside nav .navGroupLabel,
   :root[data-theme="light"] .shell aside nav .navUtility button {
