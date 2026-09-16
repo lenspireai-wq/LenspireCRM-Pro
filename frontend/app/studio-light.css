@@ -2280,19 +2280,176 @@
 :root[data-theme="light"] .calCell.muted { opacity: .62; background: #f9fbff !important; }
 :root[data-theme="light"] .calCell.today { border-color: #246bfd !important; box-shadow: inset 0 0 0 1px #246bfd, 0 5px 14px rgba(31, 77, 154, .06); }
 :root[data-theme="light"] .calCell.selected { background: #eff5ff !important; border-color: #8bb8ff !important; }
-:root[data-theme="light"] .calCell li { background: #f7faff !important; border: 1px solid #e4eefc; border-left-width: 3px; border-radius: 8px; }
-:root[data-theme="light"] .calCell li strong { color: #172033 !important; }
+:root[data-theme="light"] .calCell li {
+  background: linear-gradient(115deg, #edf7ff 0%, #f4f0ff 100%) !important;
+  border: 1px solid #d8d0ff;
+  border-left-width: 3px;
+  border-radius: 8px;
+  padding: 1px 3px;
+  line-height: 1;
+  box-shadow: 0 3px 9px rgb(91 87 255 / 8%);
+}
+:root[data-theme="light"] .calCell li:hover { background: linear-gradient(115deg, #e4f3ff 0%, #eee8ff 100%) !important; border-color: #aeb8ff; }
+:root[data-theme="light"] .calCell li strong {
+  color: #31567e !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 8px;
+  line-height: 1;
+}
 :root[data-theme="light"] .calCell li span,
-:root[data-theme="light"] .calCell li.calMore { color: #65738a !important; }
+:root[data-theme="light"] .calCell li.calMore { color: #65738a !important; font-size: 8px; line-height: 1; }
 :root[data-theme="light"] .calSidePanel {
   background: #fff !important;
   border-color: #dceaff !important;
   border-radius: 18px;
   box-shadow: 0 10px 28px rgba(31, 77, 154, .07);
 }
+
+/* Keep a busy date's schedule usable without compressing its event details. */
+:root[data-theme="light"] .mainOperationsCalendar .calSidePanel {
+  min-height: 220px !important;
+  max-height: 320px !important;
+  overflow-y: auto !important;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calSidePanel > ul {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* A month with several shoots needs room for every event, not compressed rows. */
+:root[data-theme="light"] .mainOperationsCalendar .calendar {
+  flex: 0 0 auto;
+  min-height: 620px;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calCellsMonth {
+  grid-auto-rows: minmax(94px, 1fr);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calCellsMonth > .calCell:nth-child(4n + 1) { background: linear-gradient(145deg, #edf7ff, #fbfdff) !important; }
+:root[data-theme="light"] .mainOperationsCalendar .calCellsMonth > .calCell:nth-child(4n + 2) { background: linear-gradient(145deg, #f4f0ff, #fcfbff) !important; }
+:root[data-theme="light"] .mainOperationsCalendar .calCellsMonth > .calCell:nth-child(4n + 3) { background: linear-gradient(145deg, #effbf5, #fbfffd) !important; }
+:root[data-theme="light"] .mainOperationsCalendar .calCellsMonth > .calCell:nth-child(4n) { background: linear-gradient(145deg, #fff7ea, #fffdfa) !important; }
+:root[data-theme="light"] .mainOperationsCalendar .calCellsMonth > .calCell.selected { background: linear-gradient(145deg, #e8f3ff, #f2eeff) !important; }
+
+/* Allow the expanded month grid and its schedule to be reached by scrolling. */
+:root[data-theme="light"] .shell main.mainOperationsCalendar {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain;
+}
+
+/* Desktop keeps the workspace chrome in place, while the Calendar itself
+   scrolls from the month grid down into the complete selected-date schedule. */
+@media (min-width: 769px) {
+  :root[data-theme="light"] .shell main.mainOperationsCalendar {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  :root[data-theme="light"] .mainOperationsCalendar .operationsWorkspace {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  :root[data-theme="light"] .mainOperationsCalendar .calendar {
+    height: auto !important;
+    min-height: 1120px !important;
+    overflow: visible !important;
+  }
+
+  :root[data-theme="light"] .mainOperationsCalendar .calGrid {
+    flex: 0 0 auto !important;
+  }
+
+  :root[data-theme="light"] .mainOperationsCalendar .calSidePanel,
+  :root[data-theme="light"] .mainOperationsCalendar .calSidePanel > ul {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
+
+/* On phones the month grid is intentionally tall. Do not trap the selected
+   day's schedule below a fixed, clipped calendar viewport—let the workspace
+   extend and use the page's normal vertical scroll instead. */
+@media (max-width: 768px) {
+  :root[data-theme="light"] .shell main.mainOperationsCalendar {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  :root[data-theme="light"] .mainOperationsCalendar .calendar {
+    /* The Calendar is the intentional touch scroll surface. This avoids the
+       page being trapped by the app shell on mobile browsers. */
+    height: calc(100dvh - 300px) !important;
+    min-height: 360px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  :root[data-theme="light"] .mainOperationsCalendar .calGrid,
+  :root[data-theme="light"] .mainOperationsCalendar .calCellsMonth {
+    overflow: visible !important;
+  }
+
+  :root[data-theme="light"] .mainOperationsCalendar .calSidePanel {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  :root[data-theme="light"] .mainOperationsCalendar .calSidePanel > ul {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
 :root[data-theme="light"] .calSidePanel li {
-  background: #fff;
-  border-color: #e5edf8 !important;
+  background: linear-gradient(115deg, #edf7ff 0%, #f5f1ff 100%);
+  border-color: #d8d0ff !important;
+  box-shadow: 0 4px 12px rgb(91 87 255 / 7%);
+}
+
+:root[data-theme="light"] .calSidePanel li:hover {
+  background: linear-gradient(115deg, #e4f3ff 0%, #eee8ff 100%);
+  border-color: #aeb8ff !important;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calSidePanel li {
+  align-items: stretch;
+  flex-direction: column;
+  min-height: 116px;
+  padding-right: 218px;
+  position: relative;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calCardActions {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: flex-end;
+  gap: 4px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: auto;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calCardActions .billBtn {
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-height: 26px;
+  padding-inline: 7px;
+  font-size: 10px;
+  white-space: nowrap;
 }
 
 /* Match Upcoming Events to the Completed Events layout as well as its colours. */
@@ -3149,4 +3306,1399 @@
 }
 :root[data-theme="light"] .mainSalesDashboard .salesPage {
   background: transparent;
+}
+:root[data-theme="light"] .mainSalesDashboard .leadRowActions { gap: 5px; }
+:root[data-theme="light"] .mainSalesDashboard .leadRowActions :is(a, button) {
+  border-radius: 8px;
+  box-shadow: 0 3px 7px rgb(23 32 51 / 8%);
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+:root[data-theme="light"] .mainSalesDashboard .leadRowActions :is(a, button):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgb(23 32 51 / 14%);
+}
+:root[data-theme="light"] .mainSalesDashboard .leadRowActions a { color: #168454; border-color: #bdebd5; background: #e4f8ed; }
+:root[data-theme="light"] .mainSalesDashboard .leadRowActions button:nth-of-type(1) { color: #246bfd; border-color: #c7ddff; background: #eaf3ff; }
+:root[data-theme="light"] .mainSalesDashboard .leadRowActions .attachmentAction { color: #7657ff; border-color: #d9d0ff; background: #f0edff; }
+:root[data-theme="light"] .mainSalesDashboard .leadRowActions button:nth-of-type(3) { color: #d98207; border-color: #ffdea2; background: #fff3df; }
+:root[data-theme="light"] .mainSalesDashboard .leadRowActions .delete { color: #d9505b; border-color: #f5cbd1; background: #ffeaed; }
+
+/* New Opportunity / Add Lead — polished light form surface. */
+:root[data-theme="light"] .leadModal {
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-color: #cfe2ff;
+  background: #fff;
+  box-shadow: 0 28px 70px rgb(20 75 150 / 22%);
+}
+:root[data-theme="light"] .leadModal .modalHeader {
+  border-bottom-color: #dceaff;
+  background:
+    radial-gradient(260px 150px at 92% -35%, rgb(118 87 255 / 17%), transparent 72%),
+    linear-gradient(112deg, #eef7ff 0%, #e5f3ff 52%, #f2eeff 100%);
+}
+:root[data-theme="light"] .leadModal .modalHeader small {
+  color: #246bfd;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+:root[data-theme="light"] .leadModal .modalHeader h2 { color: #172033; font: 750 23px/1.15 Inter, "Segoe UI", sans-serif; letter-spacing: -.035em; }
+:root[data-theme="light"] .leadModal .modalHeader p { color: #65738a; }
+:root[data-theme="light"] .leadModal .modalHeader > button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #cfe2ff;
+  border-radius: 11px;
+  background: rgb(255 255 255 / 82%);
+  color: #246bfd;
+}
+:root[data-theme="light"] .leadModal .leadFormGrid { gap: 16px; background: linear-gradient(180deg, #fff, #fbfdff); }
+:root[data-theme="light"] .leadModal .leadFormGrid label { color: #45536a; font-weight: 400; letter-spacing: .02em; }
+:root[data-theme="light"] .leadModal .leadFormGrid :is(input, select, textarea) {
+  min-height: 42px;
+  border-color: #dceaff;
+  border-radius: 12px;
+  background: #fff;
+  color: #172033;
+}
+:root[data-theme="light"] .leadModal .leadFormGrid select,
+:root[data-theme="light"] .leadModal .leadFormGrid select option {
+  color-scheme: light;
+  background: #fff;
+  color: #172033;
+}
+
+/* Keep the native select surface in the light palette while its menu opens. */
+:root[data-theme="light"] .leadModal .leadFormGrid select {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  color-scheme: only light !important;
+  -webkit-text-fill-color: #172033;
+  background-color: #fff !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #65738a 50%),
+    linear-gradient(135deg, #65738a 50%, transparent 50%) !important;
+  background-position:
+    calc(100% - 17px) calc(50% - 2px),
+    calc(100% - 12px) calc(50% - 2px) !important;
+  background-size: 5px 5px, 5px 5px !important;
+  background-repeat: no-repeat !important;
+  padding-right: 38px !important;
+  outline: none !important;
+}
+
+:root[data-theme="light"] .leadModal .leadFormGrid select:focus,
+:root[data-theme="light"] .leadModal .leadFormGrid select:active {
+  background-color: #fff !important;
+  border-color: #8a7cff !important;
+  box-shadow: 0 0 0 3px rgb(118 87 255 / 14%) !important;
+}
+
+:root[data-theme="light"] .leadModal .leadFormGrid select option,
+:root[data-theme="light"] .leadModal .leadFormGrid select optgroup {
+  color-scheme: only light !important;
+  background-color: #fff !important;
+  color: #172033 !important;
+}
+
+/* App-rendered menus avoid the operating system's dark native-select flash. */
+:root[data-theme="light"] .leadModal .lightFormSelect {
+  position: relative;
+  min-width: 0;
+}
+
+:root[data-theme="light"] .leadModal .lightFormSelectTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid #dceaff;
+  border-radius: 12px;
+  background: #fff;
+  color: #172033;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .16s ease, box-shadow .16s ease, background-color .16s ease;
+}
+
+:root[data-theme="light"] .leadModal .lightFormSelectTrigger:hover {
+  border-color: #b7d2ff;
+  background: #fbfdff;
+}
+
+:root[data-theme="light"] .leadModal .lightFormSelect.isOpen .lightFormSelectTrigger {
+  border-color: #8a7cff;
+  box-shadow: 0 0 0 3px rgb(118 87 255 / 14%);
+}
+
+:root[data-theme="light"] .leadModal .lightFormSelectTrigger:disabled {
+  cursor: not-allowed;
+  color: #8c98aa;
+  background: #f7f9fc;
+}
+
+:root[data-theme="light"] .leadModal .lightFormSelectChevron {
+  width: 7px;
+  height: 7px;
+  margin-left: 14px;
+  border-right: 1.75px solid #65738a;
+  border-bottom: 1.75px solid #65738a;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform .16s ease;
+}
+
+:root[data-theme="light"] .leadModal .lightFormSelect.isOpen .lightFormSelectChevron {
+  transform: rotate(225deg) translate(-1px, -1px);
+}
+
+:root[data-theme="light"] .leadModal .lightFormSelectMenu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid #cfe2ff;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 14px 30px rgb(30 83 160 / 18%);
+}
+
+:root[data-theme="light"] .leadModal .lightFormSelectMenu button {
+  display: block;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #172033;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+}
+
+:root[data-theme="light"] .leadModal .lightFormSelectMenu button:hover,
+:root[data-theme="light"] .leadModal .lightFormSelectMenu button.selected {
+  background: #eef5ff;
+  color: #174ea6;
+}
+
+/* Refined, layered form treatment without changing the form's information flow. */
+:root[data-theme="light"] .leadModal .leadFormGrid {
+  background:
+    radial-gradient(320px 180px at 100% 0%, rgb(25 167 242 / 7%), transparent 75%),
+    radial-gradient(260px 160px at 0% 100%, rgb(118 87 255 / 5%), transparent 74%),
+    #fbfdff;
+}
+
+:root[data-theme="light"] .leadModal .leadFormGrid > label {
+  padding: 9px 10px 10px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  background: linear-gradient(145deg, rgb(255 255 255 / 92%), rgb(248 251 255 / 80%));
+  box-shadow: 0 5px 16px rgb(36 107 253 / 3%);
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+:root[data-theme="light"] .leadModal .leadFormGrid > label:hover {
+  border-color: #e0ebff;
+}
+
+:root[data-theme="light"] .leadModal .leadFormGrid > label:focus-within {
+  border-color: #b7d2ff;
+  box-shadow: 0 8px 22px rgb(36 107 253 / 10%);
+}
+
+:root[data-theme="light"] .leadModal .leadFormGrid > label.wide {
+  background: linear-gradient(112deg, rgb(240 247 255 / 94%), rgb(255 255 255 / 94%), rgb(247 244 255 / 90%));
+}
+
+/* Soft, color-coded field heads make the edit form easier to scan. */
+:root[data-theme="light"] .leadModal .leadFormGrid > label:nth-child(4n + 1) {
+  background: linear-gradient(145deg, #edf7ff, #fbfdff);
+}
+:root[data-theme="light"] .leadModal .leadFormGrid > label:nth-child(4n + 2) {
+  background: linear-gradient(145deg, #f2efff, #fcfbff);
+}
+:root[data-theme="light"] .leadModal .leadFormGrid > label:nth-child(4n + 3) {
+  background: linear-gradient(145deg, #effcf6, #fbfffd);
+}
+:root[data-theme="light"] .leadModal .leadFormGrid > label:nth-child(4n) {
+  background: linear-gradient(145deg, #fff7eb, #fffdf9);
+}
+
+/* Save Lead follows the same quiet action treatment as Close. */
+:root[data-theme="light"] .leadModal .modalFooter .primary {
+  border-color: #c7ddfb;
+  background: linear-gradient(145deg, #edf6ff, #f5f9ff);
+  color: #31567e;
+  font-weight: 400;
+  box-shadow: 0 6px 14px rgb(36 107 253 / 8%);
+}
+
+:root[data-theme="light"] .leadModal .modalFooter .primary:hover {
+  border-color: #a9cbf7;
+  background: #e5f1ff;
+  color: #1f4c7a;
+}
+
+:root[data-theme="light"] .leadModal .leadFormGrid :is(input, textarea) {
+  border-color: #e1eaf8;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 90%);
+  font-weight: 400;
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+
+:root[data-theme="light"] .leadModal .leadFormGrid :is(input, textarea):focus {
+  border-color: #8db7ff;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgb(36 107 253 / 10%), inset 0 1px 0 #fff;
+}
+
+:root[data-theme="light"] .leadModal .bookingBox legend {
+  padding: 0 9px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #edf6ff, #f3efff);
+  color: #52627c;
+}
+
+:root[data-theme="light"] .leadModal .bookingBox legend span {
+  color: #7657ff;
+}
+
+/* View Lead — a clear, premium record view built from the existing data. */
+:root[data-theme="light"] .leadDetailModal {
+  overflow: auto;
+  border-color: #cfe2ff;
+  background:
+    radial-gradient(460px 220px at 100% 0%, rgb(118 87 255 / 8%), transparent 74%),
+    #fbfdff;
+  box-shadow: 0 28px 70px rgb(20 75 150 / 22%);
+}
+
+:root[data-theme="light"] .leadDetailModal .modalHeader {
+  background:
+    radial-gradient(260px 150px at 92% -35%, rgb(118 87 255 / 18%), transparent 72%),
+    linear-gradient(112deg, #eef7ff 0%, #e5f3ff 52%, #f2eeff 100%);
+  border-bottom-color: #dceaff;
+}
+
+:root[data-theme="light"] .leadDetailModal .modalHeader small { color: #246bfd; letter-spacing: .1em; }
+:root[data-theme="light"] .leadDetailModal .modalHeader h2 { color: #172033; }
+:root[data-theme="light"] .leadDetailModal .modalHeader > button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #cfe2ff;
+  border-radius: 11px;
+  background: rgb(255 255 255 / 82%);
+  color: #246bfd;
+}
+
+:root[data-theme="light"] .leadDetailModal .detailSummary {
+  gap: 10px;
+  padding: 14px 18px;
+  background: transparent;
+}
+
+:root[data-theme="light"] .leadDetailModal .detailSummary div {
+  min-height: 76px;
+  padding: 13px 14px;
+  border: 1px solid #e1ecff;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #fff, #f7fbff);
+  box-shadow: 0 6px 16px rgb(36 107 253 / 4%);
+}
+
+:root[data-theme="light"] .leadDetailModal .detailSummary div:nth-child(1) { background: linear-gradient(145deg, #edfff6, #f8fffb); }
+:root[data-theme="light"] .leadDetailModal .detailSummary div:nth-child(2) { background: linear-gradient(145deg, #edf7ff, #f8fcff); }
+:root[data-theme="light"] .leadDetailModal .detailSummary div:nth-child(3) { background: linear-gradient(145deg, #fff7e8, #fffdf8); }
+:root[data-theme="light"] .leadDetailModal .detailSummary div:nth-child(4) { background: linear-gradient(145deg, #f4efff, #fcfaff); }
+:root[data-theme="light"] .leadDetailModal .detailSummary div:nth-child(5) { background: linear-gradient(145deg, #eefbff, #f9fdff); }
+:root[data-theme="light"] .leadDetailModal .detailSummary div:nth-child(6) { background: linear-gradient(145deg, #fff3f5, #fffafb); }
+:root[data-theme="light"] .leadDetailModal .detailSummary span { color: #65738a; font-weight: 400; }
+:root[data-theme="light"] .leadDetailModal .detailSummary b { margin-top: 5px; color: #172033; font-weight: 600; }
+
+:root[data-theme="light"] .leadDetailModal :is(.detailNotes, .attachmentSection, .activitySection) {
+  margin: 0 18px 14px;
+  padding: 18px;
+  border: 1px solid #e1ecff;
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgb(255 255 255 / 95%), rgb(248 251 255 / 92%));
+  box-shadow: 0 7px 20px rgb(36 107 253 / 4%);
+}
+
+:root[data-theme="light"] .leadDetailModal .attachmentSection {
+  background: linear-gradient(145deg, #f6fbff, #fff);
+}
+
+:root[data-theme="light"] .leadDetailModal .activitySection {
+  background:
+    radial-gradient(220px 120px at 100% 0%, rgb(118 87 255 / 8%), transparent 74%),
+    linear-gradient(145deg, #f8f6ff, #f4faff);
+}
+
+:root[data-theme="light"] .leadDetailModal :is(.attachmentSection, .activitySection) h3 { color: #172033; }
+:root[data-theme="light"] .leadDetailModal :is(.attachmentSection, .activitySection) small { color: #65738a; }
+:root[data-theme="light"] .leadDetailModal .attachmentUpload {
+  border-color: #9fd8f7;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #dff5ff, #e9f1ff);
+  color: #146494;
+  box-shadow: 0 6px 14px rgb(25 167 242 / 14%);
+}
+
+:root[data-theme="light"] .leadDetailModal .attachmentList > button,
+:root[data-theme="light"] .leadDetailModal .activityList article {
+  border-color: #e2ecfa;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 84%);
+}
+
+:root[data-theme="light"] .leadDetailModal .activityList article i {
+  border-radius: 10px;
+  background: #eaf3ff;
+  color: #246bfd;
+}
+
+:root[data-theme="light"] .leadDetailModal .activityTitle form :is(select, input) {
+  border-color: #dceaff;
+  background: rgb(255 255 255 / 86%);
+}
+
+:root[data-theme="light"] .leadDetailModal .activityList article {
+  background: linear-gradient(110deg, #f1f8ff, #fbfaff);
+}
+
+:root[data-theme="light"] .leadDetailModal .activityTitle .primary {
+  border-color: #aa9bff;
+  background: linear-gradient(145deg, #dcd5ff, #d4e9ff);
+  color: #33238f;
+  font-weight: 600;
+  box-shadow: 0 8px 18px rgb(100 76 220 / 18%);
+}
+
+:root[data-theme="light"] .leadDetailModal .activityTitle .primary:hover {
+  border-color: #8977f4;
+  background: linear-gradient(145deg, #cfc6ff, #c7e2ff);
+  color: #291b80;
+}
+
+:root[data-theme="light"] .leadDetailModal .modalFooter .primary {
+  border-color: #9fd8f7;
+  background: linear-gradient(145deg, #dff5ff, #e9f1ff);
+  color: #146494;
+  font-weight: 600;
+  box-shadow: 0 8px 18px rgb(25 167 242 / 16%);
+}
+
+:root[data-theme="light"] .leadDetailModal .modalFooter .primary:hover {
+  border-color: #6fc2f0;
+  background: linear-gradient(145deg, #d0efff, #dceaff);
+  color: #0d4f77;
+}
+
+:root[data-theme="light"] .leadDetailModal .modalFooter .secondary:not(.whatsappButton) {
+  border-color: #c7ddfb;
+  background: linear-gradient(145deg, #edf6ff, #f5f9ff);
+  color: #31567e;
+  box-shadow: 0 6px 14px rgb(36 107 253 / 8%);
+}
+
+:root[data-theme="light"] .leadDetailModal .modalFooter .secondary:not(.whatsappButton):hover {
+  border-color: #a9cbf7;
+  background: #e5f1ff;
+  color: #1f4c7a;
+}
+
+/* Keep Edit Lead visually aligned with Close, as requested. */
+:root[data-theme="light"] .leadDetailModal .modalFooter .primary {
+  border-color: #c7ddfb;
+  background: linear-gradient(145deg, #edf6ff, #f5f9ff);
+  color: #31567e;
+  box-shadow: 0 6px 14px rgb(36 107 253 / 8%);
+}
+
+:root[data-theme="light"] .leadDetailModal .modalFooter .primary:hover {
+  border-color: #a9cbf7;
+  background: #e5f1ff;
+  color: #1f4c7a;
+}
+
+:root[data-theme="light"] .leadDetailModal :is(.modalFooter .primary, .modalFooter .secondary, .attachmentUpload, .activityTitle .primary) {
+  font-weight: 400;
+}
+
+:root[data-theme="light"] .leadDetailModal .modalFooter {
+  border-top-color: #dceaff;
+  background: rgb(251 253 255 / 94%);
+}
+
+:root[data-theme="light"] .leadDetailModal .dangerButton {
+  border-color: #f4c7ce;
+  background: linear-gradient(145deg, #fff0f2, #fffbfb);
+  color: #c94b5a;
+  box-shadow: 0 5px 14px rgb(201 75 90 / 8%);
+}
+
+:root[data-theme="light"] .leadDetailModal .dangerButton:hover {
+  border-color: #eaa9b3;
+  background: #ffe7ea;
+  color: #b53e4d;
+}
+
+:root[data-theme="light"] .leadDetailModal .whatsappButton {
+  border-color: #25d366;
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 7px 16px rgb(37 211 102 / 22%);
+}
+
+:root[data-theme="light"] .leadDetailModal .whatsappButton:hover {
+  border-color: #1ebe5d;
+  background: #1ebe5d;
+  color: #fff;
+}
+:root[data-theme="light"] .leadModal .leadFormGrid textarea { min-height: 92px; }
+:root[data-theme="light"] .leadModal .bookingBox {
+  border-color: #d9d1ff;
+  border-radius: 16px;
+  background: transparent;
+}
+:root[data-theme="light"] .leadModal .bookingBox .leadFormGrid { background: transparent; }
+:root[data-theme="light"] .leadModal .bookingBox :is(legend, span, label, input, textarea, .lightFormSelectTrigger) { font-weight: 400; }
+:root[data-theme="light"] .leadModal .modalFooter { border-top-color: #dceaff; background: #fbfdff; }
+:root[data-theme="light"] .leadModal .modalFooter .primary { border-color: transparent; background: linear-gradient(135deg, #246bfd, #7657ff); box-shadow: 0 9px 18px rgb(36 107 253 / 22%); }
+
+/* Final override: Save Lead matches Close exactly. */
+:root[data-theme="light"] .leadModal .modalFooter .primary {
+  border-color: #c7ddfb !important;
+  background: linear-gradient(145deg, #edf6ff, #f5f9ff) !important;
+  color: #31567e !important;
+  font-weight: 400 !important;
+  box-shadow: 0 6px 14px rgb(36 107 253 / 8%) !important;
+}
+
+:root[data-theme="light"] .leadModal .modalFooter .primary:hover {
+  border-color: #a9cbf7 !important;
+  background: #e5f1ff !important;
+  color: #1f4c7a !important;
+}
+
+:root[data-theme="light"] .leadModal .modalFooter .secondary {
+  transition: border-color .16s ease, background-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+:root[data-theme="light"] .leadModal .modalFooter .secondary:hover:not(:disabled) {
+  border-color: #9fc8f8 !important;
+  background: #e9f4ff !important;
+  color: #1f4c7a !important;
+  box-shadow: 0 7px 15px rgb(36 107 253 / 13%);
+  transform: translateY(-1px);
+}
+
+/* Operations — a distinct, softly layered studio command center. */
+:root[data-theme="light"] .operationsWorkspace {
+  position: relative;
+  padding: 18px;
+  border: 1px solid #dceaff;
+  border-radius: 24px;
+  background:
+    radial-gradient(420px 240px at 100% 0%, rgb(118 87 255 / 10%), transparent 74%),
+    radial-gradient(360px 220px at 0% 100%, rgb(25 167 242 / 8%), transparent 76%),
+    linear-gradient(145deg, #f7fbff, #fbfaff);
+}
+
+:root[data-theme="light"] .operationsWorkspace .operationsDashboardControls {
+  margin: -2px -2px 16px;
+  padding: 12px;
+  border: 1px solid #d5e6ff;
+  border-radius: 18px;
+  background: linear-gradient(110deg, rgb(235 246 255 / 92%), rgb(245 241 255 / 90%));
+  box-shadow: 0 8px 20px rgb(36 107 253 / 6%);
+}
+
+:root[data-theme="light"] .operationsWorkspace .operationsTabs {
+  margin: 0;
+  padding: 5px;
+  border-color: #cfe2ff;
+  border-radius: 13px;
+  background: rgb(255 255 255 / 78%);
+}
+
+:root[data-theme="light"] .operationsWorkspace .operationsTabs button {
+  min-height: 36px;
+  padding: 7px 13px;
+  border-radius: 9px;
+  color: #4e617c;
+  font-weight: 500;
+}
+
+:root[data-theme="light"] .operationsWorkspace .operationsTabs button:hover {
+  background: #edf5ff;
+  color: #174ea6;
+}
+
+:root[data-theme="light"] .operationsWorkspace .operationsTabs button.active {
+  border-color: transparent;
+  background: linear-gradient(135deg, #246bfd, #7657ff);
+  color: #fff;
+  box-shadow: 0 6px 15px rgb(72 86 232 / 20%);
+}
+
+:root[data-theme="light"] .operationsDashboardView .salesKpis {
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+:root[data-theme="light"] .operationsDashboardView .salesKpis article {
+  min-height: 122px;
+  padding: 18px 18px 16px 58px;
+  border: 1px solid #cee4ff;
+  border-top: 0;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #eaf5ff, #f9fcff) !important;
+  box-shadow: 0 10px 23px rgb(36 107 253 / 7%);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+:root[data-theme="light"] .operationsDashboardView .salesKpis article:nth-child(2) {
+  border-color: #ffdba1;
+  background: linear-gradient(145deg, #fff3d9, #fffdfa) !important;
+}
+:root[data-theme="light"] .operationsDashboardView .salesKpis article:nth-child(3) {
+  border-color: #b9ead7;
+  background: linear-gradient(145deg, #e9fbf3, #fbfffd) !important;
+}
+:root[data-theme="light"] .operationsDashboardView .salesKpis article:nth-child(4) {
+  border-color: #d8cffd;
+  background: linear-gradient(145deg, #f0ecff, #fcfbff) !important;
+}
+
+:root[data-theme="light"] .operationsDashboardView .salesKpis article::before {
+  position: absolute;
+  top: 18px;
+  left: 17px;
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  border-radius: 10px;
+  background: #cfe7ff;
+  color: #246bfd;
+  content: "◷";
+  font-size: 16px;
+  box-shadow: 0 5px 11px rgb(36 107 253 / 12%);
+}
+:root[data-theme="light"] .operationsDashboardView .salesKpis article:nth-child(2)::before { background: #ffe3ae; color: #c77b00; content: "☀"; }
+:root[data-theme="light"] .operationsDashboardView .salesKpis article:nth-child(3)::before { background: #c9f0dd; color: #16875c; content: "✓"; }
+:root[data-theme="light"] .operationsDashboardView .salesKpis article:nth-child(4)::before { background: #e0d9ff; color: #6849dc; content: "♙"; }
+
+:root[data-theme="light"] .operationsDashboardView .salesKpis article:hover {
+  border-color: #9ec9ff;
+  box-shadow: 0 15px 29px rgb(36 107 253 / 13%);
+  transform: translateY(-2px);
+}
+
+:root[data-theme="light"] .operationsDashboardView .salesKpis article :is(span, small) { color: #5c6d84; font-weight: 400; }
+:root[data-theme="light"] .operationsDashboardView .salesKpis article b { color: #172033; font-size: clamp(22px, 2vw, 30px); }
+
+:root[data-theme="light"] .operationsDashboardView .nextShootsPanel {
+  overflow: hidden;
+  border-color: #d5e6ff;
+  border-radius: 20px;
+  background:
+    radial-gradient(270px 160px at 100% 0%, rgb(25 167 242 / 10%), transparent 75%),
+    linear-gradient(145deg, #f8fcff, #fff);
+  box-shadow: 0 12px 28px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .operationsDashboardView .nextShootsHead {
+  padding: 18px 20px;
+  border-bottom: 1px solid #e1edff;
+  background:
+    radial-gradient(240px 110px at 84% 10%, rgb(118 87 255 / 17%), transparent 72%),
+    linear-gradient(105deg, #eaf6ff, #f5f0ff 68%, #fdfbff);
+}
+
+:root[data-theme="light"] .operationsDashboardView .sectionEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border: 1px solid #cbdfff;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 68%);
+  color: #246bfd;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+}
+:root[data-theme="light"] .operationsDashboardView .sectionEyebrow::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7657ff;
+  box-shadow: 0 0 0 3px rgb(118 87 255 / 12%);
+  content: "";
+}
+:root[data-theme="light"] .operationsDashboardView .nextShootsHead h2 {
+  margin-top: 9px;
+  color: #172033;
+  font-size: clamp(22px, 2.1vw, 30px);
+  letter-spacing: -.035em;
+}
+:root[data-theme="light"] .operationsDashboardView .nextShootsHead p {
+  max-width: 390px;
+  color: #61718a;
+  font-size: 13px;
+}
+:root[data-theme="light"] .operationsDashboardView .nextShootsCount {
+  padding: 8px 11px;
+  border-color: #c4dfff;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 86%);
+  color: #246bfd;
+  box-shadow: 0 5px 13px rgb(36 107 253 / 10%);
+}
+:root[data-theme="light"] .operationsDashboardView .nextShootsHead .viewAction {
+  border-color: #cfc5ff;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #e6e1ff, #edf5ff);
+  color: #5a42d7;
+  box-shadow: 0 6px 14px rgb(118 87 255 / 12%);
+}
+
+:root[data-theme="light"] .operationsWorkspace :is(.nextShootsTableWrap, .upcomingEventsTableWrap) {
+  border-color: #dceaff;
+  border-radius: 16px;
+  background: rgb(255 255 255 / 82%);
+}
+
+:root[data-theme="light"] .operationsWorkspace :is(.nextShootsTable, .upcomingEventsTable) thead th {
+  border-bottom-color: #cfe2ff;
+  background: linear-gradient(180deg, #edf6ff, #f8fbff);
+  color: #172033;
+  font-weight: 650;
+}
+
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable thead th {
+  padding-block: 12px;
+  vertical-align: middle;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: 700 !important;
+}
+
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable thead th:first-child {
+  min-width: 46px;
+  padding-inline: 10px;
+  border-right: 1px solid #d8e7fa;
+  background: linear-gradient(180deg, #edf6ff, #f8fbff);
+  text-align: center;
+}
+
+/* One uninterrupted header band keeps Sr. No. visually joined to every column. */
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable thead {
+  background: linear-gradient(180deg, #edf6ff, #f8fbff);
+}
+
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable thead tr,
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable thead th,
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable thead th:first-child {
+  background: transparent !important;
+}
+
+/* The dashboard owns its serial-number column, so it belongs to the real table header. */
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable > :is(thead, tbody) > tr::before {
+  display: none;
+  content: none;
+}
+
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable .shootSerial {
+  width: 46px;
+  min-width: 46px;
+  padding-inline: 10px;
+  color: #65738a;
+  text-align: center;
+  font-size: 12px;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .operationsChrome {
+  border: 1px solid #d7e6ff;
+  border-radius: 20px;
+  background:
+    radial-gradient(300px 130px at 86% 0%, rgb(118 87 255 / 12%), transparent 75%),
+    linear-gradient(110deg, #eef8ff, #f7f3ff 70%, #fbfdff);
+  box-shadow: 0 9px 22px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .operationsChrome .sectionHeader h1 {
+  color: #172033;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .operationsChrome .sectionHeader p {
+  color: #5e718d;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .operationsChrome {
+  border: 1px solid #d7e6ff;
+  border-radius: 20px;
+  background:
+    radial-gradient(300px 130px at 86% 0%, rgb(118 87 255 / 12%), transparent 75%),
+    linear-gradient(110deg, #eef8ff, #f7f3ff 70%, #fbfdff);
+  box-shadow: 0 9px 22px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .operationsChrome .sectionHeader h1 { color: #172033; }
+:root[data-theme="light"] .mainOperationsCalendar .operationsChrome .sectionHeader p { color: #5e718d; }
+
+:root[data-theme="light"] .mainOperationsCalendar .operationsCalendar {
+  overflow: hidden;
+  border-color: #d5e6ff;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #f8fcff, #fbfaff);
+  box-shadow: 0 12px 28px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > b {
+  border-bottom: 1px solid #dceaff;
+  background: linear-gradient(180deg, #eef7ff, #f8fbff);
+  color: #31567e;
+  font-weight: 700;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div {
+  border-color: #e1ecfa;
+  background: linear-gradient(145deg, #fbfdff, #f4f9ff);
+  transition: background-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div:nth-of-type(4n + 1) { background: linear-gradient(145deg, #eef7ff, #fbfdff); }
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div:nth-of-type(4n + 2) { background: linear-gradient(145deg, #f4f0ff, #fcfbff); }
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div:nth-of-type(4n + 3) { background: linear-gradient(145deg, #effbf5, #fbfffd); }
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div:nth-of-type(4n) { background: linear-gradient(145deg, #fff7ea, #fffdfa); }
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div:hover:not(.muted) {
+  position: relative;
+  z-index: 1;
+  box-shadow: inset 0 0 0 1px #9fc8f8, 0 8px 18px rgb(36 107 253 / 10%);
+  transform: translateY(-1px);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div > span {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 9px;
+  background: rgb(255 255 255 / 72%);
+  color: #172033;
+  font-weight: 600;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div.muted {
+  background: #f8fafc;
+  opacity: .6;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div > button,
+:root[data-theme="light"] .mainOperationsCalendar .calendarReadOnlyEvent {
+  border-color: #cfe2ff;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 78%);
+  color: #246bfd;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .operationsCalendar .panelHead {
+  min-height: 86px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #dceaff;
+  background:
+    radial-gradient(220px 105px at 72% 0%, rgb(118 87 255 / 16%), transparent 75%),
+    linear-gradient(105deg, #edf7ff, #f8f3ff);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .operationsCalendar .panelHead h2 {
+  padding: 9px 15px;
+  border: 1px solid #cfe2ff;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 78%);
+  color: #172033;
+  font-size: 18px;
+  letter-spacing: -.02em;
+  box-shadow: 0 5px 13px rgb(36 107 253 / 8%);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .operationsCalendar .panelHead button {
+  width: 36px;
+  height: 36px;
+  border-color: #cddfff;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #fff, #edf6ff);
+  color: #246bfd;
+  box-shadow: 0 5px 12px rgb(36 107 253 / 8%);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .operationsCalendar .panelHead button:hover {
+  border-color: #9fc8f8;
+  background: #e8f3ff;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid {
+  padding: 10px;
+  gap: 7px;
+  background: linear-gradient(145deg, #f5faff, #f8f5ff);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > b {
+  margin: 0 2px 2px;
+  padding: 9px;
+  border: 0;
+  border-radius: 9px;
+  background: rgb(255 255 255 / 62%);
+  font-size: 10px;
+  letter-spacing: .07em;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div {
+  min-height: 116px;
+  padding: 10px;
+  border: 1px solid #deebfa;
+  border-radius: 13px;
+  box-shadow: 0 5px 12px rgb(36 107 253 / 4%);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div > button,
+:root[data-theme="light"] .mainOperationsCalendar .calendarReadOnlyEvent {
+  margin-top: 4px;
+  padding: 5px 6px;
+  border: 1px solid #d8d0ff;
+  border-left: 3px solid #7657ff;
+  border-radius: 8px;
+  background: linear-gradient(115deg, #edf7ff 0%, #f4f0ff 100%);
+  color: #31567e;
+  font-size: 10px;
+  box-shadow: 0 3px 9px rgb(91 87 255 / 8%);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarGrid > div > :is(button, .calendarReadOnlyEvent):hover {
+  border-color: #aeb8ff;
+  background: linear-gradient(115deg, #e4f3ff 0%, #eee8ff 100%);
+}
+
+:root[data-theme="light"] .mainOperationsCalendar :is(.calendarGrid > div > button, .calendarReadOnlyEvent) {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarEventName {
+  overflow: hidden;
+  color: #31567e;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:root[data-theme="light"] .mainOperationsCalendar .calendarEventTime {
+  color: #65738a;
+  font-size: 9px;
+}
+
+:root[data-theme="light"] .operationsWorkspace :is(.nextShootsTable, .upcomingEventsTable) tbody tr:hover {
+  background: #f3f8ff;
+}
+
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable tbody tr {
+  transition: background-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable tbody tr:nth-child(even) {
+  background: rgb(245 250 255 / 60%);
+}
+
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable tbody tr:hover {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(90deg, #edf7ff, #faf8ff) !important;
+  box-shadow: inset 3px 0 #246bfd, 0 7px 18px rgb(36 107 253 / 8%);
+  transform: translateX(2px);
+}
+
+:root[data-theme="light"] .operationsDashboardView .nextShootsTable td {
+  border-bottom-color: #e5eefb;
+}
+
+:root[data-theme="light"] .operationsDashboardView .shootDateCard {
+  min-width: 44px;
+  padding: 5px 6px;
+  border: 1px solid #cfe2ff;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #eef7ff, #fff);
+  box-shadow: 0 4px 10px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .operationsDashboardView .shootDateCard span { color: #246bfd; font-weight: 600; }
+:root[data-theme="light"] .operationsDashboardView .shootDateCard b { color: #172033; }
+
+:root[data-theme="light"] .operationsDashboardView .shootNumber {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 8px;
+  background: #e8f3ff;
+  color: #246bfd;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+:root[data-theme="light"] .operationsDashboardView .shootClient b,
+:root[data-theme="light"] .operationsDashboardView .shootVenue b { color: #172033; font-weight: 600; }
+
+:root[data-theme="light"] .operationsDashboardView .coverageMeter.ready span { color: #1b805a; }
+:root[data-theme="light"] .operationsDashboardView .coverageMeter.ready i { background: #dff6ea; }
+:root[data-theme="light"] .operationsDashboardView .coverageMeter.ready em { background: linear-gradient(90deg, #22b573, #19a7f2); }
+:root[data-theme="light"] .operationsDashboardView .coverageMeter.pending span { color: #b56b13; }
+
+:root[data-theme="light"] .operationsDashboardView .statusPill {
+  padding: 6px 10px;
+  border: 1px solid #cfe2ff;
+  border-radius: 999px;
+  background: #f0f7ff;
+  color: #246bfd;
+  font-weight: 500;
+}
+
+
+/* Save Lead matches the form's Cancel action exactly. */
+:root[data-theme="light"] .leadModal .modalFooter .primary {
+  border-color: #dceaff !important;
+  background: #fff !important;
+  color: #172033 !important;
+  font-weight: 400 !important;
+  box-shadow: 0 3px 10px rgb(36 107 253 / 6%) !important;
+}
+
+:root[data-theme="light"] .leadModal .modalFooter .primary:hover {
+  border-color: #c5dcff !important;
+  background: #f8fbff !important;
+  color: #172033 !important;
+}
+
+/* Operations › Upcoming Events: polished light table treatment only. */
+:root[data-theme="light"] .mainOperationsEvents .workspaceChrome,
+:root[data-theme="light"] .mainOperationsEvents .operationsChrome {
+  border: 1px solid #d7e6ff;
+  border-radius: 20px;
+  background: linear-gradient(105deg, #edf7ff 0%, #f8f3ff 58%, #f4fbff 100%);
+  box-shadow: 0 10px 24px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable.upcomingEventsTableWrap {
+  border: 1px solid #d7e6ff !important;
+  border-radius: 18px;
+  background: #fbfdff !important;
+  box-shadow: 0 10px 26px rgb(36 107 253 / 6%);
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .upcomingEventsTable thead tr,
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .upcomingEventsTable th {
+  background: linear-gradient(105deg, #eaf5ff, #f3efff) !important;
+  color: #111827 !important;
+  border-color: #d6e5fb !important;
+  font-weight: 800 !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .upcomingEventsTable tbody tr,
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .upcomingEventsTable tbody tr:nth-child(even),
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .upcomingEventsTable tbody td {
+  background: #fff !important;
+  border-color: #e4edf9 !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .upcomingEventsTable tbody tr:nth-child(even) td {
+  background: #f9fcff !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .upcomingEventsTable tbody tr:hover td {
+  background: #eef7ff !important;
+  box-shadow: inset 3px 0 #77adff;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .eventRowActions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .eventRowActions :is(button, a) {
+  display: inline-grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  min-height: 29px;
+  padding: 0;
+  border: 1px solid #d5e5fa;
+  border-radius: 9px;
+  background: #f5f9ff;
+  color: #246bfd;
+  box-shadow: 0 3px 8px rgb(36 107 253 / 8%);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .eventRowActions :is(button, a):hover {
+  transform: translateY(-2px);
+  background: #e8f3ff;
+  border-color: #9fc8f8;
+  box-shadow: 0 6px 12px rgb(36 107 253 / 16%);
+}
+
+:root[data-theme="light"] .mainOperationsEvents .eventRowActions .message { color: #22a06b !important; background: #edfbf4 !important; border-color: #c7eedb !important; }
+:root[data-theme="light"] .mainOperationsEvents .eventRowActions .duplicate { color: #7657ff !important; background: #f3f0ff !important; border-color: #ded5ff !important; }
+:root[data-theme="light"] .mainOperationsEvents .eventRowActions :is(button, a):nth-child(3) { color: #246bfd !important; background: #edf5ff !important; border-color: #cfe2ff !important; }
+:root[data-theme="light"] .mainOperationsEvents .eventRowActions .delete { color: #d34b58 !important; background: #fff1f2 !important; border-color: #ffd6db !important; }
+
+/* Not-applicable crew slots remain readable but are clearly distinct. */
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .crewAssignments .crewNA {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 1px 6px;
+  border: 1px solid #ffd5da;
+  border-radius: 999px;
+  background: #fff1f2 !important;
+  color: #c94a57 !important;
+  font-weight: 600;
+}
+
+/* Assigned photographers use a soft green label; unavailable slots stay red above. */
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .crewAssignments .crewAssigned,
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .crewAssignments .crewAssignedMultiple {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 1px 6px;
+  border: 1px solid #c6ecd7;
+  border-radius: 999px;
+  background: #edfbf4 !important;
+  color: #21865c !important;
+  font-weight: 600;
+}
+
+/* A pair or team of photographers gets a stronger green cue. */
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .crewAssignments .crewAssignedMultiple {
+  border-color: #17834f;
+  background: #21865c !important;
+  color: #ffffff !important;
+}
+
+/* Placeholder crew slots are visible without competing with assigned names. */
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .crewAssignments :is(.crewX, .crewXX) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 1px 6px;
+  border: 1px solid #f5df9b;
+  border-radius: 999px;
+  background: #fff9e8 !important;
+  color: #a97411 !important;
+  font-weight: 600;
+}
+
+/* Use compact rectangles rather than status pills for every crew assignment. */
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .crewAssignments :is(.crewNA, .crewX, .crewXX, .crewAssigned, .crewAssignedMultiple) {
+  border-radius: 6px;
+}
+
+/* Alternating soft row colors make the upcoming schedule easier to scan. */
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .upcomingEventsTable tbody tr:nth-child(odd) td {
+  background: #f2f8ff !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .upcomingEventsTable tbody tr:nth-child(even) td {
+  background: #f8f4ff !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsUpcomingTable .upcomingEventsTable tbody tr:hover td {
+  background: #e8f4ff !important;
+}
+
+/* Completed Events uses the same visual language as Upcoming Events. */
+:root[data-theme="light"] .mainOperationsEvents .operationsCompletedTable .crewAssignments .crewNA {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 1px 6px;
+  border: 1px solid #ffd5da;
+  border-radius: 6px;
+  background: #fff1f2 !important;
+  color: #c94a57 !important;
+  font-weight: 600;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsCompletedTable .crewAssignments :is(.crewAssigned, .crewAssignedMultiple) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 1px 6px;
+  border: 1px solid #c6ecd7;
+  border-radius: 6px;
+  background: #edfbf4 !important;
+  color: #21865c !important;
+  font-weight: 600;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsCompletedTable .crewAssignments .crewAssignedMultiple {
+  border-color: #17834f;
+  background: #21865c !important;
+  color: #ffffff !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsCompletedTable .crewAssignments :is(.crewX, .crewXX) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 1px 6px;
+  border: 1px solid #f5df9b;
+  border-radius: 6px;
+  background: #fff9e8 !important;
+  color: #a97411 !important;
+  font-weight: 600;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsCompletedTable .upcomingEventsTable tbody tr:nth-child(odd) td {
+  background: #f2f8ff !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsCompletedTable .upcomingEventsTable tbody tr:nth-child(even) td {
+  background: #f8f4ff !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents .operationsCompletedTable .upcomingEventsTable tbody tr:hover td {
+  background: #e8f4ff !important;
+}
+
+/* Stronger, consistently sized crew markers for fast schedule scanning. */
+:root[data-theme="light"] .mainOperationsEvents :is(.operationsUpcomingTable, .operationsCompletedTable) .crewAssignments :is(.crewNA, .crewX, .crewXX, .crewAssigned, .crewAssignedMultiple) {
+  min-height: 25px;
+  padding: 3px 9px;
+  border-width: 1px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 17px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  opacity: 1;
+  text-shadow: none;
+}
+
+:root[data-theme="light"] .mainOperationsEvents :is(.operationsUpcomingTable, .operationsCompletedTable) .crewAssignments .crewNA {
+  background: #ffe9ec !important;
+  border-color: #f3a9b2;
+  color: #9f2736 !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents :is(.operationsUpcomingTable, .operationsCompletedTable) .crewAssignments :is(.crewX, .crewXX) {
+  background: #fff4cc !important;
+  border-color: #e7c75c;
+  color: #785000 !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents :is(.operationsUpcomingTable, .operationsCompletedTable) .crewAssignments .crewAssigned {
+  background: #e2f8eb !important;
+  border-color: #8dd8ac;
+  color: #12663e !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents :is(.operationsUpcomingTable, .operationsCompletedTable) .crewAssignments .crewAssignedMultiple {
+  background: #16784d !important;
+  border-color: #0d5938;
+  color: #ffffff !important;
+}
+
+/* Fill the crew cell rather than showing a small floating tag. */
+:root[data-theme="light"] .mainOperationsEvents :is(.operationsUpcomingTable, .operationsCompletedTable) .crewAssignments {
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) !important;
+  justify-items: stretch !important;
+}
+
+/* Photographers: a distinct, polished studio-directory treatment. */
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView {
+  background:
+    radial-gradient(circle at 92% 5%, rgb(118 87 255 / 12%), transparent 22rem),
+    radial-gradient(circle at 8% 18%, rgb(25 167 242 / 10%), transparent 23rem),
+    #f8fbff;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .operationsDashboardControls {
+  padding: 11px 12px;
+  border: 1px solid #d7e6ff;
+  border-radius: 18px;
+  background: linear-gradient(105deg, #eff8ff 0%, #fbf9ff 56%, #f1edff 100%);
+  box-shadow: 0 10px 25px rgb(36 107 253 / 8%);
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .operationsTabs {
+  padding: 4px;
+  border: 1px solid #dceaff;
+  border-radius: 13px;
+  background: rgb(255 255 255 / 78%);
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .operationsTabs button {
+  min-height: 35px;
+  padding-inline: 13px;
+  color: #42516a;
+  border-radius: 9px;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .operationsTabs button.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #246bfd, #7657ff);
+  box-shadow: 0 6px 14px rgb(70 91 230 / 24%);
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerActions .operationsActionButton {
+  min-height: 36px;
+  border-radius: 10px;
+  background: #ffffff !important;
+  border-color: #d8e7ff !important;
+  color: #27517f !important;
+  box-shadow: 0 4px 12px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerActions .operationsActionButton.primary {
+  color: #ffffff !important;
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #246bfd, #7657ff) !important;
+  box-shadow: 0 7px 16px rgb(70 91 230 / 25%);
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
+  overflow: hidden;
+  border: 1px solid #d8e7ff !important;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 88%) !important;
+  box-shadow: 0 12px 28px rgb(36 107 253 / 8%) !important;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable thead th {
+  height: 42px;
+  color: #111827 !important;
+  border-color: #d7e5fa !important;
+  background: linear-gradient(105deg, #eaf5ff, #f4efff) !important;
+  font-size: 11px;
+  font-weight: 800 !important;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:nth-child(odd) td {
+  background: #f5faff !important;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:nth-child(even) td {
+  background: #faf7ff !important;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable tbody tr:hover td {
+  background: #eaf7ff !important;
+  box-shadow: inset 3px 0 #55a5fa !important;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerIdentity {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerIdentity i {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgb(255 255 255 / 65%);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #246bfd, #7657ff) !important;
+  color: #ffffff !important;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 800;
+  box-shadow: 0 5px 10px rgb(70 91 230 / 20%);
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerIdentity b {
+  color: #172033;
+  font-weight: 700;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerMobile {
+  padding: 6px 9px;
+  border: 1px solid #bfe9f3;
+  border-radius: 8px;
+  background: #eafaff !important;
+  color: #08758d !important;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerWork {
+  padding: 5px 9px;
+  border-color: #cde2ff !important;
+  border-radius: 8px;
+  background: #edf5ff !important;
+  color: #245f9b !important;
+  font-weight: 650;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable .statusPill.status-in-house {
+  border-color: #bae9ce !important;
+  background: #e9faef !important;
+  color: #177144 !important;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable .statusPill.status-outside {
+  border-color: #d8cdfd !important;
+  background: #f2efff !important;
+  color: #6246bd !important;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions button {
+  width: 31px;
+  height: 31px;
+  border-radius: 10px;
+  background: #ffffff !important;
+  border-color: #cfdef7 !important;
+  box-shadow: 0 3px 8px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions button:first-child {
+  color: #246bfd !important;
+  background: #edf5ff !important;
+}
+
+:root[data-theme="light"] .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions button:last-child {
+  color: #c74452 !important;
+  background: #fff0f2 !important;
+  border-color: #ffd5db !important;
+}
+
+:root[data-theme="light"] .mainOperationsEvents :is(.operationsUpcomingTable, .operationsCompletedTable) .crewAssignments :is(.crewNA, .crewX, .crewXX, .crewAssigned, .crewAssignedMultiple) {
+  box-sizing: border-box;
+  display: flex !important;
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  justify-content: center !important;
 }

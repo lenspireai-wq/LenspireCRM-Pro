@@ -165,13 +165,14 @@ export default function CalendarWorkspace() {
                     <li
                       key={event.id}
                       className={event.date_status === "TBD Month" ? "calTbdEvent" : undefined}
+                      title={`${event.couple_name || event.client_name || event.title || "Event"} · ${event.date_status === "TBD Month" ? "TBD" : formatTime(event.start_time, "Time TBD")}`}
                       draggable
                       onDragStart={(e) => e.dataTransfer.setData("text/plain", String(event.id))}
                       onClick={(e) => { e.stopPropagation(); setSelectedEvent(event); }}
                       style={{ borderLeft: `3px solid ${STATUS_COLORS[event.status] || "var(--muted)"}` }}
                     >
-                      <strong>{event.date_status === "TBD Month" ? "TBD" : formatTime(event.start_time)}</strong>
-                      <span>{event.client_name || event.title}</span>
+                      <strong>{event.couple_name || event.client_name || event.title || "Event"}</strong>
+                      <span>{event.date_status === "TBD Month" ? "TBD" : formatTime(event.start_time, "Time TBD")}</span>
                     </li>
                   ))}
                   {dayEvents.length > 3 ? <li className="calMore">+ {dayEvents.length - 3} more</li> : null}

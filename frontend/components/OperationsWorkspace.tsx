@@ -705,6 +705,7 @@ function NextShootsTable({ events }: { events: Row[] }) {
       <table className="nextShootsTable">
         <thead>
           <tr>
+            <th>Sr. No.</th>
             <th>When</th>
             <th>Client &amp; shoot</th>
             <th>Coverage</th>
@@ -717,6 +718,7 @@ function NextShootsTable({ events }: { events: Row[] }) {
             const count = crewCount(event);
             return (
               <tr key={event.id}>
+                <td className="shootSerial">{index + 1}</td>
                 <td>
                   <div className="shootDateCard">
                     <span>{event.start_date ? new Date(`${event.start_date}T00:00:00`).toLocaleDateString("en-IN", { month: "short" }).toUpperCase() : "TBD"}</span>
@@ -1021,17 +1023,21 @@ function Calendar({
               <span>{day}</span>
               {events
                 .filter((e) => e.start_date === key)
-                .map((e) =>
-                  edit ? (
+                .map((e) => {
+                  const eventName = e.couple_name || e.client_name || e.title || "Event";
+                  const eventTime = formatTime(e.start_time, "Time TBD");
+                  return edit ? (
                     <button key={e.id} onClick={() => edit({ ...e })}>
-                      {formatTime(e.start_time, "Time TBD")} {e.client_name || e.title}
+                      <span className="calendarEventName">{eventName}</span>
+                      <span className="calendarEventTime">{eventTime}</span>
                     </button>
                   ) : (
                     <small key={e.id} className="calendarReadOnlyEvent">
-                      {formatTime(e.start_time, "Time TBD")} {e.client_name || e.title}
+                      <span className="calendarEventName">{eventName}</span>
+                      <span className="calendarEventTime">{eventTime}</span>
                     </small>
-                  ),
-                )}
+                  );
+                })}
             </div>
           );
         })}
@@ -1092,17 +1098,12 @@ function CrewTable({
           </thead>
           <tbody>
             {displayedRows.map((row, index) => {
-              const initials = String(row.name || "—")
-                .split(/\s+/)
-                .filter(Boolean)
-                .slice(0, 2)
-                .map((part) => part[0])
-                .join("")
-                .toUpperCase();
               return <tr key={row.id}>
                 <td className="mobilePhotographerSerial">{index + 1}</td>
                 <td>
-                  <span className="photographerIdentity"><i>{initials}</i><b>{row.name}</b></span>
+                  <span className="photographerIdentity">
+                    <b>{row.name}</b>
+                  </span>
                 </td>
                 <td><span className="photographerMobile">{row.mobile || "—"}</span></td>
                 <td>{row.living_in || "—"}</td>

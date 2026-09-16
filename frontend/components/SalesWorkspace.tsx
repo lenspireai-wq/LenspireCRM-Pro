@@ -1026,6 +1026,66 @@ function LeadTable({
   );
 }
 
+function LightFormSelect({
+  value,
+  options,
+  onChange,
+  placeholder = "Select an option",
+  disabled = false,
+}: {
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    return () => document.removeEventListener("mousedown", closeOnOutsideClick);
+  }, []);
+
+  return (
+    <div className={`lightFormSelect${open ? " isOpen" : ""}`} ref={rootRef}>
+      <button
+        type="button"
+        className="lightFormSelectTrigger"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        disabled={disabled}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span>{value || placeholder}</span>
+        <span className="lightFormSelectChevron" aria-hidden="true" />
+      </button>
+      {open && (
+        <div className="lightFormSelectMenu" role="listbox">
+          {options.map((option) => (
+            <button
+              type="button"
+              role="option"
+              aria-selected={option === value}
+              className={option === value ? "selected" : ""}
+              key={option}
+              onClick={() => {
+                onChange(option);
+                setOpen(false);
+              }}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function LeadModal({
   lead,
   onClose,
@@ -1122,11 +1182,10 @@ function LeadModal({
           </label>
           <label>
             Event Type
-            <select
+            <LightFormSelect
               value={form.event_type}
-              onChange={(e) => set("event_type", e.target.value)}
-            >
-              {[
+              onChange={(value) => set("event_type", value)}
+              options={[
                 "Wedding",
                 "Night Wedding",
                 "Pre-Wedding",
@@ -1135,10 +1194,8 @@ function LeadModal({
                 "Corporate",
                 "Product Shoot",
                 "Others",
-              ].map((x) => (
-                <option key={x}>{x}</option>
-              ))}
-            </select>
+              ]}
+            />
           </label>
           <label>
             Event Date
@@ -1169,32 +1226,26 @@ function LeadModal({
           </label>
           <label>
             Lead Source
-            <select
+            <LightFormSelect
               value={form.source}
-              onChange={(e) => set("source", e.target.value)}
-            >
-              {[
+              onChange={(value) => set("source", value)}
+              options={[
                 "Instagram",
                 "Google",
                 "Referral",
                 "WhatsApp",
                 "Website",
                 "Others",
-              ].map((x) => (
-                <option key={x}>{x}</option>
-              ))}
-            </select>
+              ]}
+            />
           </label>
           <label>
             Status
-            <select
+            <LightFormSelect
               value={form.status}
-              onChange={(e) => set("status", e.target.value)}
-            >
-              {["New", "Follow-up", "Confirmed", "Lost"].map((x) => (
-                <option key={x}>{x}</option>
-              ))}
-            </select>
+              onChange={(value) => set("status", value)}
+              options={["New", "Follow-up", "Confirmed", "Lost"]}
+            />
           </label>
           <label>
             Budget
@@ -1208,14 +1259,11 @@ function LeadModal({
           </label>
           <label>
             Priority
-            <select
+            <LightFormSelect
               value={form.priority}
-              onChange={(e) => set("priority", e.target.value)}
-            >
-              <option>High</option>
-              <option>Medium</option>
-              <option>Low</option>
-            </select>
+              onChange={(value) => set("priority", value)}
+              options={["High", "Medium", "Low"]}
+            />
           </label>
           <label>
             Sales Person
@@ -1250,22 +1298,18 @@ function LeadModal({
           {form.status === "Lost" && (
             <label>
               Lost Reason
-              <select
-                required
+              <LightFormSelect
                 value={form.lost_reason}
-                onChange={(e) => set("lost_reason", e.target.value)}
-              >
-                <option value="">Select reason</option>
-                {[
+                onChange={(value) => set("lost_reason", value)}
+                placeholder="Select reason"
+                options={[
                   "Price",
                   "Unavailable Date",
                   "No Response",
                   "Competitor",
                   "Postponed",
-                ].map((x) => (
-                  <option key={x}>{x}</option>
-                ))}
-              </select>
+                ]}
+              />
             </label>
           )}
           <label className="wide">
@@ -1310,19 +1354,13 @@ function LeadModal({
               </label>
               <label>
                 Mode of Payment
-                <select
-                  required={booked}
+                <LightFormSelect
                   value={form.payment_mode}
-                  onChange={(e) => set("payment_mode", e.target.value)}
-                >
-                  <option value="">Select payment mode</option>
-                  <option>Gpay</option>
-                  <option>UPI/Gpay</option>
-                  <option>Cash</option>
-                  <option>Bank Transfer</option>
-                  <option>Cheque</option>
-                  <option>Other</option>
-                </select>
+                  onChange={(value) => set("payment_mode", value)}
+                  placeholder="Select payment mode"
+                  disabled={!booked}
+                  options={["Gpay", "UPI/Gpay", "Cash", "Bank Transfer", "Cheque", "Other"]}
+                />
               </label>
               <label>
                 Advance Received
@@ -1359,7 +1397,7 @@ function LeadModal({
           <button type="button" className="secondary" onClick={onClose}>
             Cancel
           </button>
-          <button className="primary" disabled={saving}>
+          <button className="secondary" disabled={saving}>
             {saving ? "Saving…" : lead ? "Update Lead" : "Save Lead"}
           </button>
         </div>
