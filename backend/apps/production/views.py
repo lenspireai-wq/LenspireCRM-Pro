@@ -24,6 +24,7 @@ from apps.core.api import OrganizationScopedViewSet
 from apps.core.permissions import ProductionAccessPermission
 from apps.users.models import User
 from apps.operations.models import CalendarEvent
+from apps.sales.models import Booking
 from .models import ClientPortalAccess, ClientPortalActivity, ProductionActivity, ProductionDeliverable, ProductionJob
 
 
@@ -80,7 +81,7 @@ class ProductionDeliverableSerializer(serializers.ModelSerializer):
 class ProductionActivitySerializer(serializers.ModelSerializer):
     client_name = serializers.CharField(source="job.customer.name", read_only=True)
     booking_code = serializers.CharField(source="job.booking.booking_code", read_only=True)
-    event_type = serializers.CharField(source="job.booking.event_type", read_only=True)
+    event_type = serializers.SerializerMethodField()
     editor_id = serializers.IntegerField(source="job.editor_id", read_only=True)
     editor_name = serializers.SerializerMethodField()
 
@@ -94,12 +95,15 @@ class ProductionActivitySerializer(serializers.ModelSerializer):
             return ""
         return obj.job.editor.display_name or obj.job.editor.username
 
+    def get_event_type(self, obj):
+        return obj.job.calendar_event.event_type if obj.job.calendar_event_id else obj.job.booking.event_type
+
 
 class ProductionJobSerializer(serializers.ModelSerializer):
     client_name = serializers.CharField(source="customer.name", read_only=True)
     booking_code = serializers.CharField(source="booking.booking_code", read_only=True)
-    event_type = serializers.CharField(source="booking.event_type", read_only=True)
-    event_date = serializers.DateField(source="booking.event_date", read_only=True)
+    event_type = serializers.SerializerMethodField()
+    event_date = serializers.SerializerMethodField()
     couple_name = serializers.CharField(source="booking.lead.couple_name", read_only=True, default="")
     editor_name = serializers.SerializerMethodField()
     editor_mobile = serializers.SerializerMethodField()
@@ -109,7 +113,7 @@ class ProductionJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductionJob
         fields = "__all__"
-        read_only_fields = ("organization",)
+        read_only_fields = ("organization", "calendar_event")
 
     def validate(self, attrs):
         organization = self.context["request"].user.organization
@@ -157,6 +161,12 @@ class ProductionJobSerializer(serializers.ModelSerializer):
         if not obj.editor:
             return ""
         return obj.editor.display_name or obj.editor.username
+
+    def get_event_type(self, obj):
+        return obj.calendar_event.event_type if obj.calendar_event_id else obj.booking.event_type
+
+    def get_event_date(self, obj):
+        return obj.calendar_event.start_date if obj.calendar_event_id else obj.booking.event_date
 
     def get_editor_mobile(self, obj):
         return getattr(obj.editor, "mobile", "") if obj.editor else ""
@@ -223,7 +233,7 @@ class ProductionJobSerializer(serializers.ModelSerializer):
 
 
 class ProductionJobViewSet(OrganizationScopedViewSet):
-    queryset = ProductionJob.objects.select_related("booking", "booking__lead", "customer", "editor").prefetch_related("deliverables__editor").all().order_by("due_date", "id")
+    queryset = ProductionJob.objects.select_related("booking", "booking__lead", "customer", "editor", "calendar_event").prefetch_related("deliverables__editor").all().order_by("due_date", "id")
     serializer_class = ProductionJobSerializer
     permission_classes = (ProductionAccessPermission,)
     filterset_fields = {"stage": ["exact", "in"], "raw_status": ["exact", "in"], "editing_status": ["exact", "in"], "album_status": ["exact", "in"], "video_status": ["exact", "in"], "client_approval_status": ["exact", "in"], "delivery_status": ["exact", "in"], "photo_delivery_status": ["exact", "in"], "video_delivery_status": ["exact", "in"], "album_delivery_status": ["exact", "in"], "editor": ["exact"], "due_date": ["exact", "gte", "lte"], "delivered_at": ["gte", "lte"]}
@@ -296,12 +306,17 @@ class ProductionJobViewSet(OrganizationScopedViewSet):
                 default=Value(False),
             ),
         )
-        return queryset.filter(
+        confirmed_jobs = queryset.filter(
             booking__lead__status__iexact="Confirmed",
             booking__status__iexact="Confirmed",
             booking__quoted_amount__gt=0,
             has_completed_event=True,
-        ).filter(
+        )
+        # New jobs are created only when their own completed calendar event
+        # passes the appropriate payment gate.  Keep a created event job in
+        # the queue as an auditable work record even if a later refund occurs.
+        # Booking-level jobs retain the legacy aggregate eligibility rule.
+        legacy_payment_gate = (
             Q(
                 combined_wedding_package=True,
                 has_completed_qualifying_event=True,
@@ -312,9 +327,32 @@ class ProductionJobViewSet(OrganizationScopedViewSet):
                 net_paid__gte=F("ninety_percent"),
             )
         )
+        return confirmed_jobs.filter(
+            Q(
+                calendar_event__isnull=False,
+                calendar_event__status__iexact="Completed",
+            )
+            | (Q(calendar_event__isnull=True) & legacy_payment_gate)
+        )
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        # Reconcile completed calendar events before returning production work.
+        # This also catches events that became eligible after a payment update.
+        from .event_jobs import sync_event_production_jobs_for_booking
+
+        completed_events = CalendarEvent.objects.filter(
+            booking__isnull=False,
+            status__iexact="Completed",
+            is_archived=False,
+        )
+        if not self.request.user.is_superuser:
+            completed_events = completed_events.filter(
+                organization=self.request.user.organization
+            )
+        booking_ids = completed_events.values_list("booking_id", flat=True).distinct()
+        for booking in Booking.objects.filter(id__in=booking_ids).select_related("lead", "customer"):
+            sync_event_production_jobs_for_booking(booking)
         is_editor = str(getattr(self.request.user, "role", "")).strip().lower() == "editor"
         if self.action in {"list", "export"} or is_editor:
             queryset = self.eligible_for_edit_queue(queryset)
@@ -397,7 +435,7 @@ class ProductionJobViewSet(OrganizationScopedViewSet):
                     activity.activity_date,
                     activity.job.customer.name,
                     activity.job.booking.booking_code,
-                    activity.job.booking.event_type,
+                    activity.job.calendar_event.event_type if activity.job.calendar_event_id else activity.job.booking.event_type,
                     activity.activity_type,
                     activity.description,
                     activity.performed_by,
@@ -481,8 +519,8 @@ class ProductionJobViewSet(OrganizationScopedViewSet):
                 [
                     job.customer.name,
                     job.booking.booking_code,
-                    job.booking.event_type,
-                    job.booking.event_date,
+                    job.calendar_event.event_type if job.calendar_event_id else job.booking.event_type,
+                    job.calendar_event.start_date if job.calendar_event_id else job.booking.event_date,
                     editor_name,
                     job.stage,
                     job.raw_status,

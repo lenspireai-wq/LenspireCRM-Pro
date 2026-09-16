@@ -236,12 +236,33 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
     search_fields = ("title", "client_name", "couple_name", "contact_no", "city", "notes", "handled_by", "photo", "video", "candid", "cinematic", "drone", "assistant", "bts")
     ordering_fields = ("start_date", "start_time", "status")
 
+    @staticmethod
+    def _sync_production(event):
+        # Import lazily to avoid the operations ↔ production model import cycle.
+        from apps.production.event_jobs import sync_event_production_jobs_for_event
+
+        sync_event_production_jobs_for_event(event)
+
+    def perform_create(self, serializer):
+        event = serializer.save(organization=self.request.user.organization)
+        self._sync_production(event)
+
+    def perform_update(self, serializer):
+        event = serializer.save()
+        self._sync_production(event)
+
     def get_queryset(self):
         queryset = super().get_queryset()
         today = timezone.localdate()
         # Lifecycle readiness is calculated when an event is saved.  On reads,
         # only date-driven transitions need updating; doing this in SQL avoids
         # loading every event before returning a paginated response.
+        newly_completed_ids = list(
+            queryset.filter(start_date__lt=today)
+            .exclude(status__in=("Cancelled", "Completed"))
+            .filter(booking__isnull=False, is_archived=False)
+            .values_list("id", flat=True)
+        )
         queryset.filter(start_date__lt=today).exclude(
             status__in=("Cancelled", "Completed")
         ).update(status="Completed")
@@ -256,6 +277,14 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
             changed.append(event)
         if changed:
             CalendarEvent.objects.bulk_update(changed, ("status",))
+
+        # Date-driven completion is applied above with a bulk update. Reconcile
+        # only events that changed in this request; reprocessing every historic
+        # event would make the Calendar progressively slower as data grows.
+        for event in CalendarEvent.objects.filter(id__in=newly_completed_ids).select_related(
+            "booking", "booking__lead", "booking__customer"
+        ):
+            self._sync_production(event)
 
         # Calendar screens need both dated events in their visible grid and
         # date-TBD events assigned to the selected month.  These parameters

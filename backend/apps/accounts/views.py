@@ -89,7 +89,11 @@ class PaymentViewSet(OrganizationScopedViewSet):
         if serializer.validated_data.get("status") == "Paid" and not paid_at:
             payment = serializer.save(organization=self.request.user.organization, paid_at=timezone.now())
         else:
-            payment = super().perform_create(serializer)
+            payment = serializer.save(organization=self.request.user.organization)
+        if payment.booking_id:
+            from apps.production.event_jobs import sync_event_production_jobs_for_booking
+
+            sync_event_production_jobs_for_booking(payment.booking)
         try:
             from apps.notifications.models import broadcast
             broadcast(
@@ -109,9 +113,13 @@ class PaymentViewSet(OrganizationScopedViewSet):
         status_value = serializer.validated_data.get("status", serializer.instance.status)
         paid_at = serializer.validated_data.get("paid_at", serializer.instance.paid_at)
         if status_value == "Paid" and not paid_at:
-            serializer.save(paid_at=timezone.now())
+            payment = serializer.save(paid_at=timezone.now())
         else:
-            serializer.save()
+            payment = serializer.save()
+        if payment.booking_id:
+            from apps.production.event_jobs import sync_event_production_jobs_for_booking
+
+            sync_event_production_jobs_for_booking(payment.booking)
 
     def get_throttles(self):
         if self.action in {"import"}:

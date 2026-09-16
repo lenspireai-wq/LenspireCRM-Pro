@@ -158,7 +158,8 @@ class LeadViewSet(OrganizationScopedViewSet):
                     "paid_at": paid_at,
                 },
             )
-        ProductionJob.objects.get_or_create(organization=org, booking=booking, defaults={"customer":customer,"due_date":lead.event_date})
+        # Production jobs are now created per completed calendar event after
+        # its payment gate is met, rather than as one booking-level job.
         if lead.event_date:
             CalendarEvent.objects.update_or_create(
                 organization=org,
@@ -196,7 +197,9 @@ class LeadViewSet(OrganizationScopedViewSet):
                 city=lead.city,
                 notes=lead.notes,
             )
-            ProductionJob.objects.filter(booking=booking).update(due_date=lead.event_date)
+            # Preserve historic booking-level jobs, but do not overwrite the
+            # due dates of new event-specific production jobs.
+            ProductionJob.objects.filter(booking=booking, calendar_event__isnull=True).update(due_date=lead.event_date)
     @action(detail=True, methods=["post"], url_path="activities")
     def add_activity(self, request, pk=None):
         lead = self.get_object(); activity_type = request.data.get("activity_type") or request.data.get("type")

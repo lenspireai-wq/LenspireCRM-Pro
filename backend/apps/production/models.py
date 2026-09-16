@@ -6,6 +6,15 @@ from apps.core.models import OrganizationScopedModel
 from apps.sales.models import Booking, Customer
 class ProductionJob(OrganizationScopedModel):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="production_jobs")
+    # New jobs belong to one operational event.  Legacy jobs may remain
+    # booking-level, so this link intentionally stays optional.
+    calendar_event = models.OneToOneField(
+        "operations.CalendarEvent",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="production_job",
+    )
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     stage = models.CharField(max_length=40, default="Shoot Planning")
     raw_status = models.CharField(max_length=30, default="Pending")

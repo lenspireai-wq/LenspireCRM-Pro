@@ -63,7 +63,7 @@ class TestLeadAPI:
         assert "lost_reason" in str(response.data).lower()
 
     def test_convert_lead_to_customer(self, authenticated_client, organization):
-        """Test lead conversion creates customer, booking, and production job"""
+        """Test lead conversion creates the customer and booking workflow."""
         lead = Lead.objects.create(
             organization=organization,
             lead_code="L002",

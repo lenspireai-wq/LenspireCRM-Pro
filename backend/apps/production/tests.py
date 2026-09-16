@@ -9,6 +9,7 @@ from apps.accounts.models import Payment
 from apps.operations.models import CalendarEvent
 from apps.sales.models import Booking, Customer, Lead
 from apps.users.models import User
+from .event_jobs import sync_event_production_jobs_for_booking
 from .models import ProductionActivity, ProductionDeliverable, ProductionJob
 
 
@@ -184,18 +185,52 @@ class ProductionApiTests(TestCase):
         reset = self.client.patch("/api/client-portal/invitations/", {"user": user["id"], "action": "reset"}, format="json")
         self.assertEqual(reset.status_code, 200)
         self.assertIn("/client-portal/setup/", reset.data["url"])
-    def test_edit_queue_requires_completed_event_and_ninety_percent_payment(self):
+    def test_event_job_stays_in_queue_after_creation_until_its_event_is_reopened(self):
         self.assertEqual(len(self.listed_jobs()), 1)
         payment = Payment.objects.get(booking=self.booking)
         payment.amount = "899.00"
         payment.save(update_fields=["amount"])
-        self.assertEqual(len(self.listed_jobs()), 0)
+        self.assertEqual(len(self.listed_jobs()), 1)
         payment.amount = "900.00"
         payment.save(update_fields=["amount"])
         event = CalendarEvent.objects.get(booking=self.booking)
         event.status = "Scheduled"
         event.save(update_fields=["status"])
         self.assertEqual(len(self.listed_jobs()), 0)
+
+    def test_each_completed_major_event_gets_its_own_production_job(self):
+        """A combined booking is split into independent production work."""
+        event = CalendarEvent.objects.get(booking=self.booking, event_type="Wedding")
+        event.start_date = "2026-12-20"
+        event.save(update_fields=["start_date"])
+        engagement = CalendarEvent.objects.create(
+            organization=self.organization,
+            booking=self.booking,
+            customer=self.customer,
+            title="Engagement",
+            event_type="Engagement",
+            start_date="2026-10-10",
+            status="Completed",
+        )
+        pre_wedding = CalendarEvent.objects.create(
+            organization=self.organization,
+            booking=self.booking,
+            customer=self.customer,
+            title="Pre-Wedding",
+            event_type="Pre-Wedding",
+            start_date="2026-11-15",
+            status="Completed",
+        )
+        Payment.objects.filter(booking=self.booking).update(amount="500.00")
+
+        jobs = sync_event_production_jobs_for_booking(self.booking)
+        self.assertEqual({job.calendar_event_id for job in jobs}, {engagement.id, pre_wedding.id})
+        self.assertEqual(ProductionJob.objects.filter(booking=self.booking).count(), 2)
+
+        Payment.objects.filter(booking=self.booking).update(amount="900.00")
+        jobs = sync_event_production_jobs_for_booking(self.booking)
+        self.assertEqual({job.calendar_event.event_type for job in jobs}, {"Engagement", "Pre-Wedding", "Wedding"})
+        self.assertEqual(ProductionJob.objects.filter(booking=self.booking).count(), 3)
 
     def test_combined_package_requires_any_qualifying_completion_and_fifty_percent(self):
         CalendarEvent.objects.create(
@@ -237,7 +272,7 @@ class ProductionApiTests(TestCase):
         self.assertEqual(len(self.listed_jobs()), 1)
         first_shoot.amount = "399.00"
         first_shoot.save(update_fields=["amount"])
-        self.assertEqual(len(self.listed_jobs()), 0)
+        self.assertEqual(len(self.listed_jobs()), 1)
 
     def test_job_includes_connected_booking_details(self):
         response = self.client.get(f"/api/production/{self.job.id}/")
