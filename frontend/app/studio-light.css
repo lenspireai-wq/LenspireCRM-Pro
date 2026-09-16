@@ -105,6 +105,9 @@
   display: block;
   width: min(100%, 190px);
   height: 112px;
+  justify-self: center;
+  align-self: center;
+  margin-inline: auto;
   object-fit: contain;
   filter: drop-shadow(0 7px 10px rgb(7 29 74 / 28%));
 }
