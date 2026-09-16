@@ -148,6 +148,40 @@
   background: rgb(255 255 255 / 72%);
 }
 :root[data-theme="light"] .loginFeatures > div { border-color: var(--line); }
+
+/* Keep the supplied wide studio logo centred even when the sidebar's shared
+   compact-brand rules are loaded later. */
+:root[data-theme="light"] .shell aside .brand.ankitSidebarBrand {
+  display: grid !important;
+  width: 100% !important;
+  align-self: stretch !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  place-items: center !important;
+  justify-content: stretch !important;
+  align-content: center !important;
+  padding: 8px 18px 18px !important;
+  gap: 0 !important;
+}
+
+:root[data-theme="light"] .shell aside .brand.ankitSidebarBrand .ankitSidebarLogo {
+  width: 176px !important;
+  max-width: calc(100% - 36px) !important;
+  height: 116px !important;
+  margin: 0 auto !important;
+  object-position: center center !important;
+}
+
+@media (max-width: 900px) {
+  :root[data-theme="light"] .shell aside .brand.ankitSidebarBrand {
+    padding: 6px 12px 16px !important;
+  }
+
+  :root[data-theme="light"] .shell aside .brand.ankitSidebarBrand .ankitSidebarLogo {
+    width: 158px !important;
+    max-width: calc(100% - 24px) !important;
+    height: 106px !important;
+  }
+}
 :root[data-theme="light"] .loginFeatures i,
 :root[data-theme="light"] .loginHeroNote { color: var(--brand); }
 :root[data-theme="light"] .loginFeatures small { color: var(--muted); }

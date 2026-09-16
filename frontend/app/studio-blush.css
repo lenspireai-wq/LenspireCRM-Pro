@@ -199,3 +199,38 @@
   :root[data-theme="blush"] .shell aside { box-shadow: 10px 0 30px rgb(132 66 111 / 14%); }
   :root[data-theme="blush"] .mainDashboard .dashMetric { min-height: 90px; }
 }
+
+/* Shared studio lockup: all themes keep the supplied Ankit Studios mark
+   centred against the entire sidebar, not only its intrinsic image width. */
+:root[data-theme] .shell aside .brand.ankitSidebarBrand {
+  display: flex !important;
+  width: 100% !important;
+  align-self: stretch !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px 18px 18px !important;
+  gap: 0 !important;
+}
+
+:root[data-theme] .shell aside .brand.ankitSidebarBrand .ankitSidebarLogo {
+  width: 176px !important;
+  max-width: 100% !important;
+  height: 116px !important;
+  margin: 0 auto !important;
+  justify-self: center !important;
+  align-self: center !important;
+  object-position: center center !important;
+}
+
+@media (max-width: 900px) {
+  :root[data-theme] .shell aside .brand.ankitSidebarBrand {
+    padding: 6px 12px 16px !important;
+  }
+
+  :root[data-theme] .shell aside .brand.ankitSidebarBrand .ankitSidebarLogo {
+    width: 158px !important;
+    max-width: 100% !important;
+    height: 106px !important;
+  }
+}
