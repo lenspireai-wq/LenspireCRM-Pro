@@ -1,5 +1,7 @@
 from pathlib import Path
+from django.http import FileResponse, Http404
 from rest_framework import serializers
+from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from apps.core.api import OrganizationScopedViewSet
 from .models import Attachment
@@ -22,3 +24,14 @@ class AttachmentViewSet(OrganizationScopedViewSet):
     filterset_fields = {"lead": ["exact"], "created_at": ["gte", "lte"]}
     search_fields = ("name",)
     ordering_fields = ("created_at", "name")
+
+    @action(detail=True, methods=["get"])
+    def download(self, request, pk=None):
+        attachment = self.get_object()
+        if not attachment.file or not attachment.file.name:
+            raise Http404("Attachment file not found.")
+        return FileResponse(
+            attachment.file.open("rb"),
+            as_attachment=False,
+            filename=attachment.name or Path(attachment.file.name).name,
+        )

@@ -1373,6 +1373,7 @@ function LeadDetail({
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [openingAttachmentId, setOpeningAttachmentId] = useState<number | null>(null);
   const attachMutation = useApiMutation<FormData, any, Error>({
     mutationFn: async (payload) =>
       (await api.post("/attachments/", payload)).data,
@@ -1420,6 +1421,27 @@ function LeadDetail({
         : "Could not upload quotation. Please try again or contact support."));
     } finally {
       setUploading(false);
+    }
+  };
+  const openAttachment = async (attachment: Attachment) => {
+    const preview = window.open("", "_blank");
+    setOpeningAttachmentId(attachment.id);
+    setError("");
+    try {
+      const response = await api.get(`/attachments/${attachment.id}/download/`, { responseType: "blob" });
+      const fileUrl = URL.createObjectURL(response.data);
+      if (preview) {
+        preview.opener = null;
+        preview.location.href = fileUrl;
+      } else {
+        window.location.assign(fileUrl);
+      }
+      window.setTimeout(() => URL.revokeObjectURL(fileUrl), 60_000);
+    } catch {
+      preview?.close();
+      setError("Could not open this quotation. Please try again.");
+    } finally {
+      setOpeningAttachmentId(null);
     }
   };
   const add = async (e: React.FormEvent) => {
@@ -1502,19 +1524,19 @@ function LeadDetail({
           )}
           <div className="attachmentList">
             {(lead.attachments || []).map((attachment) => (
-              <a
+              <button
                 key={attachment.id}
-                href={attachment.file}
-                target="_blank"
-                rel="noopener noreferrer"
+                type="button"
+                disabled={openingAttachmentId === attachment.id}
+                onClick={() => void openAttachment(attachment)}
               >
                 <span>▤</span>
                 <div>
-                  <b>{attachment.name}</b>
+                  <b>{openingAttachmentId === attachment.id ? "Opening…" : attachment.name}</b>
                   <small>{dateTime(attachment.created_at)}</small>
                 </div>
                 <i>Open ↗</i>
-              </a>
+              </button>
             ))}
             {!lead.attachments?.length && (
               <div className="salesEmpty">No quotation uploaded.</div>

@@ -87,6 +87,7 @@ jobs:
                 "      BACKUP_ROOT: /var/lib/lenspirecrm/backups" \
                 "    volumes:" \
                 "      - lenspirecrm_backups:/var/lib/lenspirecrm/backups" \
+                "      - lenspirecrm_media:/app/media" \
                 "  worker:" \
                 "    environment:" \
                 "      BACKUP_ENCRYPTION_KEY: \${BACKUP_ENCRYPTION_KEY}" \
@@ -100,7 +101,8 @@ jobs:
                 "    volumes:" \
                 "      - lenspirecrm_backups:/var/lib/lenspirecrm/backups" \
                 "volumes:" \
-                "  lenspirecrm_backups:" > docker-compose.backups.yml
+                "  lenspirecrm_backups:" \
+                "  lenspirecrm_media:" > docker-compose.backups.yml
               if ! grep -q "^BACKUP_ENCRYPTION_KEY=." .env; then
                 umask 077
                 backup_key="$(openssl rand -base64 48 | tr -d "\\n")"
@@ -108,6 +110,11 @@ jobs:
                 unset backup_key
               fi
               compose() { docker compose -f "$base_compose" -f docker-compose.backups.yml "$@"; }
+              previous_api="$(docker compose -f "$base_compose" ps -q api || true)"
+              media_snapshot="$(mktemp -d)"
+              if [ -n "$previous_api" ]; then
+                docker cp "$previous_api:/app/media/." "$media_snapshot" 2>/dev/null || true
+              fi
               pulled=false
               for pull_attempt in 1 2 3; do
                 if compose pull; then
@@ -118,6 +125,11 @@ jobs:
               done
               [ "$pulled" = true ] || exit 1
               compose up -d --remove-orphans
+              current_api="$(compose ps -q api)"
+              if [ -d "$media_snapshot" ] && [ -n "$(find "$media_snapshot" -mindepth 1 -print -quit)" ]; then
+                docker cp "$media_snapshot/." "$current_api:/app/media"
+              fi
+              rm -rf "$media_snapshot"
               compose exec -T api python manage.py migrate --noinput
               compose ps
               (docker image prune -af || echo "Docker cleanup already running; skipped for this release.")

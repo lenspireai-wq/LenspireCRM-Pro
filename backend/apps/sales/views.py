@@ -32,8 +32,7 @@ class LeadSerializer(serializers.ModelSerializer):
     def get_activities(self, obj):
         return LeadActivitySerializer(obj.activities.order_by("-created_at", "-id"), many=True).data
     def get_attachments(self, obj):
-        request = self.context.get("request")
-        return [{"id": item.id, "name": item.name, "file": request.build_absolute_uri(item.file.url) if request else item.file.url, "created_at": item.created_at} for item in obj.attachments.order_by("-created_at")]
+        return [{"id": item.id, "name": item.name, "file": f"/api/attachments/{item.id}/download/", "created_at": item.created_at} for item in obj.attachments.order_by("-created_at")]
     def validate(self, attrs):
         status_value = attrs.get("status", getattr(self.instance, "status", "New"))
         lost_reason = attrs.get("lost_reason", getattr(self.instance, "lost_reason", ""))

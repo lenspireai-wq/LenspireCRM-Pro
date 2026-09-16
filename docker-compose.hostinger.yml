@@ -39,6 +39,7 @@ services:
              gunicorn lenspirecrm.wsgi:application --bind 0.0.0.0:8000 --workers 2 --access-logfile - --error-logfile -"
     volumes:
       - lenspirecrm_backups:/var/lib/lenspirecrm/backups
+      - lenspirecrm_media:/app/media
 
   worker:
     build:
@@ -77,3 +78,4 @@ services:
 
 volumes:
   lenspirecrm_backups:
+  lenspirecrm_media:

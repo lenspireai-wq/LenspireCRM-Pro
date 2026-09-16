@@ -1343,10 +1343,12 @@
   border: 1px solid color-mix(in srgb, var(--brand) 33%, transparent);
   color: var(--brand);
 }
-:root[data-theme="dark"] .attachmentList a {
+:root[data-theme="dark"] .attachmentList a,
+:root[data-theme="dark"] .attachmentList button {
   color: var(--text);
 }
-:root[data-theme="dark"] .attachmentList a > span {
+:root[data-theme="dark"] .attachmentList a > span,
+:root[data-theme="dark"] .attachmentList button > span {
   color: var(--brand);
 }
 :root[data-theme="dark"] .attachmentList i {

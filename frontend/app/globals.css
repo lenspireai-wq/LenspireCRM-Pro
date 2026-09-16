@@ -7166,21 +7166,29 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   display: grid;
   gap: var(--space-2);
 }
-.attachmentList a {
+.attachmentList a,
+.attachmentList button {
   display: flex;
+  width: 100%;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
+  background: transparent;
   color: #d8e0ea;
+  font: inherit;
+  text-align: left;
   text-decoration: none;
+  cursor: pointer;
 }
-.attachmentList a > span {
+.attachmentList a > span,
+.attachmentList button > span {
   font-size: var(--font-lg);
   color: #8f86ff;
 }
-.attachmentList a > div {
+.attachmentList a > div,
+.attachmentList button > div {
   flex: 1;
 }
 .attachmentList b,
