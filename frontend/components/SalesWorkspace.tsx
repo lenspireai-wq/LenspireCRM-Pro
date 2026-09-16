@@ -1375,11 +1375,7 @@ function LeadDetail({
   const [uploading, setUploading] = useState(false);
   const attachMutation = useApiMutation<FormData, any, Error>({
     mutationFn: async (payload) =>
-      (
-        await api.post("/attachments/", payload, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
-      ).data,
+      (await api.post("/attachments/", payload)).data,
   });
   const logActivityMutation = useApiMutation<
     { type: string; description: string },
@@ -1396,6 +1392,10 @@ function LeadDetail({
   });
   const uploadAttachment = async (file?: File) => {
     if (!file) return;
+    if (file.size === 0) {
+      setError("The selected file is empty. Choose a non-empty quotation PDF.");
+      return;
+    }
     if (file.size > 10 * 1024 * 1024) {
       setError("Quotation files must be 10 MB or smaller.");
       return;
@@ -1405,7 +1405,7 @@ function LeadDetail({
     const data = new FormData();
     data.append("lead", String(lead.id));
     data.append("name", file.name);
-    data.append("file", file);
+    data.append("file", file, file.name);
     try {
       await attachMutation.mutateAsync(data);
       await onRefresh();
