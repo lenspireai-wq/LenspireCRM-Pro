@@ -754,7 +754,41 @@
   color: var(--muted);
 }
 :root[data-theme="light"] .loginMobileWordmark {
-  filter: brightness(0) invert(0.25);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  filter: none !important;
+}
+
+/* Light login credentials: override the shared dark-login autofill rule. */
+:root[data-theme="light"] .login .loginInput {
+  background: #ffffff !important;
+  border-color: #cddfff !important;
+}
+
+:root[data-theme="light"] .login :is(.loginUsernameField input, .loginPasswordField input),
+:root[data-theme="light"] .login :is(.loginUsernameField input:focus, .loginPasswordField input:focus) {
+  color: #172033 !important;
+  -webkit-text-fill-color: #172033 !important;
+  caret-color: #246bfd !important;
+}
+
+:root[data-theme="light"] .login :is(.loginUsernameField input, .loginPasswordField input)::placeholder {
+  color: #6d7c94 !important;
+  -webkit-text-fill-color: #6d7c94 !important;
+  opacity: 1;
+}
+
+:root[data-theme="light"] .login .loginInput input:-webkit-autofill,
+:root[data-theme="light"] .login .loginInput input:-webkit-autofill:hover,
+:root[data-theme="light"] .login .loginInput input:-webkit-autofill:focus,
+:root[data-theme="light"] .login .loginInput input:-webkit-autofill:active {
+  -webkit-text-fill-color: #172033 !important;
+  caret-color: #246bfd !important;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
 }
 :root[data-theme="light"] .loginWordmark {
   filter: none;

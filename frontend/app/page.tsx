@@ -155,8 +155,8 @@ function Login({
       <ThemeToggle className="loginThemeToggle" />
       <section className="loginHero" aria-label="LenspireCRM introduction">
         <img
-          className="loginWordmark"
-          src="/login/lenspire-wordmark.png"
+            className="loginWordmark"
+            src="/login/lenspireai-wordmark-premium.png"
           alt="Lenspire.ai — See, Create, Inspire"
         />
         <div className="loginHeroCopy">
@@ -201,7 +201,7 @@ function Login({
         <form className="loginCard" onSubmit={submit}>
           <img
             className="loginMobileWordmark"
-            src="/login/lenspire-wordmark.png"
+            src="/login/lenspireai-wordmark-premium.png"
             alt="Lenspire.ai"
           />
           <span className="loginEyebrow">

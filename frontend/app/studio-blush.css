@@ -89,6 +89,41 @@
   box-shadow: 0 10px 20px rgb(223 63 137 / 24%);
 }
 
+/* Blush login credentials: override the dark-theme autofill safeguard. */
+:root[data-theme="blush"] .login .loginInput {
+  background: #ffffff !important;
+  border-color: #e9cddd !important;
+}
+
+:root[data-theme="blush"] .login :is(.loginUsernameField input, .loginPasswordField input),
+:root[data-theme="blush"] .login :is(.loginUsernameField input:focus, .loginPasswordField input:focus) {
+  color: #2a2432 !important;
+  -webkit-text-fill-color: #2a2432 !important;
+  caret-color: #df3f89 !important;
+}
+
+:root[data-theme="blush"] .login :is(.loginUsernameField input, .loginPasswordField input)::placeholder {
+  color: #8b7d90 !important;
+  -webkit-text-fill-color: #8b7d90 !important;
+  opacity: 1;
+}
+
+:root[data-theme="blush"] .login .loginInput input:-webkit-autofill,
+:root[data-theme="blush"] .login .loginInput input:-webkit-autofill:hover,
+:root[data-theme="blush"] .login .loginInput input:-webkit-autofill:focus,
+:root[data-theme="blush"] .login .loginInput input:-webkit-autofill:active {
+  -webkit-text-fill-color: #2a2432 !important;
+  caret-color: #df3f89 !important;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+}
+
+/* Preserve the supplied Lenspire.ai logo colors in Blush mode. */
+:root[data-theme="blush"] :is(.loginWordmark, .loginMobileWordmark) {
+  filter: none !important;
+  mix-blend-mode: normal;
+}
+
 :root[data-theme="blush"] .shell aside nav button {
   color: #756a7d;
 }
