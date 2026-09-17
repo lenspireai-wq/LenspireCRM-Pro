@@ -765,7 +765,7 @@ export default function AccountsWorkspace({
                 ◉
               </button>
             </div>
-            {paymentTable(payments.slice(0, 8))}
+            {paymentTable(payments.slice(0, 10))}
           </section>
           <div className="accountColumns">
             {breakdown("Payment Modes", modes, "payment_mode", paid)}

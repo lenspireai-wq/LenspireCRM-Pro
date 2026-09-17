@@ -393,6 +393,160 @@
     background: rgb(215 107 119 / 18%) !important;
     color: #ffd5da !important;
   }
+  /* Compact the four Accounts summary cards without reducing readability. */
+  :root[data-theme="dark"] .mainAccountsSticky .accountsViewSticky .accountMetrics article {
+    min-height: 64px !important;
+    padding: 8px 10px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .accountsViewSticky .accountMetrics span {
+    margin-bottom: 2px;
+    font-size: 10px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .accountsViewSticky .accountMetrics strong {
+    font-size: 15px;
+    line-height: 1.1;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .accountsWorkspace.paymentDashboardView .accountsViewSticky {
+    padding-bottom: 0;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsCommandDeck {
+    margin-top: 0;
+    margin-bottom: 4px;
+    gap: 7px;
+    padding: 9px 11px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsCommandDeck small {
+    font-size: 8px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsCommandDeck h2 {
+    margin: 3px 0;
+    font-size: 17px;
+    line-height: 1.12;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsCommandDeck p {
+    font-size: 10px;
+    line-height: 1.25;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsCommandSignals {
+    gap: 5px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsCommandSignals span {
+    padding: 4px 3px;
+    font-size: 7px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsCommandSignals b {
+    font-size: 12px;
+  }
+  /* Keep the live collections introduction compact without changing its payment table. */
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .panelHead {
+    gap: 4px;
+    padding: 3px 9px 6px;
+    border-bottom-color: transparent;
+    background: transparent;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .panelHead > * {
+    transform: translateY(-5px);
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .panelHead small {
+    font-size: 7px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .panelHead h2 {
+    margin: 2px 0;
+    font-size: 14px;
+    line-height: 1.08;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .panelHead p {
+    font-size: 9px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .panelHead .viewAction {
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+    min-height: 22px;
+    padding: 0;
+    font-size: 10px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .paymentTable {
+    width: max-content !important;
+    min-width: max-content !important;
+    table-layout: auto !important;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .paymentTable :is(th, td) {
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 6px 5px !important;
+    overflow: visible !important;
+    overflow-wrap: normal !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+    font-size: 10px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .paymentTable th {
+    font-size: 9px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .paymentTable :is(th, td):first-child {
+    width: 42px !important;
+    min-width: 42px !important;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .paymentTable .rowActions {
+    gap: 3px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountsRecentPaymentsPanel .paymentTable .rowActions button {
+    flex-basis: 22px;
+    width: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    padding: 0;
+    font-size: 10px;
+  }
+  /* Keep the two payment summary panels compact without changing their data. */
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountColumns {
+    gap: 9px;
+    margin: 9px 0;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountBreakdown {
+    padding: 11px 12px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountBreakdown h2 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountBreakdown > div {
+    gap: 8px;
+    padding: 7px 0;
+    font-size: 11px;
+    line-height: 1.2;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountBreakdown > div > span {
+    min-width: 0;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .paymentDashboardView .accountBreakdown b {
+    flex: 0 0 auto;
+    font-size: 12px;
+  }
+  /* Upcoming and Completed event tables: size columns from the content itself. */
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable {
+    width: max-content !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    table-layout: auto !important;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable :is(th, td) {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    overflow: visible !important;
+    overflow-wrap: normal !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable :is(th, td):first-child {
+    width: 44px !important;
+    min-width: 44px !important;
+  }
   :root[data-theme="dark"] .mainOperationsDashboard .operationsWorkspace .salesKpis {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px;
