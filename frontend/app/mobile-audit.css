@@ -248,6 +248,13 @@
   :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable td {
     text-align: center;
   }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable th:nth-child(n + 8):nth-child(-n + 14) {
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.15;
+  }
   :root[data-theme="dark"] .mainOperationsDashboard .operationsWorkspace .salesKpis {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px;
