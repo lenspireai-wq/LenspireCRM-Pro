@@ -5567,6 +5567,393 @@
   box-shadow: 0 7px 15px rgb(70 91 230 / 23%);
 }
 
+/* Post Production: one polished visual system across Dashboard, queue, overdue, history and delivery. */
+:root[data-theme="light"] .productionWorkspace {
+  background:
+    radial-gradient(circle at 96% 1%, rgb(25 167 242 / 12%), transparent 23rem),
+    radial-gradient(circle at 9% 31%, rgb(118 87 255 / 7%), transparent 23rem),
+    #f8fbff;
+}
+
+:root[data-theme="light"] .productionWorkspace .workspaceTabs,
+:root[data-theme="light"] .productionWorkspace .productionTabs {
+  padding: 5px;
+  border: 1px solid #d5e6fb;
+  border-radius: 14px;
+  background: #ffffffc9;
+  box-shadow: 0 7px 18px rgb(32 75 140 / 6%);
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.workspaceTabs, .productionTabs) button {
+  min-height: 34px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: #4f6079;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.workspaceTabs, .productionTabs) button.active,
+:root[data-theme="light"] .productionWorkspace :is(.workspaceTabs, .productionTabs) button[aria-current="page"] {
+  border-color: #bcd6fc;
+  background: linear-gradient(135deg, #eaf5ff, #f1edff);
+  color: #246bfd;
+  box-shadow: 0 3px 9px rgb(36 107 253 / 10%);
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionCommandDeck, .productionFocusPanel, .productionOverduePanel, .productionDeliveryPanel, .editQueuePanel, .productionTimeline, .productionTools, .myProductionTask) {
+  border-color: #d4e5fb !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #ffffff, #f8fbff) !important;
+  box-shadow: 0 12px 30px rgb(31 77 154 / 8%) !important;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionFocusPanel, .productionOverduePanel, .productionDeliveryPanel, .editQueuePanel) > .panelHead {
+  padding: 17px 19px;
+  border-bottom: 1px solid #e0ebf8;
+  background: linear-gradient(105deg, #eef8ff, #fbf9ff);
+}
+
+:root[data-theme="light"] .productionWorkspace .panelHead :is(h2, h3) {
+  color: #172033;
+  font-weight: 760;
+}
+
+:root[data-theme="light"] .productionWorkspace .panelHead :is(p, small) {
+  color: #65738a;
+}
+
+:root[data-theme="light"] .productionWorkspace .productionMetrics :is(article, button) {
+  min-height: 104px;
+  border: 1px solid #d5e6fb !important;
+  border-top: 3px solid #246bfd !important;
+  border-radius: 15px !important;
+  background: linear-gradient(135deg, #eaf5ff, #f8fbff) !important;
+  box-shadow: 0 9px 21px rgb(31 77 154 / 7%) !important;
+}
+
+:root[data-theme="light"] .productionWorkspace .productionMetrics :is(article, button):nth-child(3n + 2) {
+  border-top-color: #7657ff !important;
+  background: linear-gradient(135deg, #f2eeff, #fbfaff) !important;
+}
+
+:root[data-theme="light"] .productionWorkspace .productionMetrics :is(article, button):nth-child(3n) {
+  border-top-color: #22b573 !important;
+  background: linear-gradient(135deg, #eafaf2, #fafffc) !important;
+}
+
+:root[data-theme="light"] .productionWorkspace .productionMetrics :is(span, strong, b) {
+  color: #172033 !important;
+}
+
+:root[data-theme="light"] .productionWorkspace .productionMetrics small {
+  color: #65738a !important;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) {
+  overflow: hidden;
+  border: 1px solid #d7e6f8;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) thead :is(tr, th) {
+  border-color: #dbe8f8 !important;
+  background: linear-gradient(105deg, #eaf5ff, #f6f2ff) !important;
+  color: #172033 !important;
+  font-size: 11px !important;
+  font-weight: 780 !important;
+  letter-spacing: .045em;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) tbody tr,
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) tbody td {
+  background: #ffffff !important;
+  color: #27364c !important;
+  border-color: #e1ebf7 !important;
+  font-size: 13px;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) tbody tr:nth-child(even),
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) tbody tr:nth-child(even) td {
+  background: #f7fbff !important;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) tbody tr:hover td {
+  background: #edf7ff !important;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) :is(button, a) {
+  border: 1px solid #c3dbfb;
+  border-radius: 8px;
+  background: #f1f7ff;
+  color: #246bfd;
+  font-weight: 650;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) :is(button, a):hover {
+  border-color: #8db9f7;
+  background: #e3f0ff;
+}
+
+/* Individual Production Job: detailed work planning, with the same light production language. */
+:root[data-theme="light"] .productionModal {
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #cfe1ff !important;
+  border-radius: 22px !important;
+  background: #ffffff !important;
+  box-shadow: 0 26px 66px rgb(27 74 148 / 23%) !important;
+}
+
+:root[data-theme="light"] .productionModal .productionJobHeader {
+  padding: 22px 25px 19px;
+  border-bottom: 1px solid #d9e8fa;
+  background:
+    radial-gradient(circle at 92% 15%, rgb(118 87 255 / 16%), transparent 13rem),
+    linear-gradient(105deg, #edf8ff, #ffffff 59%, #f7f3ff);
+}
+
+:root[data-theme="light"] .productionModal .productionJobHeader::after {
+  border-color: rgb(36 107 253 / 12%);
+  box-shadow: 0 0 0 24px rgb(118 87 255 / 5%);
+}
+
+:root[data-theme="light"] .productionModal .productionJobHeader small {
+  color: #246bfd;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+:root[data-theme="light"] .productionModal .productionJobHeader h2 {
+  color: #172033;
+  font-size: 25px;
+  font-weight: 780;
+}
+
+:root[data-theme="light"] .productionModal .productionJobHeader p {
+  color: #61728a;
+  font-size: 13px;
+}
+
+:root[data-theme="light"] .productionModal .productionJobHeader > button {
+  border-color: #cbdcf4;
+  border-radius: 10px;
+  background: #ffffffd9;
+  color: #52637c;
+}
+
+:root[data-theme="light"] .productionModal .productionWorkflowEditor {
+  padding: 18px 22px;
+  background:
+    radial-gradient(circle at 5% 100%, rgb(36 107 253 / 7%), transparent 17rem),
+    #f8fbff;
+}
+
+:root[data-theme="light"] .productionModal .productionWorkflowIntro {
+  padding: 15px 16px;
+  border: 1px solid #d5e6fb;
+  border-radius: 14px;
+  background: linear-gradient(105deg, #eff8ff, #faf8ff);
+}
+
+:root[data-theme="light"] .productionModal .productionWorkflowIntro h3 {
+  color: #172033;
+  font-size: 17px;
+  font-weight: 760;
+}
+
+:root[data-theme="light"] .productionModal .productionWorkflowIntro p {
+  color: #65738a;
+}
+
+:root[data-theme="light"] .productionModal .productionWorkflowIntro > b {
+  padding: 7px 10px;
+  border: 1px solid #c8ddfd;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #246bfd;
+  font-size: 12px;
+}
+
+:root[data-theme="light"] .productionModal .productionDeliverableGrid article {
+  border: 1px solid #d7e6f8;
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgb(32 75 140 / 6%);
+}
+
+:root[data-theme="light"] .productionModal .productionDeliverableGrid article.disabled {
+  background: #f5f8fc;
+  opacity: .72;
+}
+
+:root[data-theme="light"] .productionModal .productionDeliverableGrid article > header {
+  padding: 12px 13px;
+  border-bottom: 1px solid #e1ebf7;
+  background: linear-gradient(105deg, #f2f8ff, #faf8ff);
+}
+
+:root[data-theme="light"] .productionModal .productionDeliverableGrid article > header b {
+  color: #172033;
+  font-size: 14px;
+}
+
+:root[data-theme="light"] .productionModal .productionDeliverableGrid article > div {
+  padding: 12px;
+}
+
+:root[data-theme="light"] .productionModal .productionDeliverableGrid label {
+  color: #485971;
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+:root[data-theme="light"] .productionModal .productionDeliverableGrid :is(input, select, textarea) {
+  margin-top: 6px;
+  border: 1px solid #cbdcf4;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #172033;
+  font-size: 13px;
+  font-weight: 450;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+:root[data-theme="light"] .productionModal .productionDeliverableGrid :is(input, select, textarea):focus {
+  border-color: #76adfb;
+  box-shadow: 0 0 0 3px rgb(36 107 253 / 13%);
+}
+
+:root[data-theme="light"] .productionModal .deliverableStatus {
+  border: 1px solid #c8e5d5;
+  border-radius: 8px;
+  background: #eaf9f1;
+  color: #178555;
+  font-weight: 750;
+}
+
+:root[data-theme="light"] .productionModal .deliverableReviewActions button,
+:root[data-theme="light"] .productionModal .productionDeliverableGrid a.wide {
+  border: 1px solid #bdd6fa;
+  border-radius: 9px;
+  background: #eff7ff;
+  color: #246bfd;
+  font-weight: 650;
+}
+
+:root[data-theme="light"] .productionModal .deliverableReviewActions .approve {
+  border-color: #bde7d1;
+  background: #eaf9f1;
+  color: #178555;
+}
+
+:root[data-theme="light"] .productionModal .modalFooter {
+  gap: 10px;
+  padding: 15px 22px;
+  border-top: 1px solid #dce9fa;
+  background: linear-gradient(105deg, #f8fbff, #f6f3ff);
+  box-shadow: 0 -7px 18px rgb(34 75 140 / 6%);
+}
+
+:root[data-theme="light"] .productionModal .modalFooter button {
+  min-height: 38px;
+  border: 1px solid #c7d9f3;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #3c4c64;
+  font-weight: 600;
+}
+
+:root[data-theme="light"] .productionModal .modalFooter .primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, #246bfd, #7657ff);
+  color: #ffffff;
+  box-shadow: 0 7px 15px rgb(70 91 230 / 23%);
+}
+
+/* Post Production tables: dark, dependable headers and softly differentiated work rows. */
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) thead th {
+  background: linear-gradient(105deg, #e7f3ff, #f2eeff) !important;
+  color: #172033 !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: .05em;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) tbody tr:nth-child(odd) td {
+  background: #f5faff !important;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) tbody tr:nth-child(even) td {
+  background: #f9f7ff !important;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) tbody tr:hover td {
+  background: #e9f5ff !important;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) .rowActions :is(button, a),
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) td:last-child :is(button, a) {
+  min-width: 31px;
+  min-height: 31px;
+  border: 1px solid #bcd8fc !important;
+  border-radius: 8px;
+  background: #eaf4ff !important;
+  color: #246bfd !important;
+  box-shadow: 0 3px 8px rgb(36 107 253 / 8%);
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) .rowActions :is(button, a):nth-child(2),
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) td:last-child :is(button, a):nth-child(2) {
+  border-color: #d7cafb !important;
+  background: #f2eeff !important;
+  color: #7657ff !important;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) .rowActions :is(button, a):nth-child(3),
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) td:last-child :is(button, a):nth-child(3) {
+  border-color: #bfe8d3 !important;
+  background: #eaf9f1 !important;
+  color: #178555 !important;
+}
+
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) .rowActions :is(button, a):hover,
+:root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) td:last-child :is(button, a):hover {
+  filter: brightness(.97);
+  transform: translateY(-1px);
+}
+
+/* Edit Queue workflow should read like normal table content, not a coloured badge. */
+:root[data-theme="light"] .productionWorkspace .editQueueTable .editQueueWorkflow {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #27364c !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="light"] .productionWorkspace .editQueueTable .workflowBadge {
+  display: inline;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #27364c !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  box-shadow: none !important;
+}
+
 /* Public client portal: a bright, premium client experience independent of the staff workspace theme. */
 .clientPortal {
   max-width: 1180px;
