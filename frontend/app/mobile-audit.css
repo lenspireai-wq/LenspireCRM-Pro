@@ -528,38 +528,345 @@
     font-size: 12px;
   }
   /* Collections: retain the content, remove the inner decorative patch, and tighten its header. */
-  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsHero {
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .collectionsHero {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
     gap: 6px;
+    margin: 0 0 7px;
     padding: 8px 10px;
-    border-bottom-color: transparent;
-    background: transparent;
+    overflow: hidden;
+    border: 1px solid #6c5636;
+    border-radius: 16px;
+    background:
+      radial-gradient(circle at 90% -25%, #d3a04744 0, transparent 44%),
+      radial-gradient(circle at 7% 120%, #b9873a20 0, transparent 48%),
+      linear-gradient(115deg, #2c261d, #211d17 64%, #272018);
+    box-shadow: 0 12px 28px #00000026;
   }
-  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsHero::after {
-    display: none;
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .collectionsHero::after {
+    display: block;
+    right: -82px;
+    bottom: -126px;
+    width: 180px;
+    height: 180px;
+    border-color: #d8ab5258;
+    box-shadow: 0 0 0 24px #d8ab5209;
   }
-  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsHero small {
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .collectionsHero small {
     font-size: 7px;
   }
-  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsHero h2 {
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .collectionsHero h2 {
     margin: 2px 0;
     font-size: 14px;
     line-height: 1.1;
   }
-  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsHero p {
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .collectionsHero p {
     font-size: 9px;
     line-height: 1.2;
   }
-  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsSignals {
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .collectionsHero .collectionsSignals {
+    display: flex;
     gap: 4px;
+    width: 100%;
   }
-  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsSignals span {
-    min-width: 56px;
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .collectionsHero .collectionsSignals span {
+    flex: 1 1 0;
+    min-width: 0;
     gap: 2px;
-    padding: 4px 5px;
+    padding: 4px 3px;
     font-size: 7px;
   }
-  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsSignals b {
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .collectionsHero .collectionsSignals b {
+    font-size: 12px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .collectionsHero .collectionsSignals span:last-child {
+    border-color: #3d8364;
+    color: #a5d9bd;
+  }
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .collectionsHero .collectionsSignals span:last-child b {
+    color: #78ddb0;
+  }
+  /* Collections columns follow their actual content width and remain touch-scrollable. */
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .paymentTable {
+    width: max-content !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    table-layout: auto !important;
+  }
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .paymentTable :is(th, td) {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 6px 5px !important;
+    overflow: visible !important;
+    overflow-wrap: normal !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+    font-size: 10px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .paymentTable th {
+    font-size: 9px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .paymentTable :is(th, td):first-child {
+    width: 42px !important;
+    min-width: 42px !important;
+  }
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .paymentTable .rowActions {
+    gap: 3px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace .collectionsPanel .paymentTable .rowActions button {
+    flex-basis: 22px;
+    width: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    padding: 0;
+    font-size: 10px;
+  }
+
+  /* Receivables columns follow their actual content width and remain touch-scrollable. */
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .accountsScheduleTable {
+    width: max-content !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    table-layout: auto !important;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .accountsScheduleTable :is(th, td) {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 6px 5px !important;
+    overflow: visible !important;
+    overflow-wrap: normal !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+    font-size: 10px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .accountsScheduleTable th {
+    font-size: 9px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .accountsScheduleTable :is(th, td):first-child {
+    width: 42px !important;
+    min-width: 42px !important;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .accountsScheduleTable .rowActions {
+    gap: 3px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .accountsScheduleTable .rowActions button {
+    flex-basis: 22px;
+    width: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    padding: 0;
+    font-size: 10px;
+  }
+
+  /* Receivables summary follows the compact finance command-deck treatment. */
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesHero {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 6px;
+    margin: 0 0 7px;
+    padding: 8px 10px;
+    overflow: hidden;
+    border: 1px solid #6c5636;
+    border-radius: 16px;
+    background:
+      radial-gradient(circle at 90% -25%, #d3a04744 0, transparent 44%),
+      radial-gradient(circle at 7% 120%, #b9873a20 0, transparent 48%),
+      linear-gradient(115deg, #2c261d, #211d17 64%, #272018);
+    box-shadow: 0 12px 28px #00000026;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .accountsWorkspace.receivablesView .accountsViewSticky {
+    padding-bottom: 0;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesHero::after {
+    right: -82px;
+    bottom: -126px;
+    width: 180px;
+    height: 180px;
+    border-color: #d8ab5258;
+    box-shadow: 0 0 0 24px #d8ab5209;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesHero small {
+    font-size: 7px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesHero h2 {
+    margin: 2px 0;
+    font-size: 14px;
+    line-height: 1.1;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesHero p {
+    font-size: 9px;
+    line-height: 1.2;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesSignals {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesSignals span {
+    flex: 1 1 0;
+    min-width: 0;
+    gap: 2px;
+    padding: 4px 3px;
+    font-size: 8px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesSignals span:first-child {
+    flex: 1.65 1 0;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesSignals span:first-child b {
+    transform: translateY(3px);
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesSignals span:nth-child(2),
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesSignals span:nth-child(3) {
+    flex: .68 1 0;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.receivablesView .receivablesSignals b {
+    font-size: clamp(11px, 3.4vw, 14px);
+    font-weight: 400;
+    letter-spacing: -.03em;
+    white-space: nowrap;
+  }
+  /* Match Record Payment to the compact event dialogs on phones. */
+  :root[data-theme="dark"] .paymentModal {
+    position: relative;
+    width: min(340px, calc(100vw - 32px));
+    max-height: calc(100dvh - 64px);
+  }
+  :root[data-theme="dark"] .paymentModal .modalHeader {
+    position: relative;
+    padding: 12px 42px 10px 12px;
+  }
+  :root[data-theme="dark"] .paymentModal .modalHeader small {
+    font-size: 8px;
+  }
+  :root[data-theme="dark"] .paymentModal .modalHeader h2 {
+    margin: 3px 0;
+    font-size: 16px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .paymentModal .modalHeader p {
     font-size: 11px;
+    line-height: 1.3;
+  }
+  :root[data-theme="dark"] .paymentModal .modalHeader > button[aria-label="Close payment form"] {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    min-height: 26px;
+    padding: 0;
+  }
+  /* Keep the payment reminder dialog as compact and reachable as the other account dialogs. */
+  :root[data-theme="dark"] .reminderModal {
+    position: relative;
+    width: min(340px, calc(100vw - 32px));
+    max-height: calc(100dvh - 64px);
+  }
+  :root[data-theme="dark"] .reminderModal .modalHeader {
+    position: relative;
+    padding: 12px 42px 10px 12px;
+  }
+  :root[data-theme="dark"] .reminderModal .modalHeader small {
+    font-size: 8px;
+  }
+  :root[data-theme="dark"] .reminderModal .modalHeader h2 {
+    margin: 3px 0;
+    font-size: 16px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .reminderModal .modalHeader p {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  :root[data-theme="dark"] .reminderModal .modalHeader > button[aria-label="Close reminder"] {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    min-height: 26px;
+    padding: 0;
+  }
+  /* Keep the client statement heading compact without reducing its readable ledger area. */
+  :root[data-theme="dark"] .clientStatementModal .statementHeader {
+    position: relative;
+    gap: 0;
+    padding: 12px 42px 10px 12px;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementStudioBrand img {
+    width: 32px;
+    height: 24px;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementStudioBrand small {
+    font-size: 8px;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementHeader h2 {
+    margin: 4px 0 2px;
+    font-size: 16px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementHeader p {
+    font-size: 10px;
+    line-height: 1.3;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementHeader > button[aria-label="Close ledger"] {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    min-height: 26px;
+    padding: 0;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementMetrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 4px;
+    padding: 8px 10px 10px;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementMetrics article {
+    min-width: 0;
+    min-height: 52px;
+    padding: 6px 4px;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementMetrics span {
+    min-height: 0;
+    margin-bottom: 3px;
+    font-size: 7px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementMetrics b {
+    font-size: clamp(9px, 2.65vw, 11px);
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementSchedule {
+    padding: 8px 10px 10px;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementSchedule h3 {
+    margin-bottom: 5px;
+    font-size: 12px;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementSchedule > div {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 4px;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementSchedule article {
+    min-width: 0;
+    padding: 6px 4px;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementSchedule :is(span, small) {
+    font-size: 7px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementSchedule b {
+    margin: 3px 0;
+    font-size: 10px;
+    line-height: 1.15;
+    white-space: nowrap;
   }
   /* Upcoming and Completed event tables: size columns from the content itself. */
   :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable {
@@ -651,4 +958,75 @@
     flex: 0 0 26px;
   }
 
+}
+
+/* The client statement must print as a clear A4 document, independent of the
+   current phone viewport or selected application theme. */
+@media print {
+  .clientStatementModal,
+  .clientStatementPrintArea {
+    background: #fff !important;
+    color: #111827 !important;
+  }
+  .statementHeader {
+    padding: 0 0 10px !important;
+    margin: 0 0 6px !important;
+    border-bottom: 2px solid #334155 !important;
+    background: #fff !important;
+  }
+  .statementHeader :is(h2, p, small) { color: #111827 !important; }
+  .statementMetrics {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    width: 100% !important;
+    padding: 8px 0 10px !important;
+  }
+  .statementMetrics article {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 8px !important;
+    border-color: #94a3b8 !important;
+    background: #f8fafc !important;
+    color: #111827 !important;
+  }
+  .statementMetrics :is(span, b) { color: #111827 !important; }
+  .statementMetrics .overdueMetric b { color: #b91c1c !important; }
+  .statementLedgerTable {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+  .statementLedgerTable table {
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;
+  }
+  .statementLedgerTable :is(th, td) {
+    padding: 7px 6px !important;
+    border-color: #94a3b8 !important;
+    background: #fff !important;
+    color: #111827 !important;
+    font-size: 9px !important;
+    line-height: 1.25 !important;
+    overflow-wrap: anywhere !important;
+  }
+  .statementLedgerTable th {
+    background: #eaf0f8 !important;
+    font-weight: 700 !important;
+  }
+  .statementSchedule { padding: 12px 0 8px !important; }
+  .statementSchedule > div {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+  .statementSchedule article {
+    min-width: 0 !important;
+    padding: 8px !important;
+    border-color: #94a3b8 !important;
+    color: #111827 !important;
+  }
+  .statementSchedule :is(span, b, small),
+  .statementFooterNote { color: #111827 !important; }
 }
