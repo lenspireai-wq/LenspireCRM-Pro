@@ -193,6 +193,71 @@
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px;
   }
+  /* Bring the Lead Management heading a little closer to the menu on phones. */
+  :root[data-theme="dark"] .mainSalesDashboard .leadManagementChrome .salesHeader {
+    left: 52px !important;
+  }
+  /* Operations: keep the complete command set visible in one compact mobile row. */
+  :root[data-theme="dark"] .mainOperationsDashboard .operationsDashboardControls .operationsTabs {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 3px;
+    overflow: hidden;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .operationsDashboardControls .operationsTabs > button {
+    min-height: 34px;
+    padding: 3px 1px;
+    font-size: 8px;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .operationsWorkspace .salesKpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 6px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .operationsWorkspace .salesKpis > article {
+    min-width: 0;
+    min-height: 64px;
+    padding: 8px 6px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .operationsWorkspace .salesKpis :is(span, small) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 8px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .operationsWorkspace .salesKpis b {
+    font-size: 17px;
+  }
+  /* Keep the Operations schedule dense enough to scan on a phone. */
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsTable {
+    min-width: 560px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsTable :is(th, td) {
+    padding: 6px 7px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsTable th {
+    font-size: 8px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsTable td {
+    font-size: 11px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsTable .shootDateCard {
+    width: 38px;
+    min-height: 40px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsTable .shootDateCard b {
+    font-size: 15px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsTable :is(th, td):first-child {
+    display: none;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsTable {
+    min-width: 510px;
+  }
   :root[data-theme="dark"] .mainSalesDashboard .salesKpi .dashMetricIcon {
     flex: 0 0 26px;
   }
