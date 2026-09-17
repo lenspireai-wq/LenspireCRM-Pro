@@ -40,10 +40,16 @@ const printTimestamp = () => {
 const printWithFilename = (...parts: any[]) => {
   const previousTitle = document.title;
   document.title = [...parts.map(pdfNamePart), printTimestamp()].join("_");
+  let restoreTimer: number | undefined;
   const restoreTitle = () => {
+    if (restoreTimer) window.clearTimeout(restoreTimer);
     document.title = previousTitle;
   };
   window.addEventListener("afterprint", restoreTitle, { once: true });
+  // Browsers read the title synchronously when opening their print dialog.
+  // Keep a fallback for embedded browsers that do not emit `afterprint`.
+  restoreTimer = window.setTimeout(restoreTitle, 1500);
+  window.focus();
   window.print();
 };
 const ageingCategory = (dueDate: string) => {

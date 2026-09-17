@@ -809,6 +809,110 @@
     letter-spacing: -.03em;
     white-space: nowrap;
   }
+
+  /* Reports & Analytics follows the same compact finance layout as Client Ledger. */
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsHero {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 6px;
+    margin: 0 0 7px;
+    padding: 8px 10px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .accountsWorkspace.reportsAnalyticsView .accountsViewSticky { padding-bottom: 0; }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsHero::after {
+    right: -82px;
+    bottom: -126px;
+    top: auto;
+    width: 180px;
+    height: 180px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsHero small { font-size: 7px; }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsHero h2 {
+    margin: 2px 0;
+    font-size: 14px;
+    line-height: 1.1;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsHero p {
+    font-size: 9px;
+    line-height: 1.2;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsSignals {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsSignals span {
+    flex: 1 1 0;
+    min-width: 0;
+    gap: 2px;
+    padding: 4px 3px;
+    font-size: 8px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsSignals span:first-child { flex: 1.65 1 0; }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsSignals span:first-child b { transform: translateY(3px); }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsSignals span:nth-child(2),
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsSignals span:nth-child(3) { flex: .68 1 0; }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsSignals b {
+    font-size: clamp(11px, 3.4vw, 14px);
+    font-weight: 400;
+    letter-spacing: -.03em;
+    white-space: nowrap;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .accountMetrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 5px;
+    margin: 6px 0;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .accountMetrics article {
+    min-width: 0;
+    min-height: 54px !important;
+    padding: 6px 4px;
+    text-align: center;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .accountMetrics span {
+    margin-bottom: 3px;
+    font-size: 7px;
+    line-height: 1.1;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .accountMetrics strong {
+    font-size: clamp(10px, 3vw, 13px);
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsTable {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsTable .paymentTable {
+    width: max-content !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    table-layout: auto !important;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsTable .paymentTable :is(th, td) {
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 6px 5px !important;
+    overflow: visible !important;
+    overflow-wrap: normal !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+    font-size: 10px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsTable .paymentTable th { font-size: 9px; }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsTable .reportsAnalyticsTableHead {
+    padding: 8px 10px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsTableHead small { font-size: 7px; }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsTableHead h2 {
+    margin-top: 2px;
+    font-size: 14px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.reportsAnalyticsView .reportsAnalyticsTableHead > span {
+    padding: 4px 6px;
+    font-size: 8px;
+  }
   /* Client Portal uses the same compact modal header and internal close control. */
   :root[data-theme="dark"] .clientPortalAccessModal {
     position: relative;
@@ -873,6 +977,39 @@
   :root[data-theme="dark"] .clientPortalAccessModal .statementMetrics b {
     font-size: clamp(9px, 2.5vw, 11px);
     line-height: 1.1;
+    white-space: nowrap;
+  }
+  /* Keep payment receipt branding and the receipt reference orderly on phones. */
+  :root[data-theme="dark"] .receiptModal {
+    width: min(340px, calc(100vw - 32px)) !important;
+  }
+  :root[data-theme="dark"] .receiptModal .receiptPrintArea { padding: 12px; }
+  :root[data-theme="dark"] .receiptModal .receiptHeading {
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 9px;
+  }
+  :root[data-theme="dark"] .receiptModal .receiptStudioBrand { gap: 7px; }
+  :root[data-theme="dark"] .receiptModal .receiptStudioBrand > img {
+    width: 42px;
+    height: 32px;
+  }
+  :root[data-theme="dark"] .receiptModal .receiptStudioBrand small {
+    font-size: 8px;
+    line-height: 1.1;
+  }
+  :root[data-theme="dark"] .receiptModal .receiptStudioBrand span {
+    font-size: 7px;
+    line-height: 1.1;
+  }
+  :root[data-theme="dark"] .receiptModal .receiptHeading h2 {
+    margin: 3px 0 0;
+    font-size: 16px;
+    line-height: 1.1;
+  }
+  :root[data-theme="dark"] .receiptModal .receiptHeading > b {
+    flex: 0 0 auto;
+    font-size: 10px;
     white-space: nowrap;
   }
   /* Match Record Payment to the compact event dialogs on phones. */
