@@ -537,6 +537,7 @@ export default function AccountsWorkspace({
         <tbody>
           {items.map((p, index) => {
             const client = accounts.find((a) => a.id === p.booking)?.client || p.client_name || "—";
+            const isReportTable = variant === "reportPaymentActivity";
             const initials = String(client)
               .split(/\s+/)
               .filter(Boolean)
@@ -547,12 +548,12 @@ export default function AccountsWorkspace({
             return <tr key={p.id}>
               <td className="paymentSerial">{index + 1}</td>
               <td>
-                {variant ? <span className="reportPaymentClient"><i>{initials}</i><b>{client}</b></span> : client}
+                {isReportTable ? <span className="reportPaymentClient"><i>{initials}</i><b>{client}</b></span> : client}
               </td>
-              <td className={variant ? "reportPaymentAmount" : ""}>{money(p.amount)}</td>
-              <td>{variant ? <span className="reportPaymentType">{p.payment_type}</span> : p.payment_type}</td>
-              <td>{variant ? <span className="reportPaymentMode">{p.payment_mode || "—"}</span> : p.payment_mode || "—"}</td>
-              <td>{variant ? <span className={`reportPaymentStatus ${String(p.status).toLowerCase()}`}>{p.status}</span> : p.status}</td>
+              <td className={isReportTable ? "reportPaymentAmount" : ""}>{money(p.amount)}</td>
+              <td>{isReportTable ? <span className="reportPaymentType">{p.payment_type}</span> : p.payment_type}</td>
+              <td>{isReportTable ? <span className="reportPaymentMode">{p.payment_mode || "—"}</span> : p.payment_mode || "—"}</td>
+              <td>{isReportTable ? <span className={`reportPaymentStatus ${String(p.status).toLowerCase()}`}>{p.status}</span> : p.status}</td>
               <td>{date(p.paid_at || p.due_date || p.created_at)}</td>
               <td>{p.received_by || "—"}</td>
               <td>

@@ -4695,6 +4695,394 @@
   border-color: #ffd5db !important;
 }
 
+/* Accounts: cohesive soft-finance styling across every workspace tab. */
+:root[data-theme="light"] .accountsWorkspace {
+  background:
+    radial-gradient(circle at 94% 5%, rgb(118 87 255 / 13%), transparent 25rem),
+    radial-gradient(circle at 5% 22%, rgb(25 167 242 / 11%), transparent 24rem),
+    #f8fbff;
+}
+
+:root[data-theme="light"] .accountsWorkspace .operationsTabs {
+  padding: 5px;
+  border: 1px solid #d7e6ff;
+  border-radius: 15px;
+  background: linear-gradient(105deg, rgb(239 248 255 / 92%), rgb(249 246 255 / 92%));
+  box-shadow: 0 8px 20px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .accountsWorkspace .operationsTabs button {
+  min-height: 35px;
+  padding-inline: 14px;
+  border-radius: 10px;
+  color: #33445e;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+:root[data-theme="light"] .accountsWorkspace .operationsTabs button.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #246bfd, #7657ff);
+  box-shadow: 0 6px 14px rgb(70 91 230 / 24%);
+}
+
+:root[data-theme="light"] .accountsWorkspace .accountMetrics article {
+  position: relative;
+  overflow: hidden;
+  min-height: 86px;
+  padding: 15px 17px;
+  border: 1px solid #cde1ff !important;
+  border-top-width: 3px !important;
+  border-radius: 16px;
+  box-shadow: 0 9px 20px rgb(36 107 253 / 8%) !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace .accountMetrics article::after {
+  content: "";
+  position: absolute;
+  right: -18px;
+  bottom: -28px;
+  width: 92px;
+  height: 92px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: .16;
+}
+
+:root[data-theme="light"] .accountsWorkspace .accountMetrics article:nth-child(1) {
+  background: linear-gradient(135deg, #eaf5ff, #f7fbff) !important;
+  color: #246bfd;
+}
+
+:root[data-theme="light"] .accountsWorkspace .accountMetrics article:nth-child(2) {
+  background: linear-gradient(135deg, #f1edff, #fbfaff) !important;
+  color: #7657ff;
+}
+
+:root[data-theme="light"] .accountsWorkspace .accountMetrics article:nth-child(3) {
+  background: linear-gradient(135deg, #fff4df, #fffaf1) !important;
+  color: #d88b08;
+}
+
+:root[data-theme="light"] .accountsWorkspace .accountMetrics article:nth-child(4) {
+  background: linear-gradient(135deg, #e8faef, #f6fdf8) !important;
+  color: #178454;
+}
+
+:root[data-theme="light"] .accountsWorkspace .accountMetrics article > span,
+:root[data-theme="light"] .accountsWorkspace .accountMetrics .reportKpiHeader span {
+  color: #4d607a !important;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+:root[data-theme="light"] .accountsWorkspace .accountMetrics article > strong {
+  position: relative;
+  z-index: 1;
+  color: #172033 !important;
+  font-size: clamp(18px, 1.7vw, 25px);
+  font-weight: 750;
+  letter-spacing: -.03em;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.accountsCommandDeck, .collectionsHero, .receivablesHero, .clientLedgerHero, .reportsAnalyticsHero) {
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 91% 14%, rgb(25 167 242 / 19%), transparent 13rem),
+    radial-gradient(circle at 70% 120%, rgb(118 87 255 / 14%), transparent 17rem),
+    linear-gradient(110deg, #ffffff, #f2f9ff 56%, #f7f2ff) !important;
+  border-color: #d3e4ff !important;
+  box-shadow: 0 12px 29px rgb(36 107 253 / 9%) !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.accountsCommandDeck, .collectionsHero, .receivablesHero, .clientLedgerHero, .reportsAnalyticsHero) h2 {
+  color: #172033 !important;
+  font-size: clamp(21px, 2vw, 30px);
+  letter-spacing: -.035em;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.accountsCommandDeck, .collectionsHero, .receivablesHero, .clientLedgerHero, .reportsAnalyticsHero) p {
+  max-width: 690px;
+  color: #5f7087 !important;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.accountsCommandSignals, .collectionsSignals, .receivablesSignals, .clientLedgerSignals, .reportsAnalyticsSignals) span {
+  min-width: 94px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 88%) !important;
+  border-color: #cfe2ff !important;
+  box-shadow: 0 5px 12px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.accountsRecentPaymentsPanel, .collectionsPanel, .accountsScheduleTableWrap, .accountBreakdown, .reportsAnalyticsTable) {
+  overflow: hidden;
+  border: 1px solid #d7e6ff !important;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 90%) !important;
+  box-shadow: 0 10px 25px rgb(36 107 253 / 7%) !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.panelHead, .accountBreakdownTitle, .reportsAnalyticsTableHead) {
+  padding: 16px 18px;
+  background: linear-gradient(105deg, #eff8ff, #f8f4ff) !important;
+  border-bottom: 1px solid #dce9fb;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.panelHead h2, .accountBreakdownTitle h2, .reportsAnalyticsTableHead h2) {
+  color: #172033 !important;
+  font-size: 17px;
+  font-weight: 750;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.paymentTable, .receivablesTable, .clientLedgerTable) :is(thead tr, thead th) {
+  height: 42px;
+  background: linear-gradient(105deg, #eaf5ff, #f3efff) !important;
+  color: #111827 !important;
+  border-color: #d4e3f8 !important;
+  font-size: 11px;
+  font-weight: 800 !important;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.paymentTable, .receivablesTable, .clientLedgerTable) tbody td {
+  color: #27354a !important;
+  border-color: #e0eaf7 !important;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.paymentTable, .receivablesTable, .clientLedgerTable) tbody tr:nth-child(odd) td {
+  background: #f5faff !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.paymentTable, .receivablesTable, .clientLedgerTable) tbody tr:nth-child(even) td {
+  background: #faf7ff !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.paymentTable, .receivablesTable, .clientLedgerTable) tbody tr:hover td {
+  background: #e8f5ff !important;
+  box-shadow: inset 3px 0 #65a5fc !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.paymentTable, .receivablesTable, .clientLedgerTable) tbody td :is(b, strong) {
+  color: #172033;
+  font-weight: 700;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.paymentTable, .receivablesTable, .clientLedgerTable) .rowActions button {
+  width: 31px;
+  height: 31px;
+  border: 1px solid #cfe1fa;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #246bfd;
+  box-shadow: 0 3px 8px rgb(36 107 253 / 7%);
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.paymentTable, .receivablesTable, .clientLedgerTable) .rowActions button:hover {
+  transform: translateY(-1px);
+  background: #edf5ff;
+  border-color: #9dc4fb;
+}
+
+/* Accounts page chrome and row controls use the same finance workspace language. */
+:root[data-theme="light"] .mainAccountsSticky .workspaceChrome.accountsChrome {
+  border: 1px solid #d6e5ff;
+  border-radius: 0 0 20px 20px;
+  background:
+    radial-gradient(circle at 92% 18%, rgb(118 87 255 / 13%), transparent 17rem),
+    linear-gradient(105deg, #eff8ff 0%, #ffffff 52%, #f7f2ff 100%);
+  box-shadow: 0 9px 24px rgb(36 107 253 / 8%);
+}
+
+:root[data-theme="light"] .mainAccountsSticky .accountsChrome .sectionHeader h1 {
+  color: #172033;
+  font-size: clamp(21px, 2vw, 29px);
+  font-weight: 780;
+  letter-spacing: -.035em;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .accountsChrome .sectionHeader p {
+  color: #61728a;
+  font-size: 13px;
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.paymentTable, .receivablesTable, .clientLedgerTable) .rowActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid #dce9fa;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 75%);
+}
+
+:root[data-theme="light"] .accountsWorkspace :is(.paymentTable, .receivablesTable, .clientLedgerTable) .rowActions button {
+  display: inline-grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  padding: 0;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+:root[data-theme="light"] .accountsWorkspace .rowActions .editAction,
+:root[data-theme="light"] .accountsWorkspace .rowActions .ledgerAction {
+  color: #246bfd !important;
+  background: #edf5ff !important;
+  border-color: #c8e0ff !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace .rowActions .deleteAction {
+  color: #c74353 !important;
+  background: #fff0f2 !important;
+  border-color: #ffd3d9 !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace .rowActions .receiptAction,
+:root[data-theme="light"] .accountsWorkspace .rowActions .portalAction {
+  color: #6a4ce3 !important;
+  background: #f2efff !important;
+  border-color: #ddd4ff !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace .rowActions .reminderAction {
+  color: #b87106 !important;
+  background: #fff5dd !important;
+  border-color: #f7dfa0 !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace .rowActions .paymentAction {
+  color: #177c50 !important;
+  background: #e9faef !important;
+  border-color: #bce8d0 !important;
+}
+
+:root[data-theme="light"] .accountsWorkspace .rowActions button:hover {
+  filter: saturate(1.08);
+  box-shadow: 0 5px 11px rgb(36 107 253 / 15%);
+}
+
+/* Receivables payment schedules: readable milestone cards instead of compressed text. */
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .accountsScheduleTableWrap {
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable {
+  min-width: 1520px !important;
+  max-width: none !important;
+  table-layout: fixed !important;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable th:nth-child(1) { width: 4% !important; }
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable th:nth-child(2) { width: 7% !important; }
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable th:nth-child(3) { width: 12% !important; }
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable th:nth-child(4),
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable th:nth-child(5),
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable th:nth-child(6) { width: 8% !important; }
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable th:nth-child(7) { width: 32% !important; }
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable th:nth-child(8) { width: 9% !important; }
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable th:nth-child(9) { width: 5% !important; }
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable th:nth-child(10) { width: 7% !important; }
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable td:nth-child(7) {
+  padding: 9px !important;
+  overflow: visible !important;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  width: 100%;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan > span {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: 116px;
+  padding: 9px !important;
+  overflow: visible;
+  border: 1px solid #cfe3ff !important;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #eef7ff, #fbfdff) !important;
+  color: #34445f !important;
+  font-size: 11px !important;
+  line-height: 1.28;
+  text-align: left !important;
+  box-shadow: 0 4px 10px rgb(36 107 253 / 6%);
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan > span.paid {
+  border-color: #a9dfc0 !important;
+  background: linear-gradient(145deg, #e9faef, #f7fdf9) !important;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan > span.upcoming {
+  border-color: #f2d58a !important;
+  background: linear-gradient(145deg, #fff5df, #fffaf1) !important;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan > span.overdue {
+  border-color: #efbbc3 !important;
+  background: linear-gradient(145deg, #fff0f2, #fff9fa) !important;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan :is(small, b, .milestoneDue) {
+  color: #40516a !important;
+  font-size: 10px;
+  font-weight: 550;
+  line-height: 1.3;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan > span > b {
+  margin-top: 4px;
+  color: #172033 !important;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.15;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan > span.paid > b {
+  color: #177b4e !important;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan .milestoneDue {
+  min-height: 27px;
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid rgb(92 116 150 / 16%);
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .milestoneDateButton {
+  width: 100%;
+  min-height: 25px;
+  margin-top: auto !important;
+  padding: 4px 5px;
+  border: 1px solid #bcd8fc !important;
+  border-radius: 7px;
+  background: #ffffff !important;
+  color: #246bfd !important;
+  font-size: 10px !important;
+  font-weight: 650;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+:root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .milestoneDateButton:hover {
+  background: #eaf4ff !important;
+  border-color: #79adf8 !important;
+}
+
 :root[data-theme="light"] .mainOperationsEvents :is(.operationsUpcomingTable, .operationsCompletedTable) .crewAssignments :is(.crewNA, .crewX, .crewXX, .crewAssigned, .crewAssignedMultiple) {
   box-sizing: border-box;
   display: flex !important;
