@@ -172,39 +172,29 @@
     color: var(--text, #f5f8ff);
   }
 
-  /* Center the compact Sales KPI story: title, icon plus value, then context. */
+  /* Keep the icon centered on the left and the KPI details grouped beside it. */
   :root[data-theme="dark"] .mainSalesDashboard .salesKpi {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr);
-    grid-template-rows: auto auto auto;
-    column-gap: 5px;
-    row-gap: 2px;
-    align-content: center;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    text-align: left;
   }
   :root[data-theme="dark"] .mainSalesDashboard .salesKpi .dashMetricCopy {
-    display: contents;
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+    transform: translateY(3px);
   }
-  :root[data-theme="dark"] .mainSalesDashboard .salesKpi .dashMetricLabel {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    text-align: center;
+  :root[data-theme="dark"] .mainSalesDashboard .salesChrome:not(.leadManagementChrome) .salesHeader {
+    top: 17px !important;
+  }
+  :root[data-theme="dark"] .mainSalesDashboard .leadManagementSticky .reminderGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 6px;
   }
   :root[data-theme="dark"] .mainSalesDashboard .salesKpi .dashMetricIcon {
-    grid-column: 2;
-    grid-row: 2;
-    align-self: center;
-  }
-  :root[data-theme="dark"] .mainSalesDashboard .salesKpi b {
-    grid-column: 3;
-    grid-row: 2;
-    margin: 0 !important;
-    align-self: center;
-  }
-  :root[data-theme="dark"] .mainSalesDashboard .salesKpi small {
-    grid-column: 1 / -1;
-    grid-row: 3;
-    text-align: center;
+    flex: 0 0 26px;
   }
 
 }
