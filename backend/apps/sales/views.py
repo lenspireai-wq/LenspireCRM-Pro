@@ -160,22 +160,33 @@ class LeadViewSet(OrganizationScopedViewSet):
         # Production jobs are now created per completed calendar event after
         # its payment gate is met, rather than as one booking-level job.
         if lead.event_date:
-            CalendarEvent.objects.update_or_create(
+            # A booking can now contain distinct Engagement, Pre-wedding and
+            # Wedding events.  Never use booking alone as the lookup key here:
+            # that would raise MultipleObjectsReturned when a lead is edited.
+            event_defaults = {
+                "customer": customer,
+                "title": f"{lead.name} · {lead.event_type}",
+                "client_name": lead.client_name or lead.name,
+                "handled_by": lead.assigned_to,
+                "couple_name": lead.couple_name,
+                "contact_no": lead.client_mobile or lead.mobile,
+                "city": lead.city,
+                "notes": lead.notes,
+            }
+            matching_events = CalendarEvent.objects.filter(
                 organization=org,
                 booking=booking,
-                defaults={
-                    "customer": customer,
-                    "title": f"{lead.name} · {lead.event_type}",
-                    "client_name": lead.client_name or lead.name,
-                    "handled_by": lead.assigned_to,
-                    "couple_name": lead.couple_name,
-                    "contact_no": lead.client_mobile or lead.mobile,
-                    "event_type": lead.event_type,
-                    "start_date": lead.event_date,
-                    "city": lead.city,
-                    "notes": lead.notes,
-                },
+                event_type=lead.event_type,
+                start_date=lead.event_date,
             )
+            if not matching_events.update(**event_defaults):
+                CalendarEvent.objects.create(
+                    organization=org,
+                    booking=booking,
+                    event_type=lead.event_type,
+                    start_date=lead.event_date,
+                    **event_defaults,
+                )
         if lead.status != "Confirmed": lead.status="Confirmed"; lead.save(update_fields=("status","updated_at"))
         return customer, booking
     def _sync_connected(self, lead):
@@ -185,7 +196,14 @@ class LeadViewSet(OrganizationScopedViewSet):
         booking = Booking.objects.filter(lead=lead).first()
         if booking:
             booking.event_type=lead.event_type; booking.event_date=lead.event_date; booking.city=lead.city; booking.quoted_amount=lead.total_closing or lead.budget or 0; booking.save()
-            CalendarEvent.objects.filter(booking=booking).update(
+            # Only synchronize the event represented by this lead.  Other
+            # events on the same booking are independently scheduled and must
+            # retain their own dates, assignments and details.
+            CalendarEvent.objects.filter(
+                booking=booking,
+                event_type=lead.event_type,
+                start_date=lead.event_date,
+            ).update(
                 title=f"{lead.name} · {lead.event_type}",
                 client_name=lead.client_name or lead.name,
                 handled_by=lead.assigned_to,

@@ -2,6 +2,7 @@ import pytest
 from django.urls import reverse
 from apps.sales.models import Lead, Customer, Booking
 from apps.accounts.models import Payment
+from apps.operations.models import CalendarEvent
 
 
 @pytest.mark.django_db
@@ -114,6 +115,58 @@ class TestLeadAPI:
         ).first()
         assert advance_payment is not None
         assert advance_payment.amount == 10000
+
+    def test_editing_confirmed_lead_preserves_other_booking_events(self, authenticated_client, organization):
+        """A confirmed booking may have separate events without breaking lead edits."""
+        lead = Lead.objects.create(
+            organization=organization,
+            lead_code="L005",
+            name="Multi Event Lead",
+            mobile="9876543220",
+            event_type="Wedding",
+            event_date="2026-12-20",
+            status="Confirmed",
+            couple_name="Multi & Event",
+            total_closing="100000",
+            advance_received="10000",
+            payment_mode="Cash",
+            received_by="Admin",
+            payment_received_date="2026-09-03",
+        )
+        # Convert once, then add independently scheduled events for the same
+        # booking, exactly as operations does after confirmation.
+        response = authenticated_client.patch(
+            reverse("lead-detail", kwargs={"pk": lead.pk}),
+            {"city": "Mumbai"},
+            format="json",
+        )
+        assert response.status_code == 200
+        booking = Booking.objects.get(lead=lead)
+        CalendarEvent.objects.create(
+            organization=organization,
+            booking=booking,
+            event_type="Engagement",
+            start_date="2026-11-01",
+            title="Multi Event Lead · Engagement",
+        )
+        CalendarEvent.objects.create(
+            organization=organization,
+            booking=booking,
+            event_type="Pre-wedding",
+            start_date="2026-11-15",
+            title="Multi Event Lead · Pre-wedding",
+        )
+
+        response = authenticated_client.patch(
+            reverse("lead-detail", kwargs={"pk": lead.pk}),
+            {"city": "Pune"},
+            format="json",
+        )
+
+        assert response.status_code == 200
+        assert CalendarEvent.objects.filter(booking=booking).count() == 3
+        assert CalendarEvent.objects.get(booking=booking, event_type="Engagement").start_date.isoformat() == "2026-11-01"
+        assert CalendarEvent.objects.get(booking=booking, event_type="Pre-wedding").start_date.isoformat() == "2026-11-15"
 
     def test_readonly_user_cannot_create_lead(self, api_client, readonly_user):
         """Test that read-only users cannot create leads"""
