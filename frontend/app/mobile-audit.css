@@ -205,10 +205,13 @@
     overflow: hidden;
   }
   :root[data-theme="dark"] .mainOperationsDashboard .operationsDashboardControls .operationsTabs > button {
+    display: grid;
+    place-items: center;
     min-height: 34px;
     padding: 3px 1px;
     font-size: 8px;
     line-height: 1.1;
+    text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -257,6 +260,27 @@
   }
   :root[data-theme="dark"] .mainOperationsDashboard .nextShootsTable {
     min-width: 510px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsHead .sectionEyebrow {
+    display: none;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsHead {
+    padding-block: 8px;
+    gap: 6px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsHead h2 {
+    font-size: 14px;
+    line-height: 1.1;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsHead .nextShootsCount {
+    padding: 3px 6px;
+    font-size: 8px;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .nextShootsHead .viewAction {
+    width: 24px;
+    height: 24px;
+    min-height: 24px;
+    font-size: 11px;
   }
   :root[data-theme="dark"] .mainSalesDashboard .salesKpi .dashMetricIcon {
     flex: 0 0 26px;
