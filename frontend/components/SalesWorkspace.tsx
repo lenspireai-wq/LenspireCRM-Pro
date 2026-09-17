@@ -1520,7 +1520,12 @@ function LeadDetail({
             <small>
               {lead.lead_code} · {lead.priority} PRIORITY
             </small>
-            <h2>{lead.name}</h2>
+            <h2>
+              {lead.client_name || lead.name}
+              {lead.couple_name && lead.couple_name !== (lead.client_name || lead.name)
+                ? ` (${lead.couple_name})`
+                : ""}
+            </h2>
             <p>
               {lead.event_type} · {date(lead.event_date)} · {lead.city}
             </p>
