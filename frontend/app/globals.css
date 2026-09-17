@@ -11500,6 +11500,45 @@ table > tbody > tr:has(td[colspan])::before {
 }
 
 @media (max-width: 1000px) {
+  /* Main Dashboard header: keep every piece of context on the left below the
+     in-panel menu rather than splitting the date and Window control right. */
+  .mainDashboard .dashboardChrome {
+    grid-template-rows: auto auto;
+  }
+  .mainDashboard .dashboardChrome .dashHeader {
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-left: 35px;
+    padding-top: 2px;
+  }
+  .mainDashboard .dashboardChrome .dashHeader > div {
+    width: 100%;
+    padding-inline: 0 !important;
+    text-align: left;
+  }
+  .mainDashboard .dashboardChrome .dashHeader :is(h1, p, small) {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    margin-left: 0 !important;
+    text-align: left !important;
+  }
+  .mainDashboard .dashboardChrome .dashHeader p {
+    margin-top: 3px !important;
+  }
+  .mainDashboard .dashboardChrome .dashHeader small {
+    display: block;
+    margin-top: 3px !important;
+  }
+  .mainDashboard .dashboardChrome .dashSelect {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    width: auto !important;
+    justify-self: start !important;
+    justify-content: flex-start;
+    margin: 8px 0 0 46px !important;
+  }
   /* Align Sales content with the mobile workspace header instead of adding a
      second inset around the tab and KPI container. */
   .mainSalesDashboard .salesPage {
@@ -12564,5 +12603,71 @@ table > tbody > tr:has(td[colspan])::before {
   :root[data-theme] .mainSalesDashboard .salesKpi small {
     font-size: 9px !important;
     line-height: 1.1;
+  }
+}
+
+/* Light-theme mobile layout parity with the dark workspace.  These rules set
+   only structure (flow, spacing, sizing and typography), leaving the light
+   palette and all application behavior untouched. */
+@media (max-width: 900px) {
+  :root[data-theme="light"] .mainDashboard .workspaceChrome.dashboardChrome {
+    min-height: 116px;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    row-gap: 8px;
+  }
+  :root[data-theme="light"] .mainDashboard .dashboardChrome .dashHeader {
+    padding: 0 126px 0 40px;
+    margin: 0;
+  }
+  :root[data-theme="light"] .mainDashboard .dashboardChrome .dashHeader > div {
+    padding: 0 !important;
+  }
+  :root[data-theme="light"] .mainDashboard .dashboardChrome .dashHeader h1 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    line-height: 1.15;
+  }
+  :root[data-theme="light"] .mainDashboard .dashboardChrome .dashHeader p {
+    margin: 0 0 3px !important;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  :root[data-theme="light"] .mainDashboard .dashboardChrome .dashHeader small {
+    margin: 0 !important;
+    font-size: 10px;
+  }
+  :root[data-theme="light"] .mainDashboard .dashboardChrome .dashSelect {
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+    margin: 0 !important;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  :root[data-theme="light"] .mainDashboard .dashboardChrome .dashSelect select {
+    min-height: 32px;
+    padding: 5px 8px;
+  }
+  :root[data-theme="light"] .mainDashboard .dashMetrics {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  :root[data-theme="light"] .mainDashboard .dashMetric {
+    min-height: 96px;
+    padding: 10px;
+    border-radius: 14px;
+  }
+  :root[data-theme="light"] .mainDashboard .dashGrid {
+    gap: 14px;
+  }
+  :root[data-theme="light"] .mainDashboard .dashCard {
+    padding: 14px;
+    border-radius: 16px;
+  }
+  :root[data-theme="light"] .mainDashboard .dashCard h2 {
+    margin-bottom: 12px;
+    font-size: 16px;
+    line-height: 1.2;
   }
 }

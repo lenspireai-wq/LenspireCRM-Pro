@@ -7,6 +7,7 @@ import "./event-columns.css";
 import "./mobile-scroll.css";
 import "./studio-neon.css";
 import "./studio-blush.css";
+import "./mobile-audit.css";
 import { QueryProvider } from "@/components/QueryProvider";
 import { ThemeProvider } from "@/components/ThemeToggle";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";

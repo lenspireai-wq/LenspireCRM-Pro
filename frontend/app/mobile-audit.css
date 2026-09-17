@@ -1,0 +1,119 @@
+/*
+ * Final responsive audit layer.  Loaded last so it can make shared mobile
+ * behaviour consistent without changing desktop presentation.
+ */
+
+@media (max-width: 900px) {
+  html, body { max-width: 100%; overflow-x: clip; }
+  body.mobileDrawerOpen { overflow: hidden; overscroll-behavior: none; }
+
+  main, main > *, .workspace, .salesPage, .operationsWorkspace,
+  .accountsWorkspace, .productionWorkspace, .adminConsoleLayout,
+  .adminWorkspace, .settingsWorkspace, .reportsWorkspace {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  img, svg, video, canvas, iframe { max-width: 100%; }
+
+  /* Keep wide data readable inside their own touch-scroll region. */
+  .table, .leadTableWrap, .operationsTableWrap, .operationsCompletedTable,
+  .accountsScheduleTableWrap, .editQueueTableWrap, .ledgerTable,
+  .reportsAnalyticsTable, .clientPortalTableWrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  .table > table, .leadTableWrap > table, .operationsTableWrap > table,
+  .operationsCompletedTable > table, .accountsScheduleTableWrap > table,
+  .editQueueTableWrap > table, .ledgerTable > table, .reportsAnalyticsTable > table {
+    min-width: max-content;
+  }
+  .table th, .table td, .leadTable th, .leadTable td,
+  .operationsTable th, .operationsTable td, .paymentTable th, .paymentTable td,
+  .productionTable th, .productionTable td, .editQueueTable th, .editQueueTable td {
+    white-space: nowrap;
+  }
+
+  /* Shared compact, tap-friendly controls. */
+  button, input, select, textarea { max-width: 100%; }
+  .panelHead, .panelTitle, .modalHeader, .calNav, .adminConsoleHeaderRow,
+  .accountsViewSticky, .productionHeader, .operationsHeader,
+  .reportsHeader, .settingsHeader { gap: 10px; flex-wrap: wrap; }
+  .panelHead > *, .panelTitle > *, .modalHeader > *, .calNav > * { min-width: 0; }
+  .operationsTabs, .productionPageTabs, .accountsViewSticky .operationsTabs {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    scroll-snap-type: x proximity;
+  }
+  .operationsTabs > button, .productionPageTabs > button { flex: 0 0 auto; scroll-snap-align: start; }
+
+  /* All modal variants retain a reachable footer and independently scroll. */
+  .modalBackdrop, .billModalBackdrop {
+    padding: 12px;
+    align-items: flex-start;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .leadModal, .leadDetailModal, .targetModal, .accountModal,
+  .productionModal, .billModal, .clientStatementModal, .receiptModal {
+    box-sizing: border-box;
+    width: min(680px, calc(100vw - 24px)) !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    margin: 12px auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modalFooter, .billActions, .leadRowActions, .rowActions,
+  .productionRowActions, .calCardActions, .adminHeaderActions {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .modalFooter > button, .billActions > button { min-height: 40px; }
+
+  /* Forms and grouped content collapse safely instead of squeezing labels. */
+  .leadFormGrid, .billFormRow, .accountColumns, .salesDashboardGrid,
+  .productionDashboardDeck, .productionDeliverableGrid, .myProductionTaskGrid,
+  .clientPortalGrid, .clientPortalStats, .detailSummary, .statementMetrics,
+  .receiptDetails, .reminderGrid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .leadFormGrid .wide, .billFormRow > *, .productionDeliverableGrid .wide { grid-column: auto !important; }
+  .leadFormGrid label, .billForm label, .clientInviteForm label { min-width: 0; }
+  .leadFormGrid input, .leadFormGrid select, .leadFormGrid textarea,
+  .billForm input, .billForm select, .billForm textarea { width: 100%; box-sizing: border-box; }
+
+  /* Calendar stays usable: a horizontal calendar with a full-height schedule. */
+  .calendar, .calGrid { min-width: 0; }
+  .calGridMonth { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .calHeader, .calCellsMonth { min-width: 640px; }
+  .calSidePanel { max-height: none; }
+  .calCardActions { display: flex; align-items: center; }
+
+  /* The drawer owns navigation scrolling while the page is locked. */
+  .shell:not(.sidebarHidden) aside { overscroll-behavior: contain; }
+  .shell:not(.sidebarHidden) aside nav { overflow-y: auto !important; -webkit-overflow-scrolling: touch; }
+}
+
+@media (max-width: 600px) {
+  main { padding-inline: 12px !important; }
+  .workspaceChrome, .dashboardChrome, .salesChrome, .operationsChrome, .accountsChrome {
+    margin-inline: 0 !important;
+    border-radius: 16px;
+  }
+  .panel, .salesPanel, .dashCard, .accountMetrics, .productionCommandDeck,
+  .operationsTimeline, .collectionsPanel, .receivablesHero, .clientLedgerHero {
+    border-radius: 16px;
+  }
+  .panel, .salesPanel, .dashCard { padding: 12px; }
+  .modalHeader h2, .modalHeader h3 { font-size: 18px; }
+  .dashHeader h1, .salesHeader h1, .operationsHeader h1, .productionHeader h1 { font-size: 18px; }
+  .detailSummary > *, .statementMetrics > *, .receiptDetails > * { min-width: 0; }
+}

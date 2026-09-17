@@ -346,6 +346,25 @@ export default function Home() {
     return () => mobileQuery.removeEventListener("change", closeMobileDrawer);
   }, []);
   useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 900px)");
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && mobileQuery.matches && !sidebarHidden) {
+        setSidebarHidden(true);
+      }
+    };
+    const syncDrawerScroll = () => {
+      document.body.classList.toggle("mobileDrawerOpen", mobileQuery.matches && !sidebarHidden);
+    };
+    syncDrawerScroll();
+    document.addEventListener("keydown", closeOnEscape);
+    mobileQuery.addEventListener("change", syncDrawerScroll);
+    return () => {
+      document.body.classList.remove("mobileDrawerOpen");
+      document.removeEventListener("keydown", closeOnEscape);
+      mobileQuery.removeEventListener("change", syncDrawerScroll);
+    };
+  }, [sidebarHidden]);
+  useEffect(() => {
     setTargetOpen(false);
   }, [section]);
   useEffect(() => {
