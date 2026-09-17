@@ -116,4 +116,59 @@
   .modalHeader h2, .modalHeader h3 { font-size: 18px; }
   .dashHeader h1, .salesHeader h1, .operationsHeader h1, .productionHeader h1 { font-size: 18px; }
   .detailSummary > *, .statementMetrics > *, .receiptDetails > * { min-width: 0; }
+
+  /* Align the Main Dashboard greeting closer to the left edge on phones. */
+  :root .mainDashboard .workspaceChrome.dashboardChrome {
+    position: relative !important;
+    min-height: 112px !important;
+  }
+  .mainDashboard .dashboardChrome .dashHeader {
+    padding-left: 30px !important;
+    transform: none;
+  }
+  .mainDashboard .dashboardChrome .dashHeader small {
+    display: block;
+    padding-right: 126px;
+    white-space: nowrap;
+  }
+  .mainDashboard .dashboardChrome .dashSelect {
+    display: flex !important;
+    align-items: center;
+    position: absolute !important;
+    right: 12px !important;
+    bottom: 8px !important;
+    margin: 0 !important;
+    width: auto !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    white-space: nowrap;
+    z-index: 2;
+  }
+  :root[data-theme="dark"] .mainDashboard .dashboardChrome .dashSelect {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    bottom: 26px !important;
+    gap: 4px;
+    font-size: 9px;
+    color: var(--muted, #b7c3d5) !important;
+  }
+  :root[data-theme="dark"] .mainDashboard .dashboardChrome .dashHeader {
+    padding-left: 38px !important;
+  }
+  :root[data-theme="dark"] .mainDashboard .workspaceChrome.dashboardChrome {
+    min-height: 98px !important;
+  }
+  :root[data-theme="dark"] .mainDashboard .dashboardChrome .dashSelect {
+    bottom: 12px !important;
+  }
+  :root[data-theme="dark"] .mainDashboard .dashboardChrome .dashSelect select {
+    display: block !important;
+    min-height: 26px;
+    padding: 3px 6px;
+    font-size: 9px;
+    background: var(--panel, #101b2a);
+    border-color: var(--line, #33435c);
+    color: var(--text, #f5f8ff);
+  }
 }
