@@ -216,6 +216,38 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  /* Pull the Operations Dashboard heading slightly toward the menu on phones. */
+  :root[data-theme="dark"] :is(.mainOperationsDashboard, .mainOperationsCalendar, .mainOperationsEvents) .operationsChrome .sectionHeader {
+    left: 52px !important;
+  }
+  /* Upcoming and Completed retain the complete 18-column operations grid. */
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns.upcomingEventsTableWrap {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable {
+    width: 1812px !important;
+    min-width: 1812px !important;
+    table-layout: fixed !important;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable :is(th, td):first-child {
+    width: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(n + 2):nth-child(-n + 17),
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable :is(th, td):last-child {
+    width: 104px !important;
+    min-width: 104px !important;
+    max-width: 104px !important;
+    text-align: center;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable th,
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable td {
+    text-align: center;
+  }
   :root[data-theme="dark"] .mainOperationsDashboard .operationsWorkspace .salesKpis {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px;
