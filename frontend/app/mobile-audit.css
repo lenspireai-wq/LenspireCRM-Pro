@@ -171,4 +171,40 @@
     border-color: var(--line, #33435c);
     color: var(--text, #f5f8ff);
   }
+
+  /* Center the compact Sales KPI story: title, icon plus value, then context. */
+  :root[data-theme="dark"] .mainSalesDashboard .salesKpi {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    column-gap: 5px;
+    row-gap: 2px;
+    align-content: center;
+    text-align: center;
+  }
+  :root[data-theme="dark"] .mainSalesDashboard .salesKpi .dashMetricCopy {
+    display: contents;
+  }
+  :root[data-theme="dark"] .mainSalesDashboard .salesKpi .dashMetricLabel {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    text-align: center;
+  }
+  :root[data-theme="dark"] .mainSalesDashboard .salesKpi .dashMetricIcon {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+  }
+  :root[data-theme="dark"] .mainSalesDashboard .salesKpi b {
+    grid-column: 3;
+    grid-row: 2;
+    margin: 0 !important;
+    align-self: center;
+  }
+  :root[data-theme="dark"] .mainSalesDashboard .salesKpi small {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    text-align: center;
+  }
+
 }
