@@ -1094,7 +1094,13 @@ export default function AccountsWorkspace({
                 <h2>{portalBooking.client}</h2>
                 <p>Secure gallery, payment and permanent client access.</p>
               </div>
-              <button onClick={() => setPortalBooking(null)}>×</button>
+              <button
+                className="portalClose"
+                aria-label="Close Client Portal"
+                onClick={() => setPortalBooking(null)}
+              >
+                ×
+              </button>
             </div>
             <div className="clientPortalAccessBody">
               <div className="statementMetrics">
