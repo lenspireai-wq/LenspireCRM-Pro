@@ -332,6 +332,31 @@
     width: 2008px !important;
     min-width: 2008px !important;
   }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .crewAssignments.multipleCrew {
+    padding: 0;
+    border-color: transparent !important;
+    background: transparent !important;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .crewAssignments.multipleCrew::before {
+    display: none;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .crewAssignments.multipleCrew span.crewAssignedMultiple {
+    border-color: #2f966a !important;
+    background: #277354 !important;
+    color: #effff5 !important;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14) .crewAssignments {
+    display: flex !important;
+    width: 100%;
+    justify-content: center !important;
+    justify-items: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14) .crewAssignments span {
+    flex: 0 1 auto;
+  }
   :root[data-theme="dark"] .mainOperationsDashboard .operationsWorkspace .salesKpis {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px;
