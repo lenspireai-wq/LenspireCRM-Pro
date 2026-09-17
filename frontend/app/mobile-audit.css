@@ -269,6 +269,60 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  /* Event message stays compact on a phone, with an always reachable close control. */
+  :root[data-theme="dark"] .eventMessageModal {
+    position: relative;
+    width: min(312px, calc(100vw - 40px));
+    max-height: calc(100dvh - 84px);
+  }
+  :root[data-theme="dark"] .eventMessageModal .modalHeader {
+    position: relative;
+    padding: 12px 42px 10px 12px;
+  }
+  :root[data-theme="dark"] .eventMessageModal .modalHeader h2 {
+    font-size: 16px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .eventMessageModal .modalHeader p {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  :root[data-theme="dark"] .eventMessageModal .modalHeader > button[aria-label="Close"] {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    min-height: 26px;
+    padding: 0;
+  }
+  /* Match the event editor to the compact message dialog on phones. */
+  :root[data-theme="dark"] .eventEditorModal {
+    position: relative;
+    width: min(340px, calc(100vw - 32px));
+    max-height: calc(100dvh - 64px);
+  }
+  :root[data-theme="dark"] .eventEditorModal .modalHeader {
+    position: relative;
+    padding: 12px 42px 10px 12px;
+  }
+  :root[data-theme="dark"] .eventEditorModal .modalHeader h2 {
+    font-size: 16px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .eventEditorModal .modalHeader p {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  :root[data-theme="dark"] .eventEditorModal .modalHeader > button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    min-height: 26px;
+    padding: 0;
+  }
   :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(n + 8):nth-child(-n + 14) {
     width: 132px !important;
     min-width: 132px !important;
