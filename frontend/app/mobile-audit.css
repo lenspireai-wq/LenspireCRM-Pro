@@ -357,6 +357,42 @@
   :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14) .crewAssignments span {
     flex: 0 1 auto;
   }
+  /* Photographers: keep the long roster independently scrollable on phones. */
+  :root[data-theme="dark"] .mainOperationsDashboard .photographersDetailsView .photographerTablePanel {
+    height: calc(100dvh - 190px) !important;
+    max-height: calc(100dvh - 190px) !important;
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .photographersDetailsView .photographerTable .statusPill {
+    display: inline-flex;
+    justify-content: center;
+    min-width: 76px;
+    border-color: #4d719b;
+    background: #1d3046;
+    color: #cbe5ff;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .photographersDetailsView .photographerTable .statusPill.status-in-house {
+    border-color: #4f9d73;
+    background: rgb(79 157 115 / 18%);
+    color: #c9f3da;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .photographersDetailsView .photographerTable .statusPill.status-outside {
+    border-color: #b9855e;
+    background: rgb(185 133 94 / 18%);
+    color: #ffe0c2;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions .editAction {
+    border-color: #4e9bff !important;
+    background: rgb(78 155 255 / 18%) !important;
+    color: #cfe7ff !important;
+  }
+  :root[data-theme="dark"] .mainOperationsDashboard .photographersDetailsView .photographerTable .rowActions .deleteAction {
+    border-color: #d76b77 !important;
+    background: rgb(215 107 119 / 18%) !important;
+    color: #ffd5da !important;
+  }
   :root[data-theme="dark"] .mainOperationsDashboard .operationsWorkspace .salesKpis {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px;
