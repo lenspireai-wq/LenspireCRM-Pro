@@ -860,6 +860,14 @@
     line-height: 1.15;
     white-space: nowrap;
   }
+  :root[data-theme="dark"] .clientStatementModal .statementLedgerTable :is(th, td) {
+    padding: 5px 6px;
+    font-size: 8px;
+    line-height: 1.2;
+  }
+  :root[data-theme="dark"] .clientStatementModal .statementLedgerTable th {
+    font-size: 7px;
+  }
   :root[data-theme="dark"] .clientStatementModal .statementSchedule {
     padding: 8px 10px 10px;
   }
