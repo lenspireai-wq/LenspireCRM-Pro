@@ -37,11 +37,26 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/build-push-action@v6
+      # GHCR can occasionally reject a freshly uploaded layer with "unknown blob".
+      # Preserve the first build result and retry the complete push once.
+      - name: Build and push ${{ matrix.name }}
+        id: container_build
+        continue-on-error: true
+        uses: docker/build-push-action@v6
         with:
           context: ./${{ matrix.context }}
           push: true
           tags: ghcr.io/lenspireai-wq/${{ matrix.name }}:latest
+          provenance: false
+      - name: Retry container push after registry blob error
+        if: steps.container_build.outcome == 'failure'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./${{ matrix.context }}
+          push: true
+          tags: ghcr.io/lenspireai-wq/${{ matrix.name }}:latest
+          no-cache: true
+          provenance: false
 
   deploy:
     name: Deploy to Hostinger VPS

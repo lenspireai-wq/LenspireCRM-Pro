@@ -527,6 +527,40 @@
     flex: 0 0 auto;
     font-size: 12px;
   }
+  /* Collections: retain the content, remove the inner decorative patch, and tighten its header. */
+  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsHero {
+    gap: 6px;
+    padding: 8px 10px;
+    border-bottom-color: transparent;
+    background: transparent;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsHero::after {
+    display: none;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsHero small {
+    font-size: 7px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsHero h2 {
+    margin: 2px 0;
+    font-size: 14px;
+    line-height: 1.1;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsHero p {
+    font-size: 9px;
+    line-height: 1.2;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsSignals {
+    gap: 4px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsSignals span {
+    min-width: 56px;
+    gap: 2px;
+    padding: 4px 5px;
+    font-size: 7px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .collectionsPanel .collectionsSignals b {
+    font-size: 11px;
+  }
   /* Upcoming and Completed event tables: size columns from the content itself. */
   :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable {
     width: max-content !important;
