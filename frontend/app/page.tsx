@@ -559,6 +559,14 @@ export default function Home() {
         <div ref={dashboardChromeRef} className={`workspaceChrome${section === "Dashboard" ? " dashboardChrome" : ""}${section === "Sales" ? " salesChrome" : ""}${section === "Sales" && salesView === "Lead Management" ? " leadManagementChrome" : ""}${section === "Operations" ? " operationsChrome" : ""}${section === "Accounts" ? " accountsChrome" : ""}`}>
           {section === "Dashboard" ? (
             <>
+              <button
+                type="button"
+                className="dashboardMobileMenu"
+                aria-label={sidebarHidden ? "Show navigation menu" : "Hide navigation menu"}
+                onClick={() => setSidebarHidden((hidden) => !hidden)}
+              >
+                ☰
+              </button>
               <div className="dashHeader">
                 <div>
                   <h1>Hello, {(auth.user?.display_name || auth.user?.username || "there").split(" ")[0]}</h1>
@@ -577,6 +585,14 @@ export default function Home() {
             </>
           ) : section === "Sales" ? (
             <>
+              <button
+                type="button"
+                className="salesMobileMenu"
+                aria-label={sidebarHidden ? "Show navigation menu" : "Hide navigation menu"}
+                onClick={() => setSidebarHidden((hidden) => !hidden)}
+              >
+                ☰
+              </button>
               <div className="salesHeader">
                 <div>
                   <h1>{salesView === "Dashboard" ? "Sales Dashboard" : "Lead Management"}</h1>
