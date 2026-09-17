@@ -3,6 +3,7 @@ import re
 import secrets
 from decimal import Decimal, ROUND_HALF_UP
 from datetime import timedelta
+from types import SimpleNamespace
 from urllib.parse import quote
 
 from django.conf import settings
@@ -88,7 +89,7 @@ PAYMENT_SCHEDULE = (
 )
 
 
-def client_payment_schedule(booking, payments, events):
+def client_payment_schedule(booking, payments, events, confirmed_advance=Decimal("0.00")):
     """Return the client-facing 10 / 40 / 40 / 10 booking schedule.
 
     Payments are allocated in ledger order so older bookings with manually
@@ -118,6 +119,14 @@ def client_payment_schedule(booking, payments, events):
         })
 
     paid = [payment for payment in payments if payment.status == "Paid" and payment.payment_type != "Refund"]
+    # Older confirmed leads can have a recorded advance before their ledger
+    # payment was generated. Surface that confirmed advance as the first paid
+    # milestone, without inventing a database payment or double-counting one.
+    if confirmed_advance > 0:
+        paid.insert(0, SimpleNamespace(
+            amount=confirmed_advance,
+            paid_at=getattr(booking.lead, "payment_received_date", None),
+        ))
     paid_index = 0
     paid_remaining = Decimal("0.00")
     for stage in stages:
@@ -458,6 +467,14 @@ class ClientPortalPublicView(APIView):
         totals = payments.filter(status="Paid").aggregate(received=Sum("amount", filter=~Q(payment_type="Refund")), refunded=Sum("amount", filter=Q(payment_type="Refund")))
         payments = list(payments)
         received = (totals["received"] or 0) - (totals["refunded"] or 0)
+        lead_advance = Decimal(getattr(booking.lead, "advance_received", 0) or 0)
+        paid_advance = sum(
+            (Decimal(payment.amount or 0) for payment in payments
+             if payment.status == "Paid" and payment.payment_type == "Advance"),
+            Decimal("0.00"),
+        )
+        confirmed_advance = max(lead_advance - paid_advance, Decimal("0.00"))
+        received += confirmed_advance
         events = list(CalendarEvent.objects.filter(organization=access.organization, booking=booking).order_by("start_date"))
         deliverables = ProductionDeliverable.objects.filter(organization=access.organization, job__booking=booking, drive_link__gt="").select_related("job")
         ClientPortalActivity.objects.create(organization=access.organization, access=access, booking=booking, action="Portal Opened", detail="Client opened the secure portal.")
@@ -480,7 +497,9 @@ class ClientPortalPublicView(APIView):
                 }
                 for event in events
             ],
-            "payments": client_payment_schedule(booking, payments, events),
+            "payments": client_payment_schedule(
+                booking, payments, events, confirmed_advance=confirmed_advance,
+            ),
             "deliverables": [{"id": item.id, "name": item.name, "status": item.status, "drive_link": item.drive_link, "thumbnail_url": deliverable_thumbnail_url(item), "revision_notes": item.revision_notes} for item in deliverables],
         })
 

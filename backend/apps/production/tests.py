@@ -149,6 +149,23 @@ class ProductionApiTests(TestCase):
         )
         self.assertEqual(str(portal.data["payments"][2]["due_date"]), "2026-10-10")
 
+    def test_client_portal_includes_confirmed_lead_advance_without_ledger_row(self):
+        Payment.objects.filter(booking=self.booking).delete()
+        self.lead.advance_received = "100.00"
+        self.lead.payment_received_date = "2026-06-01"
+        self.lead.save(update_fields=("advance_received", "payment_received_date"))
+        generated = self.client.post(
+            "/api/client-portal/access/",
+            {"booking": self.booking.id, "expiry_days": 60},
+            format="json",
+        )
+        token = generated.data["url"].rstrip("/").split("/")[-1]
+        portal = APIClient().get(f"/api/client-portal/{token}/")
+        self.assertEqual(portal.status_code, 200, portal.data)
+        self.assertEqual(str(portal.data["booking"]["received"]), "100")
+        self.assertEqual(str(portal.data["booking"]["balance"]), "900")
+        self.assertEqual(portal.data["payments"][0]["status"], "Paid")
+
     def test_client_invitation_pin_login_reset_disable_and_audit(self):
         invited = self.client.post(
             "/api/client-portal/invitations/",

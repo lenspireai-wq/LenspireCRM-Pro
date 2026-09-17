@@ -20,6 +20,17 @@ export default function ClientPortalPage() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [message, setMessage] = useState("");
   const load = () => api.get(`/client-portal/${token}/`).then(({ data }) => setData(data)).catch((problem) => setError(problem.response?.data?.detail || "This portal is unavailable."));
+  useEffect(() => {
+    const documentRoot = document.documentElement;
+    const previousTheme = documentRoot.dataset.theme;
+    const previousColorScheme = documentRoot.style.colorScheme;
+    documentRoot.dataset.theme = "light";
+    documentRoot.style.colorScheme = "light";
+    return () => {
+      documentRoot.dataset.theme = previousTheme;
+      documentRoot.style.colorScheme = previousColorScheme;
+    };
+  }, []);
   useEffect(() => { void load(); }, [token]);
   const feedback = async (deliverable: any, action: "approve" | "changes", feedbackMessage = "") => {
     if (action === "changes" && !feedbackMessage.trim()) return;

@@ -5083,10 +5083,703 @@
   border-color: #79adf8 !important;
 }
 
+/* Record / Edit Payment: premium finance form without changing its workflow. */
+:root[data-theme="light"] .paymentModal {
+  overflow: hidden;
+  border: 1px solid #cfe1ff !important;
+  border-radius: 22px !important;
+  background: #ffffff !important;
+  box-shadow: 0 26px 66px rgb(27 74 148 / 23%) !important;
+}
+
+:root[data-theme="light"] .paymentModal .modalHeader {
+  position: relative;
+  padding: 22px 24px 19px;
+  border-bottom: 1px solid #dbe8fb;
+  background:
+    radial-gradient(circle at 92% 18%, rgb(118 87 255 / 15%), transparent 12rem),
+    linear-gradient(105deg, #eef8ff, #ffffff 58%, #f6f2ff);
+}
+
+:root[data-theme="light"] .paymentModal .modalHeader small {
+  color: #246bfd;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+:root[data-theme="light"] .paymentModal .modalHeader h2 {
+  margin-top: 6px;
+  color: #172033;
+  font-size: 23px;
+  font-weight: 780;
+  letter-spacing: -.03em;
+}
+
+:root[data-theme="light"] .paymentModal .modalHeader p {
+  color: #61728a;
+  font-size: 13px;
+}
+
+:root[data-theme="light"] .paymentModal .modalHeader > button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ccddf7;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 80%);
+  color: #52637c;
+  font-size: 19px;
+  line-height: 1;
+}
+
+:root[data-theme="light"] .paymentModal .leadFormGrid {
+  gap: 12px;
+  padding: 20px 24px;
+  background: linear-gradient(180deg, #fcfeff, #f9fbff);
+}
+
+:root[data-theme="light"] .paymentModal .leadFormGrid > label {
+  min-height: 78px;
+  padding: 9px 10px 10px;
+  border: 1px solid #dce9fa;
+  border-radius: 12px;
+  background: #f4f9ff;
+  color: #42536d;
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+:root[data-theme="light"] .paymentModal .leadFormGrid > label.wide {
+  background: linear-gradient(100deg, #eff8ff, #f7f3ff);
+}
+
+:root[data-theme="light"] .paymentModal .leadFormGrid :is(input, select, textarea) {
+  margin-top: 7px;
+  border: 1px solid #cbdcf4;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #172033;
+  font-size: 14px;
+  font-weight: 450;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: 0 2px 5px rgb(36 107 253 / 3%);
+}
+
+:root[data-theme="light"] .paymentModal .leadFormGrid :is(input, select, textarea):focus {
+  border-color: #76adfb;
+  box-shadow: 0 0 0 3px rgb(36 107 253 / 14%);
+}
+
+:root[data-theme="light"] .paymentModal .leadFormGrid textarea {
+  min-height: 75px;
+  resize: vertical;
+}
+
+:root[data-theme="light"] .paymentModal .modalFooter {
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid #dce9fa;
+  background: linear-gradient(105deg, #f8fbff, #f7f4ff);
+}
+
+:root[data-theme="light"] .paymentModal .modalFooter button {
+  min-height: 38px;
+  padding-inline: 16px;
+  border: 1px solid #c7d9f3;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #3c4c64;
+  font-weight: 600;
+}
+
+:root[data-theme="light"] .paymentModal .modalFooter .primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, #246bfd, #7657ff);
+  color: #ffffff;
+  box-shadow: 0 7px 15px rgb(70 91 230 / 23%);
+}
+
 :root[data-theme="light"] .mainOperationsEvents :is(.operationsUpcomingTable, .operationsCompletedTable) .crewAssignments :is(.crewNA, .crewX, .crewXX, .crewAssigned, .crewAssignedMultiple) {
   box-sizing: border-box;
   display: flex !important;
   flex: 1 1 100% !important;
   width: 100% !important;
   justify-content: center !important;
+}
+
+/* Payment reminders, statements and client access share the same polished finance language. */
+:root[data-theme="light"] :is(.reminderModal, .clientStatementModal, .clientPortalAccessModal) {
+  overflow: hidden;
+  border: 1px solid #cfe1ff !important;
+  border-radius: 22px !important;
+  background: #ffffff !important;
+  box-shadow: 0 26px 66px rgb(27 74 148 / 23%) !important;
+}
+
+:root[data-theme="light"] :is(.reminderModal, .clientStatementModal, .clientPortalAccessModal) > .modalHeader,
+:root[data-theme="light"] .clientStatementModal .statementHeader {
+  padding: 22px 24px 19px;
+  border-bottom: 1px solid #dbe8fb;
+  background:
+    radial-gradient(circle at 92% 18%, rgb(118 87 255 / 15%), transparent 12rem),
+    linear-gradient(105deg, #eef8ff, #ffffff 58%, #f6f2ff);
+}
+
+:root[data-theme="light"] :is(.reminderModal, .clientStatementModal, .clientPortalAccessModal) .modalHeader small {
+  color: #246bfd;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+:root[data-theme="light"] :is(.reminderModal, .clientStatementModal, .clientPortalAccessModal) .modalHeader h2 {
+  margin-top: 6px;
+  color: #172033;
+  font-size: 23px;
+  font-weight: 780;
+  letter-spacing: -.03em;
+}
+
+:root[data-theme="light"] :is(.reminderModal, .clientStatementModal, .clientPortalAccessModal) .modalHeader p {
+  color: #61728a;
+  font-size: 13px;
+}
+
+:root[data-theme="light"] :is(.reminderModal, .clientPortalAccessModal) .modalHeader > button,
+:root[data-theme="light"] .clientStatementModal .statementClose {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ccddf7;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 80%);
+  color: #52637c;
+  font-size: 19px;
+  line-height: 1;
+}
+
+:root[data-theme="light"] .reminderModal .reminderBody {
+  display: grid;
+  gap: 14px;
+  padding: 20px 24px;
+  background: linear-gradient(180deg, #fcfeff, #f9fbff);
+}
+
+:root[data-theme="light"] .reminderModal .reminderBody textarea,
+:root[data-theme="light"] .reminderModal .reminderFollowup {
+  border: 1px solid #d8e7fa;
+  border-radius: 12px;
+  background: #f4f9ff;
+}
+
+:root[data-theme="light"] .reminderModal .reminderBody textarea {
+  min-height: 160px;
+  padding: 14px;
+  color: #28364c;
+  font-size: 14px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+:root[data-theme="light"] .reminderModal .reminderFollowup {
+  padding: 10px 12px;
+  color: #42536d;
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+:root[data-theme="light"] .reminderModal .reminderFollowup input {
+  margin-top: 7px;
+  border: 1px solid #cbdcf4;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #172033;
+}
+
+:root[data-theme="light"] :is(.reminderModal, .clientPortalAccessModal) .modalFooter {
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid #dce9fa;
+  background: linear-gradient(105deg, #f8fbff, #f7f4ff);
+}
+
+:root[data-theme="light"] :is(.reminderModal, .clientPortalAccessModal) .modalFooter :is(button, a) {
+  min-height: 38px;
+  padding: 8px 16px;
+  border: 1px solid #c7d9f3;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #3c4c64;
+  font-weight: 600;
+}
+
+:root[data-theme="light"] :is(.reminderModal, .clientPortalAccessModal) .modalFooter .primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, #246bfd, #7657ff);
+  color: #ffffff;
+  box-shadow: 0 7px 15px rgb(70 91 230 / 23%);
+}
+
+:root[data-theme="light"] .clientStatementModal .statementStudioBrand {
+  align-items: center;
+  gap: 10px;
+}
+
+:root[data-theme="light"] .clientStatementModal .statementStudioBrand img {
+  max-height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
+:root[data-theme="light"] :is(.clientStatementModal, .clientPortalAccessModal) :is(.statementMetrics, .clientPortalAccessBody) {
+  gap: 12px;
+  padding: 20px 24px;
+  background: linear-gradient(180deg, #fcfeff, #f9fbff);
+}
+
+:root[data-theme="light"] :is(.clientStatementModal, .clientPortalAccessModal) .statementMetrics article {
+  border: 1px solid #d8e7fa;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #f0f8ff, #f8f5ff);
+  box-shadow: none;
+}
+
+:root[data-theme="light"] :is(.clientStatementModal, .clientPortalAccessModal) .statementMetrics span {
+  color: #61728a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+:root[data-theme="light"] :is(.clientStatementModal, .clientPortalAccessModal) .statementMetrics b {
+  color: #172033;
+  font-size: 16px;
+}
+
+:root[data-theme="light"] .clientPortalAccessModal .clientPortalAccessBody {
+  display: grid;
+  gap: 16px;
+}
+
+:root[data-theme="light"] .clientPortalAccessModal .clientAccessSection {
+  padding: 16px;
+  border: 1px solid #d8e7fa;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #f4faff, #faf8ff);
+}
+
+:root[data-theme="light"] .clientPortalAccessModal .clientAccessSection h3 {
+  color: #172033;
+  font-size: 16px;
+}
+
+:root[data-theme="light"] .clientPortalAccessModal .clientAccessSection :is(label, p, small) {
+  color: #5d6d85;
+}
+
+:root[data-theme="light"] .clientPortalAccessModal .clientAccessSection :is(input, select) {
+  margin-top: 7px;
+  border: 1px solid #cbdcf4;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #172033;
+}
+
+:root[data-theme="light"] .clientStatementModal .statementLedgerTable {
+  margin: 0 24px 20px;
+  border: 1px solid #d9e7f9;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+:root[data-theme="light"] .clientStatementModal .statementLedgerTable thead {
+  background: #eaf4ff;
+}
+
+:root[data-theme="light"] .clientStatementModal .statementLedgerTable th {
+  color: #172033;
+  font-weight: 750;
+}
+
+/* Operations event editor: keep a dense workflow, but give every assignment a clear home. */
+:root[data-theme="light"] .eventEditorModal {
+  border: 0 !important;
+  background: #f8fbff !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="light"] .eventEditorModal .modalHeader {
+  padding: 20px 30px 17px;
+  border-bottom: 1px solid #d9e7f9;
+  background:
+    radial-gradient(circle at 90% 20%, rgb(118 87 255 / 14%), transparent 13rem),
+    linear-gradient(105deg, #eff8ff, #ffffff 57%, #f7f3ff);
+}
+
+:root[data-theme="light"] .eventEditorModal .modalHeader small {
+  color: #246bfd;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+:root[data-theme="light"] .eventEditorModal .modalHeader h2 {
+  margin-top: 5px;
+  color: #172033;
+  font-size: 25px;
+  font-weight: 780;
+  letter-spacing: -.03em;
+}
+
+:root[data-theme="light"] .eventEditorModal .modalHeader p {
+  color: #61728a;
+  font-size: 13px;
+}
+
+:root[data-theme="light"] .eventEditorModal .modalHeader > button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #cbdcf4;
+  border-radius: 10px;
+  background: #ffffffcc;
+  color: #53647c;
+  font-size: 19px;
+}
+
+:root[data-theme="light"] .eventEditorModal .operationForm {
+  padding: 16px 30px;
+  background:
+    radial-gradient(circle at 4% 96%, rgb(36 107 253 / 7%), transparent 18rem),
+    #f8fbff;
+}
+
+:root[data-theme="light"] .eventEditorModal .operationFormSection {
+  border-color: #d7e6f8;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgb(33 75 139 / 7%);
+}
+
+:root[data-theme="light"] .eventEditorModal .operationSectionTitle {
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 13px;
+}
+
+:root[data-theme="light"] .eventEditorModal .operationSectionTitle span {
+  padding: 5px 8px;
+  border: 1px solid #caddfc;
+  border-radius: 999px;
+  background: #eef6ff;
+  color: #246bfd;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .09em;
+}
+
+:root[data-theme="light"] .eventEditorModal .operationSectionTitle b {
+  color: #172033;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+:root[data-theme="light"] .eventEditorModal .operationFieldGrid > label,
+:root[data-theme="light"] .eventEditorModal .crewMultiField {
+  padding: 9px 10px 10px;
+  border: 1px solid #dce9fa;
+  border-radius: 11px;
+  background: #f5f9ff;
+  color: #485971;
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+:root[data-theme="light"] .eventEditorModal .crewMultiField > b {
+  color: #485971;
+  font-size: 10px;
+}
+
+:root[data-theme="light"] .eventEditorModal :is(.operationFieldGrid, .crewMultiField) :is(input, select, textarea) {
+  margin-top: 7px;
+  border: 1px solid #cbdcf4;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #172033;
+  font-size: 13px;
+  font-weight: 450;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+:root[data-theme="light"] .eventEditorModal :is(.operationFieldGrid, .crewMultiField) :is(input, select, textarea):focus {
+  border-color: #76adfb;
+  box-shadow: 0 0 0 3px rgb(36 107 253 / 13%);
+}
+
+:root[data-theme="light"] .eventEditorModal .crewSelectionRow {
+  gap: 6px;
+}
+
+:root[data-theme="light"] .eventEditorModal .addCrewSelection,
+:root[data-theme="light"] .eventEditorModal .removeCrewSelection {
+  border: 1px solid #bdd6fa;
+  border-radius: 8px;
+  background: #eef6ff;
+  color: #246bfd;
+  font-weight: 650;
+}
+
+:root[data-theme="light"] .eventEditorModal .removeCrewSelection {
+  min-width: 30px;
+  background: #fff2f3;
+  border-color: #f2cbd2;
+  color: #c13d52;
+}
+
+:root[data-theme="light"] .eventEditorModal .modalFooter {
+  gap: 10px;
+  padding: 14px 30px;
+  border-top: 1px solid #dce9fa;
+  background: linear-gradient(105deg, #f8fbff, #f6f3ff);
+}
+
+:root[data-theme="light"] .eventEditorModal .modalFooter button {
+  min-height: 38px;
+  padding-inline: 17px;
+  border: 1px solid #c7d9f3;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #3c4c64;
+  font-weight: 600;
+}
+
+:root[data-theme="light"] .eventEditorModal .modalFooter .primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, #246bfd, #7657ff);
+  color: #ffffff;
+  box-shadow: 0 7px 15px rgb(70 91 230 / 23%);
+}
+
+/* Public client portal: a bright, premium client experience independent of the staff workspace theme. */
+.clientPortal {
+  max-width: 1180px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 6% 0%, rgb(36 107 253 / 13%), transparent 25rem),
+    radial-gradient(circle at 96% 10%, rgb(118 87 255 / 13%), transparent 24rem),
+    #f8fbff;
+  color: #172033;
+}
+
+.clientPortalHero,
+.clientPortalCard {
+  border-color: #d6e6fb;
+  background: rgb(255 255 255 / 88%);
+  box-shadow: 0 16px 38px rgb(37 78 142 / 10%);
+}
+
+.clientPortalHero {
+  background:
+    radial-gradient(circle at 90% 20%, rgb(118 87 255 / 17%), transparent 17rem),
+    linear-gradient(112deg, #eef8ff, #ffffff 56%, #f7f3ff);
+}
+
+.clientPortalHeroGlow {
+  border-color: rgb(36 107 253 / 17%);
+  box-shadow: 0 0 0 48px rgb(36 107 253 / 4%), 0 0 0 100px rgb(118 87 255 / 3%);
+}
+
+.clientPortalHeroTop > span {
+  border-color: #c6dafa;
+  background: #ffffffb8;
+  color: #246bfd;
+}
+
+.clientPortalHero small,
+.clientPortalHeroFeature small {
+  color: #246bfd !important;
+}
+
+.clientPortalHero h1,
+.clientPortalCard h2,
+.clientPortalHeroFeature b {
+  color: #172033;
+  font-family: inherit;
+  font-weight: 760;
+}
+
+.clientPortalHero p,
+.clientPortalHeroFeature span,
+.clientPortalHeroFooter,
+.clientPortalRow span,
+.clientDeliverable span,
+.clientPortal footer {
+  color: #61728a !important;
+}
+
+.clientPortalHero p i,
+.clientPortalHeroFooter b {
+  color: #7657ff;
+}
+
+.clientPortalHeroFooter {
+  border-top-color: #dce9fa;
+}
+
+.clientPortalHeroFeature {
+  border-color: #cddffb;
+  background: linear-gradient(135deg, #ffffffcc, #f2edffcc);
+  box-shadow: 0 10px 26px rgb(55 93 162 / 10%);
+}
+
+.clientPortalStats article {
+  border-color: #d5e6fb;
+  background: linear-gradient(135deg, #edf8ff, #faf8ff);
+}
+
+.clientPortalStats article:nth-child(2) {
+  background: linear-gradient(135deg, #ecfbf4, #f7fffb);
+}
+
+.clientPortalStats article:nth-child(3) {
+  background: linear-gradient(135deg, #f5f0ff, #fbf9ff);
+}
+
+.clientPortalStats article::after {
+  background: linear-gradient(90deg, #246bfd, #7657ff, transparent);
+}
+
+.clientPortalStats small,
+.clientPortalCardTitle small {
+  color: #61728a;
+}
+
+.clientPortalStats b {
+  color: #172033;
+}
+
+.clientPortalCardTitle > span {
+  border-color: #cddffb;
+  background: linear-gradient(135deg, #eaf5ff, #f3edff);
+  color: #246bfd;
+}
+
+.clientPortalRow {
+  border-color: #e0ebf8;
+}
+
+.clientPortalRow > i {
+  color: #246bfd;
+}
+
+.clientPortalRow b {
+  color: #172033;
+}
+
+.clientPortalRow strong {
+  color: #174ea6;
+}
+
+.clientPortalRow em {
+  border-color: #c8e5d5;
+  border-radius: 8px;
+  background: #eaf9f1;
+  color: #178555;
+}
+
+.clientPortalRow em:not(:where(:empty)) {
+  font-weight: 750;
+}
+
+.clientEventDetails {
+  border-color: #bdd6fa;
+  background: #f3f8ff;
+  color: #246bfd;
+}
+
+.clientEventDetails:hover {
+  background: #e5f1ff;
+}
+
+.clientPortalDeliveries {
+  background: linear-gradient(135deg, #f1f9ff, #f9f6ff);
+}
+
+.clientDeliverable {
+  border-color: #d5e6fb;
+  background: #ffffff;
+}
+
+.clientDeliverableIcon {
+  background: linear-gradient(135deg, #e4f3ff, #eee8ff);
+  color: #246bfd;
+}
+
+.clientDeliverable a,
+.clientFeedback button {
+  border: 0;
+  background: linear-gradient(135deg, #246bfd, #7657ff);
+  color: #ffffff;
+  box-shadow: 0 7px 15px rgb(70 91 230 / 20%);
+}
+
+.clientFeedback button:last-child {
+  background: #fff2f3;
+  color: #c13d52;
+  box-shadow: none;
+}
+
+.clientApproved {
+  color: #178555 !important;
+}
+
+.clientFeedbackBackdrop {
+  background: rgb(19 32 51 / 45%);
+  backdrop-filter: blur(5px);
+}
+
+.clientFeedbackModal {
+  border-color: #cfe1ff;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #172033;
+  box-shadow: 0 26px 66px rgb(27 74 148 / 23%);
+}
+
+.clientFeedbackModal h2 {
+  color: #172033;
+}
+
+.clientFeedbackModal p,
+.clientFeedbackModal dt {
+  color: #61728a;
+}
+
+.clientFeedbackModal dd {
+  color: #172033;
+}
+
+.clientFeedbackModal textarea {
+  border-color: #cbdcf4;
+  background: #f7fbff;
+  color: #172033;
+}
+
+.clientFeedbackModal button {
+  border-color: #c7d9f3;
+  background: #ffffff;
+  color: #3c4c64;
+}
+
+.clientFeedbackModal button.primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, #246bfd, #7657ff);
+  color: #ffffff;
 }

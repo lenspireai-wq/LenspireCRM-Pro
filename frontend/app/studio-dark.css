@@ -438,3 +438,135 @@
   font-family: Georgia, "Times New Roman", serif;
   color: var(--text-strong);
 }
+
+/* The public Client Portal deliberately keeps its calm light client experience in every workspace theme. */
+:root[data-theme="dark"] .clientPortal {
+  background:
+    radial-gradient(circle at 6% 0%, rgb(36 107 253 / 13%), transparent 25rem),
+    radial-gradient(circle at 96% 10%, rgb(118 87 255 / 13%), transparent 24rem),
+    #f8fbff;
+  color: #172033;
+}
+:root[data-theme="dark"] :is(.clientPortalHero, .clientPortalCard) { border-color: #d6e6fb; background: rgb(255 255 255 / 88%); box-shadow: 0 16px 38px rgb(37 78 142 / 10%); }
+:root[data-theme="dark"] .clientPortalHero { background: radial-gradient(circle at 90% 20%, rgb(118 87 255 / 17%), transparent 17rem), linear-gradient(112deg, #eef8ff, #ffffff 56%, #f7f3ff); }
+:root[data-theme="dark"] .clientPortalHeroGlow { border-color: rgb(36 107 253 / 17%); box-shadow: 0 0 0 48px rgb(36 107 253 / 4%), 0 0 0 100px rgb(118 87 255 / 3%); }
+:root[data-theme="dark"] .clientPortalHeroTop > span { border-color: #c6dafa; background: #ffffffb8; color: #246bfd; }
+:root[data-theme="dark"] :is(.clientPortalHero small, .clientPortalHeroFeature small) { color: #246bfd !important; }
+:root[data-theme="dark"] :is(.clientPortalHero h1, .clientPortalCard h2, .clientPortalHeroFeature b) { color: #172033; font-family: inherit; font-weight: 760; }
+:root[data-theme="dark"] :is(.clientPortalHero p, .clientPortalHeroFeature span, .clientPortalHeroFooter, .clientPortalRow span, .clientDeliverable span, .clientPortal footer) { color: #61728a !important; }
+:root[data-theme="dark"] :is(.clientPortalHero p i, .clientPortalHeroFooter b) { color: #7657ff; }
+:root[data-theme="dark"] .clientPortalHeroFooter { border-top-color: #dce9fa; }
+:root[data-theme="dark"] .clientPortalHeroFeature { border-color: #cddffb; background: linear-gradient(135deg, #ffffffcc, #f2edffcc); box-shadow: 0 10px 26px rgb(55 93 162 / 10%); }
+:root[data-theme="dark"] .clientPortalStats article { border-color: #d5e6fb; background: linear-gradient(135deg, #edf8ff, #faf8ff); }
+:root[data-theme="dark"] .clientPortalStats article:nth-child(2) { background: linear-gradient(135deg, #ecfbf4, #f7fffb); }
+:root[data-theme="dark"] .clientPortalStats article:nth-child(3) { background: linear-gradient(135deg, #f5f0ff, #fbf9ff); }
+:root[data-theme="dark"] .clientPortalStats article::after { background: linear-gradient(90deg, #246bfd, #7657ff, transparent); }
+:root[data-theme="dark"] :is(.clientPortalStats small, .clientPortalCardTitle small) { color: #61728a; }
+:root[data-theme="dark"] .clientPortalStats b { color: #172033; }
+:root[data-theme="dark"] .clientPortalCardTitle > span { border-color: #cddffb; background: linear-gradient(135deg, #eaf5ff, #f3edff); color: #246bfd; }
+:root[data-theme="dark"] .clientPortalRow { border-color: #e0ebf8; }
+:root[data-theme="dark"] .clientPortalRow > i { color: #246bfd; }
+:root[data-theme="dark"] .clientPortalRow b { color: #172033; }
+:root[data-theme="dark"] .clientPortalRow strong { color: #174ea6; }
+:root[data-theme="dark"] .clientPortalRow em { border-color: #c8e5d5; border-radius: 8px; background: #eaf9f1; color: #178555; font-weight: 750; }
+:root[data-theme="dark"] .clientEventDetails { border-color: #bdd6fa; background: #f3f8ff; color: #246bfd; }
+:root[data-theme="dark"] .clientEventDetails:hover { background: #e5f1ff; }
+:root[data-theme="dark"] .clientPortalDeliveries { background: linear-gradient(135deg, #f1f9ff, #f9f6ff); }
+:root[data-theme="dark"] .clientDeliverable { border-color: #d5e6fb; background: #ffffff; }
+:root[data-theme="dark"] .clientDeliverableIcon { background: linear-gradient(135deg, #e4f3ff, #eee8ff); color: #246bfd; }
+:root[data-theme="dark"] :is(.clientDeliverable a, .clientFeedback button) { border: 0; background: linear-gradient(135deg, #246bfd, #7657ff); color: #ffffff; box-shadow: 0 7px 15px rgb(70 91 230 / 20%); }
+:root[data-theme="dark"] .clientFeedback button:last-child { background: #fff2f3; color: #c13d52; box-shadow: none; }
+:root[data-theme="dark"] .clientApproved { color: #178555 !important; }
+:root[data-theme="dark"] .clientFeedbackBackdrop { background: rgb(19 32 51 / 45%); backdrop-filter: blur(5px); }
+:root[data-theme="dark"] .clientFeedbackModal { border-color: #cfe1ff; border-radius: 20px; background: #ffffff; color: #172033; box-shadow: 0 26px 66px rgb(27 74 148 / 23%); }
+:root[data-theme="dark"] :is(.clientFeedbackModal h2, .clientFeedbackModal dd) { color: #172033; }
+:root[data-theme="dark"] :is(.clientFeedbackModal p, .clientFeedbackModal dt) { color: #61728a; }
+:root[data-theme="dark"] .clientFeedbackModal textarea { border-color: #cbdcf4; background: #f7fbff; color: #172033; }
+:root[data-theme="dark"] .clientFeedbackModal button { border-color: #c7d9f3; background: #ffffff; color: #3c4c64; }
+:root[data-theme="dark"] .clientFeedbackModal button.primary { border-color: transparent; background: linear-gradient(135deg, #246bfd, #7657ff); color: #ffffff; }
+
+/* Final portal theme guard: this public route should not inherit the workspace's charcoal palette. */
+:root[data-theme="dark"] body .clientPortal { background: radial-gradient(circle at 6% 0%, rgb(36 107 253 / 13%), transparent 25rem), radial-gradient(circle at 96% 10%, rgb(118 87 255 / 13%), transparent 24rem), #f8fbff !important; color: #172033 !important; }
+:root[data-theme="dark"] body .clientPortal :is(.clientPortalHero, .clientPortalCard) { border-color: #d6e6fb !important; background: rgb(255 255 255 / 88%) !important; box-shadow: 0 16px 38px rgb(37 78 142 / 10%) !important; }
+:root[data-theme="dark"] body .clientPortal .clientPortalHero { background: radial-gradient(circle at 90% 20%, rgb(118 87 255 / 17%), transparent 17rem), linear-gradient(112deg, #eef8ff, #ffffff 56%, #f7f3ff) !important; }
+:root[data-theme="dark"] body .clientPortal :is(.clientPortalHero h1, .clientPortalCard h2, .clientPortalHeroFeature b, .clientPortalRow b, .clientPortalStats b) { color: #172033 !important; font-family: inherit; }
+:root[data-theme="dark"] body .clientPortal :is(.clientPortalHero small, .clientPortalHeroFeature small) { color: #246bfd !important; }
+:root[data-theme="dark"] body .clientPortal :is(.clientPortalHero p, .clientPortalHeroFeature span, .clientPortalHeroFooter, .clientPortalRow span, .clientDeliverable span, footer) { color: #61728a !important; }
+:root[data-theme="dark"] body .clientPortal :is(.clientPortalHeroTop > span, .clientPortalHeroFeature) { border-color: #cddffb !important; background: linear-gradient(135deg, #ffffffcc, #f2edffcc) !important; color: #246bfd !important; }
+:root[data-theme="dark"] body .clientPortal .clientPortalStats article { border-color: #d5e6fb !important; background: linear-gradient(135deg, #edf8ff, #faf8ff) !important; }
+:root[data-theme="dark"] body .clientPortal .clientPortalStats article:nth-child(2) { background: linear-gradient(135deg, #ecfbf4, #f7fffb) !important; }
+:root[data-theme="dark"] body .clientPortal .clientPortalStats article:nth-child(3) { background: linear-gradient(135deg, #f5f0ff, #fbf9ff) !important; }
+:root[data-theme="dark"] body .clientPortal .clientPortalRow { border-color: #e0ebf8 !important; }
+:root[data-theme="dark"] body .clientPortal :is(.clientPortalRow > i, .clientPortalRow strong) { color: #246bfd !important; }
+:root[data-theme="dark"] body .clientPortal .clientPortalRow em { border-color: #c8e5d5 !important; border-radius: 8px; background: #eaf9f1 !important; color: #178555 !important; }
+:root[data-theme="dark"] body .clientPortal .clientEventDetails { border-color: #bdd6fa !important; background: #f3f8ff !important; color: #246bfd !important; }
+:root[data-theme="dark"] body .clientPortal .clientPortalDeliveries { background: linear-gradient(135deg, #f1f9ff, #f9f6ff) !important; }
+:root[data-theme="dark"] body .clientPortal .clientDeliverable { border-color: #d5e6fb !important; background: #ffffff !important; }
+:root[data-theme="dark"] body .clientPortal :is(.clientDeliverable a, .clientFeedback button) { background: linear-gradient(135deg, #246bfd, #7657ff) !important; color: #ffffff !important; }
+
+/* Read-only event details are presented as a compact client itinerary. */
+:root[data-theme="dark"] body .clientEventModal {
+  border: 1px solid #cfe1ff !important;
+  border-radius: 22px !important;
+  background:
+    radial-gradient(circle at 92% 8%, rgb(118 87 255 / 13%), transparent 12rem),
+    #ffffff !important;
+  box-shadow: 0 26px 66px rgb(27 74 148 / 23%) !important;
+}
+:root[data-theme="dark"] body .clientEventModal > small {
+  display: inline-flex;
+  padding: 6px 9px;
+  border: 1px solid #c7ddfd;
+  border-radius: 999px;
+  background: #edf6ff;
+  color: #246bfd !important;
+}
+:root[data-theme="dark"] body .clientEventModal h2 {
+  margin-bottom: 22px;
+  color: #172033 !important;
+  font-family: inherit;
+  font-weight: 780;
+}
+:root[data-theme="dark"] body .clientEventModal dl {
+  gap: 10px;
+  border: 0;
+}
+:root[data-theme="dark"] body .clientEventModal dl > div {
+  grid-template-columns: minmax(130px, .65fr) minmax(0, 1.55fr);
+  gap: 18px;
+  align-items: start;
+  padding: 14px 16px;
+  border: 1px solid #d9e7f9;
+  border-radius: 12px;
+  background: linear-gradient(100deg, #f3f9ff, #fbf9ff);
+}
+:root[data-theme="dark"] body .clientEventModal dt {
+  color: #61728a !important;
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+:root[data-theme="dark"] body .clientEventModal dd {
+  color: #172033 !important;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+:root[data-theme="dark"] body .clientEventModal dl > div:last-child dd {
+  justify-self: start;
+  padding: 4px 9px;
+  border: 1px solid #c9e6d6;
+  border-radius: 8px;
+  background: #eaf9f1;
+  color: #178555 !important;
+  font-size: 12px;
+}
+:root[data-theme="dark"] body .clientEventModal > div:last-child .primary {
+  min-height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #246bfd, #7657ff) !important;
+  color: #ffffff !important;
+  box-shadow: 0 7px 15px rgb(70 91 230 / 22%);
+}
