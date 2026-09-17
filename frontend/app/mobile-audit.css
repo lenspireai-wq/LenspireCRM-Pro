@@ -255,6 +255,29 @@
     word-break: break-word;
     line-height: 1.15;
   }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14) .crewAssignments {
+    justify-content: center !important;
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable td:nth-child(n + 8):nth-child(-n + 14) .crewAssignments span {
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable :is(th, td):nth-child(n + 8):nth-child(-n + 14) {
+    width: 132px !important;
+    min-width: 132px !important;
+    max-width: 132px !important;
+  }
+  :root[data-theme="dark"] .mainOperationsEvents .fitUpcomingColumns .upcomingEventsTable {
+    width: 2008px !important;
+    min-width: 2008px !important;
+  }
   :root[data-theme="dark"] .mainOperationsDashboard .operationsWorkspace .salesKpis {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px;
