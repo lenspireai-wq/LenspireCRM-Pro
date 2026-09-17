@@ -729,6 +729,86 @@
     letter-spacing: -.03em;
     white-space: nowrap;
   }
+
+  /* Client Ledger mirrors the compact, swipe-friendly Receivables layout. */
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .accountsScheduleTable {
+    width: max-content !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    table-layout: auto !important;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .accountsScheduleTable :is(th, td) {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 6px 5px !important;
+    overflow: visible !important;
+    overflow-wrap: normal !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+    font-size: 10px;
+    line-height: 1.15;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .accountsScheduleTable th { font-size: 9px; }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .accountsScheduleTable :is(th, td):first-child {
+    width: 42px !important;
+    min-width: 42px !important;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .accountsScheduleTable .rowActions { gap: 3px; }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .accountsScheduleTable .rowActions button {
+    flex-basis: 22px;
+    width: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    padding: 0;
+    font-size: 10px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerHero {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 6px;
+    margin: 0 0 7px;
+    padding: 8px 10px;
+  }
+  :root[data-theme="dark"] .mainAccountsSticky .accountsWorkspace.clientLedgerView .accountsViewSticky { padding-bottom: 0; }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerHero::after {
+    right: -82px;
+    bottom: -126px;
+    width: 180px;
+    height: 180px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerHero small { font-size: 7px; }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerHero h2 {
+    margin: 2px 0;
+    font-size: 14px;
+    line-height: 1.1;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerHero p {
+    font-size: 9px;
+    line-height: 1.2;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerSignals {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerSignals span {
+    flex: 1 1 0;
+    min-width: 0;
+    gap: 2px;
+    padding: 4px 3px;
+    font-size: 8px;
+  }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerSignals span:nth-child(2) { flex: 1.65 1 0; }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerSignals span:nth-child(2) b { transform: translateY(3px); }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerSignals span:first-child,
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerSignals span:nth-child(3) { flex: .68 1 0; }
+  :root[data-theme="dark"] .accountsWorkspace.clientLedgerView .clientLedgerSignals b {
+    font-size: clamp(11px, 3.4vw, 14px);
+    font-weight: 400;
+    letter-spacing: -.03em;
+    white-space: nowrap;
+  }
   /* Match Record Payment to the compact event dialogs on phones. */
   :root[data-theme="dark"] .paymentModal {
     position: relative;
