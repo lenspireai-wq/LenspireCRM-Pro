@@ -365,6 +365,27 @@ export default function Home() {
     };
   }, [sidebarHidden]);
   useEffect(() => {
+    const closeTopmostModalOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      const modals = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          ".modalBackdrop, .billModalBackdrop, .backupRestoreModal, .leadImportModal, .clientFeedbackBackdrop",
+        ),
+      );
+      const modal = modals.at(-1);
+      if (!modal || modal.querySelector('button[type="submit"]:disabled')) return;
+      const closeButton = Array.from(modal.querySelectorAll<HTMLButtonElement>("button")).find((button) => {
+        const label = `${button.getAttribute("aria-label") || ""} ${button.textContent || ""}`.trim().toLowerCase();
+        return !button.disabled && (label === "×" || label === "close" || label === "cancel" || label.startsWith("close "));
+      });
+      if (!closeButton) return;
+      event.preventDefault();
+      closeButton.click();
+    };
+    document.addEventListener("keydown", closeTopmostModalOnEscape);
+    return () => document.removeEventListener("keydown", closeTopmostModalOnEscape);
+  }, []);
+  useEffect(() => {
     setTargetOpen(false);
   }, [section]);
   useEffect(() => {

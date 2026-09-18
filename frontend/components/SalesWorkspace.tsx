@@ -1117,6 +1117,13 @@ function LeadModal({
       (await (url ? api.put(url, payload) : api.post("/leads/", payload))).data,
   });
   const booked = ["Booked", "Confirmed"].includes(form.status);
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !saving) onClose();
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [onClose, saving]);
   const set = (key: string, value: any) =>
     setForm((x: any) => ({ ...x, [key]: value }));
   const submit = async (e: React.FormEvent) => {
