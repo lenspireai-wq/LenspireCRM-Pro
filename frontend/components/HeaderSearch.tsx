@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { api } from "@/lib/api";
 import { canAccess } from "@/lib/permissions";
 import { useAuthStore } from "@/stores/auth";
@@ -18,14 +19,16 @@ export default function HeaderSearch({ onNavigate, scope = "global", onEventSear
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [groups, setGroups] = useState<Group[]>([]);
+  const [resultsPosition, setResultsPosition] = useState<{ top: number; right: number } | null>(null);
   const root = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
   const isLeadManagementSearch = scope === "lead-management";
   const isEventSearch = scope === "events";
   const isAccountsSearch = scope === "accounts-table";
   const isProductionSearch = scope === "production-table";
   const isTableSearch = isLeadManagementSearch || isEventSearch || isAccountsSearch || isProductionSearch;
   useEffect(() => {
-    const close = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
+    const close = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node) && !resultsRef.current?.contains(event.target as Node)) setOpen(false); };
     document.addEventListener("pointerdown", close);
     return () => document.removeEventListener("pointerdown", close);
   }, []);
@@ -37,6 +40,21 @@ export default function HeaderSearch({ onNavigate, scope = "global", onEventSear
     onAccountsSearch?.("");
     onProductionSearch?.("");
   }, [scope, isLeadManagementSearch, onEventSearch, onAccountsSearch, onProductionSearch]);
+  useEffect(() => {
+    if (!open || isTableSearch) return;
+    const updatePosition = () => {
+      const rect = root.current?.getBoundingClientRect();
+      if (!rect) return;
+      setResultsPosition({ top: rect.bottom + 8, right: Math.max(16, window.innerWidth - rect.right) });
+    };
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [open, isTableSearch]);
   useEffect(() => {
     if (isTableSearch) return;
     const search = term.trim();
@@ -67,21 +85,22 @@ export default function HeaderSearch({ onNavigate, scope = "global", onEventSear
     }
     setOpen(value.trim().length >= 2);
   };
+  const results = !isTableSearch && open && term.trim().length >= 2 && resultsPosition ? <div id="header-search-results" className={styles.results} ref={resultsRef} aria-label="CRM search results" style={{ position: "fixed", top: resultsPosition.top, right: resultsPosition.right, zIndex: 1000 }}>
+    <div role="status">{loading ? "Searching…" : groups.every(group => !group.count) && !groups.some(group => group.failed) ? "No matching records." : "Search results"}</div>
+    {groups.map(({ source, rows, count, failed }) => <section key={source.path}>
+      {failed ? <p role="alert">Could not search {source.label.toLowerCase()}. Please try again.</p> : count > 0 && <>
+        <h3>{source.label} · {count} matches</h3>
+        {rows.map(row => <article key={row.id}>
+          <strong>{row.title || row.name || row.booking_code || `Record ${row.id}`}</strong>
+          <small>{[row.lead_code || row.customer_code, row.client_name || row.couple_name, row.start_date, row.city, row.mobile || row.phone || row.contact_no, row.status].filter(Boolean).join(" · ")}</small>
+        </article>)}
+        {count > 5 && <small>Showing the first 5 matches. Refine your search for more specific results.</small>}
+        <button type="button" onClick={() => { onNavigate(source.section); setOpen(false); }}>Open {source.section}</button>
+      </>}
+    </section>)}
+  </div> : null;
   return <div className={styles.root} ref={root} onKeyDown={event => { if (event.key === "Escape") setOpen(false); }}>
     <input className={styles.input} type="search" aria-label={isEventSearch ? "Search events in this table" : isLeadManagementSearch ? "Search leads in this table" : isAccountsSearch ? "Search client accounts in this table" : isProductionSearch ? `Search ${productionView || "production"}` : "Search CRM records"} placeholder={isEventSearch ? "Search events in this table…" : isLeadManagementSearch ? "Search leads in this table…" : isAccountsSearch ? "Search client, couple, or booking…" : isProductionSearch ? `Search ${productionView || "this view"}…` : "Search leads, clients, events…"} value={term} onChange={event => updateTerm(event.target.value)} aria-expanded={!isTableSearch && open} aria-controls={isTableSearch ? undefined : "header-search-results"} />
-    {!isTableSearch && open && term.trim().length >= 2 && <div id="header-search-results" className={styles.results} aria-label="CRM search results">
-      <div role="status">{loading ? "Searching…" : groups.every(group => !group.count) && !groups.some(group => group.failed) ? "No matching records." : "Search results"}</div>
-      {groups.map(({ source, rows, count, failed }) => <section key={source.path}>
-        {failed ? <p role="alert">Could not search {source.label.toLowerCase()}. Please try again.</p> : count > 0 && <>
-          <h3>{source.label} · {count} matches</h3>
-          {rows.map(row => <article key={row.id}>
-            <strong>{row.title || row.name || row.booking_code || `Record ${row.id}`}</strong>
-            <small>{[row.lead_code || row.customer_code, row.client_name || row.couple_name, row.start_date, row.city, row.mobile || row.phone || row.contact_no, row.status].filter(Boolean).join(" · ")}</small>
-          </article>)}
-          {count > 5 && <small>Showing the first 5 matches. Refine your search for more specific results.</small>}
-          <button type="button" onClick={() => { onNavigate(source.section); setOpen(false); }}>Open {source.section}</button>
-        </>}
-      </section>)}
-    </div>}
+    {typeof document !== "undefined" && results ? createPortal(results, document.body) : null}
   </div>;
 }
