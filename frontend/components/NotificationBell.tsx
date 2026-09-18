@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useApiMutation, useApiQuery, queryKeys } from "@/lib/query";
 import { api } from "@/lib/api";
 
@@ -37,17 +38,35 @@ const formatRelative = (value: string) => {
 
 export function NotificationBell() {
   const [open, setOpen] = useState(false);
+  const [panelPosition, setPanelPosition] = useState<{ top: number; right: number } | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!open) return;
     const handleClick = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
+      if (!ref.current?.contains(event.target as Node) && !panelRef.current?.contains(event.target as Node)) {
         setOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const updatePosition = () => {
+      const rect = ref.current?.getBoundingClientRect();
+      if (!rect) return;
+      setPanelPosition({ top: rect.bottom + 8, right: Math.max(12, window.innerWidth - rect.right) });
+    };
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
   }, [open]);
 
   const { data, refetch } = useApiQuery<Summary>(
@@ -81,6 +100,57 @@ export function NotificationBell() {
   const unread = data?.unread || 0;
   const items = list?.results || data?.latest || [];
 
+  const panel = open && panelPosition ? (
+    <div
+      className="notifPanel"
+      ref={panelRef}
+      role="dialog"
+      aria-label="Notifications inbox"
+      style={{ position: "fixed", top: panelPosition.top, right: panelPosition.right, bottom: "auto", transform: "none", zIndex: 1000 }}
+    >
+      <header>
+        <strong>Notifications</strong>
+        {unread > 0 ? (
+          <button
+            type="button"
+            className="notifAction notifMarkAll"
+            onClick={() => markAll.mutate(undefined)}
+            disabled={markAll.isPending}
+            aria-label="Mark all notifications as read"
+            title="Mark all as read"
+          >
+            {markAll.isPending ? "…" : "✓✓"}
+          </button>
+        ) : null}
+      </header>
+      <ul>
+        {items.length === 0 ? <li className="notifEmpty">You&apos;re all caught up.</li> : null}
+        {items.map((notification) => (
+          <li key={notification.id} className={`notifItem ${notification.is_read ? "read" : "unread"}`}>
+            <div className="notifDot" style={{ background: LEVEL_COLORS[notification.level] || "var(--muted)" }} />
+            <div className="notifBody">
+              <strong>{notification.title}</strong>
+              {notification.body ? <p>{notification.body}</p> : null}
+              <small>{formatRelative(notification.created_at)} · {notification.category}</small>
+            </div>
+            {!notification.is_read ? (
+              <button
+                type="button"
+                className="notifAction notifMarkRead"
+                onClick={() => markOne.mutate({ id: notification.id })}
+                disabled={markOne.isPending}
+                aria-label={`Mark ${notification.title} as read`}
+                title="Mark as read"
+              >
+                {markOne.isPending ? "…" : "✓"}
+              </button>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ) : null;
+
   return (
     <div className="notifBell" ref={ref}>
       <button
@@ -93,50 +163,7 @@ export function NotificationBell() {
         🔔
         {unread > 0 ? <span className="notifBadge">{unread > 99 ? "99+" : unread}</span> : null}
       </button>
-      {open ? (
-        <div className="notifPanel" role="dialog" aria-label="Notifications inbox">
-          <header>
-            <strong>Notifications</strong>
-            {unread > 0 ? (
-              <button
-                type="button"
-                className="notifAction notifMarkAll"
-                onClick={() => markAll.mutate(undefined)}
-                disabled={markAll.isPending}
-                aria-label="Mark all notifications as read"
-                title="Mark all as read"
-              >
-                {markAll.isPending ? "…" : "✓✓"}
-              </button>
-            ) : null}
-          </header>
-          <ul>
-            {items.length === 0 ? <li className="notifEmpty">You&apos;re all caught up.</li> : null}
-            {items.map((notification) => (
-              <li key={notification.id} className={`notifItem ${notification.is_read ? "read" : "unread"}`}>
-                <div className="notifDot" style={{ background: LEVEL_COLORS[notification.level] || "var(--muted)" }} />
-                <div className="notifBody">
-                  <strong>{notification.title}</strong>
-                  {notification.body ? <p>{notification.body}</p> : null}
-                  <small>{formatRelative(notification.created_at)} · {notification.category}</small>
-                </div>
-                {!notification.is_read ? (
-                  <button
-                    type="button"
-                    className="notifAction notifMarkRead"
-                    onClick={() => markOne.mutate({ id: notification.id })}
-                    disabled={markOne.isPending}
-                    aria-label={`Mark ${notification.title} as read`}
-                    title="Mark as read"
-                  >
-                    {markOne.isPending ? "…" : "✓"}
-                  </button>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
+      {typeof document !== "undefined" && panel ? createPortal(panel, document.body) : null}
     </div>
   );
 }
