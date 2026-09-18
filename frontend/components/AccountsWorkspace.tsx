@@ -369,7 +369,23 @@ export default function AccountsWorkspace({
       .toLowerCase()
       .includes(query.toLowerCase()),
   );
-  const collectionPayments = payments;
+  const collectionPayments = payments.filter((payment) => {
+    const account = accounts.find((item) => item.id === Number(payment.booking));
+    const searchable = [
+      account?.client,
+      account?.couple,
+      account?.booking_code,
+      payment.payment_type,
+      payment.payment_mode,
+      payment.status,
+      payment.amount,
+      payment.due_date,
+    ]
+      .filter((value) => value !== undefined && value !== null)
+      .join(" ")
+      .toLowerCase();
+    return searchable.includes(query.trim().toLowerCase());
+  });
   const ageingRows = accounts.flatMap((account) =>
     account.stages
       .filter((stage: Row) => stage.remaining > 0)
