@@ -122,10 +122,12 @@ function Login({
     [error, setError] = useState(""),
     [showPassword, setShowPassword] = useState(false),
     [submitting, setSubmitting] = useState(false),
-    [username, setUsername] = useState("");
+    [username, setUsername] = useState(""),
+    [returningName, setReturningName] = useState("");
 
   useEffect(() => {
     setUsername(window.localStorage.getItem("lenspire-last-username") || "");
+    setReturningName(window.localStorage.getItem("lenspire-last-user-name") || "");
   }, []);
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -143,6 +145,8 @@ function Login({
         return;
       }
       setSession(data.access, data.refresh, data.user);
+      window.localStorage.setItem("lenspire-last-username", data.user?.username || String(form.get("username") || ""));
+      window.localStorage.setItem("lenspire-last-user-name", data.user?.display_name || data.user?.username || String(form.get("username") || ""));
       authenticated(ownerMode);
     } catch (err: unknown) {
       setError(getSignInErrorMessage(err));
@@ -207,7 +211,7 @@ function Login({
           <span className="loginEyebrow">
             {ownerMode ? "LENSPIREAI OWNER PORTAL" : "WELCOME BACK"}
           </span>
-          <h2>{ownerMode ? "Studio Management" : "Sandeep Jadhav"}</h2>
+          <h2>{ownerMode ? "Studio Management" : returningName || "Welcome back"}</h2>
           <p>
             {ownerMode
               ? "Sign in with the verified LenspireAI owner account."
@@ -428,6 +432,11 @@ export default function Home() {
       })
       .catch(() => auth.logout());
   }, [mounted, auth.access]);
+  useEffect(() => {
+    if (!auth.user) return;
+    window.localStorage.setItem("lenspire-last-username", auth.user.username);
+    window.localStorage.setItem("lenspire-last-user-name", auth.user.display_name || auth.user.username);
+  }, [auth.user]);
   useEffect(() => {
     if (mounted && auth.access && auth.user) {
       queryClient.prefetchQuery({
