@@ -10,6 +10,7 @@ from apps.core.models import Organization
 from apps.sales.models import Booking, Customer, Lead
 from apps.users.models import User
 from .models import CalendarEvent, PhotographerDetail
+from .google_sheets import CRM_ID_HEADER, event_row, target_tab
 
 
 class OperationsApiTests(TestCase):
@@ -26,6 +27,26 @@ class OperationsApiTests(TestCase):
         response = self.client.post("/api/photographers/", {"name": "Avi", "status": "Available"})
         self.assertEqual(response.status_code, 201)
         self.assertEqual(PhotographerDetail.objects.get().organization, self.organization)
+
+    def test_google_sheet_event_mapping_uses_stable_crm_id(self):
+        event = CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Asha Patel · Wedding",
+            client_name="Asha Patel",
+            couple_name="Asha & Rohan",
+            event_type="Wedding",
+            start_date=date(2026, 9, 20),
+            city="Mumbai",
+            status="Scheduled",
+        )
+        headers = ["Sr. No.", "Client Name", "Couple Name", "Event Date", CRM_ID_HEADER]
+        self.assertEqual(
+            event_row(headers, event, serial_number=7),
+            [7, "Asha Patel", "Asha & Rohan", "2026-09-20", event.id],
+        )
+        self.assertEqual(target_tab(event), "Upcoming Events")
+        event.status = "Completed"
+        self.assertEqual(target_tab(event), "Completed Events")
 
     def confirmed_booking(self, *, name="Asha Patel", couple_name="Asha & Rohan", phone="9876543210"):
         lead = Lead.objects.create(

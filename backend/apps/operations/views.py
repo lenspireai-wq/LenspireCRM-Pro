@@ -3,6 +3,7 @@ from datetime import datetime
 from calendar import month_abbr, month_name
 import re
 
+from django.db import transaction
 from django.db.models import Q
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.http import HttpResponse
@@ -274,10 +275,24 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
     def perform_create(self, serializer):
         event = serializer.save(organization=self.request.user.organization)
         self._sync_production(event)
+        transaction.on_commit(lambda: self._sync_google_sheet(event))
 
     def perform_update(self, serializer):
         event = serializer.save()
         self._sync_production(event)
+        transaction.on_commit(lambda: self._sync_google_sheet(event))
+
+    @staticmethod
+    def _sync_google_sheet(event):
+        from .google_sheets import sync_calendar_event
+
+        sync_calendar_event(event)
+
+    def perform_destroy(self, instance):
+        from .google_sheets import remove_calendar_event
+
+        instance.delete()
+        transaction.on_commit(lambda: remove_calendar_event(instance))
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -313,6 +328,7 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
             "booking", "booking__lead", "booking__customer"
         ):
             self._sync_production(event)
+            transaction.on_commit(lambda event=event: self._sync_google_sheet(event))
 
         # Calendar screens need both dated events in their visible grid and
         # date-TBD events assigned to the selected month.  These parameters
