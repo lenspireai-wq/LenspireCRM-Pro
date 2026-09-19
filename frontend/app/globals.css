@@ -9800,17 +9800,29 @@ textarea {
   background: var(--bg);
 }
 :root[data-theme="light"] .clientDeliverable {
-  background: var(--surface);
-  border-color: var(--line);
+  background: linear-gradient(135deg, #fffefd, #f8f8ff);
+  border-color: #e6e5f5;
+  box-shadow: 0 8px 22px rgb(79 70 229 / 5%);
 }
 :root[data-theme="light"] .clientFeedback button {
-  background: var(--brand);
-  color: #fff;
+  background: #eeecff;
+  border: 1px solid #d9d5ff;
+  color: #4f46a5;
+  box-shadow: none;
 }
 :root[data-theme="light"] .clientFeedback button:last-child {
-  background: #b91c1c;
-  color: #fff;
+  background: #fff0f1;
+  border-color: #ffd7dc;
+  color: #b4535c;
 }
+:root[data-theme="light"] .clientDeliverable a {
+  background: #eef2ff;
+  border-color: #d8e0ff;
+  color: #4759a8;
+  box-shadow: none;
+}
+:root[data-theme="light"] .clientDeliverableIcon { background: #edf1ff; color: #5d70c4; }
+:root[data-theme="light"] .clientGalleryNoPreview { background: #faf9ff; border-color: #dddaf5; color: #8a88a4; }
 
 /* Misc elements */
 :root[data-theme="light"] .empty {
