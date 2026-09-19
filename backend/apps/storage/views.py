@@ -26,6 +26,12 @@ class AttachmentViewSet(OrganizationScopedViewSet):
     search_fields = ("name",)
     ordering_fields = ("created_at", "name")
 
+    def perform_destroy(self, instance):
+        # Keep storage tidy when staff explicitly remove an uploaded quotation.
+        if instance.file:
+            instance.file.delete(save=False)
+        instance.delete()
+
     @action(detail=True, methods=["get"])
     def download(self, request, pk=None):
         attachment = self.get_object()

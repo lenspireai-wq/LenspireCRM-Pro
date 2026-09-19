@@ -3657,7 +3657,7 @@
   box-shadow: 0 6px 14px rgb(25 167 242 / 14%);
 }
 
-:root[data-theme="light"] .leadDetailModal .attachmentList > button,
+:root[data-theme="light"] .leadDetailModal .attachmentList > .attachmentItem,
 :root[data-theme="light"] .leadDetailModal .activityList article {
   border-color: #e2ecfa;
   border-radius: 12px;

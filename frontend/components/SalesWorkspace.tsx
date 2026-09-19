@@ -1434,6 +1434,7 @@ function LeadDetail({
     [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [openingAttachmentId, setOpeningAttachmentId] = useState<number | null>(null);
+  const [removingAttachmentId, setRemovingAttachmentId] = useState<number | null>(null);
   const attachMutation = useApiMutation<FormData, any, Error>({
     mutationFn: async (payload) =>
       (await api.post("/attachments/", payload)).data,
@@ -1502,6 +1503,19 @@ function LeadDetail({
       setError("Could not open this quotation. Please try again.");
     } finally {
       setOpeningAttachmentId(null);
+    }
+  };
+  const removeAttachment = async (attachment: Attachment) => {
+    if (!window.confirm(`Remove quotation “${attachment.name}”? This cannot be undone.`)) return;
+    setRemovingAttachmentId(attachment.id);
+    setError("");
+    try {
+      await api.delete(`/attachments/${attachment.id}/`);
+      await onRefresh();
+    } catch {
+      setError("Could not remove this quotation. Please try again.");
+    } finally {
+      setRemovingAttachmentId(null);
     }
   };
   const add = async (e: React.FormEvent) => {
@@ -1573,7 +1587,11 @@ function LeadDetail({
           </div>
           {canEdit && (
             <label className="attachmentUpload">
-              {uploading ? "Uploading…" : "⇧ Upload Quotation"}
+              {uploading
+                ? "Uploading…"
+                : lead.attachments?.length
+                  ? "⇧ Add Another Quotation"
+                  : "⇧ Upload Quotation"}
               <input
                 hidden
                 disabled={uploading}
@@ -1589,19 +1607,33 @@ function LeadDetail({
           )}
           <div className="attachmentList">
             {(lead.attachments || []).map((attachment) => (
-              <button
-                key={attachment.id}
-                type="button"
-                disabled={openingAttachmentId === attachment.id}
-                onClick={() => void openAttachment(attachment)}
-              >
+              <div className="attachmentItem" key={attachment.id}>
                 <span>▤</span>
                 <div>
-                  <b>{openingAttachmentId === attachment.id ? "Opening…" : attachment.name}</b>
+                  <b>{attachment.name}</b>
                   <small>{dateTime(attachment.created_at)}</small>
                 </div>
-                <i>Open ↗</i>
-              </button>
+                <div className="attachmentRowActions">
+                  <button
+                    className="attachmentOpen"
+                    type="button"
+                    disabled={openingAttachmentId === attachment.id}
+                    onClick={() => void openAttachment(attachment)}
+                  >
+                    {openingAttachmentId === attachment.id ? "Opening…" : "Open ↗"}
+                  </button>
+                  {canEdit && (
+                    <button
+                      className="attachmentRemove"
+                      type="button"
+                      disabled={removingAttachmentId === attachment.id}
+                      onClick={() => void removeAttachment(attachment)}
+                    >
+                      {removingAttachmentId === attachment.id ? "Removing…" : "Remove"}
+                    </button>
+                  )}
+                </div>
+              </div>
             ))}
             {!lead.attachments?.length && (
               <div className="salesEmpty">No quotation uploaded.</div>
