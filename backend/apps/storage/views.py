@@ -1,4 +1,5 @@
 from pathlib import Path
+from django.conf import settings
 from django.http import FileResponse, Http404
 from rest_framework import serializers
 from rest_framework.decorators import action
@@ -14,7 +15,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Lead does not belong to this organization.")
         allowed={".pdf",".doc",".docx",".xls",".xlsx",".jpg",".jpeg",".png"}
         if Path(upload.name).suffix.lower() not in allowed: raise serializers.ValidationError({"file":"Unsupported quotation file type."})
-        if upload.size > 10*1024*1024: raise serializers.ValidationError({"file":"Quotation files must be 10 MB or smaller."})
+        if upload.size > settings.QUOTATION_UPLOAD_MAX_SIZE: raise serializers.ValidationError({"file":"Quotation files must be 25 MB or smaller."})
         return attrs
 class AttachmentViewSet(OrganizationScopedViewSet):
     queryset = Attachment.objects.all()

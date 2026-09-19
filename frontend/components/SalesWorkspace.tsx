@@ -1457,8 +1457,8 @@ function LeadDetail({
       setError("The selected file is empty. Choose a non-empty quotation PDF.");
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      setError("Quotation files must be 10 MB or smaller.");
+    if (file.size > 25 * 1024 * 1024) {
+      setError("Quotation files must be 25 MB or smaller.");
       return;
     }
     setUploading(true);
@@ -1477,7 +1477,7 @@ function LeadDetail({
         ? Object.values(details).flat().filter((value) => typeof value === "string").join(" ")
         : "";
       setError(validationMessage || (response?.status === 413
-        ? "The server rejected this file as too large. Quotation files up to 10 MB are supported."
+        ? "The server rejected this file as too large. Quotation files up to 25 MB are supported."
         : "Could not upload quotation. Please try again or contact support."));
     } finally {
       setUploading(false);
