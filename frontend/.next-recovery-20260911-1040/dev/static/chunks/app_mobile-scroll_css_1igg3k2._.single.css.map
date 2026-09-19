@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/app/mobile-scroll.css"],"sourcesContent":["/* Mobile content scrolls with the page; drawers and dialog backdrops remain overlays. */\n@media (max-width: 900px) {\n  :root :is(\n    .workspaceChrome,\n    .dashMetrics,\n    .salesDashboardSticky,\n    .leadManagementSticky,\n    .operationsDashboardControls,\n    .operationsDashboardView > .salesKpis,\n    .accountsViewSticky,\n    .ownerSidebar,\n    .modalHeader,\n    .modalFooter\n  ),\n  :root table thead th,\n  :root .upcomingEventsTableWrap .upcomingEventsTable thead th {\n    position: static !important;\n    inset: auto !important;\n    z-index: auto !important;\n  }\n\n  :root :is(\n    .leadTableWrap,\n    .upcomingEventsTableWrap,\n    .accountsScheduleTableWrap,\n    .auditTableWrap,\n    .ownerSidebar\n  ) {\n    height: auto !important;\n    max-height: none !important;\n  }\n\n  .shell {\n    position: relative;\n  }\n\n  :root .sidebarToggle,\n  :root .sidebarHidden .sidebarToggle,\n  :root .loginThemeToggle {\n    position: absolute;\n  }\n}\n"],"names":[],"mappings":"AACA;EACE;;;;;;EAmBA;;;;;EAWA;;;;EAIA"}}]
+}

@@ -32,6 +32,17 @@ def normalized_phone(value):
     return digits[-10:] if len(digits) >= 10 else digits
 
 
+def event_identity_values(values):
+    return {
+        "client_name": normalized_text(values.get("client_name", "")),
+        "contact_no": normalized_phone(values.get("contact_no")),
+        "event_type": str(values.get("event_type") or "Shoot").strip() or "Shoot",
+        "start_date": values.get("start_date"),
+        "start_time": str(values.get("start_time") or "").strip(),
+        "tbd_month": str(values.get("tbd_month") or "").strip(),
+    }
+
+
 def confirmed_bookings_for_organization(organization):
     """Return only bookings that are safe targets for automatic event linking."""
     return list(
@@ -220,11 +231,28 @@ class CalendarEventSerializer(serializers.ModelSerializer):
         duplicate = CalendarEvent.objects.filter(
             organization=request.user.organization,
             is_archived=False,
-            **identity,
         )
         if self.instance:
             duplicate = duplicate.exclude(pk=self.instance.pk)
-        if duplicate.exists() and not self.context.get("allow_duplicate_identity", False):
+        duplicate_identity = event_identity_values(identity)
+        duplicate_match = next(
+            (
+                event
+                for event in duplicate.iterator()
+                if event_identity_values(
+                    {
+                        "client_name": event.client_name,
+                        "contact_no": event.contact_no,
+                        "event_type": event.event_type,
+                        "start_date": event.start_date,
+                        "start_time": event.start_time,
+                        "tbd_month": event.tbd_month,
+                    }
+                ) == duplicate_identity
+            ),
+            None,
+        )
+        if duplicate_match and not self.context.get("allow_duplicate_identity", False):
             raise serializers.ValidationError({"detail": "This event already exists. Change the client, contact, event type, date, or time before saving."})
         return attrs
 
@@ -493,11 +521,24 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
                     for field in identity_fields
                 }
                 try:
-                    candidates = CalendarEvent.objects.filter(
-                        organization=request.user.organization,
-                        is_archived=False,
-                        **identity,
-                    )
+                    identity_value = event_identity_values(identity)
+                    candidates = [
+                        event
+                        for event in CalendarEvent.objects.filter(
+                            organization=request.user.organization,
+                            is_archived=False,
+                        ).iterator()
+                        if event_identity_values(
+                            {
+                                "client_name": event.client_name,
+                                "contact_no": event.contact_no,
+                                "event_type": event.event_type,
+                                "start_date": event.start_date,
+                                "start_time": event.start_time,
+                                "tbd_month": event.tbd_month,
+                            }
+                        ) == identity_value
+                    ]
                     instances = list(candidates)
                 except (DjangoValidationError, TypeError, ValueError) as exc:
                     return Response(

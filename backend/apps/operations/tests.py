@@ -118,6 +118,30 @@ class OperationsApiTests(TestCase):
         self.assertEqual(response.status_code, 201, response.data)
         self.assertIsNone(response.data["booking"])
 
+    def test_duplicate_event_detects_phone_format_variations(self):
+        payload = {
+            "title": "Rahul Singh · Wedding",
+            "client_name": "Rahul Singh",
+            "couple_name": "Rahul Singh (Anita Kanojiya)",
+            "contact_no": "90822 98262",
+            "event_type": "Wedding",
+            "start_date": "2026-11-21",
+            "date_status": "Confirmed",
+        }
+        response = self.client.post("/api/events/", payload)
+        self.assertEqual(response.status_code, 201, response.data)
+
+        response = self.client.post(
+            "/api/events/",
+            {
+                **payload,
+                "contact_no": "9082298262",
+                "title": "Rahul Singh · Wedding Duplicate",
+            },
+        )
+        self.assertEqual(response.status_code, 400, response.data)
+        self.assertIn("already exists", str(response.data).lower())
+
     def test_photographers_stay_scoped_for_a_superuser(self):
         other_organization = Organization.objects.create(name="Other Studio", slug="other-studio")
         PhotographerDetail.objects.create(organization=self.organization, name="Avi")

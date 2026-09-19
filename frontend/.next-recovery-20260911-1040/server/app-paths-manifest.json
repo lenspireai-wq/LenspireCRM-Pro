@@ -1,0 +1,10 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/client-portal/[token]/page": "app/client-portal/[token]/page.js",
+  "/client-portal/login/page": "app/client-portal/login/page.js",
+  "/client-portal/setup/[invite]/page": "app/client-portal/setup/[invite]/page.js",
+  "/icon.svg/route": "app/icon.svg/route.js",
+  "/manifest.webmanifest/route": "app/manifest.webmanifest/route.js",
+  "/page": "app/page.js"
+}

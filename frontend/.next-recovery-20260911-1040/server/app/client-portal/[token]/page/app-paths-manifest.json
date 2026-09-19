@@ -1,0 +1,3 @@
+{
+  "/client-portal/[token]/page": "app/client-portal/[token]/page.js"
+}

@@ -249,6 +249,37 @@ class ProductionApiTests(TestCase):
         self.assertEqual({job.calendar_event.event_type for job in jobs}, {"Engagement", "Pre-Wedding", "Wedding"})
         self.assertEqual(ProductionJob.objects.filter(booking=self.booking).count(), 3)
 
+    def test_multiple_pre_wedding_dates_share_one_production_job(self):
+        ProductionJob.objects.filter(booking=self.booking).delete()
+        CalendarEvent.objects.filter(booking=self.booking, event_type="Wedding").update(
+            status="Scheduled"
+        )
+        first_pre_wedding = CalendarEvent.objects.create(
+            organization=self.organization,
+            booking=self.booking,
+            customer=self.customer,
+            title="First Pre-Wedding",
+            event_type="Pre-Wedding",
+            start_date="2026-10-10",
+            status="Completed",
+        )
+        CalendarEvent.objects.create(
+            organization=self.organization,
+            booking=self.booking,
+            customer=self.customer,
+            title="Second Pre-Wedding",
+            event_type="Pre-Wedding",
+            start_date="2026-10-20",
+            status="Completed",
+        )
+        Payment.objects.filter(booking=self.booking).update(amount="500.00")
+
+        jobs = sync_event_production_jobs_for_booking(self.booking)
+
+        self.assertEqual(len(jobs), 1)
+        self.assertEqual(ProductionJob.objects.filter(booking=self.booking).count(), 1)
+        self.assertEqual(jobs[0].calendar_event_id, first_pre_wedding.id)
+
     def test_combined_package_requires_any_qualifying_completion_and_fifty_percent(self):
         CalendarEvent.objects.create(
             organization=self.organization,

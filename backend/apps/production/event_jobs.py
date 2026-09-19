@@ -46,16 +46,28 @@ def event_payment_threshold(event: CalendarEvent) -> Decimal:
 
 
 def sync_event_production_jobs_for_booking(booking: Booking) -> list[ProductionJob]:
-    """Idempotently create a job for each completed, unlocked major event."""
+    """Idempotently create one job per completed, unlocked event type."""
     if not booking or str(booking.status or "").lower() != "confirmed":
         return []
     if booking.lead_id and str(booking.lead.status or "").lower() != "confirmed":
         return []
-    if not booking.quoted_amount or booking.quoted_amount <= 0:
+    quoted_amount = Decimal(str(booking.quoted_amount or 0))
+    if quoted_amount <= 0:
         return []
 
     paid = booking_paid_amount(booking)
     jobs = []
+    jobs_by_label = {}
+    existing_jobs = ProductionJob.objects.filter(
+        organization=booking.organization,
+        booking=booking,
+        calendar_event__isnull=False,
+    ).select_related("calendar_event").order_by("id")
+    for existing_job in existing_jobs:
+        existing_label = production_event_label(existing_job.calendar_event)
+        if existing_label:
+            jobs_by_label.setdefault(existing_label, existing_job)
+    processed_labels = set()
     events = CalendarEvent.objects.filter(
         organization=booking.organization,
         booking=booking,
@@ -64,11 +76,15 @@ def sync_event_production_jobs_for_booking(booking: Booking) -> list[ProductionJ
     ).order_by("start_date", "id")
     for event in events:
         label = production_event_label(event)
-        if not label or paid < booking.quoted_amount * event_payment_threshold(event):
+        if not label or paid < quoted_amount * event_payment_threshold(event):
             continue
-        job = ProductionJob.objects.filter(
-            organization=booking.organization, calendar_event=event
-        ).first()
+        # A client may have multiple dates for the same event type (for
+        # example two Pre-wedding shoots). They are separate operations, but
+        # form one editing assignment in Post Production.
+        if label in processed_labels:
+            continue
+        processed_labels.add(label)
+        job = jobs_by_label.get(label)
         if not job:
             # Upgrade the old single booking-level job the first time an
             # eligible event enters production. This prevents duplicate work
@@ -93,6 +109,13 @@ def sync_event_production_jobs_for_booking(booking: Booking) -> list[ProductionJ
                     stage="Shoot Planning",
                     notes=f"{label} production job created from calendar event.",
                 )
+        elif job.calendar_event_id != event.id:
+            # Keep the earliest completed date as the representative event for
+            # the one consolidated editing job.
+            job.calendar_event = event
+            job.customer = booking.customer
+            job.due_date = event.start_date
+            job.save(update_fields=("calendar_event", "customer", "due_date", "updated_at"))
         jobs.append(job)
     return jobs
 

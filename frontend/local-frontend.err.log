@@ -1,4 +1,300 @@
 npm notice run lenspirecrm-web@1.0.0 dev
-npm notice run next dev -H 0.0.0.0
-⚠ Slow filesystem detected. The benchmark took 390ms. If \\?\F:\LenspireCRM-Pro\frontend\.next\dev is a network drive, consider moving it to a local folder.
-See more: https://nextjs.org/docs/app/guides/local-development
+npm notice run next dev
+⚠ Found a change in next.config.mjs. Restarting the server to apply the changes...
+⨯ ./app/layout.tsx:8:1
+Error: Module not found: Can't resolve './studio-neon.css'
+  [90m 6 |[0m [36mimport[0m [32m"./event-columns.css"[0m;
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+[31m[1m>[0m [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 9 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m10 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m11 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:8:1
+Error: Module not found: Can't resolve './studio-neon.css'
+  [90m 6 |[0m [36mimport[0m [32m"./event-columns.css"[0m;
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+[31m[1m>[0m [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 9 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m10 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m11 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:8:1
+Error: Module not found: Can't resolve './studio-neon.css'
+  [90m 6 |[0m [36mimport[0m [32m"./event-columns.css"[0m;
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+[31m[1m>[0m [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 9 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m10 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m11 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:8:1
+Error: Module not found: Can't resolve './studio-neon.css'
+  [90m 6 |[0m [36mimport[0m [32m"./event-columns.css"[0m;
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+[31m[1m>[0m [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 9 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m10 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m11 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⚠ Fast Refresh had to perform a full reload when ./components/ThemeToggle.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./components/ThemeToggle.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./components/ThemeToggle.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./components/ThemeToggle.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./components/ThemeToggle.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./components/ThemeToggle.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[browser] ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+   7 | import "./mobile-scroll.css";
+   8 | import "./studio-neon.css";
+>  9 | import "./studio-blush.css";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { QueryProvider } from "@/components/QueryProvider";
+  11 | import { ThemeProvider } from "@/components/ThemeToggle";
+  12 | import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+   7 | import "./mobile-scroll.css";
+   8 | import "./studio-neon.css";
+>  9 | import "./studio-blush.css";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { QueryProvider } from "@/components/QueryProvider";
+  11 | import { ThemeProvider } from "@/components/ThemeToggle";
+  12 | import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+
+https://nextjs.org/docs/messages/module-not-found 
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+  [90m 7 |[0m [36mimport[0m [32m"./mobile-scroll.css"[0m;
+  [90m 8 |[0m [36mimport[0m [32m"./studio-neon.css"[0m;
+[31m[1m>[0m [90m 9 |[0m [36mimport[0m [32m"./studio-blush.css"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m10 |[0m [36mimport[0m { [33mQueryProvider[0m } [36mfrom[0m [32m"@/components/QueryProvider"[0m;
+  [90m11 |[0m [36mimport[0m { [33mThemeProvider[0m } [36mfrom[0m [32m"@/components/ThemeToggle"[0m;
+  [90m12 |[0m [36mimport[0m { [33mGlobalErrorBoundary[0m } [36mfrom[0m [32m"@/components/GlobalErrorBoundary"[0m;
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[browser] ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+   7 | import "./mobile-scroll.css";
+   8 | import "./studio-neon.css";
+>  9 | import "./studio-blush.css";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { QueryProvider } from "@/components/QueryProvider";
+  11 | import { ThemeProvider } from "@/components/ThemeToggle";
+  12 | import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+   7 | import "./mobile-scroll.css";
+   8 | import "./studio-neon.css";
+>  9 | import "./studio-blush.css";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { QueryProvider } from "@/components/QueryProvider";
+  11 | import { ThemeProvider } from "@/components/ThemeToggle";
+  12 | import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+   7 | import "./mobile-scroll.css";
+   8 | import "./studio-neon.css";
+>  9 | import "./studio-blush.css";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { QueryProvider } from "@/components/QueryProvider";
+  11 | import { ThemeProvider } from "@/components/ThemeToggle";
+  12 | import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+
+https://nextjs.org/docs/messages/module-not-found 
+[browser] ./app/layout.tsx:9:1
+Error: Module not found: Can't resolve './studio-blush.css'
+   7 | import "./mobile-scroll.css";
+   8 | import "./studio-neon.css";
+>  9 | import "./studio-blush.css";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import { QueryProvider } from "@/components/QueryProvider";
+  11 | import { ThemeProvider } from "@/components/ThemeToggle";
+  12 | import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+
+https://nextjs.org/docs/messages/module-not-found 

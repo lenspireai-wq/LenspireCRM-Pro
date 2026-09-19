@@ -1,0 +1,23 @@
+/* [project]/app/mobile-scroll.css [app-client] (css) */
+@media (max-width: 900px) {
+  :root :is(.workspaceChrome, .dashMetrics, .salesDashboardSticky, .leadManagementSticky, .operationsDashboardControls, .operationsDashboardView > .salesKpis, .accountsViewSticky, .ownerSidebar, .modalHeader, .modalFooter), :root table thead th, :root .upcomingEventsTableWrap .upcomingEventsTable thead th {
+    z-index: auto !important;
+    position: static !important;
+    inset: auto !important;
+  }
+
+  :root :is(.leadTableWrap, .upcomingEventsTableWrap, .accountsScheduleTableWrap, .auditTableWrap, .ownerSidebar) {
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .shell {
+    position: relative;
+  }
+
+  :root .sidebarToggle, :root .sidebarHidden .sidebarToggle, :root .loginThemeToggle {
+    position: absolute;
+  }
+}
+
+/*# sourceMappingURL=app_mobile-scroll_css_1igg3k2._.single.css.map*/
