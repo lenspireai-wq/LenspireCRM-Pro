@@ -110,6 +110,39 @@ def _ensure_crm_id_column(values_api, spreadsheet_id, tab, rows):
     return headers, rows, headers.index(CRM_ID_HEADER)
 
 
+def _hide_crm_id_columns(service, spreadsheet_id, tab_columns):
+    """Keep the internal upsert key available but out of the staff-facing view."""
+    sheets = service.spreadsheets().get(
+        spreadsheetId=spreadsheet_id,
+        fields="sheets.properties(sheetId,title)",
+    ).execute().get("sheets", [])
+    sheet_ids = {
+        sheet["properties"]["title"]: sheet["properties"]["sheetId"]
+        for sheet in sheets
+    }
+    requests = [
+        {
+            "updateDimensionProperties": {
+                "range": {
+                    "sheetId": sheet_ids[tab],
+                    "dimension": "COLUMNS",
+                    "startIndex": column,
+                    "endIndex": column + 1,
+                },
+                "properties": {"hiddenByUser": True},
+                "fields": "hiddenByUser",
+            }
+        }
+        for tab, column in tab_columns.items()
+        if tab in sheet_ids
+    ]
+    if requests:
+        service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheet_id,
+            body={"requests": requests},
+        ).execute()
+
+
 def _find_event_row(rows, id_column, event_id):
     for index, row in enumerate(rows[1:], start=2):
         if len(row) > id_column and str(row[id_column]) == str(event_id):
@@ -126,11 +159,13 @@ def sync_calendar_event(event) -> bool:
         spreadsheet_id = settings.GOOGLE_SHEETS_SYNC_SPREADSHEET_ID
         values_api = service.spreadsheets().values()
         destination = target_tab(event)
+        id_columns = {}
         for tab in (UPCOMING_TAB, COMPLETED_TAB):
             rows = _tab_rows(values_api, spreadsheet_id, tab)
             headers, rows, id_column = _ensure_crm_id_column(
                 values_api, spreadsheet_id, tab, rows
             )
+            id_columns[tab] = id_column
             matching_row = _find_event_row(rows, id_column, event.id)
             if tab != destination:
                 if matching_row:
@@ -155,6 +190,7 @@ def sync_calendar_event(event) -> bool:
                     insertDataOption="INSERT_ROWS",
                     body={"values": [row]},
                 ).execute()
+        _hide_crm_id_columns(service, spreadsheet_id, id_columns)
         return True
     except Exception:
         # A temporary Google outage must never prevent staff from saving CRM work.
@@ -170,15 +206,18 @@ def remove_calendar_event(event) -> bool:
         service = _sheet_service()
         spreadsheet_id = settings.GOOGLE_SHEETS_SYNC_SPREADSHEET_ID
         values_api = service.spreadsheets().values()
+        id_columns = {}
         for tab in (UPCOMING_TAB, COMPLETED_TAB):
             rows = _tab_rows(values_api, spreadsheet_id, tab)
             headers, rows, id_column = _ensure_crm_id_column(values_api, spreadsheet_id, tab, rows)
+            id_columns[tab] = id_column
             matching_row = _find_event_row(rows, id_column, event.id)
             if matching_row:
                 values_api.clear(
                     spreadsheetId=spreadsheet_id,
                     range=f"'{tab}'!A{matching_row}:ZZ{matching_row}",
                 ).execute()
+        _hide_crm_id_columns(service, spreadsheet_id, id_columns)
         return True
     except Exception:
         logger.exception("Unable to remove calendar event %s from Google Sheets", event.id)
@@ -201,6 +240,11 @@ def sync_all_calendar_events(events) -> int:
                 values_api, spreadsheet_id, tab, rows
             )
             tabs[tab] = {"headers": headers, "rows": rows, "id_column": id_column}
+        _hide_crm_id_columns(
+            service,
+            spreadsheet_id,
+            {tab: data["id_column"] for tab, data in tabs.items()},
+        )
 
         active_ids = {str(event.id) for event in events}
         updates, clears, appends = [], [], {UPCOMING_TAB: [], COMPLETED_TAB: []}
