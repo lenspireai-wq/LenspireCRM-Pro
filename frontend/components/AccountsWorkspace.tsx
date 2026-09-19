@@ -270,6 +270,7 @@ export default function AccountsWorkspace({
       total,
       received,
       balance: Math.max(0, total - received),
+      credit: Math.max(0, received - total),
       entries,
       reminders,
       lastReminder: reminders[0],
@@ -906,7 +907,13 @@ export default function AccountsWorkspace({
                     </td>
                     <td>{money(a.total)}</td>
                     <td>{money(a.received)}</td>
-                    <td>{money(a.balance)}</td>
+                    <td>
+                      {a.credit > 0 ? (
+                        <span className="ledgerCredit">Credit {money(a.credit)}</span>
+                      ) : (
+                        money(a.balance)
+                      )}
+                    </td>
                     <td>
                       <div className="accountPlan">
                         {a.stages.map((s: Row) => (
@@ -1369,8 +1376,16 @@ export default function AccountsWorkspace({
                   <b>{money(selectedLedger.received)}</b>
                 </article>
                 <article>
-                  <span>Outstanding</span>
-                  <b>{money(selectedLedger.balance)}</b>
+                  <span>
+                    {selectedLedger.credit > 0 ? "Advance Credit" : "Outstanding"}
+                  </span>
+                  <b>
+                    {money(
+                      selectedLedger.credit > 0
+                        ? selectedLedger.credit
+                        : selectedLedger.balance,
+                    )}
+                  </b>
                 </article>
                 <article className="overdueMetric">
                   <span>Overdue</span>

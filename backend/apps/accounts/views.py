@@ -50,9 +50,6 @@ class PaymentSerializer(serializers.ModelSerializer):
             net_collected = (totals["collected"] or 0) - (totals["refunded"] or 0)
             if payment_type == "Refund" and amount > net_collected:
                 raise serializers.ValidationError({"amount": f"Refund cannot exceed the collected balance of {net_collected}."})
-            if payment_type != "Refund" and booking.quoted_amount > 0 and net_collected + amount > booking.quoted_amount:
-                remaining = max(booking.quoted_amount - net_collected, 0)
-                raise serializers.ValidationError({"amount": f"Payment cannot exceed the outstanding balance of {remaining}."})
         if booking and payment_status != "Paid" and payment_type != "Refund":
             pending_duplicate = Payment.objects.filter(
                 organization=organization,

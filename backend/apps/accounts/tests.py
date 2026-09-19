@@ -49,15 +49,13 @@ class AccountsTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("detail", response.data)
 
-    def test_rejects_overpayment_and_excess_refund(self):
+    def test_allows_overpayment_but_rejects_excess_refund(self):
         overpayment = self.payload()
         overpayment["amount"] = "10001.00"
         response = self.client.post("/api/payments/", overpayment)
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("amount", response.data)
-        self.assertEqual(self.client.post("/api/payments/", self.payload()).status_code, 201)
+        self.assertEqual(response.status_code, 201, response.data)
         refund = self.payload()
-        refund.update(amount="1001.00", payment_type="Refund")
+        refund.update(amount="10002.00", payment_type="Refund")
         response = self.client.post("/api/payments/", refund)
         self.assertEqual(response.status_code, 400)
         self.assertIn("amount", response.data)
