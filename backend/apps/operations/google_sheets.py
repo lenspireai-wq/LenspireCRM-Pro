@@ -50,6 +50,7 @@ def event_row(headers, event, serial_number=0):
         "clientname": event.client_name,
         "couplename": event.couple_name,
         "contactno": event.contact_no,
+        "event": event.event_type,
         "eventtype": event.event_type,
         "date": event_date,
         "eventdate": event_date,

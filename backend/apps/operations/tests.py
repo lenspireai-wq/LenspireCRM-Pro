@@ -39,10 +39,10 @@ class OperationsApiTests(TestCase):
             city="Mumbai",
             status="Scheduled",
         )
-        headers = ["Sr. No.", "Client Name", "Couple Name", "Date", "Event Date", CRM_ID_HEADER]
+        headers = ["Sr. No.", "Client Name", "Couple Name", "Date", "Event", "Event Date", CRM_ID_HEADER]
         self.assertEqual(
             event_row(headers, event, serial_number=7),
-            [7, "Asha Patel", "Asha & Rohan", "2026-09-20", "2026-09-20", event.id],
+            [7, "Asha Patel", "Asha & Rohan", "2026-09-20", "Wedding", "2026-09-20", event.id],
         )
         self.assertEqual(target_tab(event), "Upcoming Events")
         event.status = "Completed"
