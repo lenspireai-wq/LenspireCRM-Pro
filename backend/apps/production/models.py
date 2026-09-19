@@ -96,6 +96,9 @@ class ClientPortalAccess(OrganizationScopedModel):
     closed_at = models.DateTimeField(null=True, blank=True)
     last_accessed_at = models.DateTimeField(null=True, blank=True)
     access_count = models.PositiveIntegerField(default=0)
+    photo_finder_status = models.CharField(max_length=20, default="Not Enabled")
+    photo_finder_url = models.URLField(max_length=500, blank=True)
+    photo_finder_requested_at = models.DateTimeField(null=True, blank=True)
 
 
 class ClientPortalActivity(OrganizationScopedModel):

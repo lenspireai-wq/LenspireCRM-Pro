@@ -4,7 +4,7 @@ import secrets
 from decimal import Decimal, ROUND_HALF_UP
 from datetime import timedelta
 from types import SimpleNamespace
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
@@ -192,6 +192,11 @@ class ClientPortalManageView(APIView):
             "preview_url": staff_preview_url(access) if portal_status == "Active" else "",
             "activities": list(access.activities.values("action", "detail", "created_at")[:25]) if access else [],
             "portal_users": list(booking.portal_users.values("id", "name", "email", "mobile", "active", "last_login_at", "invite_expires_at")),
+            "photo_finder": {
+                "status": access.photo_finder_status if access else "Not Enabled",
+                "url": access.photo_finder_url if access else "",
+                "requested_at": access.photo_finder_requested_at if access else None,
+            },
         })
 
     def post(self, request):
@@ -218,6 +223,31 @@ class ClientPortalManageView(APIView):
         access.revoked_at = timezone.now(); access.save(update_fields=("revoked_at", "updated_at"))
         ClientPortalActivity.objects.create(organization=booking.organization, access=access, booking=booking, action="Access Revoked", detail="Studio revoked Client Portal access.")
         return Response({"status": "Revoked"})
+
+    def patch(self, request):
+        booking = self.booking(request)
+        access = ClientPortalAccess.objects.filter(booking=booking).first() if booking else None
+        if not access:
+            return Response({"detail": "Generate Client Portal access before managing Photo Finder."}, status=404)
+        action = str(request.data.get("action", "")).strip()
+        if action == "activate_photo_finder":
+            url = str(request.data.get("url", "")).strip()
+            parsed = urlparse(url)
+            if parsed.scheme != "https" or not (parsed.hostname or "").endswith("lenspireai.com"):
+                return Response({"url": "Enter the client’s private https://…lenspireai.com gallery link."}, status=400)
+            access.photo_finder_status = "Active"
+            access.photo_finder_url = url
+            access.save(update_fields=("photo_finder_status", "photo_finder_url", "updated_at"))
+            activity, detail = "Photo Finder Activated", "Studio activated the client’s private LenspireAI Photo Finder link."
+        elif action == "deactivate_photo_finder":
+            access.photo_finder_status = "Not Enabled"
+            access.photo_finder_url = ""
+            access.save(update_fields=("photo_finder_status", "photo_finder_url", "updated_at"))
+            activity, detail = "Photo Finder Deactivated", "Studio removed Photo Finder access."
+        else:
+            return Response({"detail": "Select a valid Photo Finder action."}, status=400)
+        ClientPortalActivity.objects.create(organization=booking.organization, access=access, booking=booking, action=activity, detail=detail)
+        return Response({"status": access.photo_finder_status, "url": access.photo_finder_url})
 
 
 class ClientPortalInviteView(APIView):
@@ -512,6 +542,11 @@ class ClientPortalPublicView(APIView):
                 for item in quotations
                 if item.file and item.file.name
             ],
+            "photo_finder": {
+                "status": access.photo_finder_status,
+                "url": access.photo_finder_url if access.photo_finder_status == "Active" else "",
+                "requested_at": access.photo_finder_requested_at,
+            },
         })
 
     def post(self, request, token):
@@ -520,11 +555,20 @@ class ClientPortalPublicView(APIView):
             return Response({"detail": "This Client Portal link is invalid, expired, or revoked."}, status=401)
         if preview:
             return Response({"detail": "Studio previews are read-only."}, status=403)
+        action = request.data.get("action")
+        message = str(request.data.get("message", "")).strip()
+        if action == "photo_finder_request":
+            if access.photo_finder_status == "Active":
+                return Response({"detail": "Photo Finder is already active.", "status": "Active"})
+            if access.photo_finder_status != "Requested":
+                access.photo_finder_status = "Requested"
+                access.photo_finder_requested_at = timezone.now()
+                access.save(update_fields=("photo_finder_status", "photo_finder_requested_at", "updated_at"))
+                ClientPortalActivity.objects.create(organization=access.organization, access=access, booking=access.booking, action="Photo Finder Requested", detail="Client requested LenspireAI Photo Finder access.")
+            return Response({"detail": "Your request has been sent to the studio.", "status": "Requested"})
         deliverable = ProductionDeliverable.objects.filter(pk=request.data.get("deliverable"), organization=access.organization, job__booking=access.booking).first()
         if not deliverable:
             return Response({"detail": "Deliverable not found."}, status=404)
-        action = request.data.get("action")
-        message = str(request.data.get("message", "")).strip()
         if action == "approve":
             deliverable.status = "Client Approved"; deliverable.approved_at = timezone.now(); deliverable.revision_notes = ""
             activity = "Delivery Approved"

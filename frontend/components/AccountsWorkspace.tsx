@@ -189,6 +189,7 @@ export default function AccountsWorkspace({
   const [portalBooking, setPortalBooking] = useState<Row | null>(null);
   const [portalInfo, setPortalInfo] = useState<Row | null>(null);
   const [portalLink, setPortalLink] = useState("");
+  const [photoFinderUrl, setPhotoFinderUrl] = useState("");
   const [inviteResult, setInviteResult] = useState<Row | null>(null);
   const [whatsappResult, setWhatsappResult] = useState<Row | null>(null);
   const [whatsappType, setWhatsappType] = useState("gallery_ready");
@@ -288,6 +289,7 @@ export default function AccountsWorkspace({
         `/client-portal/access/?booking=${booking.id}`,
       );
       setPortalInfo(data);
+      setPhotoFinderUrl(data.photo_finder?.url || "");
     } catch (problem: any) {
       setError(
         problem.response?.data?.detail ||
@@ -661,6 +663,15 @@ export default function AccountsWorkspace({
         />
       </label>
     </section>;
+  };
+  const updatePhotoFinder = async (action: "activate_photo_finder" | "deactivate_photo_finder") => {
+    if (!portalBooking) return;
+    try {
+      await api.patch("/client-portal/access/", { booking: portalBooking.id, action, url: photoFinderUrl.trim() });
+      await openPortal(portalBooking);
+    } catch (problem: any) {
+      setError(problem.response?.data?.url || problem.response?.data?.detail || "Could not update Photo Finder access.");
+    }
   };
   const breakdown = (
     title: string,
@@ -1203,6 +1214,22 @@ export default function AccountsWorkspace({
                   >
                     × Revoke
                   </button>
+                </div>
+              </section>
+              <section className="clientAccessSection">
+                <h3>LenspireAI Photo Finder</h3>
+                <p>{portalInfo?.photo_finder?.status === "Requested" ? "The client has requested this service. Add their private LenspireAI gallery link, then activate access." : "Create the client’s private event in LenspireAI, then paste its private gallery link here."}</p>
+                <label>
+                  Service status
+                  <input readOnly value={portalInfo?.photo_finder?.status || "Not Enabled"} />
+                </label>
+                <label>
+                  Private LenspireAI gallery link
+                  <input type="url" value={photoFinderUrl} onChange={(event) => setPhotoFinderUrl(event.target.value)} placeholder="https://www.lenspireai.com/..." />
+                </label>
+                <div className="modalFooter">
+                  <button className="primary" disabled={!photoFinderUrl.trim()} onClick={() => void updatePhotoFinder("activate_photo_finder")}>✦ Activate Photo Finder</button>
+                  <button disabled={portalInfo?.photo_finder?.status !== "Active"} onClick={() => void updatePhotoFinder("deactivate_photo_finder")}>Deactivate</button>
                 </div>
               </section>
               <section className="clientAccessSection clientPortalPreview">
