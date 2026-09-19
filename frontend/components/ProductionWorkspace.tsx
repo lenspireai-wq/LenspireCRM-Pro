@@ -843,7 +843,10 @@ export default function ProductionWorkspace({
             <div className="modalHeader productionJobHeader">
               <div>
                 <small>PRODUCTION JOB</small>
-                <h2>{draft.client_name || draft.booking_code}</h2>
+                <h2>
+                  {draft.client_name || draft.booking_code}
+                  {draft.couple_name ? ` (${draft.couple_name})` : ""}
+                </h2>
                 <p>
                   {draft.event_type} · Event {dateLabel(draft.event_date)}
                 </p>
