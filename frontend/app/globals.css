@@ -1222,8 +1222,9 @@ input:-webkit-autofill:active {
 
 .clientDeliverable.hasThumbnail { grid-template-columns: 132px 1fr auto; }
 .clientGalleryThumbnail { grid-row: span 3; width: 132px; height: 94px; border: 1px solid rgb(212 180 119 / 24%); border-radius: 11px; object-fit: cover; background: #1a1815; }
+.clientGalleryNoPreview { grid-row: span 3; display: grid; place-items: center; width: 132px; height: 94px; box-sizing: border-box; border: 1px dashed rgb(212 180 119 / 34%); border-radius: 11px; background: rgb(212 180 119 / 7%); color: #a99d8e; font-size: 11px; text-align: center; }
 .clientDeliverable.hasThumbnail .clientFeedback, .clientDeliverable.hasThumbnail .clientApproved { grid-column: 2 / -1; }
-@media(max-width:700px) { .clientDeliverable.hasThumbnail { grid-template-columns: 1fr; }.clientGalleryThumbnail { grid-row: auto; width: 100%; height: 160px; }.clientDeliverable.hasThumbnail .clientFeedback, .clientDeliverable.hasThumbnail .clientApproved { grid-column: auto; } }
+@media(max-width:700px) { .clientDeliverable.hasThumbnail { grid-template-columns: 1fr; }.clientGalleryThumbnail, .clientGalleryNoPreview { grid-row: auto; width: 100%; height: 160px; }.clientDeliverable.hasThumbnail .clientFeedback, .clientDeliverable.hasThumbnail .clientApproved { grid-column: auto; } }
 .clientDeliverable { grid-template-columns: minmax(0, 1fr) auto; align-items: start; }
 .clientDeliverable.hasThumbnail { grid-template-columns: 132px minmax(0, 1fr) auto; }
 .clientDeliverable > .clientDeliverableTop { justify-content: flex-start; min-width: 0; }
