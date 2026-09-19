@@ -1224,6 +1224,12 @@ input:-webkit-autofill:active {
 .clientGalleryThumbnail { grid-row: span 3; width: 132px; height: 94px; border: 1px solid rgb(212 180 119 / 24%); border-radius: 11px; object-fit: cover; background: #1a1815; }
 .clientDeliverable.hasThumbnail .clientFeedback, .clientDeliverable.hasThumbnail .clientApproved { grid-column: 2 / -1; }
 @media(max-width:700px) { .clientDeliverable.hasThumbnail { grid-template-columns: 1fr; }.clientGalleryThumbnail { grid-row: auto; width: 100%; height: 160px; }.clientDeliverable.hasThumbnail .clientFeedback, .clientDeliverable.hasThumbnail .clientApproved { grid-column: auto; } }
+.clientDeliverable { grid-template-columns: minmax(0, 1fr) auto; align-items: start; }
+.clientDeliverable.hasThumbnail { grid-template-columns: 132px minmax(0, 1fr) auto; }
+.clientDeliverable > .clientDeliverableTop { justify-content: flex-start; min-width: 0; }
+.clientDeliverableTop > div:last-child { min-width: 0; }
+.clientDeliverable > a { align-self: center; }
+@media(max-width:700px) { .clientDeliverable, .clientDeliverable.hasThumbnail { grid-template-columns: 1fr; }.clientDeliverable > a { width: 100%; justify-content: center; box-sizing: border-box; } }
 .error {
   margin-bottom: 12px;
   color: #ff8d98;
