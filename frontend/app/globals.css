@@ -7165,6 +7165,13 @@ td { min-height: 44px; color: var(--text); font-size: var(--font-sm); }
   color: #65748a;
   font-size: var(--font-xs);
 }
+.attachmentSuccess {
+  clear: both;
+  margin: 10px 0 0;
+  color: #16835a;
+  font-size: 13px;
+  font-weight: 700;
+}
 .attachmentUpload {
   float: right;
   padding: var(--space-2) var(--space-3);

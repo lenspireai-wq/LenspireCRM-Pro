@@ -598,10 +598,7 @@ export default function SalesWorkspace({
               setDetail(null);
             }}
             onDelete={() => remove(detail)}
-            onRefresh={async () => {
-              await refresh();
-              setDetail(null);
-            }}
+            onRefresh={refresh}
           />
         )}
         {notice && <div className="toast">{notice}</div>}
@@ -741,10 +738,7 @@ export default function SalesWorkspace({
             setDetail(null);
           }}
           onDelete={() => remove(detail)}
-          onRefresh={async () => {
-            await refresh();
-            setDetail(null);
-          }}
+          onRefresh={refresh}
         />
       )}
       {importOpen && (
@@ -1433,6 +1427,8 @@ function LeadDetail({
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [attachmentSuccess, setAttachmentSuccess] = useState("");
+  const [attachments, setAttachments] = useState<Attachment[]>(lead.attachments || []);
   const [openingAttachmentId, setOpeningAttachmentId] = useState<number | null>(null);
   const [removingAttachmentId, setRemovingAttachmentId] = useState<number | null>(null);
   const attachMutation = useApiMutation<FormData, any, Error>({
@@ -1464,13 +1460,16 @@ function LeadDetail({
     }
     setUploading(true);
     setError("");
+    setAttachmentSuccess("");
     const data = new FormData();
     data.append("lead", String(lead.id));
     data.append("name", file.name);
     data.append("file", file, file.name);
     try {
-      await attachMutation.mutateAsync(data);
+      const savedAttachment = await attachMutation.mutateAsync(data) as Attachment;
+      setAttachments((items) => [savedAttachment, ...items]);
       await onRefresh();
+      setAttachmentSuccess("Attachment saved successfully.");
     } catch (problem: any) {
       const response = problem.response;
       const details = response?.data;
@@ -1511,6 +1510,7 @@ function LeadDetail({
     setError("");
     try {
       await api.delete(`/attachments/${attachment.id}/`);
+      setAttachments((items) => items.filter((item) => item.id !== attachment.id));
       await onRefresh();
     } catch {
       setError("Could not remove this quotation. Please try again.");
@@ -1589,7 +1589,7 @@ function LeadDetail({
             <label className="attachmentUpload">
               {uploading
                 ? "Uploading…"
-                : lead.attachments?.length
+                : attachments.length
                   ? "⇧ Add Another Quotation"
                   : "⇧ Upload Quotation"}
               <input
@@ -1605,8 +1605,9 @@ function LeadDetail({
               />
             </label>
           )}
+          {attachmentSuccess && <p className="attachmentSuccess" role="status">✓ {attachmentSuccess}</p>}
           <div className="attachmentList">
-            {(lead.attachments || []).map((attachment) => (
+            {attachments.map((attachment) => (
               <div className="attachmentItem" key={attachment.id}>
                 <span>▤</span>
                 <div>
@@ -1635,7 +1636,7 @@ function LeadDetail({
                 </div>
               </div>
             ))}
-            {!lead.attachments?.length && (
+            {!attachments.length && (
               <div className="salesEmpty">No quotation uploaded.</div>
             )}
           </div>
