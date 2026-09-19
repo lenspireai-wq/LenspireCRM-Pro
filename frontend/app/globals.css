@@ -9829,6 +9829,12 @@ textarea {
   color: #4759a8;
   box-shadow: none;
 }
+:root[data-theme="light"] .clientQuotation a {
+  background: #eef2ff;
+  border-color: #d8e0ff;
+  color: #4759a8;
+  box-shadow: none;
+}
 :root[data-theme="light"] .clientDeliverableIcon { background: #edf1ff; color: #5d70c4; }
 :root[data-theme="light"] .clientGalleryNoPreview { background: #faf9ff; border-color: #dddaf5; color: #8a88a4; }
 
@@ -9851,7 +9857,7 @@ textarea {
 }
 :root[data-theme="light"] .clientPortalEvents { background: linear-gradient(145deg, #fff, #f8f6ff); }
 :root[data-theme="light"] .clientPortalPayments { background: linear-gradient(145deg, #fff, #f4fbf8); }
-:root[data-theme="light"] .clientPortalQuotations { background: linear-gradient(145deg, #fff, #fff9f2); }
+:root[data-theme="light"] .clientPortalQuotations { background: linear-gradient(145deg, #fff, #f4f5ff); border-color: #e1e3fb; }
 :root[data-theme="light"] .clientPortalDeliveries { background: linear-gradient(145deg, #fff, #f8f8ff); }
 :root[data-theme="light"] .clientPortalCardTitle > span {
   border-color: #dcd7ff;
