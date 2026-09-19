@@ -9824,6 +9824,45 @@ textarea {
 :root[data-theme="light"] .clientDeliverableIcon { background: #edf1ff; color: #5d70c4; }
 :root[data-theme="light"] .clientGalleryNoPreview { background: #faf9ff; border-color: #dddaf5; color: #8a88a4; }
 
+/* A brighter, more distinctive client portal: every information block has a
+   soft editorial surface instead of looking like the same plain white card. */
+:root[data-theme="light"] .clientPortalStats article {
+  min-height: 104px;
+  border: 1px solid transparent;
+  box-shadow: 0 12px 28px rgb(55 48 163 / 7%);
+}
+:root[data-theme="light"] .clientPortalStats article:nth-child(1) { background: linear-gradient(135deg, #f1eeff, #fbfaff); border-color: #e0d9ff; }
+:root[data-theme="light"] .clientPortalStats article:nth-child(2) { background: linear-gradient(135deg, #eafaf4, #fafffd); border-color: #ccefe0; }
+:root[data-theme="light"] .clientPortalStats article:nth-child(3) { background: linear-gradient(135deg, #fff4e8, #fffdfa); border-color: #f7dfc0; }
+:root[data-theme="light"] .clientPortalStats article small { color: #72718b; }
+:root[data-theme="light"] .clientPortalStats article b { color: #29264f; }
+:root[data-theme="light"] .clientPortalCard {
+  border: 1px solid #ebe9f5;
+  background: linear-gradient(145deg, #ffffff, #fafaff);
+  box-shadow: 0 14px 30px rgb(60 52 135 / 6%);
+}
+:root[data-theme="light"] .clientPortalEvents { background: linear-gradient(145deg, #fff, #f8f6ff); }
+:root[data-theme="light"] .clientPortalPayments { background: linear-gradient(145deg, #fff, #f4fbf8); }
+:root[data-theme="light"] .clientPortalQuotations { background: linear-gradient(145deg, #fff, #fff9f2); }
+:root[data-theme="light"] .clientPortalDeliveries { background: linear-gradient(145deg, #fff, #f8f8ff); }
+:root[data-theme="light"] .clientPortalCardTitle > span {
+  border-color: #dcd7ff;
+  background: #f0eeff;
+  color: #6158bc;
+}
+:root[data-theme="light"] .clientPortalCardTitle small { color: #7f789b; }
+:root[data-theme="light"] .clientPortalCard h2 { color: #28244d; }
+:root[data-theme="light"] .clientPortalFaceSearch {
+  border-color: #dcd8ff;
+  background: radial-gradient(circle at 88% 24%, rgb(190 184 255 / 34%), transparent 32%), linear-gradient(135deg, #f4f2ff, #eff8ff);
+  box-shadow: 0 14px 34px rgb(75 64 181 / 9%);
+}
+:root[data-theme="light"] .clientPortalFaceSearch h2 { color: #302a68; }
+:root[data-theme="light"] .clientPortalFaceSearch p { color: #65617e; }
+:root[data-theme="light"] .clientPortalFaceSearchIcon { border-color: #d8d2ff; background: #ffffffa8; color: #675cc5; }
+:root[data-theme="light"] .clientPortalFaceSearch button,
+:root[data-theme="light"] .clientPortalFaceSearch a { border-color: #d9d4ff; background: #ffffffc7; color: #554ba9; box-shadow: 0 8px 18px rgb(91 80 191 / 10%); }
+
 /* Misc elements */
 :root[data-theme="light"] .empty {
   color: var(--muted);
