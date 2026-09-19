@@ -181,3 +181,66 @@ def remove_calendar_event(event) -> bool:
     except Exception:
         logger.exception("Unable to remove calendar event %s from Google Sheets", event.id)
         return False
+
+
+def sync_all_calendar_events(events) -> int:
+    """Efficiently seed or reconcile all active CRM events in the mirror."""
+    if not is_configured():
+        return 0
+    try:
+        events = list(events)
+        service = _sheet_service()
+        spreadsheet_id = settings.GOOGLE_SHEETS_SYNC_SPREADSHEET_ID
+        values_api = service.spreadsheets().values()
+        tabs = {}
+        for tab in (UPCOMING_TAB, COMPLETED_TAB):
+            rows = _tab_rows(values_api, spreadsheet_id, tab)
+            headers, rows, id_column = _ensure_crm_id_column(
+                values_api, spreadsheet_id, tab, rows
+            )
+            tabs[tab] = {"headers": headers, "rows": rows, "id_column": id_column}
+
+        active_ids = {str(event.id) for event in events}
+        updates, clears, appends = [], [], {UPCOMING_TAB: [], COMPLETED_TAB: []}
+        for tab, data in tabs.items():
+            for row_number, row in enumerate(data["rows"][1:], start=2):
+                if len(row) > data["id_column"] and str(row[data["id_column"]]) in active_ids:
+                    clears.append(f"'{tab}'!A{row_number}:ZZ{row_number}")
+
+        for event in events:
+            tab = target_tab(event)
+            data = tabs[tab]
+            matching_row = _find_event_row(data["rows"], data["id_column"], event.id)
+            row = event_row(
+                data["headers"],
+                event,
+                serial_number=matching_row - 1 if matching_row else len(data["rows"]) + len(appends[tab]),
+            )
+            if matching_row:
+                updates.append({"range": f"'{tab}'!A{matching_row}", "values": [row]})
+                clears.remove(f"'{tab}'!A{matching_row}:ZZ{matching_row}")
+            else:
+                appends[tab].append(row)
+
+        if clears:
+            values_api.batchClear(
+                spreadsheetId=spreadsheet_id, body={"ranges": clears}
+            ).execute()
+        if updates:
+            values_api.batchUpdate(
+                spreadsheetId=spreadsheet_id,
+                body={"valueInputOption": "RAW", "data": updates},
+            ).execute()
+        for tab, rows in appends.items():
+            if rows:
+                values_api.append(
+                    spreadsheetId=spreadsheet_id,
+                    range=f"'{tab}'!A:ZZ",
+                    valueInputOption="RAW",
+                    insertDataOption="INSERT_ROWS",
+                    body={"values": rows},
+                ).execute()
+        return len(events)
+    except Exception:
+        logger.exception("Unable to bulk mirror calendar events to Google Sheets")
+        return 0

@@ -29,3 +29,6 @@ For PowerShell, create the base64 value without changing the JSON file:
 Do not commit the JSON key or the base64 value to Git.
 
 The first CRM event save adds a `CRM Event ID` column to each target tab. That stable ID lets later updates move an event between Upcoming and Completed without creating duplicate records.
+
+Each production deployment also runs a bulk reconciliation, which safely adds
+existing CRM events to the mirror without changing the sheet's column layout.
