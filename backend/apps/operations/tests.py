@@ -10,7 +10,7 @@ from apps.core.models import Organization
 from apps.sales.models import Booking, Customer, Lead
 from apps.users.models import User
 from .models import CalendarEvent, PhotographerDetail
-from .google_sheets import CRM_ID_HEADER, event_row, target_tab
+from .google_sheets import CRM_ID_HEADER, _sheet_row_values, event_row, target_tab
 
 
 class OperationsApiTests(TestCase):
@@ -47,6 +47,17 @@ class OperationsApiTests(TestCase):
         self.assertEqual(target_tab(event), "Upcoming Events")
         event.status = "Completed"
         self.assertEqual(target_tab(event), "Completed Events")
+
+    def test_google_sheet_row_uses_staff_facing_headers(self):
+        values = _sheet_row_values(
+            ["Date", "Client Name", "Event", "Venue", "Time", "Notes"],
+            ["05-Aug-2026", "Asha Patel", "Wedding", "Mumbai", "10:30 AM", "Outdoor"],
+        )
+        self.assertEqual(values["start_date"].isoformat(), "2026-08-05")
+        self.assertEqual(values["client_name"], "Asha Patel")
+        self.assertEqual(values["event_type"], "Wedding")
+        self.assertEqual(values["city"], "Mumbai")
+        self.assertEqual(values["start_time"].isoformat(), "10:30:00")
 
     def confirmed_booking(self, *, name="Asha Patel", couple_name="Asha & Rohan", phone="9876543210"):
         lead = Lead.objects.create(

@@ -123,6 +123,7 @@ CSRF_COOKIE_SECURE = not DEBUG
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", CELERY_BROKER_URL)
 CELERY_BEAT_SCHEDULE = {
+    "import-google-sheets-events": {"task": "apps.operations.tasks.import_google_sheets_events", "schedule": 300},
     "daily-encrypted-backup": {"task": "apps.backup.tasks.create_scheduled_backup", "schedule": 86400},
     "scan-overdue-production": {"task": "apps.notifications.tasks.scan_overdue_production", "schedule": 3600},
     "scan-pending-payments": {"task": "apps.notifications.tasks.scan_pending_payments", "schedule": 21600},

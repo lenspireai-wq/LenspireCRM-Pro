@@ -1,11 +1,15 @@
-# Google Sheets event mirror setup
+# Google Sheets two-way event sync setup
 
 The CRM mirrors calendar events to these tabs in the configured spreadsheet:
 
 - `Upcoming Events` for all non-completed events
 - `Completed Events` after an event is marked completed
 
-The CRM is the source of truth. Sheet edits are not imported back into the CRM.
+Every five minutes, staff edits in the configured columns are imported back
+into the matching CRM event. `CRM Event ID` is hidden but must not be deleted.
+New rows create calendar events only when the CRM has one active organization.
+Removing a row in Sheets never deletes a CRM event. If a CRM event and its Sheet
+row change between import cycles, the CRM value wins and is written back out.
 
 ## Production setup
 
@@ -30,5 +34,5 @@ Do not commit the JSON key or the base64 value to Git.
 
 The first CRM event save adds a `CRM Event ID` column to each target tab. That stable ID lets later updates move an event between Upcoming and Completed without creating duplicate records.
 
-Each production deployment also runs a bulk reconciliation, which safely adds
-existing CRM events to the mirror without changing the sheet's column layout.
+Each production deployment imports Sheet edits first, then runs a bulk
+reconciliation without changing the sheet's column layout.

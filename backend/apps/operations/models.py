@@ -32,6 +32,17 @@ class CalendarEvent(OrganizationScopedModel):
     is_archived = models.BooleanField(default=False)
 
 
+class GoogleSheetEventSyncState(models.Model):
+    """Last mirrored values used to resolve simultaneous CRM/Sheet edits."""
+
+    event = models.OneToOneField(
+        CalendarEvent, on_delete=models.CASCADE, related_name="google_sheet_sync_state"
+    )
+    crm_values = models.JSONField(default=dict, blank=True)
+    sheet_values = models.JSONField(default=dict, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class PhotographerDetail(OrganizationScopedModel):
     name = models.CharField(max_length=160)
     mobile = models.CharField(max_length=40, blank=True)
