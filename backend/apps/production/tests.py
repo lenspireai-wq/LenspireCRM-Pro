@@ -263,7 +263,7 @@ class ProductionApiTests(TestCase):
             start_date="2026-10-10",
             status="Completed",
         )
-        CalendarEvent.objects.create(
+        second_pre_wedding = CalendarEvent.objects.create(
             organization=self.organization,
             booking=self.booking,
             customer=self.customer,
@@ -274,6 +274,18 @@ class ProductionApiTests(TestCase):
         )
         Payment.objects.filter(booking=self.booking).update(amount="500.00")
 
+        jobs = sync_event_production_jobs_for_booking(self.booking)
+
+        self.assertEqual(len(jobs), 1)
+        self.assertEqual(ProductionJob.objects.filter(booking=self.booking).count(), 1)
+        self.assertEqual(jobs[0].calendar_event_id, first_pre_wedding.id)
+
+        ProductionJob.objects.create(
+            organization=self.organization,
+            booking=self.booking,
+            customer=self.customer,
+            calendar_event=second_pre_wedding,
+        )
         jobs = sync_event_production_jobs_for_booking(self.booking)
 
         self.assertEqual(len(jobs), 1)

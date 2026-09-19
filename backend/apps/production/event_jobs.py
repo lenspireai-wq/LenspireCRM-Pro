@@ -1,7 +1,9 @@
 """Create event-specific production jobs when a completed shoot is financially ready."""
 
+from datetime import date
 from decimal import Decimal
 
+from django.db import transaction
 from django.db.models import Q, Sum
 
 from apps.operations.models import CalendarEvent
@@ -66,7 +68,21 @@ def sync_event_production_jobs_for_booking(booking: Booking) -> list[ProductionJ
     for existing_job in existing_jobs:
         existing_label = production_event_label(existing_job.calendar_event)
         if existing_label:
-            jobs_by_label.setdefault(existing_label, existing_job)
+            jobs_by_label.setdefault(existing_label, []).append(existing_job)
+    for label, label_jobs in jobs_by_label.items():
+        # Keep the job belonging to the earliest completed event. If old
+        # duplicate jobs have any editing work, preserve it by moving it to
+        # that consolidated job before removing the duplicate.
+        label_jobs.sort(
+            key=lambda job: (job.calendar_event.start_date or job.due_date or date.max, job.id)
+        )
+        canonical_job = label_jobs[0]
+        for duplicate_job in label_jobs[1:]:
+            with transaction.atomic():
+                duplicate_job.activities.update(job=canonical_job)
+                duplicate_job.deliverables.update(job=canonical_job)
+                duplicate_job.delete()
+        jobs_by_label[label] = canonical_job
     processed_labels = set()
     events = CalendarEvent.objects.filter(
         organization=booking.organization,
