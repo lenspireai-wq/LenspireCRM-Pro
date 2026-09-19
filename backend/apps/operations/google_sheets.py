@@ -51,6 +51,7 @@ def event_row(headers, event, serial_number=0):
         "couplename": event.couple_name,
         "contactno": event.contact_no,
         "eventtype": event.event_type,
+        "date": event_date,
         "eventdate": event_date,
         "startdate": event_date,
         "starttime": event.start_time.isoformat() if event.start_time else "",
