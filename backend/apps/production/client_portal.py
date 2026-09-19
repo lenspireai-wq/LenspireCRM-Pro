@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.core import signing
 from django.db.models import F, Q, Sum
+from django.http import FileResponse
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -21,6 +22,7 @@ from apps.core.permissions import AccountsAccessPermission
 from apps.core.models import Organization
 from apps.operations.models import CalendarEvent
 from apps.sales.models import Booking
+from apps.storage.models import Attachment
 from .models import ClientPortalAccess, ClientPortalActivity, ClientPortalUser, ProductionActivity, ProductionDeliverable
 
 
@@ -477,6 +479,10 @@ class ClientPortalPublicView(APIView):
         received += confirmed_advance
         events = list(CalendarEvent.objects.filter(organization=access.organization, booking=booking).order_by("start_date"))
         deliverables = ProductionDeliverable.objects.filter(organization=access.organization, job__booking=booking, drive_link__gt="").select_related("job")
+        quotations = Attachment.objects.filter(
+            organization=access.organization,
+            lead=booking.lead,
+        ).order_by("-created_at") if booking.lead_id else Attachment.objects.none()
         ClientPortalActivity.objects.create(organization=access.organization, access=access, booking=booking, action="Portal Opened", detail="Client opened the secure portal.")
         return Response({
             "studio": {"name": access.organization.name, "phone": access.organization.contact_phone, "email": access.organization.contact_email, "logo_url": access.organization.logo_url},
@@ -501,6 +507,11 @@ class ClientPortalPublicView(APIView):
                 booking, payments, events, confirmed_advance=confirmed_advance,
             ),
             "deliverables": [{"id": item.id, "name": item.name, "status": item.status, "drive_link": item.drive_link, "thumbnail_url": deliverable_thumbnail_url(item), "revision_notes": item.revision_notes} for item in deliverables],
+            "quotations": [
+                {"id": item.id, "name": item.name, "created_at": item.created_at}
+                for item in quotations
+                if item.file and item.file.name
+            ],
         })
 
     def post(self, request, token):
@@ -533,3 +544,37 @@ class ClientPortalPublicView(APIView):
         ProductionActivity.objects.create(organization=access.organization, job=job, activity_type="Client Portal Feedback", description=f"{deliverable.name}: {activity}. {message}".strip(), performed_by="Client")
         ClientPortalActivity.objects.create(organization=access.organization, access=access, booking=access.booking, action=activity, detail=message or f"Client approved {deliverable.name}.")
         return Response({"detail": "Feedback submitted successfully.", "status": deliverable.status})
+
+
+class ClientPortalQuotationDownloadView(ClientPortalPublicView):
+    """Serve only the quotation attached to the booking behind this portal token."""
+
+    def get(self, request, token, attachment_id):
+        access, permanent, _preview = self.access(token)
+        if (
+            not access
+            or not organization_available(access.organization)
+            or access.closed_at
+            or (not permanent and access_status(access) != "Active")
+            or not access.booking.lead_id
+        ):
+            return Response({"detail": "This Client Portal link is invalid, expired, or revoked."}, status=401)
+        attachment = Attachment.objects.filter(
+            pk=attachment_id,
+            organization=access.organization,
+            lead=access.booking.lead,
+        ).first()
+        if not attachment or not attachment.file or not attachment.file.name:
+            return Response({"detail": "Quotation not found."}, status=404)
+        ClientPortalActivity.objects.create(
+            organization=access.organization,
+            access=access,
+            booking=access.booking,
+            action="Quotation Viewed",
+            detail=attachment.name,
+        )
+        return FileResponse(
+            attachment.file.open("rb"),
+            as_attachment=False,
+            filename=attachment.name,
+        )

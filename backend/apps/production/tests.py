@@ -8,6 +8,7 @@ from apps.core.models import Organization
 from apps.accounts.models import Payment
 from apps.operations.models import CalendarEvent
 from apps.sales.models import Booking, Customer, Lead
+from apps.storage.models import Attachment
 from apps.users.models import User
 from .event_jobs import sync_event_production_jobs_for_booking
 from .models import ProductionActivity, ProductionDeliverable, ProductionJob
@@ -117,6 +118,41 @@ class ProductionApiTests(TestCase):
             "/api/client-portal/access/", {"booking": self.booking.id}, format="json"
         )
         self.assertEqual(revoked.status_code, 200)
+
+    def test_client_portal_lists_only_its_booking_quotations(self):
+        quotation = Attachment.objects.create(
+            organization=self.organization,
+            lead=self.lead,
+            name="Wedding quotation.pdf",
+            file="lead-attachments/wedding-quotation.pdf",
+        )
+        other_lead = Lead.objects.create(
+            organization=self.organization,
+            lead_code="L2",
+            name="Other Client",
+        )
+        other = Attachment.objects.create(
+            organization=self.organization,
+            lead=other_lead,
+            name="Other quotation.pdf",
+            file="lead-attachments/other-quotation.pdf",
+        )
+        generated = self.client.post(
+            "/api/client-portal/access/",
+            {"booking": self.booking.id, "expiry_days": 60},
+            format="json",
+        )
+        token = generated.data["url"].rstrip("/").split("/")[-1]
+        public = APIClient()
+        portal = public.get(f"/api/client-portal/{token}/")
+        self.assertEqual(portal.status_code, 200, portal.data)
+        self.assertEqual(len(portal.data["quotations"]), 1)
+        self.assertEqual(portal.data["quotations"][0]["id"], quotation.id)
+        self.assertEqual(portal.data["quotations"][0]["name"], quotation.name)
+        self.assertEqual(
+            public.get(f"/api/client-portal/{token}/quotations/{other.id}/").status_code,
+            404,
+        )
 
     def test_client_portal_uses_standard_four_stage_payment_schedule(self):
         self.booking.quoted_amount = "125000.00"

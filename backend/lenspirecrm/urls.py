@@ -20,7 +20,7 @@ from apps.notifications.views import NotificationSummaryView, NotificationViewSe
 from apps.core.views import HealthView, OrganizationViewSet
 from apps.operations.views import CalendarEventViewSet, PhotographerDetailViewSet
 from apps.production.views import ProductionJobViewSet
-from apps.production.client_portal import ClientPortalAuthView, ClientPortalInviteView, ClientPortalManageView, ClientPortalPublicView, ClientPortalResetRequestView, ClientPortalWhatsAppView
+from apps.production.client_portal import ClientPortalAuthView, ClientPortalInviteView, ClientPortalManageView, ClientPortalPublicView, ClientPortalQuotationDownloadView, ClientPortalResetRequestView, ClientPortalWhatsAppView
 from apps.sales.views import BookingViewSet, CustomerViewSet, LeadViewSet, SalesTargetViewSet
 from apps.storage.views import AttachmentViewSet
 from apps.users.views import (
@@ -58,6 +58,7 @@ urlpatterns = [
     path("api/client-portal/whatsapp/", ClientPortalWhatsAppView.as_view()),
     path("api/client-portal/auth/<str:action>/", ClientPortalAuthView.as_view()),
     path("api/client-portal/request-password-reset/", ClientPortalResetRequestView.as_view()),
+    path("api/client-portal/<str:token>/quotations/<int:attachment_id>/", ClientPortalQuotationDownloadView.as_view()),
     path("api/client-portal/<str:token>/", ClientPortalPublicView.as_view()),
     path("admin/", admin.site.urls), path("api/health/", HealthView.as_view()),
     path("api/auth/login/", LoginView.as_view()), path("api/auth/refresh/", OrganizationAwareTokenRefreshView.as_view()),
