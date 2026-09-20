@@ -10,9 +10,12 @@ from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, Ou
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import update_last_login
+from django.core.files.storage import default_storage
 from django.db import transaction
+from django.utils.text import get_valid_filename
 from django.utils import timezone
 import os
+from uuid import uuid4
 from .models import PasswordResetToken, User, UserAuditActivity, UserNotificationPreference
 from .authentication import ensure_studio_is_active
 from apps.accounts.models import Payment, PaymentReminder
@@ -38,10 +41,12 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
     class Meta:
         model = User
-        fields = ("id", "username", "display_name", "mobile", "role", "department_access", "is_active", "is_staff", "is_superuser", "is_platform_owner", "organization", "date_joined", "last_login", "password")
+        fields = ("id", "username", "display_name", "mobile", "role", "department_access", "is_active", "is_staff", "is_superuser", "is_platform_owner", "organization", "organization_name", "organization_logo_url", "date_joined", "last_login", "password")
         read_only_fields = ("organization", "is_staff", "is_superuser", "is_platform_owner", "date_joined", "last_login")
 
     is_platform_owner = serializers.BooleanField(source="is_superuser", read_only=True)
+    organization_name = serializers.CharField(source="organization.name", read_only=True, default="")
+    organization_logo_url = serializers.CharField(source="organization.logo_url", read_only=True, default="")
     def validate_department_access(self, value):
         if not isinstance(value, dict):
             raise serializers.ValidationError("Department access must be an object.")
@@ -96,6 +101,33 @@ class LoginView(APIView):
 class CurrentUserView(APIView):
     def get(self, request):
         return Response(UserSerializer(request.user).data)
+
+
+class StudioLogoView(APIView):
+    """Allow a studio administrator to manage branding for their own studio."""
+
+    permission_classes = [AdminAccessPermission]
+    MAX_LOGO_BYTES = 5 * 1024 * 1024
+    ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".svg"}
+
+    def post(self, request):
+        organization = request.user.organization
+        logo = request.FILES.get("logo")
+        if not organization:
+            return Response({"detail": "Your account is not connected to a studio."}, status=400)
+        if not logo:
+            return Response({"detail": "Choose a logo image to upload."}, status=400)
+        extension = os.path.splitext(logo.name)[1].lower()
+        if extension not in self.ALLOWED_EXTENSIONS:
+            return Response({"detail": "Use a PNG, JPG, WEBP, or SVG logo."}, status=400)
+        if logo.size > self.MAX_LOGO_BYTES:
+            return Response({"detail": "Logo files must be 5 MB or smaller."}, status=400)
+
+        filename = get_valid_filename(f"{uuid4().hex}{extension}")
+        path = default_storage.save(f"studio-logos/{organization.id}/{filename}", logo)
+        organization.logo_url = default_storage.url(path)
+        organization.save(update_fields=["logo_url"])
+        return Response({"logo_url": organization.logo_url})
 
 
 class UserAuditActivitySerializer(serializers.ModelSerializer):

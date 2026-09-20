@@ -316,7 +316,10 @@ export default function Home() {
     [adminView, setAdminView] = useState<"Admin" | "Audit">("Admin");
   const [adminSearch, setAdminSearch] = useState("");
   const [auditSearch, setAuditSearch] = useState("");
+  const [studioLogoUrl, setStudioLogoUrl] = useState(auth.user?.organization_logo_url || "");
+  const [studioLogoUploading, setStudioLogoUploading] = useState(false);
   const dashboardChromeRef = useRef<HTMLDivElement>(null);
+  const studioLogoInputRef = useRef<HTMLInputElement>(null);
   const landingUserIdRef = useRef<number | null>(null);
   const savedMobileRouteRef = useRef<MobileRoute | null>(null);
   const today = new Date();
@@ -344,6 +347,7 @@ export default function Home() {
     if (params.get("action") === "new-lead") setStartNewLead(true);
     setMounted(true);
   }, []);
+  useEffect(() => setStudioLogoUrl(auth.user?.organization_logo_url || ""), [auth.user?.organization_logo_url]);
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 900px)");
     const closeMobileDrawer = () => {
@@ -535,11 +539,30 @@ export default function Home() {
     );
   const department = sectionDepartments[section];
   const readOnly = department ? !canWrite(auth.user, department) : false;
+  const canManageStudioLogo = isAdministrator(auth.user);
+  const studioName = auth.user?.organization_name || "Your Studio";
+  const uploadStudioLogo = async (file?: File) => {
+    if (!file) return;
+    setStudioLogoUploading(true);
+    try {
+      const form = new FormData();
+      form.append("logo", file);
+      const { data } = await api.post("/auth/studio-logo/", form);
+      setStudioLogoUrl(data.logo_url || "");
+    } catch (error: any) {
+      window.alert(error?.response?.data?.detail || "Could not upload the studio logo.");
+    } finally {
+      setStudioLogoUploading(false);
+      if (studioLogoInputRef.current) studioLogoInputRef.current.value = "";
+    }
+  };
   return (
     <div className={`shell ${sidebarHidden ? "sidebarHidden" : ""}`}>
       <aside aria-hidden={sidebarHidden ? true : undefined}>
-        <div className="brand ankitSidebarBrand">
-          <img className="ankitSidebarLogo" src="/ankit-studios-logo.png" alt="Ankit Studios" />
+        <div className="brand studioSidebarBrand">
+          <input ref={studioLogoInputRef} className="studioLogoInput" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => void uploadStudioLogo(event.target.files?.[0])} />
+          {studioLogoUrl ? <img className="studioSidebarLogo" src={studioLogoUrl} alt={`${studioName} logo`} /> : <div className="studioLogoPlaceholder" aria-label={`${studioName} logo placeholder`}><span>+</span><b>{studioName}</b></div>}
+          {canManageStudioLogo && <button type="button" className="studioLogoButton" onClick={() => studioLogoInputRef.current?.click()} disabled={studioLogoUploading} title={studioLogoUrl ? "Change studio logo" : "Add studio logo"}>{studioLogoUploading ? "Uploading…" : studioLogoUrl ? "Change logo" : "Add Logo"}</button>}
         </div>
         <nav aria-label="Primary navigation">
           <div className="navGroupCard">
@@ -575,12 +598,8 @@ export default function Home() {
           <small>Capture · Plan · Deliver · Grow</small>
         </div>
         <div className="profile">
-          <span className="profileAvatar">
-            {isAdministrator(auth.user) ? (
-              <img src="/sandeep-jadhav.jpg" alt="Sandeep Jadhav" />
-            ) : (
-              <span aria-hidden="true">{(auth.user?.display_name || auth.user?.username || "U").split(/\s+/).map((part: string) => part[0]).join("").slice(0, 2).toUpperCase()}</span>
-            )}
+          <span className="profileAvatar" aria-label="Profile image placeholder">
+            <span aria-hidden="true">{(auth.user?.display_name || auth.user?.username || "U").split(/\s+/).map((part: string) => part[0]).join("").slice(0, 2).toUpperCase()}</span>
           </span>
           <span className="profileIdentity"><b>{auth.user?.display_name || auth.user?.username}</b><small><i />{auth.user?.role}</small><time>{formatDate(new Date())}</time></span>
           <button className="profilePower" aria-label="Sign out" onClick={logout}>◯</button>

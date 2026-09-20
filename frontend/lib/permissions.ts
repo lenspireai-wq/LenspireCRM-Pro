@@ -13,6 +13,9 @@ export type SessionUser = {
   is_active?: boolean;
   date_joined?: string;
   last_login?: string | null;
+  organization?: number | null;
+  organization_name?: string;
+  organization_logo_url?: string;
   department_access: Partial<Record<Department, AccessLevel>>;
 };
 
