@@ -9,9 +9,11 @@ from django.conf import settings
 from django.core import serializers
 from django.apps import apps
 from django.db import transaction
+from django.utils.text import slugify
+from apps.core.models import Organization
 
 BACKUP_FORMAT = "lenspirecrm-django-backup"
-BACKUP_VERSION = 1
+BACKUP_VERSION = 2
 BACKUP_VERSIONED_APPS = {
     "core", "users", "sales", "operations", "accounts", "production", "storage",
 }
@@ -30,17 +32,31 @@ def _decrypt(payload: dict) -> bytes:
         raise ValueError(f"Unsupported backup version: {payload.get('version')!r}")
     nonce = base64.b64decode(payload["nonce"])
     ciphertext = base64.b64decode(payload["ciphertext"])
-    return AESGCM(_key()).decrypt(nonce, ciphertext, b"lenspirecrm-backup-v1")
+    return AESGCM(_key()).decrypt(nonce, ciphertext, b"lenspirecrm-backup-v2")
 
 
-def encrypted_snapshot():
+def _organization_objects(organization: Organization):
     objects = []
     for model in apps.get_models():
-        if model._meta.app_label in BACKUP_VERSIONED_APPS:
-            objects.extend(model.objects.all())
-    payload = serializers.serialize("json", objects).encode()
+        if model._meta.app_label not in BACKUP_VERSIONED_APPS:
+            continue
+        if model is Organization:
+            objects.append(organization)
+        elif any(field.name == "organization" for field in model._meta.fields):
+            objects.extend(model.objects.filter(organization=organization))
+    return objects
+
+
+def encrypted_snapshot(organization: Organization):
+    snapshot = {
+        "organization_id": organization.id,
+        "organization_slug": organization.slug,
+        "organization_name": organization.name,
+        "objects": json.loads(serializers.serialize("json", _organization_objects(organization))),
+    }
+    payload = json.dumps(snapshot).encode()
     nonce = os.urandom(12)
-    ciphertext = AESGCM(_key()).encrypt(nonce, payload, b"lenspirecrm-backup-v1")
+    ciphertext = AESGCM(_key()).encrypt(nonce, payload, b"lenspirecrm-backup-v2")
     return {
         "format": BACKUP_FORMAT,
         "version": BACKUP_VERSION,
@@ -50,15 +66,21 @@ def encrypted_snapshot():
     }
 
 
-def create_backup_file():
-    folder = Path(settings.BACKUP_ROOT)
-    folder.mkdir(exist_ok=True)
-    path = folder / f"lenspire-{datetime.now():%Y%m%d-%H%M%S}.json"
-    path.write_text(json.dumps(encrypted_snapshot()), encoding="utf-8")
+def backup_folder(organization: Organization) -> Path:
+    folder = Path(settings.BACKUP_ROOT) / (slugify(organization.name) or f"studio-{organization.id}")
+    folder.mkdir(parents=True, exist_ok=True)
+    return folder
+
+
+def create_backup_file(organization: Organization):
+    folder = backup_folder(organization)
+    studio_name = slugify(organization.name) or f"studio-{organization.id}"
+    path = folder / f"{studio_name}-backup-{datetime.now():%Y%m%d-%H%M%S}.json"
+    path.write_text(json.dumps(encrypted_snapshot(organization)), encoding="utf-8")
     return path
 
 
-def restore_snapshot(path: Path, dry_run: bool = True) -> dict:
+def restore_snapshot(path: Path, organization: Organization, dry_run: bool = True) -> dict:
     """Restore from a backup file.
 
     When ``dry_run`` is True (the default) we decrypt and summarise the
@@ -66,8 +88,10 @@ def restore_snapshot(path: Path, dry_run: bool = True) -> dict:
     actually perform the restore.
     """
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    raw = _decrypt(payload)
-    objects = list(serializers.deserialize("json", raw))
+    snapshot = json.loads(_decrypt(payload))
+    if snapshot.get("organization_id") != organization.id:
+        raise ValueError("This backup belongs to a different studio.")
+    objects = list(serializers.deserialize("json", json.dumps(snapshot.get("objects", []))))
     per_app = Counter()
     for obj in objects:
         per_app[obj.object._meta.app_label] += 1
@@ -77,6 +101,7 @@ def restore_snapshot(path: Path, dry_run: bool = True) -> dict:
         "backup_created_at": payload.get("created_at"),
         "backup_format": payload.get("format"),
         "backup_version": payload.get("version"),
+        "studio": snapshot.get("organization_name"),
     }
     if dry_run:
         summary["dry_run"] = True

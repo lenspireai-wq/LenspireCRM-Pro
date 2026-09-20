@@ -46,6 +46,7 @@ const errorMessage = (error: unknown, fallback: string) => {
 export default function BackupWorkspace() {
   const [restoreFilename, setRestoreFilename] = useState<string | null>(null);
   const [confirmation, setConfirmation] = useState("");
+  const [restorePassword, setRestorePassword] = useState("");
   const [dryRun, setDryRun] = useState(true);
   const [restoreSummary, setRestoreSummary] = useState<RestoreSummary | null>(null);
   const [restoreError, setRestoreError] = useState<string | null>(null);
@@ -96,7 +97,7 @@ export default function BackupWorkspace() {
   });
 
   const restoreMutation = useApiMutation<
-    { filename: string; confirmation: string; dry_run: boolean },
+    { filename: string; confirmation: string; password: string; dry_run: boolean },
     { dry_run: boolean; summary: RestoreSummary; filename: string; warning?: string },
     Error
   >({
@@ -123,6 +124,7 @@ export default function BackupWorkspace() {
   const startRestore = (filename: string) => {
     setRestoreFilename(filename);
     setConfirmation("");
+    setRestorePassword("");
     setRestoreSummary(null);
     setRestoreError(null);
     setDryRun(true);
@@ -134,7 +136,7 @@ export default function BackupWorkspace() {
         <div>
           <h1>Backups</h1>
           <p className="workspaceSub">
-            Encrypted snapshots of every record in your workspace. Create one
+            Encrypted snapshots of every record in your studio workspace. Create one
             before destructive changes, and store copies off-site.
           </p>
         </div>
@@ -293,6 +295,16 @@ export default function BackupWorkspace() {
                 />
                 <span>Dry run only (recommended)</span>
               </label>
+              <label className="formField">
+                <span>Studio restore password</span>
+                <input
+                  type="password"
+                  autoComplete="current-password"
+                  value={restorePassword}
+                  onChange={(event) => setRestorePassword(event.target.value)}
+                  placeholder="Enter studio restore password"
+                />
+              </label>
               {!dryRun ? (
                 <label className="formField">
                   <span>Type <code>RESTORE BACKUP</code> to confirm</span>
@@ -347,11 +359,12 @@ export default function BackupWorkspace() {
                 className="loginSubmit"
                 disabled={
                   restoreMutation.isPending ||
+                  !restorePassword ||
                   (!dryRun && confirmation !== "RESTORE BACKUP")
                 }
                 onClick={() =>
                   restoreMutation.mutate(
-                    { filename: restoreFilename, confirmation: confirmation || "RESTORE BACKUP", dry_run: dryRun },
+                    { filename: restoreFilename, confirmation: confirmation || "RESTORE BACKUP", password: restorePassword, dry_run: dryRun },
                     {
                       onError: (error: any) => {
                         setRestoreError(error.response?.data?.detail || error.message);

@@ -1,20 +1,16 @@
 import json
 import logging
-import os
 import shutil
+import hmac
 from datetime import datetime, timezone
 from pathlib import Path
 
-from django.conf import settings
 from django.http import FileResponse, HttpResponseBadRequest, JsonResponse
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.core.permissions import AdminAccessPermission
-from .tasks import create_scheduled_backup
-from .utils import BACKUP_FORMAT, create_backup_file, encrypted_snapshot, restore_snapshot
+from .utils import BACKUP_FORMAT, backup_folder, create_backup_file, encrypted_snapshot, restore_snapshot
 
 
 logger = logging.getLogger(__name__)
@@ -24,30 +20,41 @@ class BackupView(APIView):
     permission_classes = [AdminAccessPermission]
 
     def get(self, request):
-        return JsonResponse(encrypted_snapshot())
+        organization = getattr(request.user, "organization", None)
+        if organization is None:
+            return JsonResponse({"detail": "Choose a studio account to create a studio backup."}, status=403)
+        return JsonResponse(encrypted_snapshot(organization))
 
 
-def _backup_folder() -> Path:
-    folder = Path(settings.BACKUP_ROOT)
-    folder.mkdir(exist_ok=True)
-    return folder
+def _organization(request):
+    return getattr(request.user, "organization", None)
 
 
-def _safe_resolve(filename: str) -> Path:
-    folder = _backup_folder()
+def _safe_resolve(request, filename: str) -> Path:
+    organization = _organization(request)
+    if organization is None:
+        raise PermissionError("Choose a studio account to access studio backups.")
+    folder = backup_folder(organization)
     candidate = (folder / filename).resolve()
     if folder.resolve() not in candidate.parents and candidate != folder:
         raise ValueError("Path traversal attempt")
     return candidate
 
 
+def _restore_password(organization) -> str:
+    return "".join(character for character in organization.name.lower() if character.isalnum()) + "lenspireai"
+
+
 class BackupListView(APIView):
     permission_classes = [AdminAccessPermission]
 
     def get(self, request):
-        folder = _backup_folder()
+        organization = _organization(request)
+        if organization is None:
+            return JsonResponse({"detail": "Choose a studio account to access studio backups."}, status=403)
+        folder = backup_folder(organization)
         entries = []
-        for path in sorted(folder.glob("lenspire-*.json"), reverse=True):
+        for path in sorted(folder.glob("*-backup-*.json"), reverse=True):
             try:
                 stat = path.stat()
             except FileNotFoundError:
@@ -69,8 +76,11 @@ class BackupCreateView(APIView):
     permission_classes = [AdminAccessPermission]
 
     def post(self, request):
+        organization = _organization(request)
+        if organization is None:
+            return JsonResponse({"detail": "Choose a studio account to create a studio backup."}, status=403)
         try:
-            path = create_backup_file()
+            path = create_backup_file(organization)
         except Exception:
             logger.exception("Could not create encrypted backup")
             return JsonResponse(
@@ -102,9 +112,11 @@ class BackupDownloadView(APIView):
 
     def get(self, request, filename: str):
         try:
-            path = _safe_resolve(filename)
+            path = _safe_resolve(request, filename)
         except ValueError:
             return HttpResponseBadRequest("Invalid filename")
+        except PermissionError as exc:
+            return JsonResponse({"detail": str(exc)}, status=403)
         if not path.exists() or not path.is_file():
             return JsonResponse({"detail": "Backup not found"}, status=404)
         return FileResponse(
@@ -120,9 +132,11 @@ class BackupDeleteView(APIView):
 
     def delete(self, request, filename: str):
         try:
-            path = _safe_resolve(filename)
+            path = _safe_resolve(request, filename)
         except ValueError:
             return HttpResponseBadRequest("Invalid filename")
+        except PermissionError as exc:
+            return JsonResponse({"detail": str(exc)}, status=403)
         if not path.exists() or not path.is_file():
             return JsonResponse({"detail": "Backup not found"}, status=404)
         path.unlink()
@@ -137,9 +151,13 @@ class BackupUploadView(APIView):
         upload = request.FILES.get("file")
         if not upload:
             return JsonResponse({"detail": "file field is required"}, status=400)
-        folder = _backup_folder()
+        organization = _organization(request)
+        if organization is None:
+            return JsonResponse({"detail": "Choose a studio account to upload a studio backup."}, status=403)
+        folder = backup_folder(organization)
         stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        target = folder / f"lenspire-uploaded-{stamp}-{upload.name}"
+        studio_name = "".join(character for character in organization.name.lower() if character.isalnum()) or f"studio{organization.id}"
+        target = folder / f"{studio_name}-backup-uploaded-{stamp}.json"
         with target.open("wb") as out:
             shutil.copyfileobj(upload.file, out)
         try:
@@ -153,6 +171,11 @@ class BackupUploadView(APIView):
             return JsonResponse(
                 {"detail": f"Unsupported backup format: {format_!r}"}, status=400
             )
+        try:
+            restore_snapshot(target, organization, dry_run=True)
+        except Exception as exc:
+            target.unlink(missing_ok=True)
+            return JsonResponse({"detail": f"This backup cannot be used by your studio: {exc}"}, status=400)
         return JsonResponse(
             {
                 "filename": target.name,
@@ -171,6 +194,7 @@ class BackupRestoreView(APIView):
     def post(self, request):
         filename = request.data.get("filename")
         confirmation = request.data.get("confirmation")
+        password = request.data.get("password", "")
         dry_run = bool(request.data.get("dry_run", True))
         if not filename:
             return JsonResponse({"detail": "filename is required"}, status=400)
@@ -178,15 +202,22 @@ class BackupRestoreView(APIView):
             return JsonResponse(
                 {"detail": 'Type "RESTORE BACKUP" to confirm.'}, status=400
             )
+        organization = _organization(request)
+        if organization is None:
+            return JsonResponse({"detail": "Choose a studio account to restore a studio backup."}, status=403)
+        if not hmac.compare_digest(str(password), _restore_password(organization)):
+            return JsonResponse({"detail": "The studio restore password is incorrect."}, status=403)
         try:
-            path = _safe_resolve(filename)
+            path = _safe_resolve(request, filename)
         except ValueError:
             return HttpResponseBadRequest("Invalid filename")
+        except PermissionError as exc:
+            return JsonResponse({"detail": str(exc)}, status=403)
         if not path.exists():
             return JsonResponse({"detail": "Backup not found"}, status=404)
         if dry_run:
             try:
-                summary = restore_snapshot(path, dry_run=True)
+                summary = restore_snapshot(path, organization, dry_run=True)
             except Exception as exc:
                 return JsonResponse({"detail": f"Could not read backup: {exc}"}, status=400)
             return JsonResponse(
@@ -198,7 +229,7 @@ class BackupRestoreView(APIView):
                 }
             )
         try:
-            summary = restore_snapshot(path, dry_run=False)
+            summary = restore_snapshot(path, organization, dry_run=False)
         except Exception as exc:
             return JsonResponse({"detail": f"Restore failed: {exc}"}, status=500)
         return JsonResponse({"dry_run": False, "summary": summary, "filename": filename})
