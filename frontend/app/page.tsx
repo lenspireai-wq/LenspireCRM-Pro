@@ -349,6 +349,11 @@ export default function Home() {
   }, []);
   useEffect(() => setStudioLogoUrl(auth.user?.organization_logo_url || ""), [auth.user?.organization_logo_url]);
   useEffect(() => {
+    document.title = auth.user?.organization_name
+      ? `${auth.user.organization_name} · LenspireCRM`
+      : "LenspireCRM";
+  }, [auth.user?.organization_name]);
+  useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 900px)");
     const closeMobileDrawer = () => {
       if (mobileQuery.matches) setSidebarHidden(true);
