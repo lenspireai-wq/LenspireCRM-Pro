@@ -11,9 +11,11 @@ const sources = [
   { path: "/customers/", label: "Clients", department: "sales", section: "Sales" },
   { path: "/bookings/", label: "Bookings", department: "sales", section: "Sales" },
   { path: "/events/", label: "Events", department: "operations", section: "Operations" },
+  { path: "/payments/", label: "Payments", department: "accounts", section: "Accounts" },
+  { path: "/production/", label: "Production jobs", department: "production", section: "Production" },
 ] as const;
 type Group = { source: typeof sources[number]; count: number; rows: Record<string, any>[]; failed: boolean };
-export default function HeaderSearch({ onNavigate, scope = "global", onEventSearch, onAccountsSearch, onProductionSearch, productionView }: { onNavigate: (section: "Sales" | "Operations") => void; scope?: "global" | "lead-management" | "events" | "accounts-table" | "production-table"; onEventSearch?: (value: string) => void; onAccountsSearch?: (value: string) => void; onProductionSearch?: (value: string) => void; productionView?: string }) {
+export default function HeaderSearch({ onNavigate, scope = "global", onEventSearch, onPhotographerSearch, onAccountsSearch, onProductionSearch, onAdminSearch, onAuditSearch, productionView }: { onNavigate: (section: "Sales" | "Operations" | "Accounts" | "Production") => void; scope?: "global" | "lead-management" | "events" | "photographers" | "accounts-table" | "production-table" | "admin" | "audit"; onEventSearch?: (value: string) => void; onPhotographerSearch?: (value: string) => void; onAccountsSearch?: (value: string) => void; onProductionSearch?: (value: string) => void; onAdminSearch?: (value: string) => void; onAuditSearch?: (value: string) => void; productionView?: string }) {
   const user = useAuthStore(state => state.user);
   const [term, setTerm] = useState("");
   const [open, setOpen] = useState(false);
@@ -24,9 +26,12 @@ export default function HeaderSearch({ onNavigate, scope = "global", onEventSear
   const resultsRef = useRef<HTMLDivElement>(null);
   const isLeadManagementSearch = scope === "lead-management";
   const isEventSearch = scope === "events";
+  const isPhotographerSearch = scope === "photographers";
   const isAccountsSearch = scope === "accounts-table";
   const isProductionSearch = scope === "production-table";
-  const isTableSearch = isLeadManagementSearch || isEventSearch || isAccountsSearch || isProductionSearch;
+  const isAdminSearch = scope === "admin";
+  const isAuditSearch = scope === "audit";
+  const isTableSearch = isLeadManagementSearch || isEventSearch || isPhotographerSearch || isAccountsSearch || isProductionSearch || isAdminSearch || isAuditSearch;
   useEffect(() => {
     const close = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node) && !resultsRef.current?.contains(event.target as Node)) setOpen(false); };
     document.addEventListener("pointerdown", close);
@@ -37,9 +42,12 @@ export default function HeaderSearch({ onNavigate, scope = "global", onEventSear
     setOpen(false);
     if (isLeadManagementSearch) window.dispatchEvent(new CustomEvent("lenspire:lead-search", { detail: "" }));
     onEventSearch?.("");
+    onPhotographerSearch?.("");
     onAccountsSearch?.("");
     onProductionSearch?.("");
-  }, [scope, isLeadManagementSearch, onEventSearch, onAccountsSearch, onProductionSearch]);
+    onAdminSearch?.("");
+    onAuditSearch?.("");
+  }, [scope, isLeadManagementSearch, onEventSearch, onPhotographerSearch, onAccountsSearch, onProductionSearch, onAdminSearch, onAuditSearch]);
   useEffect(() => {
     if (!open || isTableSearch) return;
     const updatePosition = () => {
@@ -77,8 +85,11 @@ export default function HeaderSearch({ onNavigate, scope = "global", onEventSear
   const updateTerm = (value: string) => {
     setTerm(value);
     if (isEventSearch) { onEventSearch?.(value); return; }
+    if (isPhotographerSearch) { onPhotographerSearch?.(value); return; }
     if (isAccountsSearch) { onAccountsSearch?.(value); return; }
     if (isProductionSearch) { onProductionSearch?.(value); return; }
+    if (isAdminSearch) { onAdminSearch?.(value); return; }
+    if (isAuditSearch) { onAuditSearch?.(value); return; }
     if (isLeadManagementSearch) {
       window.dispatchEvent(new CustomEvent("lenspire:lead-search", { detail: value }));
       return;
@@ -91,7 +102,7 @@ export default function HeaderSearch({ onNavigate, scope = "global", onEventSear
       {failed ? <p role="alert">Could not search {source.label.toLowerCase()}. Please try again.</p> : count > 0 && <>
         <h3>{source.label} · {count} matches</h3>
         {rows.map(row => <article key={row.id}>
-          <strong>{row.title || row.name || row.booking_code || `Record ${row.id}`}</strong>
+          <strong>{row.title || row.name || row.client_name || row.booking_code || `Record ${row.id}`}</strong>
           <small>{[row.lead_code || row.customer_code, row.client_name || row.couple_name, row.start_date, row.city, row.mobile || row.phone || row.contact_no, row.status].filter(Boolean).join(" · ")}</small>
         </article>)}
         {count > 5 && <small>Showing the first 5 matches. Refine your search for more specific results.</small>}
@@ -100,7 +111,7 @@ export default function HeaderSearch({ onNavigate, scope = "global", onEventSear
     </section>)}
   </div> : null;
   return <div className={styles.root} ref={root} onKeyDown={event => { if (event.key === "Escape") setOpen(false); }}>
-    <input className={styles.input} type="search" aria-label={isEventSearch ? "Search events in this table" : isLeadManagementSearch ? "Search leads in this table" : isAccountsSearch ? "Search client accounts in this table" : isProductionSearch ? `Search ${productionView || "production"}` : "Search CRM records"} placeholder={isEventSearch ? "Search events in this table…" : isLeadManagementSearch ? "Search leads in this table…" : isAccountsSearch ? "Search client, couple, or booking…" : isProductionSearch ? `Search ${productionView || "this view"}…` : "Search leads, clients, events…"} value={term} onChange={event => updateTerm(event.target.value)} aria-expanded={!isTableSearch && open} aria-controls={isTableSearch ? undefined : "header-search-results"} />
+    <input className={styles.input} type="search" aria-label={isEventSearch ? "Search events in this table" : isPhotographerSearch ? "Search photographers in this table" : isLeadManagementSearch ? "Search leads in this table" : isAccountsSearch ? "Search client accounts in this table" : isProductionSearch ? `Search ${productionView || "production"}` : isAdminSearch ? "Search users in Admin Console" : isAuditSearch ? "Search Audit records" : "Search CRM records"} placeholder={isEventSearch ? "Search events in this table…" : isPhotographerSearch ? "Search photographers in this table…" : isLeadManagementSearch ? "Search leads in this table…" : isAccountsSearch ? "Search client, couple, or booking…" : isProductionSearch ? `Search ${productionView || "this view"}…` : isAdminSearch ? "Search users in Admin…" : isAuditSearch ? "Search Audit records…" : "Search leads, clients, events…"} value={term} onChange={event => updateTerm(event.target.value)} aria-expanded={!isTableSearch && open} aria-controls={isTableSearch ? undefined : "header-search-results"} />
     {typeof document !== "undefined" && results ? createPortal(results, document.body) : null}
   </div>;
 }

@@ -11,10 +11,14 @@ export default function AdminConsoleWorkspace({
   currentUser,
   view,
   onViewChange,
+  searchTerm = "",
+  auditSearchTerm = "",
 }: {
   currentUser: SessionUser;
   view: View;
   onViewChange: (next: View) => void;
+  searchTerm?: string;
+  auditSearchTerm?: string;
 }) {
   const [addUserTrigger, setAddUserTrigger] = useState(0);
   const [resetTrigger, setResetTrigger] = useState(0);
@@ -56,9 +60,9 @@ export default function AdminConsoleWorkspace({
         )}
       </div>
       {view === "Admin" ? (
-        <AdminWorkspace currentUser={currentUser} hideActions addUserTrigger={addUserTrigger} resetTrigger={resetTrigger} />
+        <AdminWorkspace currentUser={currentUser} hideActions addUserTrigger={addUserTrigger} resetTrigger={resetTrigger} searchTerm={searchTerm} />
       ) : (
-        <AuditWorkspace currentUser={currentUser} exportTrigger={exportTrigger} onExportReady={setCanExport} />
+        <AuditWorkspace currentUser={currentUser} exportTrigger={exportTrigger} onExportReady={setCanExport} headerSearch={auditSearchTerm} />
       )}
     </div>
   );

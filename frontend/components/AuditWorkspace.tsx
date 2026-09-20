@@ -61,10 +61,12 @@ export default function AuditWorkspace({
   currentUser,
   exportTrigger,
   onExportReady,
+  headerSearch = "",
 }: {
   currentUser: any;
   exportTrigger?: number;
   onExportReady?: (canExport: boolean) => void;
+  headerSearch?: string;
 }) {
   const [source, setSource] = useState<"all" | Source>("all");
   const [actor, setActor] = useState("");
@@ -72,6 +74,8 @@ export default function AuditWorkspace({
   const [search, setSearch] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+
+  useEffect(() => setSearch(headerSearch), [headerSearch]);
 
   const isAdmin = isAdministrator(currentUser);
 

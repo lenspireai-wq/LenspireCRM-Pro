@@ -172,11 +172,13 @@ Aarzoo Singh - 9307846897 - https://wa.me/9307846897
 
 export default function OperationsWorkspace({
   searchTerm = "",
+  photographerSearchTerm = "",
   readOnly = false,
   view = "Dashboard",
   setView,
 }: {
   searchTerm?: string;
+  photographerSearchTerm?: string;
   readOnly?: boolean;
   view?: View;
   setView?: (value: View) => void;
@@ -272,6 +274,15 @@ export default function OperationsWorkspace({
       }),
     [matchingEvents],
   );
+  const matchingPhotographers = useMemo(() => {
+    const terms = photographerSearchTerm.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (!terms.length) return photographers;
+    return photographers.filter((photographer) => {
+      const text = [photographer.name, photographer.mobile, photographer.living_in, photographer.work, photographer.status]
+        .filter(Boolean).join(" ").toLowerCase();
+      return terms.every((term) => text.includes(term));
+    });
+  }, [photographers, photographerSearchTerm]);
 
   const saveEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -559,7 +570,7 @@ export default function OperationsWorkspace({
       )}
       {view === "Photographers Details" && (
         <CrewTable
-          rows={photographers}
+          rows={matchingPhotographers}
           edit={readOnly ? undefined : setCrewDraft}
           remove={
             readOnly

@@ -61,7 +61,7 @@ const isoDate = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
-export default function CalendarWorkspace() {
+export default function CalendarWorkspace({ searchTerm = "" }: { searchTerm?: string }) {
   const today = useMemo(() => new Date(), []);
   const [cursor, setCursor] = useState<Date>(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
   const [selectedDate, setSelectedDate] = useState<string>(isoDate(today));
@@ -80,7 +80,25 @@ export default function CalendarWorkspace() {
     `/events/?calendar_from=${range.from}&calendar_to=${range.to}&calendar_month=${isoDate(startOfMonth(cursor)).slice(0, 7)}&ordering=start_date,start_time,id`,
   );
 
-  const events = useMemo(() => data?.results || [], [data?.results]);
+  const events = useMemo(() => {
+    const allEvents = data?.results || [];
+    const terms = searchTerm.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (!terms.length) return allEvents;
+    return allEvents.filter((event) => {
+      const searchable = [
+        event.title,
+        event.client_name,
+        event.couple_name,
+        event.contact_no,
+        event.event_type,
+        event.city,
+        event.status,
+        event.notes,
+        event.handled_by,
+      ].filter(Boolean).join(" ").toLowerCase();
+      return terms.every((term) => searchable.includes(term));
+    });
+  }, [data?.results, searchTerm]);
 
   const eventsByDate = useMemo(() => {
     const map: Record<string, CalendarEvent[]> = {};

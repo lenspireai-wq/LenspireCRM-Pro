@@ -305,6 +305,7 @@ export default function Home() {
     [targetOpen, setTargetOpen] = useState(false),
     [salesView, setSalesView] = useState<"Dashboard" | "Lead Management">("Dashboard"),
     [eventSearch, setEventSearch] = useState(""),
+    [photographerSearch, setPhotographerSearch] = useState(""),
     [accountsSearch, setAccountsSearch] = useState(""),
     [productionView, setProductionView] = useState<ProductionView>("Dashboard"),
     [productionSearch, setProductionSearch] = useState(""),
@@ -313,6 +314,8 @@ export default function Home() {
     [isFullscreen, setIsFullscreen] = useState(false),
     [workspaceChromeHeight, setWorkspaceChromeHeight] = useState(68),
     [adminView, setAdminView] = useState<"Admin" | "Audit">("Admin");
+  const [adminSearch, setAdminSearch] = useState("");
+  const [auditSearch, setAuditSearch] = useState("");
   const dashboardChromeRef = useRef<HTMLDivElement>(null);
   const landingUserIdRef = useRef<number | null>(null);
   const savedMobileRouteRef = useRef<MobileRoute | null>(null);
@@ -714,7 +717,7 @@ export default function Home() {
           ) : (
             <div><h1>{section}</h1><span>Your studio at a glance</span></div>
           )}
-          <div className="chromeActions"><HeaderSearch onNavigate={setSection} onEventSearch={setEventSearch} onAccountsSearch={setAccountsSearch} onProductionSearch={setProductionSearch} productionView={productionView} scope={section === "Production" ? "production-table" : section === "Operations" && (operationsView === "Upcoming Events" || operationsView === "Completed Events") ? "events" : section === "Sales" && salesView === "Lead Management" ? "lead-management" : section === "Accounts" && (accountsView === "Collections" || accountsView === "Receivables" || accountsView === "Client Ledger") ? "accounts-table" : "global"} /><NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
+          <div className="chromeActions"><HeaderSearch onNavigate={setSection} onEventSearch={setEventSearch} onPhotographerSearch={setPhotographerSearch} onAccountsSearch={setAccountsSearch} onProductionSearch={setProductionSearch} onAdminSearch={setAdminSearch} onAuditSearch={setAuditSearch} productionView={productionView} scope={section === "Admin" && adminView === "Admin" ? "admin" : section === "Admin" && adminView === "Audit" ? "audit" : section === "Production" && productionView !== "Dashboard" ? "production-table" : section === "Operations" && operationsView === "Photographers Details" ? "photographers" : section === "Calendar" || (section === "Operations" && (operationsView === "Upcoming Events" || operationsView === "Completed Events")) ? "events" : section === "Sales" && salesView === "Lead Management" ? "lead-management" : section === "Accounts" && (accountsView === "Collections" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics") ? "accounts-table" : "global"} /><NotificationBell /><ThemeToggle /><button type="button" aria-label={isFullscreen ? "Exit full screen" : "Enter full screen"} title={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>{isFullscreen ? "⧉" : "⛶"}</button><button type="button" aria-label="Refresh page" title="Refresh" onClick={() => window.location.reload()}>↻</button></div>
         </div>
         {readOnly && (
           <div className="readOnlyNotice">
@@ -735,11 +738,11 @@ export default function Home() {
           </ErrorBoundary>
         ) : section === "Operations" ? (
           <ErrorBoundary label="Operations">
-            <OperationsWorkspace searchTerm={eventSearch} readOnly={readOnly} view={operationsView} setView={setOperationsView} />
+            <OperationsWorkspace searchTerm={eventSearch} photographerSearchTerm={photographerSearch} readOnly={readOnly} view={operationsView} setView={setOperationsView} />
           </ErrorBoundary>
         ) : section === "Calendar" ? (
           <ErrorBoundary label="Calendar">
-            <CalendarWorkspace />
+            <CalendarWorkspace searchTerm={eventSearch} />
           </ErrorBoundary>
         ) : section === "Accounts" ? (
           <ErrorBoundary label="Accounts">
@@ -785,7 +788,7 @@ export default function Home() {
           </ErrorBoundary>
         ) : auth.user ? (
           <ErrorBoundary label="Admin Console">
-            <AdminConsoleWorkspace currentUser={auth.user} view={adminView} onViewChange={setAdminView} />
+            <AdminConsoleWorkspace currentUser={auth.user} view={adminView} onViewChange={setAdminView} searchTerm={adminSearch} auditSearchTerm={auditSearch} />
           </ErrorBoundary>
         ) : null}
       </main>

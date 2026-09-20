@@ -424,7 +424,7 @@ export default function AccountsWorkspace({
       return String(first.client || "").localeCompare(String(second.client || ""));
     });
   }
-  const reportPayments = payments.filter((p) =>
+  const reportPayments = collectionPayments.filter((p) =>
     String(p.paid_at || p.created_at).startsWith(month),
   );
   const paid = payments.filter(

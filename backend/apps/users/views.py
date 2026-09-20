@@ -18,7 +18,7 @@ from .authentication import ensure_studio_is_active
 from apps.accounts.models import Payment, PaymentReminder
 from apps.core.emailer import send_email
 from apps.core.models import Organization, OrganizationAuditActivity
-from apps.notifications.models import Notification
+from apps.notifications.models import Notification, visible_notifications_for
 from apps.core.permissions import ACCESS_LEVELS, DEPARTMENTS, AdminAccessPermission
 from apps.operations.models import CalendarEvent
 from apps.production.models import ProductionJob
@@ -377,9 +377,8 @@ class NotificationPreferencesView(APIView):
     }
 
     def get(self, request):
-        organization_id = request.user.organization_id
         seen = set(
-            Notification.objects.filter(organization_id=organization_id)
+            visible_notifications_for(request.user)
             .values_list("category", flat=True)
             .distinct()
         )

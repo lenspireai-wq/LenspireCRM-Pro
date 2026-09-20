@@ -59,11 +59,13 @@ export default function AdminWorkspace({
   hideActions,
   addUserTrigger,
   resetTrigger,
+  searchTerm = "",
 }: {
   currentUser: SessionUser;
   hideActions?: boolean;
   addUserTrigger?: number;
   resetTrigger?: number;
+  searchTerm?: string;
 }) {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [audit, setAudit] = useState<AuditRow[]>([]);
@@ -302,6 +304,14 @@ export default function AdminWorkspace({
     }
   };
 
+  const shownUsers = users.filter((user) => {
+    const terms = searchTerm.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (!terms.length) return true;
+    const text = [user.display_name, user.username, user.role, user.mobile, user.is_active ? "active" : "inactive"]
+      .filter(Boolean).join(" ").toLowerCase();
+    return terms.every((term) => text.includes(term));
+  });
+
   return (
     <div className="adminWorkspace">
       <section className="accountMetrics adminMetrics">
@@ -328,7 +338,7 @@ export default function AdminWorkspace({
       <section className="panel adminUsersPanel">
         <div className="panelHead">
           <h2>User Accounts</h2>
-          <span>{loading ? "Loading…" : `${users.length} users`}</span>
+          <span>{loading ? "Loading…" : `${shownUsers.length} users`}</span>
         </div>
         <div className="table">
           <table className="adminUsersTable">
@@ -345,7 +355,7 @@ export default function AdminWorkspace({
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {shownUsers.map((user) => (
                 <tr key={user.id}>
                   <td>
                     <b>{user.display_name || user.username}</b>
