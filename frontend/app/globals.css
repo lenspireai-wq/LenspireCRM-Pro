@@ -69,16 +69,16 @@
 }
 
 /* Per-studio branding: no studio inherits another studio's logo. */
-.shell aside .brand.studioSidebarBrand { position: relative; display: grid; flex: 0 0 144px; min-height: 144px; place-items: center; padding: 12px 18px 20px; }
+.shell aside .brand.studioSidebarBrand { position: relative; display: grid; flex: 0 0 112px; min-height: 112px; place-items: start center; padding: 14px 18px; }
 .studioLogoInput { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-.shell aside .studioSidebarLogo { display: block; width: min(176px, 100%); height: 108px; object-fit: contain; object-position: center; }
-.studioLogoPlaceholder { display: grid; place-items: center; gap: 8px; width: min(176px, 100%); height: 108px; padding: 14px; border: 1px dashed color-mix(in srgb, var(--brand) 55%, var(--line)); border-radius: 16px; background: color-mix(in srgb, var(--brand-soft) 72%, transparent); color: var(--text); text-align: center; }
+.shell aside .studioSidebarLogo { display: block; width: min(128px, 100%); height: 64px; object-fit: contain; object-position: center top; }
+.studioLogoPlaceholder { display: grid; place-items: center; gap: 6px; width: min(128px, 100%); height: 64px; padding: 8px; border: 1px dashed color-mix(in srgb, var(--brand) 55%, var(--line)); border-radius: 14px; background: color-mix(in srgb, var(--brand-soft) 72%, transparent); color: var(--text); text-align: center; }
 .studioLogoPlaceholder span { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--brand); color: var(--on-brand); font-size: 23px; font-weight: 300; line-height: 1; }
 .studioLogoPlaceholder b { max-width: 100%; overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.studioLogoButton { position: absolute; bottom: 8px; left: 50%; z-index: 1; padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--brand) 45%, var(--line)); border-radius: 999px; background: var(--surface); color: var(--brand); cursor: pointer; font-size: 10px; font-weight: 800; opacity: 0; transform: translate(-50%, 5px); transition: opacity .16s ease, transform .16s ease; white-space: nowrap; }
+.studioLogoButton { position: absolute; bottom: 8px; left: 50%; z-index: 1; padding: 5px 9px; border: 1px solid color-mix(in srgb, var(--brand) 45%, var(--line)); border-radius: 999px; background: var(--surface); color: var(--brand); cursor: pointer; font-size: 10px; font-weight: 800; opacity: 0; transform: translate(-50%, 5px); transition: opacity .16s ease, transform .16s ease; white-space: nowrap; }
 .studioSidebarBrand:hover .studioLogoButton, .studioLogoButton:focus-visible { opacity: 1; transform: translate(-50%, 0); }
 .studioLogoButton:disabled { cursor: wait; }
-@media (max-width: 900px) { .shell aside .brand.studioSidebarBrand { flex-basis: 132px; min-height: 132px; } .shell aside .studioSidebarLogo, .studioLogoPlaceholder { height: 98px; } .studioLogoButton { opacity: 1; transform: translate(-50%, 0); } }
+@media (max-width: 900px) { .shell aside .brand.studioSidebarBrand { flex-basis: 108px; min-height: 108px; } .shell aside .studioSidebarLogo, .studioLogoPlaceholder { height: 60px; } .studioLogoButton { opacity: 1; transform: translate(-50%, 0); } }
 
 * {
   box-sizing: border-box;
