@@ -10809,6 +10809,9 @@ td {
 .navGroup.groupActive button.navGroupLabel { box-shadow: inset 3px 0 #c8c0ff, 0 8px 22px rgba(0,0,0,.18); }
 .profile { flex: 0 0 78px; min-height: 78px; display: grid; grid-template-columns: 46px minmax(0,1fr) 30px; align-items: center; gap: 9px; padding: 8px 12px; }
 .profileAvatar { position: relative; width: 46px; height: 46px; display: grid; place-items: center; overflow: hidden; border-radius: 50%; color: #fff; background: linear-gradient(135deg,#7868ef,#34436e); font-weight: 800; }
+.profileAvatarButton { flex: 0 0 46px; padding: 0; border: 2px solid color-mix(in srgb, var(--brand) 72%, #fff); cursor: pointer; transition: transform .16s ease, box-shadow .16s ease; }
+.profileAvatarButton:hover, .profileAvatarButton:focus-visible { transform: translateY(-1px); box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 28%, transparent); outline: none; }
+.profileAvatarButton:disabled { cursor: wait; }
 .profileAvatar img { position: absolute; left: 50%; top: 50%; width: 195%; height: auto; max-width: none; display: block; transform: translate(-50%,-36%); }
 .profileIdentity { min-width: 0; }.profileIdentity b,.profileIdentity small,.profileIdentity time { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .profileIdentity b { color: #f2f4f8; font-size: 14px; }.profileIdentity small { margin-top: 3px; color: #8290a7; font-size: 11px; text-transform: capitalize; }

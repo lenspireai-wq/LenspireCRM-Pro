@@ -8,6 +8,7 @@ class User(AbstractUser):
     organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE, related_name="users")
     display_name = models.CharField(max_length=120, blank=True)
     mobile = models.CharField(max_length=30, blank=True)
+    profile_photo = models.FileField(upload_to="profile-photos/%Y/%m/", blank=True)
     role = models.CharField(max_length=40, default="Administrator")
     department_access = models.JSONField(default=dict, blank=True)
 

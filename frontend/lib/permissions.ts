@@ -6,6 +6,7 @@ export type SessionUser = {
   username: string;
   display_name: string;
   mobile?: string;
+  profile_photo_url?: string;
   role: string;
   is_staff?: boolean;
   is_superuser?: boolean;

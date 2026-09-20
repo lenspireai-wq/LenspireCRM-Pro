@@ -318,8 +318,11 @@ export default function Home() {
   const [auditSearch, setAuditSearch] = useState("");
   const [studioLogoUrl, setStudioLogoUrl] = useState(auth.user?.organization_logo_url || "");
   const [studioLogoUploading, setStudioLogoUploading] = useState(false);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(auth.user?.profile_photo_url || "");
+  const [profilePhotoUploading, setProfilePhotoUploading] = useState(false);
   const dashboardChromeRef = useRef<HTMLDivElement>(null);
   const studioLogoInputRef = useRef<HTMLInputElement>(null);
+  const profilePhotoInputRef = useRef<HTMLInputElement>(null);
   const landingUserIdRef = useRef<number | null>(null);
   const savedMobileRouteRef = useRef<MobileRoute | null>(null);
   const today = new Date();
@@ -348,6 +351,7 @@ export default function Home() {
     setMounted(true);
   }, []);
   useEffect(() => setStudioLogoUrl(auth.user?.organization_logo_url || ""), [auth.user?.organization_logo_url]);
+  useEffect(() => setProfilePhotoUrl(auth.user?.profile_photo_url || ""), [auth.user?.profile_photo_url]);
   useEffect(() => {
     document.title = auth.user?.organization_name
       ? `${auth.user.organization_name} · LenspireCRM`
@@ -561,6 +565,21 @@ export default function Home() {
       if (studioLogoInputRef.current) studioLogoInputRef.current.value = "";
     }
   };
+  const uploadProfilePhoto = async (file?: File) => {
+    if (!file) return;
+    setProfilePhotoUploading(true);
+    try {
+      const form = new FormData();
+      form.append("photo", file);
+      const { data } = await api.post("/auth/profile-photo/", form);
+      setProfilePhotoUrl(data.profile_photo_url || "");
+    } catch (error: any) {
+      window.alert(error?.response?.data?.detail || "Could not upload your profile photo.");
+    } finally {
+      setProfilePhotoUploading(false);
+      if (profilePhotoInputRef.current) profilePhotoInputRef.current.value = "";
+    }
+  };
   return (
     <div className={`shell ${sidebarHidden ? "sidebarHidden" : ""}`}>
       <aside aria-hidden={sidebarHidden ? true : undefined}>
@@ -603,9 +622,10 @@ export default function Home() {
           <small>Capture · Plan · Deliver · Grow</small>
         </div>
         <div className="profile">
-          <span className="profileAvatar" aria-label="Profile image placeholder">
-            <span aria-hidden="true">{(auth.user?.display_name || auth.user?.username || "U").split(/\s+/).map((part: string) => part[0]).join("").slice(0, 2).toUpperCase()}</span>
-          </span>
+          <input ref={profilePhotoInputRef} className="studioLogoInput" type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void uploadProfilePhoto(event.target.files?.[0])} />
+          <button type="button" className="profileAvatar profileAvatarButton" aria-label={profilePhotoUrl ? "Change your profile photo" : "Add your profile photo"} title={profilePhotoUploading ? "Uploading profile photo" : profilePhotoUrl ? "Change profile photo" : "Add profile photo"} onClick={() => profilePhotoInputRef.current?.click()} disabled={profilePhotoUploading}>
+            {profilePhotoUrl ? <img src={profilePhotoUrl} alt="Your profile" /> : <span aria-hidden="true">{(auth.user?.display_name || auth.user?.username || "U").split(/\s+/).map((part: string) => part[0]).join("").slice(0, 2).toUpperCase()}</span>}
+          </button>
           <span className="profileIdentity"><b>{auth.user?.display_name || auth.user?.username}</b><small><i />{auth.user?.role}</small><time>{formatDate(new Date())}</time></span>
           <button className="profilePower" aria-label="Sign out" onClick={logout}>◯</button>
         </div>

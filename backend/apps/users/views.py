@@ -44,18 +44,22 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
     class Meta:
         model = User
-        fields = ("id", "username", "display_name", "mobile", "role", "department_access", "is_active", "is_staff", "is_superuser", "is_platform_owner", "organization", "organization_name", "organization_logo_url", "date_joined", "last_login", "password")
+        fields = ("id", "username", "display_name", "mobile", "profile_photo_url", "role", "department_access", "is_active", "is_staff", "is_superuser", "is_platform_owner", "organization", "organization_name", "organization_logo_url", "date_joined", "last_login", "password")
         read_only_fields = ("organization", "is_staff", "is_superuser", "is_platform_owner", "date_joined", "last_login")
 
     is_platform_owner = serializers.BooleanField(source="is_superuser", read_only=True)
     organization_name = serializers.CharField(source="organization.name", read_only=True, default="")
     organization_logo_url = serializers.SerializerMethodField()
+    profile_photo_url = serializers.SerializerMethodField()
 
     def get_organization_logo_url(self, user):
         logo_url = getattr(user.organization, "logo_url", "") if user.organization_id else ""
         if logo_url.startswith(settings.MEDIA_URL):
             return f"/api/studio-logo/{user.organization_id}/"
         return logo_url
+
+    def get_profile_photo_url(self, user):
+        return f"/api/profile-photo/{user.id}/" if user.profile_photo else ""
     def validate_department_access(self, value):
         if not isinstance(value, dict):
             raise serializers.ValidationError("Department access must be an object.")
@@ -157,6 +161,40 @@ class StudioLogoFileView(APIView):
         path = logo_url[len(settings.MEDIA_URL):].lstrip("/")
         if not path or not default_storage.exists(path):
             return Response({"detail": "Studio logo not found."}, status=404)
+        content_type = mimetypes.guess_type(path)[0] or "application/octet-stream"
+        return FileResponse(default_storage.open(path, "rb"), content_type=content_type)
+
+
+class ProfilePhotoView(APIView):
+    """Let each user upload their own sidebar profile photo."""
+
+    MAX_PHOTO_BYTES = 5 * 1024 * 1024
+    ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+
+    def post(self, request):
+        photo = request.FILES.get("photo")
+        if not photo:
+            return Response({"detail": "Choose a profile photo to upload."}, status=400)
+        extension = os.path.splitext(photo.name)[1].lower()
+        if extension not in self.ALLOWED_EXTENSIONS:
+            return Response({"detail": "Use a PNG, JPG, or WEBP photo."}, status=400)
+        if photo.size > self.MAX_PHOTO_BYTES:
+            return Response({"detail": "Profile photos must be 5 MB or smaller."}, status=400)
+        request.user.profile_photo = photo
+        request.user.save(update_fields=["profile_photo"])
+        return Response({"profile_photo_url": f"/api/profile-photo/{request.user.id}/"})
+
+
+class ProfilePhotoFileView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, user_id):
+        user = User.objects.filter(id=user_id).only("profile_photo").first()
+        if not user or not user.profile_photo:
+            return Response({"detail": "Profile photo not found."}, status=404)
+        path = user.profile_photo.name
+        if not default_storage.exists(path):
+            return Response({"detail": "Profile photo not found."}, status=404)
         content_type = mimetypes.guess_type(path)[0] or "application/octet-stream"
         return FileResponse(default_storage.open(path, "rb"), content_type=content_type)
 
