@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.http import FileResponse
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -15,6 +17,7 @@ from django.db import transaction
 from django.utils.text import get_valid_filename
 from django.utils import timezone
 import os
+import mimetypes
 from uuid import uuid4
 from .models import PasswordResetToken, User, UserAuditActivity, UserNotificationPreference
 from .authentication import ensure_studio_is_active
@@ -46,7 +49,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     is_platform_owner = serializers.BooleanField(source="is_superuser", read_only=True)
     organization_name = serializers.CharField(source="organization.name", read_only=True, default="")
-    organization_logo_url = serializers.CharField(source="organization.logo_url", read_only=True, default="")
+    organization_logo_url = serializers.SerializerMethodField()
+
+    def get_organization_logo_url(self, user):
+        logo_url = getattr(user.organization, "logo_url", "") if user.organization_id else ""
+        if logo_url.startswith(settings.MEDIA_URL):
+            return f"/api/studio-logo/{user.organization_id}/"
+        return logo_url
     def validate_department_access(self, value):
         if not isinstance(value, dict):
             raise serializers.ValidationError("Department access must be an object.")
@@ -127,7 +136,29 @@ class StudioLogoView(APIView):
         path = default_storage.save(f"studio-logos/{organization.id}/{filename}", logo)
         organization.logo_url = default_storage.url(path)
         organization.save(update_fields=["logo_url"])
-        return Response({"logo_url": organization.logo_url})
+        return Response({"logo_url": f"/api/studio-logo/{organization.id}/"})
+
+
+class StudioLogoFileView(APIView):
+    """Serve the current studio logo through the public API route.
+
+    The production web container does not mount Django's media volume, so
+    `/media/` cannot be used directly by the browser.
+    """
+
+    permission_classes = [AllowAny]
+
+    def get(self, request, organization_id):
+        organization = Organization.objects.filter(id=organization_id).only("logo_url").first()
+        logo_url = organization.logo_url if organization else ""
+        if not logo_url.startswith(settings.MEDIA_URL):
+            return Response({"detail": "Studio logo not found."}, status=404)
+
+        path = logo_url[len(settings.MEDIA_URL):].lstrip("/")
+        if not path or not default_storage.exists(path):
+            return Response({"detail": "Studio logo not found."}, status=404)
+        content_type = mimetypes.guess_type(path)[0] or "application/octet-stream"
+        return FileResponse(default_storage.open(path, "rb"), content_type=content_type)
 
 
 class UserAuditActivitySerializer(serializers.ModelSerializer):

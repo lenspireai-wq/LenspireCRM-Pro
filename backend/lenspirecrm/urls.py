@@ -28,6 +28,7 @@ from apps.users.views import (
     UserViewSet,
     CurrentUserView,
     StudioLogoView,
+    StudioLogoFileView,
     NotificationPreferencesView,
 )
 from apps.users.views import MetricsView, PasswordResetConfirmView, PasswordResetRequestView
@@ -55,6 +56,7 @@ router.register("notifications", NotificationViewSet, basename="notification")
 urlpatterns = [
     path("api/auth/me/", CurrentUserView.as_view()),
     path("api/auth/studio-logo/", StudioLogoView.as_view(), name="studio-logo"),
+    path("api/studio-logo/<int:organization_id>/", StudioLogoFileView.as_view(), name="studio-logo-file"),
     path("api/client-portal/access/", ClientPortalManageView.as_view()),
     path("api/client-portal/invitations/", ClientPortalInviteView.as_view()),
     path("api/client-portal/whatsapp/", ClientPortalWhatsAppView.as_view()),
