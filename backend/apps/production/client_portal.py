@@ -293,17 +293,20 @@ class ClientPortalInviteView(APIView):
         # WhatsApp uses this value for the invitation page preview.  Keep the
         # studio identity on the shared link instead of a CRM product label.
         url = f"{base}/client-portal/setup/{raw}?studio={quote(booking.organization.name)}"
+        login_url = f"{base}/client-portal/login?studio={quote(booking.organization.slug)}"
         text = (
             f"Hello {name},\n\n"
             f"Warm greetings from {booking.organization.name}. Your secure Client Portal is now ready.\n\n"
             f"Client ID: {booking.booking_code}\n\n"
             "Please use the link below to set your private 4-digit PIN and access your gallery, payments, and updates:\n"
             f"{url}\n\n"
+            "After creating your PIN, save this link for all future sign-ins. Use your Client ID and the same 4-digit PIN:\n"
+            f"{login_url}\n\n"
             "For your security, please do not share this link or PIN with anyone.\n\n"
             "Thank you,\n"
             f"{booking.organization.name}"
         )
-        return Response({"id": user.id, "url": url, "message": text, "whatsapp_url": f"https://wa.me/{''.join(filter(str.isdigit, mobile))}?text={quote(text)}", "expires_in_days": 7})
+        return Response({"id": user.id, "url": url, "login_url": login_url, "message": text, "whatsapp_url": f"https://wa.me/{''.join(filter(str.isdigit, mobile))}?text={quote(text)}", "expires_in_days": 7})
 
     def patch(self, request):
         user = ClientPortalUser.objects.filter(pk=request.data.get("user"), organization=request.user.organization).select_related("booking").first()

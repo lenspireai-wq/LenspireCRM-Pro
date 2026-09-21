@@ -211,6 +211,8 @@ class ProductionApiTests(TestCase):
         )
         self.assertEqual(invited.status_code, 200, invited.data)
         self.assertIn("wa.me/919999999999", invited.data["whatsapp_url"])
+        self.assertIn("/client-portal/login?studio=studio", invited.data["login_url"])
+        self.assertIn(invited.data["login_url"], invited.data["message"])
         whatsapp = self.client.post(
             "/api/client-portal/whatsapp/",
             {"booking": self.booking.id, "message_type": "payment_reminder", "event": "prepared"},
