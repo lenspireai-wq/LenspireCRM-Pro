@@ -1,4 +1,5 @@
 from io import BytesIO
+from urllib.parse import urlparse
 
 from django.test import TestCase
 from openpyxl import load_workbook
@@ -220,7 +221,7 @@ class ProductionApiTests(TestCase):
         self.assertIn("https://wa.me/?text=", whatsapp.data["whatsapp_url"])
         copied = self.client.put("/api/client-portal/invitations/", {"booking": self.booking.id}, format="json")
         self.assertEqual(copied.status_code, 200)
-        invite_token = invited.data["url"].rstrip("/").split("/")[-1]
+        invite_token = urlparse(invited.data["url"]).path.rstrip("/").split("/")[-1]
         public = APIClient()
         setup = public.post("/api/client-portal/auth/setup/", {"token": invite_token, "password": "1234"}, format="json")
         self.assertEqual(setup.status_code, 200, setup.data)

@@ -290,7 +290,9 @@ class ClientPortalInviteView(APIView):
         access = ensure_portal_access(booking)
         ClientPortalActivity.objects.create(organization=booking.organization, access=access, booking=booking, action="Client Invited", detail=f"PIN setup invitation generated for {name} at {mobile}.")
         base = getattr(settings, "CLIENT_PORTAL_BASE_URL", "http://127.0.0.1:3000").rstrip("/")
-        url = f"{base}/client-portal/setup/{raw}"
+        # WhatsApp uses this value for the invitation page preview.  Keep the
+        # studio identity on the shared link instead of a CRM product label.
+        url = f"{base}/client-portal/setup/{raw}?studio={quote(booking.organization.name)}"
         text = (
             f"Hello {name},\n\n"
             f"Warm greetings from {booking.organization.name}. Your secure Client Portal is now ready.\n\n"
