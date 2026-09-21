@@ -239,7 +239,10 @@ class CalendarEventSerializer(serializers.ModelSerializer):
         duplicate_match = next(
             (
                 event
-                for event in duplicate.iterator()
+                # Neon/PgBouncer uses transaction pooling, which does not
+                # preserve server-side cursors across fetches. This queryset
+                # is organization-scoped and small enough to evaluate safely.
+                for event in duplicate
                 if event_identity_values(
                     {
                         "client_name": event.client_name,
