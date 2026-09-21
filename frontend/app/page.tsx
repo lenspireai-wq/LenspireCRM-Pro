@@ -24,6 +24,7 @@ import SettingsWorkspace from "@/components/SettingsWorkspace";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
+import { studioBrandName, studioDocumentTitle } from "@/lib/studio-branding";
 import {
   canAccess,
   canWrite,
@@ -56,10 +57,7 @@ type MobileRoute = {
   accountsView: string;
 };
 const mobileRouteStorageKey = "lenspire-mobile-route";
-const documentTitleForStudio = (organizationName?: string) => {
-  const studioName = organizationName?.trim();
-  return studioName ? `${studioName} · LenspireCRM` : "LenspireCRM";
-};
+const documentTitleForStudio = (organizationName?: string) => studioDocumentTitle({ organization_name: organizationName || "" });
 const sectionIcons: Record<Section, string> = {
   Dashboard: "⌂", Sales: "◎", Kanban: "▦", Operations: "◇", Calendar: "□",
   Accounts: "₹", Production: "▷", Billing: "▤", Reports: "↗",
@@ -132,7 +130,7 @@ function Login({
   useEffect(() => {
     setUsername(window.localStorage.getItem("lenspire-last-username") || "");
     setReturningName(window.localStorage.getItem("lenspire-last-user-name") || "");
-    document.title = "LenspireCRM";
+    document.title = "Studio Workspace";
   }, []);
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -167,12 +165,8 @@ function Login({
   return (
     <main className="login">
       <ThemeToggle className="loginThemeToggle" />
-      <section className="loginHero" aria-label="LenspireCRM introduction">
-        <img
-            className="loginWordmark"
-            src="/login/lenspireai-wordmark-premium.png"
-          alt="Lenspire.ai — See, Create, Inspire"
-        />
+      <section className="loginHero" aria-label="Studio workspace sign in">
+        <div className="loginWordmark">STUDIO WORKSPACE</div>
         <div className="loginHeroCopy">
           <h1>
             From first inquiry
@@ -213,18 +207,14 @@ function Login({
       </section>
       <section className="loginPanel">
         <form className="loginCard" onSubmit={submit}>
-          <img
-            className="loginMobileWordmark"
-            src="/login/lenspireai-wordmark-premium.png"
-            alt="Lenspire.ai"
-          />
+          <div className="loginMobileWordmark">STUDIO WORKSPACE</div>
           <span className="loginEyebrow">
-            {ownerMode ? "LENSPIREAI OWNER PORTAL" : "WELCOME BACK"}
+            {ownerMode ? "OWNER PORTAL" : "WELCOME BACK"}
           </span>
           <h2>{ownerMode ? "Studio Management" : returningName || "Welcome back"}</h2>
           <p>
             {ownerMode
-              ? "Sign in with the verified LenspireAI owner account."
+              ? "Sign in with the verified owner account."
               : "Sign in to manage your studio workspace."}
           </p>
           <label>
@@ -283,15 +273,15 @@ function Login({
           >
             {ownerMode
               ? "← Back to Studio Sign In"
-              : "◇ LenspireAI Owner Portal"}
+              : "◇ Owner Portal"}
           </button>
           <div className="loginCloudStatus">
-            <b>LenspireCRM Cloud</b>
+            <b>Studio Workspace</b>
             <span>Secure account authentication</span>
             <span>Internet connection required</span>
           </div>
           <small className="loginCopyright">
-            © 2026 LenspireCRM. All rights reserved.
+            © 2026 Studio Workspace. All rights reserved.
           </small>
         </form>
       </section>
@@ -528,9 +518,9 @@ export default function Home() {
   }, [mounted, auth.user, section, visibleSections.join("|")]);
   if (!mounted)
     return (
-      <main className="appBoot" aria-label="Loading LenspireCRM">
+      <main className="appBoot" aria-label="Loading studio workspace">
         <div className="brand">
-          LENSPIRE<span>CRM</span>
+          {studioBrandName(auth.user)}
         </div>
       </main>
     );

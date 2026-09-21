@@ -13,10 +13,10 @@ import { ThemeProvider } from "@/components/ThemeToggle";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
 
 export const metadata: Metadata = {
-  title: "LenspireCRM",
-  description: "Studio workspace, powered by LenspireCRM.",
-  applicationName: "LenspireCRM",
-  appleWebApp: { capable: true, title: "LenspireCRM", statusBarStyle: "black-translucent" },
+  title: "Studio Workspace",
+  description: "Secure studio workspace.",
+  applicationName: "Studio Workspace",
+  appleWebApp: { capable: true, title: "Studio Workspace", statusBarStyle: "black-translucent" },
   formatDetection: { telephone: false },
 };
 

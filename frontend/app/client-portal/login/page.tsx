@@ -36,7 +36,7 @@ function ClientLoginForm() {
           <img
             className="clientAuthLenspireLogo"
             src="/login/lenspire-wordmark.png"
-            alt="Lenspire.ai — See, Create, Inspire"
+            alt="Studio client portal"
           />
           <h1>Your event, all in one beautiful place.</h1>
           <p className="clientAuthIntroCopy">Review your event details, payments and final deliveries whenever you need them. Sign in with the Client ID shared by your studio.</p>
@@ -46,7 +46,7 @@ function ClientLoginForm() {
           <p className="clientAuthSecurity"><b>⌁</b> Private and secure client access</p>
         </section>
         <form onSubmit={submit}>
-          <div className="clientAuthBrand"><img src="/ankit-studios-logo.png" alt="Ankit Studios" /><small>ANKIT STUDIOS · CLIENT PORTAL</small><span>Powered by LenspireCRM</span></div>
+          <div className="clientAuthBrand"><small>CLIENT PORTAL</small><span>Secure access to your studio</span></div>
           <div className="clientAuthHeading"><h2>Welcome back</h2><p>Sign in to access your personal event space.</p></div>
           <label>
             Studio ID

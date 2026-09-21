@@ -50,8 +50,8 @@ export default function ClientPortalPage() {
     catch (problem: any) { window.alert(problem.response?.data?.detail || "Could not send your request."); }
     finally { setFaceSearchBusy(false); }
   };
-  if (error) return <main className="clientPortal"><section className="clientPortalHero"><img src="/ankit-studios-logo.png" alt="Ankit Studios" /><small>ANKIT STUDIOS · CLIENT PORTAL</small><h1>Portal unavailable</h1><p>{error}</p></section></main>;
-  if (!data) return <main className="clientPortal"><section className="clientPortalHero"><img src="/ankit-studios-logo.png" alt="Ankit Studios" /><small>ANKIT STUDIOS · CLIENT PORTAL</small><h1>Opening secure portal…</h1></section></main>;
+  if (error) return <main className="clientPortal"><section className="clientPortalHero"><small>CLIENT PORTAL</small><h1>Portal unavailable</h1><p>{error}</p></section></main>;
+  if (!data) return <main className="clientPortal"><section className="clientPortalHero"><small>CLIENT PORTAL</small><h1>Opening secure portal…</h1></section></main>;
   const booking = data.booking;
   const nextEvent = [...data.events]
     .filter((event: any) => event.start_date && event.start_date >= new Date().toISOString().slice(0, 10) && event.status !== "Cancelled")
@@ -64,7 +64,7 @@ export default function ClientPortalPage() {
       <h1>{booking.couple_name || booking.client_name}</h1>
       <p>{booking.code} <i>•</i> {booking.event_type} <i>•</i> {date(booking.event_date)}</p>
       {nextEvent && <aside className="clientPortalHeroFeature"><small>UP NEXT</small><b>{nextEvent.event_type}</b><span>{eventDate(nextEvent)}{nextEvent.start_time ? ` · ${formatTime(nextEvent.start_time)}` : ""}</span></aside>}
-      <div className="clientPortalHeroFooter"><span>✦ Your event journey, beautifully organised</span><b>Powered by LenspireAI</b></div>
+      <div className="clientPortalHeroFooter"><span>✦ Your event journey, beautifully organised</span><b>{data.studio.name}</b></div>
     </section>
     <section className="clientPortalStats"><article><small>Total Booking</small><b>{money(booking.total)}</b></article><article><small>Received</small><b>{money(booking.received)}</b></article><article><small>Balance</small><b>{money(booking.balance)}</b></article></section>
     {data.read_only_preview && <p className="clientPortalPreviewBanner">Studio preview · Read-only client view</p>}
@@ -73,10 +73,10 @@ export default function ClientPortalPage() {
       <section className="clientPortalCard clientPortalPayments"><div className="clientPortalCardTitle"><span>02</span><div><small>BOOKING LEDGER</small><h2>Payment Summary</h2></div></div>{data.payments.length ? data.payments.map((payment: any, index: number) => <div className="clientPortalRow" key={index}><div><b>{payment.payment_type}{payment.percent ? ` · ${payment.percent}%` : ""}</b><span>{date(payment.paid_at || payment.due_date)}</span></div><strong>{money(payment.amount)}</strong><em>{payment.status}</em></div>) : <p>No payment entries yet.</p>}</section>
     </section>
     <section className="clientPortalCard clientPortalQuotations"><div className="clientPortalCardTitle"><span>03</span><div><small>YOUR DOCUMENTS</small><h2>Quotations</h2></div></div>{data.quotations?.length ? data.quotations.map((quotation: any) => <article className="clientQuotation" key={quotation.id}><div><b>{quotation.name}</b><span>Uploaded {date(quotation.created_at)}</span></div><a href={`${api.defaults.baseURL}/client-portal/${encodeURIComponent(token)}/quotations/${quotation.id}/`} target="_blank" rel="noopener noreferrer">View quotation <i>↗</i></a></article>) : <p>Your quotation will appear here once shared by the studio.</p>}</section>
-    {data.deliverables?.length ? <section className="clientPortalFaceSearch" aria-label="Find your wedding photos with LenspireAI">
+    {data.deliverables?.length ? <section className="clientPortalFaceSearch" aria-label="Find your wedding photos">
       <div className="clientPortalFaceSearchIcon" aria-hidden="true">⌕</div>
       <div>
-        <small>LENSPIREAI FACE RECOGNITION</small>
+        <small>PHOTO FINDER</small>
         <h2>Find every photo of you</h2>
         <p>Upload one selfie and instantly find your photos across the wedding gallery.</p>
         <em>Your selfie is used only to find your photos in this event gallery.</em>
