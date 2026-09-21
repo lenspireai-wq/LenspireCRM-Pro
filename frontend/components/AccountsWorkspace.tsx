@@ -278,12 +278,7 @@ export default function AccountsWorkspace({
       stages: plan(total, received, entries, scheduledDates),
     };
   });
-  const openPortal = async (booking: Row) => {
-    setPortalBooking(booking);
-    setPortalLink("");
-    setInviteResult(null);
-    setWhatsappResult(null);
-    setError("");
+  const loadPortalInfo = async (booking: Row) => {
     try {
       const { data } = await api.get(
         `/client-portal/access/?booking=${booking.id}`,
@@ -297,6 +292,15 @@ export default function AccountsWorkspace({
       );
     }
   };
+  const openPortal = async (booking: Row) => {
+    setPortalBooking(booking);
+    setPortalInfo(null);
+    setPortalLink("");
+    setInviteResult(null);
+    setWhatsappResult(null);
+    setError("");
+    await loadPortalInfo(booking);
+  };
   const generatePortal = async (days: number) => {
     if (!portalBooking) return;
     const data = await portalAccessMutation.mutateAsync({
@@ -304,7 +308,10 @@ export default function AccountsWorkspace({
       expiry_days: days,
     });
     setPortalLink(data.url);
-    setPortalInfo(data);
+    // The generate endpoint deliberately returns only the new link details.
+    // Reload the complete read-only status so access history and invited users
+    // remain visible without requiring the studio to close and reopen the modal.
+    await loadPortalInfo(portalBooking);
   };
   const revokePortal = async () => {
     if (!portalBooking || !window.confirm("Revoke this Client Portal link?"))
@@ -1353,14 +1360,18 @@ export default function AccountsWorkspace({
               </section>
               <section className="clientAccessSection">
                 <h3>Recent Access & Invitations</h3>
-                {(portalInfo?.activities || []).map(
-                  (activity: Row, index: number) => (
+                {!portalInfo ? (
+                  <p className="clientPortalAuditEmpty">Loading access history…</p>
+                ) : portalInfo.activities?.length ? (
+                  portalInfo.activities.map((activity: Row, index: number) => (
                     <div className="clientPortalAudit" key={index}>
                       <b>{activity.action}</b>
                       <span>{activity.detail}</span>
                       <small>{date(activity.created_at)}</small>
                     </div>
-                  ),
+                  ))
+                ) : (
+                  <p className="clientPortalAuditEmpty">No access or invitations have been recorded yet.</p>
                 )}
               </section>
             </div>
