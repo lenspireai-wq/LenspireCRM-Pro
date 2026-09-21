@@ -30,7 +30,7 @@ function ClientLoginForm() {
     }
   };
   return (
-    <main className="clientAuth">
+    <main className="clientAuth clientAuthLight">
       <div className="clientAuthShell">
         <section className="clientAuthIntro" aria-label="Client portal overview">
           <img
