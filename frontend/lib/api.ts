@@ -9,6 +9,21 @@ export type PathResponse<T extends keyof import("./api-types").paths> =
 
 export const api = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api" });
 
+/**
+ * Resolve an API-provided asset path for both deployment modes. In production
+ * `/api/...` stays on the same origin; during local development the API is on
+ * port 8000 while Next.js runs on port 3000.
+ */
+export function apiAssetUrl(path?: string): string {
+  if (!path || /^(?:https?:)?\/\//i.test(path) || path.startsWith("data:")) return path || "";
+  // Keep API paths same-origin. Next.js proxies them to Django in both local
+  // development and the production container.
+  if (path.startsWith("/")) return path;
+  const baseUrl = api.defaults.baseURL || "";
+  if (!/^https?:\/\//i.test(baseUrl)) return path;
+  return new URL(path, new URL(baseUrl).origin).toString();
+}
+
 /** A clear, safe explanation for sign-in failures on phones and desktops. */
 export function getSignInErrorMessage(error: unknown): string {
   const problem = error as AxiosError<{ detail?: string; offline?: boolean }>;

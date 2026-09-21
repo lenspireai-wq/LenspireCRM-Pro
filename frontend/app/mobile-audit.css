@@ -1366,3 +1366,50 @@
   .statementSchedule :is(span, b, small),
   .statementFooterNote { color: #000 !important; }
 }
+
+/* Keep the studio command rail consistent across saved themes. This file is
+   loaded last, so a person's existing theme cannot restore the old wide rail. */
+@media (min-width: 901px) {
+  :root[data-theme] .shell aside { width: 222px; }
+  :root[data-theme] .shell main { margin-left: 222px; }
+  :root[data-theme] .sidebarToggle { left: 194px; }
+
+  :root[data-theme] .shell aside .brand.studioSidebarBrand {
+    display: grid;
+    flex: 0 0 154px;
+    min-height: 154px;
+    place-items: center;
+    justify-items: center !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 12px 12px 24px;
+  }
+  :root[data-theme] .shell aside .studioSidebarLogo,
+  :root[data-theme] .shell aside .studioLogoPlaceholder {
+    display: block;
+    width: 112px !important;
+    max-width: 112px !important;
+    height: 112px !important;
+    margin-inline: auto;
+    justify-self: center !important;
+    align-self: center !important;
+    object-position: center;
+  }
+  :root[data-theme] .shell aside nav { gap: 7px; padding: 13px 10px 10px; }
+  :root[data-theme] .navGroupCard { row-gap: 6px; padding-top: 19px; }
+  :root[data-theme] .navTopItem,
+  :root[data-theme] .navGroupLabel,
+  :root[data-theme] .navUtility button { min-height: 48px; border-radius: 14px; font-size: 12px; }
+  :root[data-theme] .navIcon,
+  :root[data-theme] .navGroupLabel i { width: 32px; height: 32px; flex-basis: 32px; border-radius: 11px; font-size: 15px; }
+  :root[data-theme] .navGroup + .navGroup { margin-top: 1px; }
+  :root[data-theme] .studioSidebarNote { margin: auto 10px 10px; padding: 12px; border-radius: 14px; }
+  :root[data-theme] .studioSidebarNote > span { font-size: 14px; }
+  :root[data-theme] .profile { margin: 0 10px 11px; }
+}
+
+@media (min-width: 901px) and (max-width: 1180px) {
+  :root[data-theme] .shell aside { width: 214px; }
+  :root[data-theme] .shell main { margin-left: 214px; }
+  :root[data-theme] .sidebarToggle { left: 186px; }
+}

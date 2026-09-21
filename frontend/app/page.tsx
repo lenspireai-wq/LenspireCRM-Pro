@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import { api, getSignInErrorMessage } from "@/lib/api";
+import { api, apiAssetUrl, getSignInErrorMessage } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import { formatDate } from "@/lib/date-format";
 import { queryClient, queryKeys } from "@/lib/query";
@@ -589,7 +589,7 @@ export default function Home() {
       <aside aria-hidden={sidebarHidden ? true : undefined}>
         <div className="brand studioSidebarBrand">
           <input ref={studioLogoInputRef} className="studioLogoInput" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => void uploadStudioLogo(event.target.files?.[0])} />
-          {studioLogoUrl ? <img className="studioSidebarLogo" src={studioLogoUrl} alt={`${studioName} logo`} /> : <div className="studioLogoPlaceholder" aria-label={`${studioName} logo placeholder`}><span>+</span><b>{studioName}</b></div>}
+          {studioLogoUrl ? <img className="studioSidebarLogo" src={apiAssetUrl(studioLogoUrl)} alt={`${studioName} logo`} /> : <div className="studioLogoPlaceholder" aria-label={`${studioName} logo placeholder`}><span>+</span><b>{studioName}</b></div>}
           {canManageStudioLogo && <button type="button" className="studioLogoButton" onClick={() => studioLogoInputRef.current?.click()} disabled={studioLogoUploading} title={studioLogoUrl ? "Change studio logo" : "Add studio logo"}>{studioLogoUploading ? "Uploading…" : studioLogoUrl ? "Change logo" : "Add Logo"}</button>}
         </div>
         <nav aria-label="Primary navigation">
@@ -628,7 +628,7 @@ export default function Home() {
         <div className="profile">
           <input ref={profilePhotoInputRef} className="studioLogoInput" type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void uploadProfilePhoto(event.target.files?.[0])} />
           <button type="button" className="profileAvatar profileAvatarButton" aria-label={profilePhotoUrl ? "Change your profile photo" : "Add your profile photo"} title={profilePhotoUploading ? "Uploading profile photo" : profilePhotoUrl ? "Change profile photo" : "Add profile photo"} onClick={() => profilePhotoInputRef.current?.click()} disabled={profilePhotoUploading}>
-            {profilePhotoUrl ? <img src={profilePhotoUrl} alt="Your profile" /> : <span aria-hidden="true">{(auth.user?.display_name || auth.user?.username || "U").split(/\s+/).map((part: string) => part[0]).join("").slice(0, 2).toUpperCase()}</span>}
+            {profilePhotoUrl ? <img src={apiAssetUrl(profilePhotoUrl)} alt="Your profile" /> : <span aria-hidden="true">{(auth.user?.display_name || auth.user?.username || "U").split(/\s+/).map((part: string) => part[0]).join("").slice(0, 2).toUpperCase()}</span>}
           </button>
           <span className="profileIdentity"><b>{auth.user?.display_name || auth.user?.username}</b><small><i />{auth.user?.role}</small><time>{formatDate(new Date())}</time></span>
           <button className="profilePower" aria-label="Sign out" onClick={logout}>◯</button>
