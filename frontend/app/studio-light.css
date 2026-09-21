@@ -6242,6 +6242,22 @@
    Keep the studio identity prominent, then give the operational sections a
    denser, gallery-like rhythm so the rail feels intentional rather than empty. */
 @media (min-width: 901px) {
+  /* Client Ledger: settled milestones are calm green; every outstanding
+     milestone is visibly soft red, including due dates not yet scheduled. */
+  :root[data-theme="light"] .clientLedgerView .accountPlan > span:not(.paid) {
+    background: linear-gradient(145deg, #fff1f3, #fff9fa) !important;
+    border-color: #f0c6cd !important;
+  }
+
+  :root[data-theme="light"] .clientLedgerView .accountPlan > span:not(.paid) :is(small, b, .milestoneDue) {
+    color: #9a3f50 !important;
+  }
+
+  :root[data-theme="light"] .clientLedgerView .accountPlan > span.paid {
+    background: linear-gradient(145deg, #effbf5, #fafffc) !important;
+    border-color: #b9e6ce !important;
+  }
+
   /* Keep the missing-preview label centered inside its delivery thumbnail. */
   :root[data-theme="light"] .clientDeliverable.hasThumbnail > .clientGalleryNoPreview {
     display: flex;
