@@ -6242,6 +6242,12 @@
    Keep the studio identity prominent, then give the operational sections a
    denser, gallery-like rhythm so the rail feels intentional rather than empty. */
 @media (min-width: 901px) {
+  :root[data-theme="light"] .receivablesView .receivablesTable .accountPlan > span {
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
   /* Client Ledger: settled milestones are calm green; every outstanding
      milestone is visibly soft red, including due dates not yet scheduled. */
   :root[data-theme="light"] .clientLedgerView .accountPlan > span:not(.paid) {
