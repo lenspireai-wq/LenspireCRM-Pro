@@ -5888,6 +5888,34 @@
   box-shadow: 0 7px 15px rgb(70 91 230 / 23%);
 }
 
+/* Production Job uses the shared light command palette on desktop. This also
+   removes the remaining legacy charcoal/gold controls from its scroll area. */
+@media (min-width: 901px) {
+  :root[data-theme="light"] .productionModal {
+    scrollbar-color: #b9cce8 #f4f8ff !important;
+  }
+
+  :root[data-theme="light"] .productionModal::-webkit-scrollbar-track {
+    background: #f4f8ff;
+  }
+
+  :root[data-theme="light"] .productionModal::-webkit-scrollbar-thumb {
+    border: 2px solid #f4f8ff;
+    border-radius: 999px;
+    background: #b9cce8;
+  }
+
+  :root[data-theme="light"] .productionModal .productionDeliverableGrid input[type="checkbox"] {
+    accent-color: #246bfd;
+  }
+
+  :root[data-theme="light"] .productionModal .deliverableReviewActions .revision {
+    border-color: #bdd6fa;
+    background: #eff7ff;
+    color: #246bfd;
+  }
+}
+
 /* Post Production tables: dark, dependable headers and softly differentiated work rows. */
 :root[data-theme="light"] .productionWorkspace :is(.productionTable, .productionActivityTable, .editQueueTable, .productionDeliveryTable) thead th {
   background: linear-gradient(105deg, #e7f3ff, #f2eeff) !important;
