@@ -6242,6 +6242,14 @@
    Keep the studio identity prominent, then give the operational sections a
    denser, gallery-like rhythm so the rail feels intentional rather than empty. */
 @media (min-width: 901px) {
+  /* Keep the missing-preview label centered inside its delivery thumbnail. */
+  :root[data-theme="light"] .clientDeliverable.hasThumbnail > .clientGalleryNoPreview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
   :root[data-theme="light"] .shell aside {
     width: 222px;
   }
