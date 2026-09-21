@@ -1232,6 +1232,24 @@ input:-webkit-autofill:active {
 .clientAuthIntro { background: radial-gradient(circle at 12% 8%, rgb(212 180 119 / 14%), transparent 32%), radial-gradient(circle at 86% 92%, rgb(181 138 71 / 9%), transparent 38%), linear-gradient(145deg, #201e1b, #171614 72%); }
 @media(max-width:760px) { .clientAuthIntro { background: radial-gradient(circle at 12% 8%, rgb(212 180 119 / 14%), transparent 36%), linear-gradient(145deg, #201e1b, #171614 72%); } }
 
+/* Invitation setup is always light, regardless of a staff user's saved CRM theme. */
+.clientAuth.clientAuthLight { background: linear-gradient(135deg, #eef5ff, #faf8ff); color: #1f2540; }
+.clientAuthLight .clientAuthShell { border-color: #d8e1f6; background: #fff; box-shadow: 0 28px 72px rgb(66 87 145 / 18%); }
+.clientAuthLight .clientAuthIntro { background: radial-gradient(circle at 12% 9%, rgb(117 100 255 / 18%), transparent 34%), linear-gradient(145deg, #f2efff, #edf7ff 72%); }
+.clientAuthLight .clientAuthIntro::after { border-color: rgb(108 92 220 / 22%); box-shadow: 0 0 0 52px rgb(108 92 220 / 5%), 0 0 0 105px rgb(108 92 220 / 3%); }
+.clientAuthLight .clientAuthIntro h1, .clientAuthLight .clientAuthHeading h2 { color: #25205b; font-family: inherit; font-weight: 750; }
+.clientAuthLight .clientAuthIntroCopy, .clientAuthLight .clientAuthFeatures, .clientAuthLight .clientAuthSecurity, .clientAuthLight .clientAuthBrand span, .clientAuthLight .clientAuth p, .clientAuthLight .clientAuthHelp { color: #65708a !important; }
+.clientAuthLight .clientAuthSecurity b, .clientAuthLight .clientAuth small { color: #6655c8; }
+.clientAuthLight form { background: #fff; }
+.clientAuthLight .clientAuthInput { border-color: #d7ddec; background: #fbfcff; box-shadow: none; }
+.clientAuthLight .clientAuthInput:focus-within { border-color: #7567df; box-shadow: 0 0 0 3px rgb(117 103 223 / 14%); }
+.clientAuthLight .clientAuthInput i, .clientAuthLight .clientAuth label, .clientAuthLight .clientShowPassword { color: #565f7c; }
+.clientAuthLight .clientAuthInput input { color: #202744; }
+.clientAuthLight .clientAuthInput input::placeholder { color: #9aa4b8; }
+.clientAuthLight .clientShowPassword input { accent-color: #6d5bd0; }
+.clientAuthLight .primary { border-color: #6d5bd0; background: linear-gradient(135deg, #7665e1, #5b7edc); box-shadow: 0 10px 24px rgb(91 96 205 / 24%); color: #fff; }
+.clientAuthLight .primary:hover:not(:disabled) { background: linear-gradient(135deg, #8677ea, #6c8ceb); }
+
 .clientDeliverable.hasThumbnail { grid-template-columns: 132px 1fr auto; }
 .clientGalleryThumbnail { grid-row: span 3; width: 132px; height: 94px; border: 1px solid rgb(212 180 119 / 24%); border-radius: 11px; object-fit: cover; background: #1a1815; }
 .clientGalleryNoPreview { grid-row: span 3; display: grid; place-items: center; width: 132px; height: 94px; box-sizing: border-box; border: 1px dashed rgb(212 180 119 / 34%); border-radius: 11px; background: rgb(212 180 119 / 7%); color: #a99d8e; font-size: 11px; text-align: center; }
