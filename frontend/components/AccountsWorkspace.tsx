@@ -1138,7 +1138,10 @@ export default function AccountsWorkspace({
             <div className="modalHeader">
               <div>
                 <small>CLIENT PORTAL</small>
-                <h2>{portalBooking.client}</h2>
+                <h2>
+                  {portalBooking.client}
+                  {portalBooking.couple ? ` (${portalBooking.couple})` : ""}
+                </h2>
                 <p>Secure gallery, payment and permanent client access.</p>
               </div>
               <button
