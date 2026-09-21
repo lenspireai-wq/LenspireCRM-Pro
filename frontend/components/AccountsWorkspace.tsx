@@ -191,6 +191,7 @@ export default function AccountsWorkspace({
   const [portalLink, setPortalLink] = useState("");
   const [photoFinderUrl, setPhotoFinderUrl] = useState("");
   const [inviteResult, setInviteResult] = useState<Row | null>(null);
+  const [invitePreviewOpen, setInvitePreviewOpen] = useState(false);
   const [whatsappResult, setWhatsappResult] = useState<Row | null>(null);
   const [whatsappType, setWhatsappType] = useState("gallery_ready");
   const [reminder, setReminder] = useState<Row | null>(null);
@@ -297,6 +298,7 @@ export default function AccountsWorkspace({
     setPortalInfo(null);
     setPortalLink("");
     setInviteResult(null);
+    setInvitePreviewOpen(false);
     setWhatsappResult(null);
     setError("");
     await loadPortalInfo(booking);
@@ -333,6 +335,7 @@ export default function AccountsWorkspace({
     setInviteResult(data);
     await openPortal(portalBooking);
     setInviteResult(data);
+    setInvitePreviewOpen(true);
   };
   const changeClientAccess = async (
     user: Row,
@@ -370,8 +373,8 @@ export default function AccountsWorkspace({
     await prepareWhatsApp("copied");
   };
   const copyInvitation = async () => {
-    if (!inviteResult?.url || !portalBooking) return;
-    await navigator.clipboard.writeText(inviteResult.url);
+    if (!inviteResult?.message || !portalBooking) return;
+    await navigator.clipboard.writeText(inviteResult.message);
     await portalInvitePutMutation.mutateAsync({ booking: portalBooking.id });
   };
   const shown = accounts.filter((a) =>
@@ -1311,18 +1314,31 @@ export default function AccountsWorkspace({
                 {inviteResult?.url && (
                   <div className="clientInviteResult">
                     <input readOnly value={inviteResult.url} />
-                    <button onClick={() => void copyInvitation()}>
-                      ⧉ Copy
+                    <button type="button" onClick={() => void navigator.clipboard.writeText(inviteResult.url)}>
+                      ⧉ Copy Link
                     </button>
-                    {inviteResult.whatsapp_url && (
-                      <a
-                        href={inviteResult.whatsapp_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        ◉ WhatsApp
+                    <button type="button" className="primary" onClick={() => setInvitePreviewOpen(true)}>
+                      Review Message
+                    </button>
+                  </div>
+                )}
+                {invitePreviewOpen && inviteResult?.message && (
+                  <div className="clientInviteMessageDialog" role="dialog" aria-modal="true" aria-label="Invitation message preview">
+                    <div className="clientInviteMessageHeader">
+                      <div>
+                        <small>INVITATION PREVIEW</small>
+                        <b>Review before sharing</b>
+                      </div>
+                      <button type="button" aria-label="Close invitation preview" onClick={() => setInvitePreviewOpen(false)}>×</button>
+                    </div>
+                    <textarea rows={10} readOnly value={inviteResult.message} />
+                    <div className="clientInviteMessageActions">
+                      <button type="button" onClick={() => void copyInvitation()}>⧉ Copy Message</button>
+                      <a href={inviteResult.whatsapp_url} target="_blank" rel="noopener noreferrer">
+                        ◉ Open WhatsApp
                       </a>
-                    )}
+                    </div>
+                    <small>WhatsApp opens with this message filled in. You choose the recipient and send it yourself.</small>
                   </div>
                 )}
                 {(portalInfo?.portal_users || []).map((user: Row) => (

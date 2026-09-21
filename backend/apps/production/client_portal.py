@@ -291,8 +291,17 @@ class ClientPortalInviteView(APIView):
         ClientPortalActivity.objects.create(organization=booking.organization, access=access, booking=booking, action="Client Invited", detail=f"PIN setup invitation generated for {name} at {mobile}.")
         base = getattr(settings, "CLIENT_PORTAL_BASE_URL", "http://127.0.0.1:3000").rstrip("/")
         url = f"{base}/client-portal/setup/{raw}"
-        text = f"Hello {name}, {booking.organization.name} has invited you to your secure Client Portal for {booking.booking_code}. Your Client ID is {booking.booking_code}. Set your 4-digit PIN here: {url}"
-        return Response({"id": user.id, "url": url, "whatsapp_url": f"https://wa.me/{''.join(filter(str.isdigit, mobile))}?text={quote(text)}", "expires_in_days": 7})
+        text = (
+            f"Hello {name},\n\n"
+            f"Warm greetings from {booking.organization.name}. Your secure Client Portal is now ready.\n\n"
+            f"Client ID: {booking.booking_code}\n\n"
+            "Please use the link below to set your private 4-digit PIN and access your gallery, payments, and updates:\n"
+            f"{url}\n\n"
+            "For your security, please do not share this link or PIN with anyone.\n\n"
+            "Thank you,\n"
+            f"{booking.organization.name}"
+        )
+        return Response({"id": user.id, "url": url, "message": text, "whatsapp_url": f"https://wa.me/{''.join(filter(str.isdigit, mobile))}?text={quote(text)}", "expires_in_days": 7})
 
     def patch(self, request):
         user = ClientPortalUser.objects.filter(pk=request.data.get("user"), organization=request.user.organization).select_related("booking").first()

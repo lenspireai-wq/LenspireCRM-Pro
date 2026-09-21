@@ -5227,6 +5227,35 @@
     overflow-y: auto !important;
     overscroll-behavior: contain;
   }
+
+  :root[data-theme="light"] .clientInviteMessageDialog {
+    display: grid;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 16px;
+    border: 1px solid #cfe1ff;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f4faff, #fbf9ff);
+    box-shadow: 0 10px 24px rgb(36 107 253 / 9%);
+  }
+
+  :root[data-theme="light"] .clientInviteMessageHeader,
+  :root[data-theme="light"] .clientInviteMessageActions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  :root[data-theme="light"] .clientInviteMessageHeader > div { display: grid; gap: 3px; }
+  :root[data-theme="light"] .clientInviteMessageHeader small { color: #246bfd; font-size: 10px; font-weight: 800; letter-spacing: .1em; }
+  :root[data-theme="light"] .clientInviteMessageHeader b { color: #172033; font-size: 15px; }
+  :root[data-theme="light"] .clientInviteMessageHeader > button { width: 30px; height: 30px; border: 1px solid #cbdcf4; border-radius: 8px; background: #fff; color: #52637c; font-size: 18px; }
+  :root[data-theme="light"] .clientInviteMessageDialog textarea { box-sizing: border-box; width: 100%; padding: 11px 12px; border: 1px solid #cbdcf4; border-radius: 9px; background: #fff; color: #27354a; line-height: 1.5; resize: vertical; }
+  :root[data-theme="light"] .clientInviteMessageActions { justify-content: flex-start; }
+  :root[data-theme="light"] .clientInviteMessageActions :is(button, a) { padding: 9px 13px; border: 1px solid #bdd6fa; border-radius: 9px; background: #fff; color: #246bfd; font-weight: 650; text-decoration: none; }
+  :root[data-theme="light"] .clientInviteMessageActions a { border-color: transparent; background: linear-gradient(135deg, #246bfd, #7657ff); color: #fff; }
+  :root[data-theme="light"] .clientInviteMessageDialog > small { color: #65738a; font-size: 12px; line-height: 1.45; }
 }
 
 :root[data-theme="light"] :is(.reminderModal, .clientStatementModal, .clientPortalAccessModal) > .modalHeader,
