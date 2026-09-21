@@ -1176,7 +1176,7 @@ export default function AccountsWorkspace({
                 <h3>Quick Secure Link</h3>
                 <label>
                   Link validity
-                  <select id="portal-days" defaultValue="60">
+                  <select id="portal-days" defaultValue="365">
                     <option value="30">30 days</option>
                     <option value="60">60 days</option>
                     <option value="90">90 days</option>

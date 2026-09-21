@@ -5219,6 +5219,16 @@
   box-shadow: 0 26px 66px rgb(27 74 148 / 23%) !important;
 }
 
+/* The Client Portal has additional management sections after Photo Finder.
+   On desktop, keep its polished clipped header but let the dialog body scroll
+   so WhatsApp, invitations, and activity are always reachable. */
+@media (min-width: 901px) {
+  :root[data-theme="light"] .clientPortalAccessModal {
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+  }
+}
+
 :root[data-theme="light"] :is(.reminderModal, .clientStatementModal, .clientPortalAccessModal) > .modalHeader,
 :root[data-theme="light"] .clientStatementModal .statementHeader {
   padding: 22px 24px 19px;
