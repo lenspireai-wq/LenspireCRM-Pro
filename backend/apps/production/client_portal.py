@@ -75,6 +75,12 @@ def deliverable_thumbnail_url(item):
     if item.thumbnail_url:
         return item.thumbnail_url
     link = item.drive_link or ""
+    # Video-hosting links have stable public cover-image URLs.  This applies to
+    # every delivery type (Reels, Teaser, Cinematic Highlight, and full video)
+    # without exposing or downloading the private video itself.
+    youtube = re.search(r"(?:youtu\.be/|youtube(?:-nocookie)?\.com/(?:watch\?v=|embed/|shorts/))([A-Za-z0-9_-]{11})", link)
+    if youtube:
+        return f"https://i.ytimg.com/vi/{youtube.group(1)}/hqdefault.jpg"
     drive_file = re.search(r"/file/d/([a-zA-Z0-9_-]+)", link) or re.search(r"[?&]id=([a-zA-Z0-9_-]+)", link)
     if drive_file and "drive.google.com" in link:
         return f"https://drive.google.com/thumbnail?id={drive_file.group(1)}&sz=w1000"
