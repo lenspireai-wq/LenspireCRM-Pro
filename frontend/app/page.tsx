@@ -56,6 +56,10 @@ type MobileRoute = {
   accountsView: string;
 };
 const mobileRouteStorageKey = "lenspire-mobile-route";
+const documentTitleForStudio = (organizationName?: string) => {
+  const studioName = organizationName?.trim();
+  return studioName ? `${studioName} · LenspireCRM` : "LenspireCRM";
+};
 const sectionIcons: Record<Section, string> = {
   Dashboard: "⌂", Sales: "◎", Kanban: "▦", Operations: "◇", Calendar: "□",
   Accounts: "₹", Production: "▷", Billing: "▤", Reports: "↗",
@@ -128,6 +132,7 @@ function Login({
   useEffect(() => {
     setUsername(window.localStorage.getItem("lenspire-last-username") || "");
     setReturningName(window.localStorage.getItem("lenspire-last-user-name") || "");
+    document.title = "LenspireCRM";
   }, []);
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -145,6 +150,7 @@ function Login({
         return;
       }
       setSession(data.access, data.refresh, data.user);
+      document.title = documentTitleForStudio(data.user?.organization_name);
       window.localStorage.setItem("lenspire-last-username", data.user?.username || String(form.get("username") || ""));
       window.localStorage.setItem("lenspire-last-user-name", data.user?.display_name || data.user?.username || String(form.get("username") || ""));
       authenticated(ownerMode);
@@ -353,9 +359,7 @@ export default function Home() {
   useEffect(() => setStudioLogoUrl(auth.user?.organization_logo_url || ""), [auth.user?.organization_logo_url]);
   useEffect(() => setProfilePhotoUrl(auth.user?.profile_photo_url || ""), [auth.user?.profile_photo_url]);
   useEffect(() => {
-    document.title = auth.user?.organization_name
-      ? `${auth.user.organization_name} · LenspireCRM`
-      : "LenspireCRM";
+    document.title = documentTitleForStudio(auth.user?.organization_name);
   }, [auth.user?.organization_name]);
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 900px)");
