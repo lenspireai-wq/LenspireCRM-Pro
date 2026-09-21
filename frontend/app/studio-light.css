@@ -6248,6 +6248,32 @@
     text-align: center !important;
   }
 
+  /* Receivables stays easy to scan without consuming an oversized table row. */
+  :root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan {
+    gap: 5px;
+  }
+
+  :root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan > span {
+    min-height: 78px;
+    padding: 6px !important;
+  }
+
+  :root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan > span > b {
+    margin-top: 2px;
+  }
+
+  :root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .accountPlan .milestoneDue {
+    min-height: 0;
+    margin-top: 3px;
+    padding-top: 3px;
+  }
+
+  :root[data-theme="light"] .mainAccountsSticky .receivablesView .receivablesTable .milestoneDateButton {
+    min-height: 22px;
+    margin-top: 3px !important;
+    padding: 3px 5px;
+  }
+
   /* Client Ledger: settled milestones are calm green; every outstanding
      milestone is visibly soft red, including due dates not yet scheduled. */
   :root[data-theme="light"] .clientLedgerView .accountPlan > span:not(.paid) {
