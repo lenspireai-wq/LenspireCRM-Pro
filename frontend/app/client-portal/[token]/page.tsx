@@ -34,6 +34,9 @@ export default function ClientPortalPage() {
     };
   }, []);
   useEffect(() => { void load(); }, [token]);
+  useEffect(() => {
+    if (data?.studio?.name) document.title = `${data.studio.name} Client Portal`;
+  }, [data?.studio?.name]);
   const feedback = async (deliverable: any, action: "approve" | "changes", feedbackMessage = "") => {
     if (action === "changes" && !feedbackMessage.trim()) return;
     setBusy(deliverable.id);
@@ -56,8 +59,8 @@ export default function ClientPortalPage() {
   return <main className="clientPortal">
     <section className="clientPortalHero">
       <div className="clientPortalHeroGlow" aria-hidden="true" />
-      <div className="clientPortalHeroTop"><img className="clientPortalStudioLogo" src={data.studio.logo_url || "/ankit-studios-logo.png"} alt={data.studio.name} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = "/ankit-studios-logo.png"; }} /><span>Private client space</span></div>
-      <small>{data.studio.name} · CLIENT PORTAL</small>
+      <div className="clientPortalHeroTop"><img className="clientPortalStudioLogo" src={data.studio.logo_url || "/ankit-studios-logo.png"} alt={data.studio.name} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = "/ankit-studios-logo.png"; }} /><span>{data.studio.name} · Private client space</span></div>
+      <small>CLIENT PORTAL</small>
       <h1>{booking.couple_name || booking.client_name}</h1>
       <p>{booking.code} <i>•</i> {booking.event_type} <i>•</i> {date(booking.event_date)}</p>
       {nextEvent && <aside className="clientPortalHeroFeature"><small>UP NEXT</small><b>{nextEvent.event_type}</b><span>{eventDate(nextEvent)}{nextEvent.start_time ? ` · ${formatTime(nextEvent.start_time)}` : ""}</span></aside>}
