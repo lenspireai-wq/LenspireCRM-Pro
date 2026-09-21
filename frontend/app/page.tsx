@@ -149,6 +149,10 @@ function Login({
         setError("This account does not have LenspireAI Owner access.");
         return;
       }
+      // Queries are held in memory for the current browser tab. Clear the
+      // previous account's data before mounting the next studio/user session;
+      // otherwise a fast logout/login can briefly reuse an empty event list.
+      queryClient.clear();
       setSession(data.access, data.refresh, data.user);
       document.title = documentTitleForStudio(data.user?.organization_name);
       window.localStorage.setItem("lenspire-last-username", data.user?.username || String(form.get("username") || ""));
@@ -299,6 +303,8 @@ export default function Home() {
   const logout = () => {
     const username = auth.user?.username?.trim();
     if (username) window.localStorage.setItem("lenspire-last-username", username);
+    // Never carry CRM records or dashboard totals into the next sign-in.
+    queryClient.clear();
     auth.logout();
   };
   const [mounted, setMounted] = useState(false),
