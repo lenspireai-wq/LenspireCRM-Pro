@@ -382,23 +382,51 @@ export default function AccountsWorkspace({
       .toLowerCase()
       .includes(query.toLowerCase()),
   );
-  const collectionPayments = payments.filter((payment) => {
-    const account = accounts.find((item) => item.id === Number(payment.booking));
-    const searchable = [
-      account?.client,
-      account?.couple,
-      account?.booking_code,
-      payment.payment_type,
-      payment.payment_mode,
-      payment.status,
-      payment.amount,
-      payment.due_date,
-    ]
-      .filter((value) => value !== undefined && value !== null)
-      .join(" ")
-      .toLowerCase();
-    return searchable.includes(query.trim().toLowerCase());
-  });
+  // Collections is a receipt register: unpaid commitments belong in
+  // Receivables. Confirmed bookings created before the advance ledger entry
+  // existed still keep their advance on the lead, so surface that receipt here
+  // without double-counting it when a paid Advance payment already exists.
+  const confirmedAdvanceCollections = accounts
+    .filter((account) => account.unrecordedAdvance > 0)
+    .map((account) => ({
+      id: `confirmed-advance-${account.id}`,
+      booking: account.id,
+      client_name: account.client,
+      amount: account.unrecordedAdvance,
+      payment_type: "Advance",
+      payment_mode: account.lead?.payment_mode || "",
+      status: "Paid",
+      paid_at: account.lead?.payment_received_date || null,
+      created_at: account.lead?.created_at || null,
+      received_by: account.lead?.received_by || "",
+      isConfirmedLeadAdvance: true,
+    }));
+  const collectionPayments = [
+    ...payments.filter((payment) => payment.status === "Paid"),
+    ...confirmedAdvanceCollections,
+  ]
+    .filter((payment) => {
+      const account = accounts.find((item) => item.id === Number(payment.booking));
+      const searchable = [
+        account?.client,
+        account?.couple,
+        account?.booking_code,
+        payment.payment_type,
+        payment.payment_mode,
+        payment.status,
+        payment.amount,
+        payment.paid_at,
+      ]
+        .filter((value) => value !== undefined && value !== null)
+        .join(" ")
+        .toLowerCase();
+      return searchable.includes(query.trim().toLowerCase());
+    })
+    .sort((first, second) =>
+      String(second.paid_at || second.created_at || "").localeCompare(
+        String(first.paid_at || first.created_at || ""),
+      ),
+    );
   const ageingRows = accounts.flatMap((account) =>
     account.stages
       .filter((stage: Row) => stage.remaining > 0)
@@ -573,6 +601,7 @@ export default function AccountsWorkspace({
           {items.map((p, index) => {
             const client = accounts.find((a) => a.id === p.booking)?.client || p.client_name || "—";
             const isReportTable = variant === "reportPaymentActivity";
+            const isConfirmedLeadAdvance = Boolean(p.isConfirmedLeadAdvance);
             const initials = String(client)
               .split(/\s+/)
               .filter(Boolean)
@@ -592,38 +621,42 @@ export default function AccountsWorkspace({
               <td>{date(p.paid_at || p.due_date || p.created_at)}</td>
               <td>{p.received_by || "—"}</td>
               <td>
-                <div className="rowActions">
-                  {p.status === "Paid" && (
-                    <button
-                      className="receiptAction"
-                      title="View receipt"
-                      aria-label="View receipt"
-                      onClick={() => setReceiptPayment(p)}
-                    >
-                      ▤
-                    </button>
-                  )}
-                  {!readOnly && (
-                    <>
+                {isConfirmedLeadAdvance ? (
+                  <small>Recorded in Sales</small>
+                ) : (
+                  <div className="rowActions">
+                    {p.status === "Paid" && (
                       <button
-                        className="editAction"
-                        title="Edit payment"
-                        aria-label="Edit payment"
-                        onClick={() => openPayment(p)}
+                        className="receiptAction"
+                        title="View receipt"
+                        aria-label="View receipt"
+                        onClick={() => setReceiptPayment(p)}
                       >
-                        ✎
+                        ▤
                       </button>
-                      <button
-                        className="deleteAction"
-                        title="Delete payment"
-                        aria-label="Delete payment"
-                        onClick={() => remove(p)}
-                      >
-                        ×
-                      </button>
-                    </>
-                  )}
-                </div>
+                    )}
+                    {!readOnly && (
+                      <>
+                        <button
+                          className="editAction"
+                          title="Edit payment"
+                          aria-label="Edit payment"
+                          onClick={() => openPayment(p)}
+                        >
+                          ✎
+                        </button>
+                        <button
+                          className="deleteAction"
+                          title="Delete payment"
+                          aria-label="Delete payment"
+                          onClick={() => remove(p)}
+                        >
+                          ×
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
               </td>
             </tr>;
           })}
