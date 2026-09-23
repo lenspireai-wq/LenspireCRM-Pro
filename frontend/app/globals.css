@@ -12427,6 +12427,35 @@ table > tbody > tr:has(td[colspan])::before {
   .accountsRecentPaymentsPanel .panelHead { align-items: flex-start; gap: 12px; padding: 16px; }
 }
 
+/* Client statements carry nine financial columns. Give the desktop dialog
+   nearly the full viewport so complete entries remain visible at a glance. */
+@media (min-width: 701px) {
+  .statementBackdrop {
+    padding: clamp(12px, 1.5vw, 24px);
+  }
+  .accountModal.clientStatementModal {
+    width: min(1480px, calc(100vw - 32px));
+    max-width: none;
+  }
+  .statementLedgerTable {
+    overflow-x: auto;
+  }
+  .statementLedgerTable table {
+    width: 100%;
+    min-width: 1120px;
+    table-layout: fixed;
+  }
+  .statementLedgerTable th:nth-child(1) { width: 10%; }
+  .statementLedgerTable th:nth-child(2) { width: 22%; }
+  .statementLedgerTable th:nth-child(3) { width: 9%; }
+  .statementLedgerTable th:nth-child(4) { width: 8%; }
+  .statementLedgerTable th:nth-child(5) { width: 11%; }
+  .statementLedgerTable th:nth-child(6),
+  .statementLedgerTable th:nth-child(7),
+  .statementLedgerTable th:nth-child(8) { width: 11%; }
+  .statementLedgerTable th:nth-child(9) { width: 9%; }
+}
+
 /* A statement has nine financial columns.  On a phone, preserve a real
    ledger and let it swipe horizontally instead of squeezing every heading
    and value into unreadable fragments. */
