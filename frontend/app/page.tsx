@@ -58,6 +58,10 @@ type MobileRoute = {
 };
 const mobileRouteStorageKey = "lenspire-mobile-route";
 const documentTitleForStudio = (organizationName?: string) => studioDocumentTitle({ organization_name: organizationName || "" });
+const refreshedAssetUrl = (url?: string) => {
+  if (!url) return "";
+  return `${url}${url.includes("?") ? "&" : "?"}v=${Date.now()}`;
+};
 const sectionIcons: Record<Section, string> = {
   Dashboard: "⌂", Sales: "◎", Kanban: "▦", Operations: "◇", Calendar: "□",
   Accounts: "₹", Production: "▷", Billing: "▤", Reports: "↗",
@@ -425,6 +429,15 @@ export default function Home() {
     if (section !== "Operations") setOperationsView("Dashboard");
   }, [section]);
   useEffect(() => {
+    if (
+      section === "Operations" &&
+      auth.user?.role?.trim().toLowerCase() === "editor" &&
+      operationsView !== "Completed Events"
+    ) {
+      setOperationsView("Completed Events");
+    }
+  }, [section, auth.user?.role, operationsView]);
+  useEffect(() => {
     if (section !== "Accounts") setAccountsView("Payment Dashboard");
   }, [section]);
   useEffect(() => {
@@ -557,7 +570,7 @@ export default function Home() {
       const form = new FormData();
       form.append("logo", file);
       const { data } = await api.post("/auth/studio-logo/", form);
-      setStudioLogoUrl(data.logo_url || "");
+      setStudioLogoUrl(refreshedAssetUrl(data.logo_url));
     } catch (error: any) {
       window.alert(error?.response?.data?.detail || "Could not upload the studio logo.");
     } finally {
@@ -572,7 +585,7 @@ export default function Home() {
       const form = new FormData();
       form.append("photo", file);
       const { data } = await api.post("/auth/profile-photo/", form);
-      setProfilePhotoUrl(data.profile_photo_url || "");
+      setProfilePhotoUrl(refreshedAssetUrl(data.profile_photo_url));
     } catch (error: any) {
       window.alert(error?.response?.data?.detail || "Could not upload your profile photo.");
     } finally {
@@ -585,7 +598,7 @@ export default function Home() {
       <aside aria-hidden={sidebarHidden ? true : undefined}>
         <div className="brand studioSidebarBrand">
           <input ref={studioLogoInputRef} className="studioLogoInput" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => void uploadStudioLogo(event.target.files?.[0])} />
-          {studioLogoUrl ? <img className="studioSidebarLogo" src={apiAssetUrl(studioLogoUrl)} alt={`${studioName} logo`} /> : <div className="studioLogoPlaceholder" aria-label={`${studioName} logo placeholder`}><span>+</span><b>{studioName}</b></div>}
+          {studioLogoUrl ? <img className="studioSidebarLogo" src={apiAssetUrl(studioLogoUrl)} alt={`${studioName} logo`} onError={() => setStudioLogoUrl("")} /> : <div className="studioLogoPlaceholder" aria-label={`${studioName} logo placeholder`}><span>+</span><b>{studioName}</b></div>}
           {canManageStudioLogo && <button type="button" className="studioLogoButton" onClick={() => studioLogoInputRef.current?.click()} disabled={studioLogoUploading} title={studioLogoUrl ? "Change studio logo" : "Add studio logo"}>{studioLogoUploading ? "Uploading…" : studioLogoUrl ? "Change logo" : "Add Logo"}</button>}
         </div>
         <nav aria-label="Primary navigation">
@@ -624,7 +637,7 @@ export default function Home() {
         <div className="profile">
           <input ref={profilePhotoInputRef} className="studioLogoInput" type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void uploadProfilePhoto(event.target.files?.[0])} />
           <button type="button" className="profileAvatar profileAvatarButton" aria-label={profilePhotoUrl ? "Change your profile photo" : "Add your profile photo"} title={profilePhotoUploading ? "Uploading profile photo" : profilePhotoUrl ? "Change profile photo" : "Add profile photo"} onClick={() => profilePhotoInputRef.current?.click()} disabled={profilePhotoUploading}>
-            {profilePhotoUrl ? <img src={apiAssetUrl(profilePhotoUrl)} alt="Your profile" /> : <span aria-hidden="true">{(auth.user?.display_name || auth.user?.username || "U").split(/\s+/).map((part: string) => part[0]).join("").slice(0, 2).toUpperCase()}</span>}
+            {profilePhotoUrl ? <img src={apiAssetUrl(profilePhotoUrl)} alt="Your profile" onError={() => setProfilePhotoUrl("")} /> : <span aria-hidden="true">{(auth.user?.display_name || auth.user?.username || "U").split(/\s+/).map((part: string) => part[0]).join("").slice(0, 2).toUpperCase()}</span>}
           </button>
           <span className="profileIdentity"><b>{auth.user?.display_name || auth.user?.username}</b><small><i />{auth.user?.role}</small><time>{formatDate(new Date())}</time></span>
           <button className="profilePower" aria-label="Sign out" onClick={logout}>◯</button>

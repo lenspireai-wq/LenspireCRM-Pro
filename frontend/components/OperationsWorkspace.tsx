@@ -183,6 +183,10 @@ export default function OperationsWorkspace({
   view?: View;
   setView?: (value: View) => void;
 }) {
+  const user = useAuthStore((state) => state.user);
+  const isEditor = user?.role?.trim().toLowerCase() === "editor";
+  const availableViews = isEditor ? (["Completed Events"] as View[]) : views;
+  const activeView: View = isEditor ? "Completed Events" : view;
   const setViewSafe = setView ?? (() => {});
   const [photographers, setPhotographers] = useState<Row[]>([]);
   const [eventDraft, setEventDraft] = useState<Row | null>(null);
@@ -191,7 +195,7 @@ export default function OperationsWorkspace({
   const [error, setError] = useState("");
   useEffect(() => {
     setError("");
-  }, [view]);
+  }, [activeView]);
   const [importSummary, setImportSummary] = useState("");
   const [month, setMonth] = useState(() => new Date());
   const [importing, setImporting] = useState(false);
@@ -217,14 +221,14 @@ export default function OperationsWorkspace({
     }
   }, [crewQuery.data]);
   useEffect(() => {
-    if ((view !== "Dashboard" && view !== "Photographers Details") || !dashboardControlsRef.current) return;
+    if ((activeView !== "Dashboard" && activeView !== "Photographers Details") || !dashboardControlsRef.current) return;
     const controls = dashboardControlsRef.current;
     const updateHeight = () => setDashboardControlsHeight(controls.getBoundingClientRect().height);
     updateHeight();
     const observer = new ResizeObserver(updateHeight);
     observer.observe(controls);
     return () => observer.disconnect();
-  }, [view, eventsQuery.isPending]);
+  }, [activeView, eventsQuery.isPending]);
   const events: Row[] = Array.isArray(eventsQuery.data)
     ? eventsQuery.data
     : eventsQuery.data?.results || [];
@@ -370,7 +374,7 @@ export default function OperationsWorkspace({
         },
         body: file,
       });
-      let auth = useAuthStore.getState();
+      const auth = useAuthStore.getState();
       let response = await upload(auth.access);
       // This direct file upload does not pass through Axios's normal token
       // refresh interceptor. Refresh once and retry so a stale access token
@@ -437,24 +441,24 @@ export default function OperationsWorkspace({
     }
   };
 
-  if (view !== "Photographers Details" && eventsQuery.isPending) {
+  if (activeView !== "Photographers Details" && eventsQuery.isPending) {
     return <div className="operationsWorkspace" role="status">Loading events…</div>;
   }
-  if (view !== "Photographers Details" && eventsQuery.isError) {
+  if (activeView !== "Photographers Details" && eventsQuery.isError) {
     return <div className="operationsWorkspace" role="alert">Could not load events. <button onClick={() => eventsQuery.refetch()}>Retry</button></div>;
   }
 
   return (
     <div
-      className={`operationsWorkspace${view === "Dashboard" ? " operationsDashboardView" : view === "Photographers Details" ? " photographersDetailsView" : ""}`}
-      style={view === "Dashboard" || view === "Photographers Details" ? { "--operations-controls-height": `${dashboardControlsHeight}px` } as CSSProperties : undefined}
+      className={`operationsWorkspace${activeView === "Dashboard" ? " operationsDashboardView" : activeView === "Photographers Details" ? " photographersDetailsView" : ""}`}
+      style={activeView === "Dashboard" || activeView === "Photographers Details" ? { "--operations-controls-height": `${dashboardControlsHeight}px` } as CSSProperties : undefined}
     >
       <div ref={dashboardControlsRef} className="operationsDashboardControls">
         <nav className="operationsTabs">
-          {views.map((item) => (
+          {availableViews.map((item) => (
             <button
               key={item}
-              className={view === item ? "active" : ""}
+              className={activeView === item ? "active" : ""}
               onClick={() => setViewSafe(item)}
             >
               <span className="desktopOperationsTabLabel">{item === "Photographers Details" ? "Photographers" : item}</span>
@@ -462,8 +466,8 @@ export default function OperationsWorkspace({
             </button>
           ))}
         </nav>
-        <div className={`operationsActions${view === "Upcoming Events" || view === "Completed Events" ? " upcomingEventActions" : view === "Photographers Details" ? " photographerActions" : ""}`}>
-        {(view === "Upcoming Events" || view === "Completed Events") && (
+        <div className={`operationsActions${activeView === "Upcoming Events" || activeView === "Completed Events" ? " upcomingEventActions" : activeView === "Photographers Details" ? " photographerActions" : ""}`}>
+        {(activeView === "Upcoming Events" || activeView === "Completed Events") && (
           <>
             <button type="button" className="operationsActionButton" onClick={exportEvents} title="Export events to Excel">
               <span>Export</span><span className="operationsActionIcon" aria-hidden="true">↗</span>
@@ -483,7 +487,7 @@ export default function OperationsWorkspace({
             </label>
           </>
         )}
-        {view === "Photographers Details" && (
+        {activeView === "Photographers Details" && (
           <>
             <button type="button" className="operationsActionButton" onClick={exportPhotographers} title="Export photographers to Excel">
               <span>Export</span><span className="operationsActionIcon" aria-hidden="true">↗</span>
@@ -511,7 +515,7 @@ export default function OperationsWorkspace({
             )}
           </>
         )}
-        {view === "Upcoming Events" && (
+        {activeView === "Upcoming Events" && (
           <>
             {!readOnly && (
               <button
@@ -531,15 +535,15 @@ export default function OperationsWorkspace({
         </p>
       )}
       {importSummary && <div className="operationsImportSummary" role="status">{importSummary}</div>}
-      {view === "Dashboard" && (
+      {activeView === "Dashboard" && (
         <Dashboard
           events={events}
           photographers={photographers}
           open={setViewSafe}
         />
       )}
-      {view === "Calendar" && <CalendarWorkspace />}
-      {view === "Upcoming Events" && (
+      {activeView === "Calendar" && <CalendarWorkspace />}
+      {activeView === "Upcoming Events" && (
         <EventTable
           events={upcoming}
           fitColumns
@@ -554,7 +558,7 @@ export default function OperationsWorkspace({
           }
         />
       )}
-      {view === "Completed Events" && (
+      {activeView === "Completed Events" && (
         <EventTable
           events={completed}
           fitColumns
@@ -568,7 +572,7 @@ export default function OperationsWorkspace({
           }
         />
       )}
-      {view === "Photographers Details" && (
+      {activeView === "Photographers Details" && (
         <CrewTable
           rows={matchingPhotographers}
           edit={readOnly ? undefined : setCrewDraft}

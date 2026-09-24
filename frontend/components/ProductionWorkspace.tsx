@@ -112,6 +112,14 @@ const activityTypes = [
   "Overdue Reminder",
 ];
 const dateLabel = (value?: string) => formatDate(value);
+const clientDisplayName = (job: Row) => {
+  const clientName = String(job.client_name || job.booking_code || "").trim();
+  const coupleName = String(job.couple_name || "").trim();
+  if (!clientName) return coupleName || "—";
+  return coupleName && coupleName !== clientName
+    ? `${clientName} (${coupleName})`
+    : clientName;
+};
 const editorStatusMessage = (status: string) =>
   ({
     "Submitted for Review": "Waiting for Production Head review",
@@ -670,7 +678,7 @@ export default function ProductionWorkspace({
                   >
                     <header>
                       <div>
-                        <h3>{job.client_name}</h3>
+                        <h3>{clientDisplayName(job)}</h3>
                         <p>{job.event_type}</p>
                       </div>
                       <div className="taskBadges">
