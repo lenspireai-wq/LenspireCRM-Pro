@@ -40,9 +40,6 @@ class LeadSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"lost_reason": "Select a reason when marking a lead as Lost."})
         if status_value != "Lost":
             attrs["lost_reason"] = ""
-        event_date = attrs.get("event_date", getattr(self.instance, "event_date", None))
-        if not event_date:
-            raise serializers.ValidationError({"event_date": "Event date is required."})
         next_followup = attrs.get("next_followup_at", getattr(self.instance, "next_followup_at", None))
         if status_value == "Follow-up" and not next_followup:
             raise serializers.ValidationError({"next_followup_at": "Schedule the next follow-up date and time."})

@@ -28,6 +28,28 @@ class TestLeadAPI:
         assert response.data["mobile"] == "9876543210"
         assert Lead.objects.filter(organization=organization).count() == 1
 
+    def test_create_lead_with_tbd_event_date(self, authenticated_client, organization):
+        """A new inquiry may be saved before the client selects an event date."""
+        response = authenticated_client.post(
+            reverse("lead-list"),
+            {
+                "name": "TBD Couple",
+                "mobile": "9876543299",
+                "event_type": "Wedding",
+                "event_date": None,
+                "city": "Pune",
+                "source": "Instagram",
+                "status": "New",
+                "priority": "Medium",
+            },
+            format="json",
+        )
+
+        assert response.status_code == 201
+        lead = Lead.objects.get(pk=response.data["id"])
+        assert lead.organization == organization
+        assert lead.event_date is None
+
     def test_duplicate_mobile_rejected(self, authenticated_client, organization):
         """Test that duplicate mobile numbers are rejected"""
         Lead.objects.create(

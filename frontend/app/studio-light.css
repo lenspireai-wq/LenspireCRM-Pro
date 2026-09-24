@@ -3501,7 +3501,8 @@
     #fbfdff;
 }
 
-:root[data-theme="light"] .leadModal .leadFormGrid > label {
+:root[data-theme="light"] .leadModal .leadFormGrid > label,
+:root[data-theme="light"] .leadModal .leadFormGrid > .leadEventDateField {
   padding: 9px 10px 10px;
   border: 1px solid transparent;
   border-radius: 15px;
@@ -3510,11 +3511,13 @@
   transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 
-:root[data-theme="light"] .leadModal .leadFormGrid > label:hover {
+:root[data-theme="light"] .leadModal .leadFormGrid > label:hover,
+:root[data-theme="light"] .leadModal .leadFormGrid > .leadEventDateField:hover {
   border-color: #e0ebff;
 }
 
-:root[data-theme="light"] .leadModal .leadFormGrid > label:focus-within {
+:root[data-theme="light"] .leadModal .leadFormGrid > label:focus-within,
+:root[data-theme="light"] .leadModal .leadFormGrid > .leadEventDateField:focus-within {
   border-color: #b7d2ff;
   box-shadow: 0 8px 22px rgb(36 107 253 / 10%);
 }
@@ -3531,6 +3534,9 @@
   background: linear-gradient(145deg, #f2efff, #fcfbff);
 }
 :root[data-theme="light"] .leadModal .leadFormGrid > label:nth-child(4n + 3) {
+  background: linear-gradient(145deg, #effcf6, #fbfffd);
+}
+:root[data-theme="light"] .leadModal .leadFormGrid > .leadEventDateField {
   background: linear-gradient(145deg, #effcf6, #fbfffd);
 }
 :root[data-theme="light"] .leadModal .leadFormGrid > label:nth-child(4n) {

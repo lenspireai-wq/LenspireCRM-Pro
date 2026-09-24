@@ -105,6 +105,7 @@ const money = (value: any) =>
     maximumFractionDigits: 0,
   }).format(Number(value) || 0);
 const date = (value: any) => formatDate(value);
+const eventDate = (value: any) => formatDate(value, "TBD");
 const dateTime = (value: any) => formatDateTime(value, "Not scheduled");
 
 export default function SalesWorkspace({
@@ -943,7 +944,7 @@ function LeadTable({
                 {l.client_mobile || l.mobile || "—"}
               </td>
               <td>{l.event_type}</td>
-              <td>{date(l.event_date)}</td>
+              <td>{eventDate(l.event_date)}</td>
               <td>{l.source || "Other"}</td>
               <td>
                 <span
@@ -1100,6 +1101,7 @@ function LeadModal({
           }
         : emptyLead,
     ),
+    [dateTbd, setDateTbd] = useState(Boolean(lead && !lead.event_date)),
     [error, setError] = useState(""),
     [saving, setSaving] = useState(false);
   const saveLeadMutation = useApiMutation<
@@ -1129,7 +1131,7 @@ function LeadModal({
       budget: form.budget || null,
       total_closing: form.total_closing || null,
       advance_received: form.advance_received || null,
-      event_date: form.event_date || null,
+      event_date: dateTbd ? null : form.event_date || null,
       next_followup_at: form.next_followup_at || null,
       payment_received_date: form.payment_received_date || null,
     };
@@ -1198,15 +1200,29 @@ function LeadModal({
               ]}
             />
           </label>
-          <label>
-            Event Date
+          <div className={`leadEventDateField ${dateTbd ? "isTbd" : ""}`}>
+            <label htmlFor="lead-event-date">Event Date</label>
             <input
+              id="lead-event-date"
               type="date"
-              required
+              required={!dateTbd}
+              disabled={dateTbd}
               value={form.event_date}
               onChange={(e) => set("event_date", e.target.value)}
             />
-          </label>
+            <label className="leadTbdDateOption">
+              <input
+                type="checkbox"
+                checked={dateTbd}
+                onChange={(event) => {
+                  const checked = event.target.checked;
+                  setDateTbd(checked);
+                  if (checked) set("event_date", "");
+                }}
+              />
+              <span>TBD Date</span>
+            </label>
+          </div>
           <label>
             Mobile Number
             <input
@@ -1548,7 +1564,7 @@ function LeadDetail({
                 : ""}
             </h2>
             <p>
-              {lead.event_type} · {date(lead.event_date)} · {lead.city}
+              {lead.event_type} · {eventDate(lead.event_date)} · {lead.city}
             </p>
           </div>
           <button onClick={onClose}>×</button>
