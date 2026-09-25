@@ -1252,6 +1252,13 @@ input:-webkit-autofill:active {
 .clientAuthLight .clientShowPassword input { accent-color: #6d5bd0; }
 .clientAuthLight .primary { border-color: #6d5bd0; background: linear-gradient(135deg, #7665e1, #5b7edc); box-shadow: 0 10px 24px rgb(91 96 205 / 24%); color: #fff; }
 .clientAuthLight .primary:hover:not(:disabled) { background: linear-gradient(135deg, #8677ea, #6c8ceb); }
+.clientAuthStudioLogo { position:relative; z-index:1; width:min(220px,72%); height:110px; margin-bottom:28px; object-fit:contain; object-position:left center; filter:drop-shadow(0 10px 20px rgb(52 48 104 / 14%)); }
+.clientAuthCouple { position:relative; z-index:1; margin:14px 0 0!important; color:#6655c8!important; font-size:16px; font-weight:800; }
+.clientAuthOwnership { position:relative; z-index:1; display:grid; gap:7px; margin-top:auto; padding-top:28px; color:#65708a; font-size:11px; line-height:1.5; }
+.clientAuthOwnership p { color:inherit!important; }
+.clientAuthOwnership b { color:#3a315f; }
+.clientAuthOwnership + .clientAuthSecurity { margin-top:0!important; padding-top:16px; }
+@media(max-width:760px) { .clientAuthStudioLogo { width:160px; height:72px; margin-bottom:18px; }.clientAuthCouple { margin-top:8px!important; }.clientAuthOwnership { margin-top:18px; padding-top:0; font-size:10px; }.clientAuthOwnership + .clientAuthSecurity { margin-top:0!important; padding-top:10px; } }
 
 .clientDeliverable.hasThumbnail { grid-template-columns: 132px 1fr auto; }
 .clientGalleryThumbnail { grid-row: span 3; width: 132px; height: 94px; border: 1px solid rgb(212 180 119 / 24%); border-radius: 11px; object-fit: cover; background: #1a1815; }

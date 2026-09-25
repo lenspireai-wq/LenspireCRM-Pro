@@ -204,6 +204,8 @@ class ProductionApiTests(TestCase):
         self.assertEqual(portal.data["payments"][0]["status"], "Paid")
 
     def test_client_invitation_pin_login_reset_disable_and_audit(self):
+        self.lead.couple_name = "Alex & Sam"
+        self.lead.save(update_fields=("couple_name",))
         invited = self.client.post(
             "/api/client-portal/invitations/",
             {"booking": self.booking.id, "name": "Test Client", "email": "client@example.com", "mobile": "919999999999"},
@@ -213,6 +215,8 @@ class ProductionApiTests(TestCase):
         self.assertIn("wa.me/919999999999", invited.data["whatsapp_url"])
         self.assertIn("/client-portal/login?studio=studio", invited.data["login_url"])
         self.assertIn(invited.data["login_url"], invited.data["message"])
+        self.assertIn("couple=Alex%20%26%20Sam", invited.data["url"])
+        self.assertIn("Hello Test Client (Alex & Sam),", invited.data["message"])
         whatsapp = self.client.post(
             "/api/client-portal/whatsapp/",
             {"booking": self.booking.id, "message_type": "payment_reminder", "event": "prepared"},
@@ -225,6 +229,11 @@ class ProductionApiTests(TestCase):
         self.assertEqual(copied.status_code, 200)
         invite_token = urlparse(invited.data["url"]).path.rstrip("/").split("/")[-1]
         public = APIClient()
+        invite_details = public.get(f"/api/client-portal/auth/setup/?token={invite_token}")
+        self.assertEqual(invite_details.status_code, 200, invite_details.data)
+        self.assertEqual(invite_details.data["studio"]["name"], "Studio")
+        self.assertEqual(invite_details.data["couple_name"], "Alex & Sam")
+        self.assertEqual(invite_details.data["display_name"], "Test Client (Alex & Sam)")
         setup = public.post("/api/client-portal/auth/setup/", {"token": invite_token, "password": "1234"}, format="json")
         self.assertEqual(setup.status_code, 200, setup.data)
         self.assertEqual(public.post("/api/client-portal/auth/setup/", {"token": invite_token, "password": "1234"}, format="json").status_code, 401)

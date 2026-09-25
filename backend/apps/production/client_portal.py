@@ -52,6 +52,14 @@ def organization_available(organization):
     )
 
 
+def organization_logo_url(organization):
+    """Return a browser-safe logo URL without exposing the media storage path."""
+    logo_url = organization.logo_url or ""
+    if logo_url.startswith(settings.MEDIA_URL):
+        return f"/api/studio-logo/{organization.id}/"
+    return logo_url
+
+
 def ensure_portal_access(booking):
     access, _ = ClientPortalAccess.objects.get_or_create(
         booking=booking,
@@ -298,10 +306,14 @@ class ClientPortalInviteView(APIView):
         base = getattr(settings, "CLIENT_PORTAL_BASE_URL", "http://127.0.0.1:3000").rstrip("/")
         # WhatsApp uses this value for the invitation page preview.  Keep the
         # studio identity on the shared link instead of a CRM product label.
+        couple_name = str(getattr(booking.lead, "couple_name", "") or "").strip()
+        invite_display_name = f"{name} ({couple_name})" if couple_name and couple_name.casefold() != name.casefold() else name
         url = f"{base}/client-portal/setup/{raw}?studio={quote(booking.organization.name)}"
+        if couple_name:
+            url += f"&couple={quote(couple_name)}"
         login_url = f"{base}/client-portal/login?studio={quote(booking.organization.slug)}"
         text = (
-            f"Hello {name},\n\n"
+            f"Hello {invite_display_name},\n\n"
             f"Warm greetings from {booking.organization.name}. Your secure Client Portal is now ready.\n\n"
             f"Client ID: {booking.booking_code}\n\n"
             "Please use the link below to set your private 4-digit PIN and access your gallery, payments, and updates:\n"
@@ -401,6 +413,24 @@ class ClientPortalAuthView(APIView):
     permission_classes = (AllowAny,)
     authentication_classes = ()
     throttle_classes = (ClientPortalLoginThrottle,)
+
+    def get(self, request, action):
+        if action != "setup":
+            return Response({"detail": "Not found."}, status=404)
+        raw = str(request.query_params.get("token", ""))
+        user = ClientPortalUser.objects.select_related("booking__lead", "organization").filter(
+            invite_token_hash=token_hash(raw), active=True, invite_expires_at__gt=timezone.now()
+        ).first()
+        if not user or not organization_available(user.organization):
+            return Response({"detail": "This invitation is invalid or expired."}, status=401)
+        couple_name = str(getattr(user.booking.lead, "couple_name", "") or "").strip()
+        display_name = f"{user.name} ({couple_name})" if couple_name and couple_name.casefold() != user.name.casefold() else user.name
+        return Response({
+            "studio": {"name": user.organization.name, "logo_url": organization_logo_url(user.organization)},
+            "client_name": user.name,
+            "couple_name": couple_name,
+            "display_name": display_name,
+        })
 
     def post(self, request, action):
         now = timezone.now()
@@ -535,7 +565,7 @@ class ClientPortalPublicView(APIView):
         ).order_by("-created_at") if booking.lead_id else Attachment.objects.none()
         ClientPortalActivity.objects.create(organization=access.organization, access=access, booking=booking, action="Portal Opened", detail="Client opened the secure portal.")
         return Response({
-            "studio": {"name": access.organization.name, "phone": access.organization.contact_phone, "email": access.organization.contact_email, "logo_url": access.organization.logo_url},
+            "studio": {"name": access.organization.name, "phone": access.organization.contact_phone, "email": access.organization.contact_email, "logo_url": organization_logo_url(access.organization)},
             "read_only_preview": preview,
             "booking": {"id": booking.id, "code": booking.booking_code, "client_name": booking.customer.name, "couple_name": getattr(booking.lead, "couple_name", "") if booking.lead else "", "event_type": booking.event_type, "event_date": booking.event_date, "total": booking.quoted_amount, "received": received, "balance": max(booking.quoted_amount - received, 0)},
             "events": [

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ClientSetupForm from "./ClientSetupForm";
 
 type SetupPageProps = {
-  searchParams: Promise<{ studio?: string | string[] }>;
+  searchParams: Promise<{ studio?: string | string[]; couple?: string | string[] }>;
 };
 
 export async function generateMetadata({ searchParams }: SetupPageProps): Promise<Metadata> {
