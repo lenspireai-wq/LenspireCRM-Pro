@@ -17,12 +17,12 @@ jobs:
           install -m 700 -d ~/.ssh
           printf '%s\n' "$VPS_SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          printf '%s\n' '187.52.122.113 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID0TTNCpOS+vZ3OJqQAlk8+cljKktR/1vtSBqPME44kM' > ~/.ssh/known_hosts
+          printf '%s\n' '147.79.66.80 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEI0WQF3s7wyC8/FSSkLXeWcg+Y1AgwEOx89px8obdN8' > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
       - name: Check backup configuration without exposing secrets
         run: |
-          ssh -o BatchMode=yes -o IdentitiesOnly=yes root@187.52.122.113 '
+          ssh -o BatchMode=yes -o IdentitiesOnly=yes root@147.79.66.80 '
             set -eu
             cd /docker/lenspire-crm-django
             echo "api_container=$(docker compose ps -q api | wc -l)"
