@@ -1,9 +1,8 @@
 import hashlib
 import re
 import secrets
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal
 from datetime import timedelta
-from types import SimpleNamespace
 from urllib.parse import quote, urlparse
 
 from django.conf import settings
@@ -97,89 +96,29 @@ def deliverable_thumbnail_url(item):
     return ""
 
 
-PAYMENT_SCHEDULE = (
-    ("Advance", 10),
-    ("First Shoot", 40),
-    ("Wedding Day", 40),
-    ("Final Delivery", 10),
-)
+def client_payment_entries(booking, payments, confirmed_advance=Decimal("0.00")):
+    """Return the real receipt ledger shown to the client.
 
-
-def client_payment_schedule(booking, payments, events, confirmed_advance=Decimal("0.00")):
-    """Return the client-facing 10 / 40 / 40 / 10 booking schedule.
-
-    Payments are allocated in ledger order so older bookings with manually
-    entered or mislabelled pending rows still present one clear, complete
-    payment plan to the client. The financial totals themselves remain based
-    on the actual ledger entries.
+    A lead-confirmation advance may predate the payment ledger. Include only
+    the unrepresented portion, preserving its actual amount and receipt date.
     """
-    total = Decimal(booking.quoted_amount or 0)
-    allocated = Decimal("0.00")
-    stages = []
-    for index, (label, percent) in enumerate(PAYMENT_SCHEDULE):
-        amount = (
-            total - allocated
-            if index == len(PAYMENT_SCHEDULE) - 1
-            else (total * Decimal(percent) / Decimal("100")).quantize(
-                Decimal("0.01"), rounding=ROUND_HALF_UP
-            )
-        )
-        allocated += amount
-        stages.append({
-            "payment_type": label,
-            "percent": percent,
-            "status": "Pending",
-            "amount": amount,
-            "due_date": None,
-            "paid_at": None,
-        })
-
-    paid = [payment for payment in payments if payment.status == "Paid" and payment.payment_type != "Refund"]
-    # Older confirmed leads can have a recorded advance before their ledger
-    # payment was generated. Surface that confirmed advance as the first paid
-    # milestone, without inventing a database payment or double-counting one.
+    entries = []
     if confirmed_advance > 0:
-        paid.insert(0, SimpleNamespace(
-            amount=confirmed_advance,
-            paid_at=getattr(booking.lead, "payment_received_date", None),
-        ))
-    paid_index = 0
-    paid_remaining = Decimal("0.00")
-    for stage in stages:
-        remaining = stage["amount"]
-        while remaining > 0 and paid_index < len(paid):
-            payment = paid[paid_index]
-            if paid_remaining <= 0:
-                paid_remaining = Decimal(payment.amount or 0)
-            applied = min(remaining, paid_remaining)
-            remaining -= applied
-            paid_remaining -= applied
-            if remaining == 0:
-                stage["status"] = "Paid"
-                stage["paid_at"] = payment.paid_at
-            if paid_remaining <= 0:
-                paid_index += 1
-
-    pending = [payment for payment in payments if payment.status != "Paid" and payment.payment_type != "Refund"]
-    pending_index = 0
-    for stage in stages:
-        if stage["status"] == "Paid" or pending_index >= len(pending):
-            continue
-        stage["due_date"] = pending[pending_index].due_date
-        pending_index += 1
-
-    wedding_events = [
-        event for event in events
-        if (event.event_type or "").strip().casefold() == "wedding"
-    ] or [
-        event for event in events
-        if (event.event_type or "").strip().casefold().startswith("wedding")
-    ]
-    if wedding_events:
-        wedding_stage = next(stage for stage in stages if stage["payment_type"] == "Wedding Day")
-        if wedding_stage["status"] != "Paid":
-            wedding_stage["due_date"] = wedding_events[0].start_date
-    return stages
+        entries.append({
+            "payment_type": "Advance",
+            "status": "Paid",
+            "amount": confirmed_advance,
+            "due_date": None,
+            "paid_at": getattr(booking.lead, "payment_received_date", None),
+        })
+    entries.extend({
+        "payment_type": payment.payment_type,
+        "status": payment.status,
+        "amount": payment.amount,
+        "due_date": payment.due_date,
+        "paid_at": payment.paid_at,
+    } for payment in payments)
+    return entries
 
 
 class ClientPortalManageView(APIView):
@@ -583,8 +522,8 @@ class ClientPortalPublicView(APIView):
                 }
                 for event in events
             ],
-            "payments": client_payment_schedule(
-                booking, payments, events, confirmed_advance=confirmed_advance,
+            "payments": client_payment_entries(
+                booking, payments, confirmed_advance=confirmed_advance,
             ),
             "deliverables": [{"id": item.id, "name": item.name, "status": item.status, "drive_link": item.drive_link, "thumbnail_url": deliverable_thumbnail_url(item), "revision_notes": item.revision_notes} for item in deliverables],
             "quotations": [

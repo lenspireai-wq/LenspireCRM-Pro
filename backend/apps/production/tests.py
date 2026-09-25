@@ -155,36 +155,33 @@ class ProductionApiTests(TestCase):
             404,
         )
 
-    def test_client_portal_uses_standard_four_stage_payment_schedule(self):
-        self.booking.quoted_amount = "125000.00"
+    def test_client_portal_uses_actual_payment_ledger_entries(self):
+        self.booking.quoted_amount = "35000.00"
         self.booking.save(update_fields=("quoted_amount",))
+        self.lead.advance_received = "3479.00"
+        self.lead.payment_received_date = "2026-04-09"
+        self.lead.save(update_fields=("advance_received", "payment_received_date"))
         Payment.objects.filter(booking=self.booking).delete()
         Payment.objects.create(
             organization=self.organization, booking=self.booking, customer=self.customer,
-            amount="12500.00", payment_type="Advance", status="Paid", paid_at="2026-07-13T00:00:00Z",
-        )
-        Payment.objects.create(
-            organization=self.organization, booking=self.booking, customer=self.customer,
-            amount="50000.00", payment_type="First Shoot", status="Paid", paid_at="2026-08-24T00:00:00Z",
-        )
-        Payment.objects.create(
-            organization=self.organization, booking=self.booking, customer=self.customer,
-            amount="37500.00", payment_type="Advance", status="Pending", due_date="2026-12-31",
+            amount="31565.00", payment_type="First Shoot", status="Paid", paid_at="2026-09-23T00:00:00Z",
         )
         generated = self.client.post("/api/client-portal/access/", {"booking": self.booking.id, "expiry_days": 60}, format="json")
         token = generated.data["url"].rstrip("/").split("/")[-1]
         portal = APIClient().get(f"/api/client-portal/{token}/")
         self.assertEqual(portal.status_code, 200, portal.data)
         self.assertEqual(
-            [(item["payment_type"], str(item["amount"]), item["status"]) for item in portal.data["payments"]],
             [
-                ("Advance", "12500.00", "Paid"),
-                ("First Shoot", "50000.00", "Paid"),
-                ("Wedding Day", "50000.00", "Pending"),
-                ("Final Delivery", "12500.00", "Pending"),
+                (item["payment_type"], str(item["amount"]), item["status"], str(item["paid_at"] or item["due_date"]))
+                for item in portal.data["payments"]
+            ],
+            [
+                ("Advance", "3479.00", "Paid", "2026-04-09"),
+                ("First Shoot", "31565.00", "Paid", "2026-09-23 00:00:00+00:00"),
             ],
         )
-        self.assertEqual(str(portal.data["payments"][2]["due_date"]), "2026-10-10")
+        self.assertEqual(str(portal.data["booking"]["received"]), "35044.00")
+        self.assertEqual(str(portal.data["booking"]["balance"]), "0")
 
     def test_client_portal_includes_confirmed_lead_advance_without_ledger_row(self):
         Payment.objects.filter(booking=self.booking).delete()
@@ -199,9 +196,11 @@ class ProductionApiTests(TestCase):
         token = generated.data["url"].rstrip("/").split("/")[-1]
         portal = APIClient().get(f"/api/client-portal/{token}/")
         self.assertEqual(portal.status_code, 200, portal.data)
-        self.assertEqual(str(portal.data["booking"]["received"]), "100")
-        self.assertEqual(str(portal.data["booking"]["balance"]), "900")
+        self.assertEqual(str(portal.data["booking"]["received"]), "100.00")
+        self.assertEqual(str(portal.data["booking"]["balance"]), "900.00")
         self.assertEqual(portal.data["payments"][0]["status"], "Paid")
+        self.assertEqual(str(portal.data["payments"][0]["amount"]), "100.00")
+        self.assertEqual(str(portal.data["payments"][0]["paid_at"]), "2026-06-01")
 
     def test_client_invitation_pin_login_reset_disable_and_audit(self):
         self.lead.couple_name = "Alex & Sam"
