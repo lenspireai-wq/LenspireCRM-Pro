@@ -11,6 +11,7 @@ from apps.sales.models import Booking, Customer, Lead
 from apps.users.models import User
 from .models import CalendarEvent, PhotographerDetail
 from .google_sheets import CRM_ID_HEADER, _sheet_row_values, event_row, target_tab
+from .tasks import refresh_event_lifecycle
 
 
 class OperationsApiTests(TestCase):
@@ -208,7 +209,7 @@ class OperationsApiTests(TestCase):
         self.assertEqual(response.status_code, 201, response.data)
         self.assertEqual(response.data["status"], "Completed")
 
-    def test_future_event_cannot_remain_completed(self):
+    def test_event_reads_are_side_effect_free_and_lifecycle_runs_in_background(self):
         tomorrow = date.today() + timedelta(days=1)
         event = CalendarEvent.objects.create(
             organization=self.organization,
@@ -220,7 +221,46 @@ class OperationsApiTests(TestCase):
         response = self.client.get("/api/events/")
         self.assertEqual(response.status_code, 200)
         event.refresh_from_db()
+        self.assertEqual(event.status, "Completed")
+
+        result = refresh_event_lifecycle()
+
+        event.refresh_from_db()
         self.assertEqual(event.status, "Scheduled")
+        self.assertEqual(result["reverted"], 1)
+
+    def test_operations_dashboard_returns_counts_and_only_next_ten_events(self):
+        today = timezone.localdate()
+        for index in range(12):
+            CalendarEvent.objects.create(
+                organization=self.organization,
+                title=f"Upcoming {index}",
+                start_date=today + timedelta(days=index + 1),
+                status="Scheduled",
+            )
+        CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Today",
+            start_date=today,
+            status="In Progress",
+        )
+        CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Finished",
+            start_date=today - timedelta(days=1),
+            status="Completed",
+        )
+        PhotographerDetail.objects.create(organization=self.organization, name="Avi")
+
+        response = self.client.get("/api/events/dashboard/")
+
+        self.assertEqual(response.status_code, 200, response.data)
+        self.assertEqual(response.data["upcoming_count"], 13)
+        self.assertEqual(response.data["shooting_today_count"], 1)
+        self.assertEqual(response.data["completed_count"], 1)
+        self.assertEqual(response.data["crew_count"], 1)
+        self.assertEqual(len(response.data["next_shoots"]), 10)
+        self.assertEqual(response.data["next_shoots"][0]["title"], "Today")
 
     def test_cancelled_past_event_stays_cancelled(self):
         yesterday = date.today() - timedelta(days=1)

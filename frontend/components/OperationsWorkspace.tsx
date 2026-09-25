@@ -15,6 +15,13 @@ export type View =
   | "Completed Events"
   | "Photographers Details";
 type Row = Record<string, any>;
+type OperationsDashboardData = {
+  upcoming_count: number;
+  shooting_today_count: number;
+  completed_count: number;
+  crew_count: number;
+  next_shoots: Row[];
+};
 const views: View[] = [
   "Dashboard",
   "Calendar",
@@ -203,13 +210,25 @@ export default function OperationsWorkspace({
   const dashboardControlsRef = useRef<HTMLDivElement>(null);
   const eventFileInputRef = useState<HTMLInputElement | null>(null)[0];
   const photographerFileInputRef = useState<HTMLInputElement | null>(null)[0];
+  const isEventListView = activeView === "Upcoming Events" || activeView === "Completed Events";
+  const eventListScope = activeView === "Completed Events" ? "completed" : "upcoming";
+  const eventListPath = activeView === "Completed Events"
+    ? "/events/?page_size=5000&status=Completed&ordering=-start_date,-start_time,-id"
+    : "/events/?page_size=5000&status__in=Scheduled,Confirmed,In%20Progress&ordering=start_date,start_time,id";
+  const dashboardQuery = useApiQuery<OperationsDashboardData>(
+    queryKeys.operationsDashboard(),
+    "/events/dashboard/",
+    { enabled: activeView === "Dashboard" },
+  );
   const eventsQuery = useApiQuery<{ results: Row[] } | Row[]>(
-    queryKeys.events(),
-    "/events/?page_size=5000&ordering=start_date,start_time,id",
+    queryKeys.events({ scope: "operations", view: eventListScope }),
+    eventListPath,
+    { enabled: isEventListView },
   );
   const crewQuery = useApiQuery<{ results: Row[] } | Row[]>(
-    ["photographers"],
+    ["photographers", { scope: "operations" }],
     "/photographers/?page_size=500",
+    { enabled: activeView === "Photographers Details" || isEventListView },
   );
   useEffect(() => {
     if (crewQuery.data) {
@@ -250,8 +269,12 @@ export default function OperationsWorkspace({
       (await (url ? api.patch(url, payload) : api.post("/photographers/", payload)))
         .data,
   });
-  const invalidateEvents = () =>
-    queryClient.invalidateQueries({ queryKey: queryKeys.events() });
+  const invalidateEvents = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["events"] }),
+      queryClient.invalidateQueries({ queryKey: queryKeys.operationsDashboard() }),
+    ]);
+  };
   const matchingEvents = useMemo(() => {
     const terms = searchTerm.trim().toLowerCase().split(/\s+/).filter(Boolean);
     return events.filter(event => {
@@ -441,11 +464,23 @@ export default function OperationsWorkspace({
     }
   };
 
-  if (activeView !== "Photographers Details" && eventsQuery.isPending) {
+  if (activeView === "Dashboard" && dashboardQuery.isPending) {
+    return <div className="operationsWorkspace" role="status">Loading dashboard…</div>;
+  }
+  if (activeView === "Dashboard" && dashboardQuery.isError) {
+    return <div className="operationsWorkspace" role="alert">Could not load the Operations dashboard. <button onClick={() => dashboardQuery.refetch()}>Retry</button></div>;
+  }
+  if (isEventListView && eventsQuery.isPending) {
     return <div className="operationsWorkspace" role="status">Loading events…</div>;
   }
-  if (activeView !== "Photographers Details" && eventsQuery.isError) {
+  if (isEventListView && eventsQuery.isError) {
     return <div className="operationsWorkspace" role="alert">Could not load events. <button onClick={() => eventsQuery.refetch()}>Retry</button></div>;
+  }
+  if (activeView === "Photographers Details" && crewQuery.isPending) {
+    return <div className="operationsWorkspace" role="status">Loading photographers…</div>;
+  }
+  if (activeView === "Photographers Details" && crewQuery.isError) {
+    return <div className="operationsWorkspace" role="alert">Could not load photographers. <button onClick={() => crewQuery.refetch()}>Retry</button></div>;
   }
 
   return (
@@ -537,8 +572,7 @@ export default function OperationsWorkspace({
       {importSummary && <div className="operationsImportSummary" role="status">{importSummary}</div>}
       {activeView === "Dashboard" && (
         <Dashboard
-          events={events}
-          photographers={photographers}
+          summary={dashboardQuery.data!}
           open={setViewSafe}
         />
       )}
@@ -611,17 +645,13 @@ export default function OperationsWorkspace({
 }
 
 function Dashboard({
-  events,
-  photographers,
+  summary,
   open,
 }: {
-  events: Row[];
-  photographers: Row[];
+  summary: OperationsDashboardData;
   open: (view: View) => void;
 }) {
-  const today = new Date().toISOString().slice(0, 10),
-    upcoming = events.filter((e) => upcomingStatuses.has(e.status));
-  const nextShoots = upcoming.slice(0, 10);
+  const nextShoots = summary.next_shoots;
   return (
     <>
       <section className="salesKpis">
@@ -638,17 +668,13 @@ function Dashboard({
           }}
         >
           <span>Upcoming Events</span>
-          <b>{upcoming.length}</b>
+          <b>{summary.upcoming_count}</b>
           <small>awaiting completion</small>
         </article>
         <article>
           <span>Shooting Today</span>
           <b>
-            {
-              events.filter(
-                (e) => e.start_date === today && e.status === "In Progress",
-              ).length
-            }
+            {summary.shooting_today_count}
           </b>
           <small>events today</small>
         </article>
@@ -665,7 +691,7 @@ function Dashboard({
           }}
         >
           <span>Completed</span>
-          <b>{events.filter((e) => e.status === "Completed").length}</b>
+          <b>{summary.completed_count}</b>
           <small>finished shoots</small>
         </article>
         <article
@@ -681,7 +707,7 @@ function Dashboard({
           }}
         >
           <span>Crew</span>
-          <b>{photographers.length}</b>
+          <b>{summary.crew_count}</b>
           <small>photographers</small>
         </article>
       </section>

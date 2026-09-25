@@ -145,7 +145,7 @@ export default function AccountsWorkspace({
     "/bookings/?page_size=500",
   );
   const eventsQuery = useApiQuery<{ results: Row[] } | Row[]>(
-    queryKeys.events(),
+    queryKeys.events({ scope: "accounts", pageSize: 500 }),
     "/events/?page_size=500",
   );
   const remindersQuery = useApiQuery<{ results: Row[] } | Row[]>(

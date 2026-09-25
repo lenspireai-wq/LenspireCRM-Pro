@@ -26,6 +26,7 @@ export const queryKeys = {
   leads: (filters?: Record<string, unknown>) => ["leads", filters ?? {}] as const,
   lead: (id: number | string) => ["leads", id] as const,
   events: (filters?: Record<string, unknown>) => ["events", filters ?? {}] as const,
+  operationsDashboard: () => ["operations", "dashboard"] as const,
   customers: (filters?: Record<string, unknown>) => ["customers", filters ?? {}] as const,
   bookings: (filters?: Record<string, unknown>) => ["bookings", filters ?? {}] as const,
   payments: (filters?: Record<string, unknown>) => ["payments", filters ?? {}] as const,

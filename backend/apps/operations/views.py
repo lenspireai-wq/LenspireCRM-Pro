@@ -4,7 +4,7 @@ from calendar import month_abbr, month_name
 import re
 
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Count, F, Q
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.http import HttpResponse
 from django.utils.dateparse import parse_time
@@ -291,6 +291,42 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
 
         sync_calendar_event(event)
 
+    @action(detail=False, methods=["get"], url_path="dashboard")
+    def dashboard(self, request):
+        """Return the small summary needed by the Operations dashboard.
+
+        The dashboard previously downloaded every event just to calculate four
+        counts and render ten rows.  Keeping this endpoint compact also avoids
+        sharing a partially paginated event collection with other workspaces.
+        """
+        queryset = self.get_queryset()
+        today = timezone.localdate()
+        upcoming_statuses = ("Scheduled", "Confirmed", "In Progress")
+        counts = queryset.aggregate(
+            upcoming_count=Count("id", filter=Q(status__in=upcoming_statuses)),
+            shooting_today_count=Count(
+                "id", filter=Q(start_date=today, status="In Progress")
+            ),
+            completed_count=Count("id", filter=Q(status="Completed")),
+        )
+        next_shoots = queryset.filter(status__in=upcoming_statuses).order_by(
+            F("start_date").asc(nulls_last=True),
+            F("start_time").asc(nulls_last=True),
+            "id",
+        )[:10]
+        crew_count = PhotographerDetail.objects.filter(
+            organization=request.user.organization
+        ).count()
+        return Response(
+            {
+                **counts,
+                "crew_count": crew_count,
+                "next_shoots": CalendarEventSerializer(
+                    next_shoots, many=True, context=self.get_serializer_context()
+                ).data,
+            }
+        )
+
     def perform_destroy(self, instance):
         from .google_sheets import remove_calendar_event
 
@@ -299,40 +335,6 @@ class CalendarEventViewSet(OrganizationScopedViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        today = timezone.localdate()
-        # Lifecycle readiness is calculated when an event is saved.  On reads,
-        # only date-driven transitions need updating; doing this in SQL avoids
-        # loading every event before returning a paginated response.
-        newly_completed_ids = list(
-            queryset.filter(start_date__lt=today)
-            .exclude(status__in=("Cancelled", "Completed"))
-            .filter(booking__isnull=False, is_archived=False)
-            .values_list("id", flat=True)
-        )
-        queryset.filter(start_date__lt=today).exclude(
-            status__in=("Cancelled", "Completed")
-        ).update(status="Completed")
-        queryset.filter(start_date=today).exclude(
-            status__in=("Cancelled", "In Progress")
-        ).update(status="In Progress")
-        changed = []
-        for event in queryset.filter(status__in=("Completed", "In Progress")).exclude(
-            start_date__lte=today
-        ):
-            event.status = automatic_event_status(event)
-            changed.append(event)
-        if changed:
-            CalendarEvent.objects.bulk_update(changed, ("status",))
-
-        # Date-driven completion is applied above with a bulk update. Reconcile
-        # only events that changed in this request; reprocessing every historic
-        # event would make the Calendar progressively slower as data grows.
-        for event in CalendarEvent.objects.filter(id__in=newly_completed_ids).select_related(
-            "booking", "booking__lead", "booking__customer"
-        ):
-            self._sync_production(event)
-            transaction.on_commit(lambda event=event: self._sync_google_sheet(event))
-
         # Calendar screens need both dated events in their visible grid and
         # date-TBD events assigned to the selected month.  These parameters
         # intentionally bypass the normal AND-only filter combination.
