@@ -1,26 +1,13 @@
 "use client";
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import dynamic from "next/dynamic";
 import { api, apiAssetUrl, getSignInErrorMessage } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import { formatDate } from "@/lib/date-format";
 import { queryClient, queryKeys } from "@/lib/query";
 import HeaderSearch from "@/components/HeaderSearch";
-import SalesWorkspace from "@/components/SalesWorkspace";
-import OperationsWorkspace, { type View as OperationsView } from "@/components/OperationsWorkspace";
-import AccountsWorkspace from "@/components/AccountsWorkspace";
-import ProductionWorkspace, { type ProductionView } from "@/components/ProductionWorkspace";
-import OwnerPortal from "@/components/OwnerPortal";
-import DashboardWorkspace from "@/components/DashboardWorkspace";
-import ReportsWorkspace from "@/components/ReportsWorkspace";
-import BillingWorkspace from "@/components/BillingWorkspace";
-import LeadsKanban from "@/components/LeadsKanban";
-import CalendarWorkspace from "@/components/CalendarWorkspace";
-import AuditWorkspace from "@/components/AuditWorkspace";
-import BackupWorkspace from "@/components/BackupWorkspace";
-import ShortcutsWorkspace from "@/components/ShortcutsWorkspace";
-import RateLimitWorkspace from "@/components/RateLimitWorkspace";
-import AdminConsoleWorkspace from "@/components/AdminConsoleWorkspace";
-import SettingsWorkspace from "@/components/SettingsWorkspace";
+import type { View as OperationsView } from "@/components/OperationsWorkspace";
+import type { ProductionView } from "@/components/ProductionWorkspace";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
@@ -32,6 +19,24 @@ import {
   type Department,
   type SessionUser,
 } from "@/lib/permissions";
+
+const workspaceLoading = () => <div className="workspaceLoading" role="status">Loading workspace…</div>;
+const SalesWorkspace = dynamic(() => import("@/components/SalesWorkspace"), { loading: workspaceLoading });
+const OperationsWorkspace = dynamic(() => import("@/components/OperationsWorkspace"), { loading: workspaceLoading });
+const AccountsWorkspace = dynamic(() => import("@/components/AccountsWorkspace"), { loading: workspaceLoading });
+const ProductionWorkspace = dynamic(() => import("@/components/ProductionWorkspace"), { loading: workspaceLoading });
+const OwnerPortal = dynamic(() => import("@/components/OwnerPortal"), { loading: workspaceLoading });
+const DashboardWorkspace = dynamic(() => import("@/components/DashboardWorkspace"), { loading: workspaceLoading });
+const ReportsWorkspace = dynamic(() => import("@/components/ReportsWorkspace"), { loading: workspaceLoading });
+const BillingWorkspace = dynamic(() => import("@/components/BillingWorkspace"), { loading: workspaceLoading });
+const LeadsKanban = dynamic(() => import("@/components/LeadsKanban"), { loading: workspaceLoading });
+const CalendarWorkspace = dynamic(() => import("@/components/CalendarWorkspace"), { loading: workspaceLoading });
+const AuditWorkspace = dynamic(() => import("@/components/AuditWorkspace"), { loading: workspaceLoading });
+const BackupWorkspace = dynamic(() => import("@/components/BackupWorkspace"), { loading: workspaceLoading });
+const ShortcutsWorkspace = dynamic(() => import("@/components/ShortcutsWorkspace"), { loading: workspaceLoading });
+const RateLimitWorkspace = dynamic(() => import("@/components/RateLimitWorkspace"), { loading: workspaceLoading });
+const AdminConsoleWorkspace = dynamic(() => import("@/components/AdminConsoleWorkspace"), { loading: workspaceLoading });
+const SettingsWorkspace = dynamic(() => import("@/components/SettingsWorkspace"), { loading: workspaceLoading });
 const sections = [
   "Dashboard",
   "Sales",

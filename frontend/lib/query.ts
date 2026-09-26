@@ -14,7 +14,11 @@ import { fetchAllPages, type Page } from "@/lib/pagination";
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30_000,
+      // Department workspaces often reuse the same reference records after a
+      // user switches views. Keep successful responses fresh for a short
+      // period instead of refetching the full collection on every return.
+      // Mutations still invalidate these queries immediately.
+      staleTime: 120_000,
       refetchOnWindowFocus: false,
       retry: 1,
     },
