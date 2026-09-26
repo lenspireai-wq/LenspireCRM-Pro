@@ -3,12 +3,12 @@ from django.db import models
 from django.db.models import Q
 
 from apps.core.models import Organization
-from apps.core.permissions import department_level, is_administrator
+from apps.core.permissions import department_level
 
 
 # Keep notification categories tied to the same department permissions used by
-# the rest of the CRM. A read-only department permission deliberately does not
-# make a category visible: notifications require full access.
+# the rest of the CRM. A notification is relevant to every member of its
+# department, including users with read-only access.
 CATEGORY_DEPARTMENTS = {
     "sales": "sales",
     "lead": "sales",
@@ -21,9 +21,6 @@ CATEGORY_DEPARTMENTS = {
     "operations": "operations",
     "event": "operations",
 }
-DIRECT_RECIPIENT_CATEGORIES = {"password_reset"}
-
-
 class Notification(models.Model):
     LEVEL_INFO = "info"
     LEVEL_SUCCESS = "success"
@@ -75,23 +72,21 @@ def broadcast(organization, *, title, body="", level=Notification.LEVEL_INFO, ca
 def visible_notifications_for(user):
     """Return notifications the user is authorised to see.
 
-    Administrators retain their organisation-wide view. Other users only see
-    categories belonging to departments where they have *full* access. Direct
-    account-security notifications remain visible only to their recipient.
-    """
-    queryset = Notification.objects.all()
-    if user.is_superuser:
-        return queryset
+    Users see department broadcasts for departments they can access. A
+    notification explicitly addressed to a user is visible only to that user,
+    irrespective of its category. Administrators receive all department
+    broadcasts but do not receive notifications addressed to somebody else.
 
-    queryset = queryset.filter(organization=user.organization)
-    if is_administrator(user):
-        return queryset
+    This is used by both the notification list and summary endpoints, keeping
+    the desktop and mobile bell counts and contents in sync.
+    """
+    queryset = Notification.objects.filter(organization=user.organization)
 
     categories = [
         category
         for category, department in CATEGORY_DEPARTMENTS.items()
-        if department_level(user, department) == "full"
+        if department_level(user, department) in {"read", "full"}
     ]
-    allowed = Q(category__in=categories)
-    allowed |= Q(recipient=user, category__in=DIRECT_RECIPIENT_CATEGORIES)
+    allowed = Q(recipient__isnull=True, category__in=categories)
+    allowed |= Q(recipient=user)
     return queryset.filter(allowed)
