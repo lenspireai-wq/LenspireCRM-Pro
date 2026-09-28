@@ -15,6 +15,7 @@ cloudflare-worker/.wrangler/
 *.key
 *.p12
 *.pfx
+.deploy-keys/
 dist/
 release-*/
 build-test*/
