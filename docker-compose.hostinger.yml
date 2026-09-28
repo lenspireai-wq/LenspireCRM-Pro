@@ -34,7 +34,6 @@ services:
       LOG_LEVEL: INFO
     command: >
       sh -c "python manage.py migrate --noinput &&
-             python manage.py migrate_from_worker &&
              python manage.py collectstatic --noinput &&
              gunicorn lenspirecrm.wsgi:application --bind 0.0.0.0:8000 --workers 2 --access-logfile - --error-logfile -"
     volumes:
