@@ -11268,6 +11268,14 @@ table > tbody > tr:has(td[colspan])::before {
   display: none;
 }
 
+/* The client-statement footer needs a real serial-column placeholder: unlike
+   its header and body, footer rows do not receive the generated pseudo-cell. */
+.statementLedgerTable tfoot .statementSerialTotal {
+  width: 38px;
+  min-width: 38px;
+  padding: var(--space-2) var(--space-1);
+}
+
 /* Payment tables carry an explicit serial-number cell so its header and
    values align with Client, Amount, Type, Mode, Status, Date and Actions. */
 .paymentTable > :is(thead, tbody) > tr::before {
