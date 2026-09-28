@@ -166,6 +166,12 @@ class ProductionApiTests(TestCase):
             organization=self.organization, booking=self.booking, customer=self.customer,
             amount="31565.00", payment_type="First Shoot", status="Paid", paid_at="2026-09-23T00:00:00Z",
         )
+        # The receipts above settle the booking. A planned milestone must not
+        # appear as a further client payment due in the portal.
+        Payment.objects.create(
+            organization=self.organization, booking=self.booking, customer=self.customer,
+            amount="14000.00", payment_type="First Shoot", status="Pending", due_date="2026-09-22",
+        )
         generated = self.client.post("/api/client-portal/access/", {"booking": self.booking.id, "expiry_days": 60}, format="json")
         token = generated.data["url"].rstrip("/").split("/")[-1]
         portal = APIClient().get(f"/api/client-portal/{token}/")

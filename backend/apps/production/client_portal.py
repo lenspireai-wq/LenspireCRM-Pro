@@ -96,7 +96,12 @@ def deliverable_thumbnail_url(item):
     return ""
 
 
-def client_payment_entries(booking, payments, confirmed_advance=Decimal("0.00")):
+def client_payment_entries(
+    booking,
+    payments,
+    confirmed_advance=Decimal("0.00"),
+    fully_paid=False,
+):
     """Return the real receipt ledger shown to the client.
 
     A lead-confirmation advance may predate the payment ledger. Include only
@@ -111,13 +116,21 @@ def client_payment_entries(booking, payments, confirmed_advance=Decimal("0.00"))
             "due_date": None,
             "paid_at": getattr(booking.lead, "payment_received_date", None),
         })
+    # Planned milestones should remain visible while money is outstanding.
+    # Once the actual receipts settle the booking, showing one as Pending
+    # would falsely tell the client that they still owe the studio.
+    visible_payments = (
+        (payment for payment in payments if payment.status == "Paid")
+        if fully_paid
+        else payments
+    )
     entries.extend({
         "payment_type": payment.payment_type,
         "status": payment.status,
         "amount": payment.amount,
         "due_date": payment.due_date,
         "paid_at": payment.paid_at,
-    } for payment in payments)
+    } for payment in visible_payments)
     return entries
 
 
@@ -523,7 +536,10 @@ class ClientPortalPublicView(APIView):
                 for event in events
             ],
             "payments": client_payment_entries(
-                booking, payments, confirmed_advance=confirmed_advance,
+                booking,
+                payments,
+                confirmed_advance=confirmed_advance,
+                fully_paid=received >= booking.quoted_amount,
             ),
             "deliverables": [{"id": item.id, "name": item.name, "status": item.status, "drive_link": item.drive_link, "thumbnail_url": deliverable_thumbnail_url(item), "revision_notes": item.revision_notes} for item in deliverables],
             "quotations": [
