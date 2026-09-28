@@ -9219,6 +9219,7 @@ input[aria-label="Search CRM records"]:focus-visible,
 .themeToggleIcon { font-size: 14px; line-height: 1; }
 .themeToggleLabel { letter-spacing: 0.02em; }
 .themeSettings { position: relative; display: inline-flex; }
+.loginThemeToggle.themeSettings { position: fixed; }
 .themeDrawer {
   position: absolute;
   z-index: 80;
