@@ -1577,3 +1577,42 @@
   :root[data-theme="light"] .shell main { margin-left: 214px; }
   :root[data-theme="light"] .sidebarToggle { left: 186px; }
 }
+
+/* Theme must never change the workspace geometry.  Earlier light-mode
+   polish rules narrowed the rail and changed its logo footprint; keep the
+   responsive measurements shared by every mode and vary colours only. */
+:root[data-theme] .shell aside .brand.ankitSidebarBrand {
+  flex: 0 0 144px !important;
+  min-height: 144px !important;
+  padding: 8px 18px 18px !important;
+}
+:root[data-theme] .shell aside .brand.ankitSidebarBrand .ankitSidebarLogo {
+  width: 176px !important;
+  height: 116px !important;
+  max-width: calc(100% - 36px) !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+@media (min-width: 1251px) {
+  :root[data-theme] .shell aside { width: 298px !important; }
+  :root[data-theme] .shell main { margin-left: 298px !important; }
+  :root[data-theme] .sidebarToggle { left: 270px !important; }
+}
+@media (min-width: 901px) and (max-width: 1250px) {
+  :root[data-theme] .shell aside { width: 260px !important; }
+  :root[data-theme] .shell main { margin-left: 260px !important; }
+  :root[data-theme] .sidebarToggle { left: 232px !important; }
+}
+@media (max-width: 900px) {
+  :root[data-theme] .shell aside .brand.ankitSidebarBrand {
+    flex-basis: 132px !important;
+    min-height: 132px !important;
+    padding: 6px 12px 16px !important;
+  }
+  :root[data-theme] .shell aside .brand.ankitSidebarBrand .ankitSidebarLogo {
+    width: 158px !important;
+    height: 106px !important;
+    max-width: calc(100% - 24px) !important;
+  }
+}
