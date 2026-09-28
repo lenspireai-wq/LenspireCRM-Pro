@@ -950,7 +950,12 @@ function EventTable({
               <td>{row.handled_by || "—"}</td>
               <td>{row.couple_name || "—"}</td>
               <td>{row.contact_no || "—"}</td>
-              <td className={`eventTypeCell ${eventTypeTone(row.event_type)}`.trim()}>{plainUpcomingFields ? row.event_type : <span className="upcomingEventType">{row.event_type}</span>}</td>
+              <td
+                className={`eventTypeCell ${eventTypeTone(row.event_type)}`.trim()}
+                title={row.event_type || "—"}
+              >
+                {plainUpcomingFields ? row.event_type : <span className="upcomingEventType">{row.event_type}</span>}
+              </td>
               <td>{crew(row.photo)}</td>
               <td>{crew(row.video)}</td>
               <td>{crew(row.candid)}</td>
