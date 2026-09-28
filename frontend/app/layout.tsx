@@ -28,14 +28,15 @@ export const viewport: Viewport = {
 
 const themeBootstrap = `(() => {
   try {
-    const stored = localStorage.getItem('lenspire-theme');
-    if (stored === 'light' || stored === 'dark' || stored === 'blush' || stored === 'neon') {
-      document.documentElement.dataset.theme = stored;
-      document.documentElement.style.colorScheme = stored === 'light' || stored === 'blush' ? 'light' : 'dark';
-      return;
-    }
-    document.documentElement.dataset.theme = 'light';
-    document.documentElement.style.colorScheme = 'light';
+    const stored = localStorage.getItem('lenspire-theme-mode');
+    const legacy = localStorage.getItem('lenspire-theme');
+    const mode = stored === 'light' || stored === 'dark' || stored === 'system'
+      ? stored : (legacy === 'dark' || legacy === 'neon' ? 'dark' : 'light');
+    const theme = mode === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : mode;
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset.themeMode = mode;
+    document.documentElement.dataset.accent = localStorage.getItem('lenspire-theme-accent') || 'violet';
+    document.documentElement.style.colorScheme = theme;
   } catch (e) {
     document.documentElement.dataset.theme = 'light';
     document.documentElement.style.colorScheme = 'light';

@@ -861,6 +861,10 @@ export default function Home() {
           </ErrorBoundary>
         ) : null}
       </main>
+      <footer className="workspaceSettingsFooter">
+        <span>Studio Workspace</span>
+        <ThemeToggle className="footerThemeToggle" />
+      </footer>
     </div>
   );
 }
