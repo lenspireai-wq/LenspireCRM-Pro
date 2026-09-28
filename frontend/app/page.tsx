@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { api, apiAssetUrl, getSignInErrorMessage } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
 import { formatDate } from "@/lib/date-format";
-import { queryClient, queryKeys } from "@/lib/query";
+import { queryClient } from "@/lib/query";
 import HeaderSearch from "@/components/HeaderSearch";
 import type { View as OperationsView } from "@/components/OperationsWorkspace";
 import type { ProductionView } from "@/components/ProductionWorkspace";
@@ -304,9 +304,11 @@ export default function Home() {
     if (username) window.localStorage.setItem("lenspire-last-username", username);
     // Never carry CRM records or dashboard totals into the next sign-in.
     queryClient.clear();
+    setWorkspaceReady(false);
     auth.logout();
   };
   const [mounted, setMounted] = useState(false),
+    [workspaceReady, setWorkspaceReady] = useState(false),
     [ownerPortalMode, setOwnerPortalMode] = useState(false),
     [startNewLead, setStartNewLead] = useState(false),
     [sidebarHidden, setSidebarHidden] = useState(false),
@@ -471,15 +473,6 @@ export default function Home() {
     window.localStorage.setItem("lenspire-last-username", auth.user.username);
     window.localStorage.setItem("lenspire-last-user-name", auth.user.display_name || auth.user.username);
   }, [auth.user]);
-  useEffect(() => {
-    if (mounted && auth.access && auth.user) {
-      queryClient.prefetchQuery({
-        queryKey: queryKeys.leads(),
-        queryFn: async () =>
-          (await api.get("/leads/?page_size=500&ordering=-created_at")).data,
-      });
-    }
-  }, [mounted, auth.access, auth.user]);
   const visibleSections = sections.filter((item) => {
     if (item === "Admin")
       return isAdministrator(auth.user);
@@ -494,7 +487,10 @@ export default function Home() {
 
     landingUserIdRef.current = auth.user.id;
     const requestedSection = new URLSearchParams(window.location.search).get("section");
-    if (requestedSection && (sections as readonly string[]).includes(requestedSection)) return;
+    if (requestedSection && (sections as readonly string[]).includes(requestedSection)) {
+      setWorkspaceReady(true);
+      return;
+    }
 
     const savedRoute = savedMobileRouteRef.current;
     if (
@@ -507,6 +503,7 @@ export default function Home() {
       setOperationsView(savedRoute.operationsView);
       setAccountsView(savedRoute.accountsView);
       savedMobileRouteRef.current = null;
+      setWorkspaceReady(true);
       return;
     }
 
@@ -516,6 +513,7 @@ export default function Home() {
         ? preferredSection
         : visibleSections[0] || "Dashboard",
     );
+    setWorkspaceReady(true);
   }, [mounted, auth.user, visibleSections.join("|")]);
   useEffect(() => {
     if (!mounted || !auth.user || !window.matchMedia("(max-width: 900px)").matches) return;
@@ -563,6 +561,15 @@ export default function Home() {
           logout();
         }}
       />
+    );
+  // Wait until the signed-in user's permitted landing section is selected.
+  // Without this gate, the default Sales workspace briefly mounted for every
+  // user and started its large lead/bookings requests before redirecting.
+  if (!auth.user || !workspaceReady)
+    return (
+      <main className="appBoot" aria-label="Loading studio workspace">
+        <div className="brand">{studioBrandName(auth.user)}</div>
+      </main>
     );
   const department = sectionDepartments[section];
   const readOnly = department ? !canWrite(auth.user, department) : false;
