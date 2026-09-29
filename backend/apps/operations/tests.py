@@ -49,6 +49,23 @@ class OperationsApiTests(TestCase):
         event.status = "Completed"
         self.assertEqual(target_tab(event), "Completed Events")
 
+    def test_google_sheet_event_mapping_preserves_staff_venue_and_time_headers(self):
+        event = CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Asha Patel · Wedding",
+            client_name="Asha Patel",
+            event_type="Wedding",
+            start_date=date(2026, 9, 20),
+            start_time=time(10, 30),
+            city="Mumbai",
+            status="Scheduled",
+        )
+
+        self.assertEqual(
+            event_row(["Venue", "Time"], event),
+            ["Mumbai", "10:30:00"],
+        )
+
     def test_google_sheet_row_uses_staff_facing_headers(self):
         values = _sheet_row_values(
             ["Date", "Client Name", "Event", "Venue", "Time", "Notes"],

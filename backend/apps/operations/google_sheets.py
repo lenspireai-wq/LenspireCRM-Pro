@@ -106,8 +106,14 @@ def event_row(headers, event, serial_number=0):
         "eventdate": event_date,
         "startdate": event_date,
         "starttime": event.start_time.isoformat() if event.start_time else "",
+        # Studios use the simpler "Time" and "Venue" headings in their
+        # upcoming/completed event sheets.  Keep these aliases in sync with
+        # the corresponding CRM fields so a sheet import can never turn a
+        # saved value back into an empty value.
+        "time": event.start_time.isoformat() if event.start_time else "",
         "endtime": event.end_time.isoformat() if event.end_time else "",
         "city": event.city,
+        "venue": event.city,
         "status": event.status,
         "datestatus": event.date_status,
         "assignedto": assigned_to,

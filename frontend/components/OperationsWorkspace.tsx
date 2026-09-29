@@ -323,7 +323,7 @@ export default function OperationsWorkspace({
       start_date:
         data.date_status === "TBD Month" ? null : data.start_date || null,
       start_time: data.start_time || null,
-      end_time: null,
+      end_time: data.end_time || null,
     };
     try {
       await saveEventMutation.mutateAsync({
@@ -1517,6 +1517,14 @@ function EventModal({ draft, photographers, close, save, error }: any) {
                   name="start_time"
                   type="time"
                   defaultValue={(draft.start_time || "").slice(0, 5)}
+                />
+              </label>
+              <label>
+                End Time
+                <input
+                  name="end_time"
+                  type="time"
+                  defaultValue={(draft.end_time || "").slice(0, 5)}
                 />
               </label>
               <label>
