@@ -10652,6 +10652,13 @@ td {
 .billModalBackdrop {
   backdrop-filter: blur(7px);
 }
+/* The workspace header is intentionally elevated while scrolling. Dialogs
+   must still sit above it, otherwise their title and close button are hidden
+   beneath the Client Ledger header. */
+.modalBackdrop,
+.billModalBackdrop {
+  z-index: 300;
+}
 .accountModal,
 .billModal,
 .operationModal,
