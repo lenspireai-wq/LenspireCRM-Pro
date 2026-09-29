@@ -25,6 +25,7 @@ from apps.sales.views import BookingViewSet, CustomerViewSet, LeadViewSet, Sales
 from apps.storage.views import AttachmentViewSet
 from apps.users.views import (
     LoginView,
+    GoogleLoginView,
     UserViewSet,
     CurrentUserView,
     StudioLogoView,
@@ -69,7 +70,7 @@ urlpatterns = [
     path("api/client-portal/<str:token>/quotations/<int:attachment_id>/", ClientPortalQuotationDownloadView.as_view()),
     path("api/client-portal/<str:token>/", ClientPortalPublicView.as_view()),
     path("admin/", admin.site.urls), path("api/health/", HealthView.as_view()),
-    path("api/auth/login/", LoginView.as_view()), path("api/auth/refresh/", OrganizationAwareTokenRefreshView.as_view()),
+    path("api/auth/login/", LoginView.as_view()), path("api/auth/google/", GoogleLoginView.as_view()), path("api/auth/refresh/", OrganizationAwareTokenRefreshView.as_view()),
     path("api/auth/password-reset/request/", PasswordResetRequestView.as_view(), name="password-reset-request"),
     path("api/auth/password-reset/confirm/", PasswordResetConfirmView.as_view(), name="password-reset-confirm"),
     path("api/metrics", MetricsView.as_view(), name="metrics"),

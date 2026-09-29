@@ -77,6 +77,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 CLIENT_PORTAL_BASE_URL = os.getenv("CLIENT_PORTAL_BASE_URL", "http://127.0.0.1:3000")
 GOOGLE_SHEETS_SYNC_SPREADSHEET_ID = os.getenv("GOOGLE_SHEETS_SYNC_SPREADSHEET_ID", "")
 GOOGLE_SHEETS_SERVICE_ACCOUNT_JSON_B64 = os.getenv("GOOGLE_SHEETS_SERVICE_ACCOUNT_JSON_B64", "")
+# Google Identity Services client ID used to verify Google Sign-In ID tokens.
+GOOGLE_SIGN_IN_CLIENT_ID = os.getenv("GOOGLE_SIGN_IN_CLIENT_ID", "")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 BACKUP_ROOT = Path(os.getenv("BACKUP_ROOT") or BASE_DIR / "backups")

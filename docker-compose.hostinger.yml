@@ -30,6 +30,7 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
       CLIENT_PORTAL_BASE_URL: https://crm.lenspireai.com
+      GOOGLE_SIGN_IN_CLIENT_ID: ${GOOGLE_SIGN_IN_CLIENT_ID:-}
       SECURE_SSL_REDIRECT: "false"
       LOG_LEVEL: INFO
     command: >
@@ -69,6 +70,7 @@ services:
       context: https://github.com/lenspireai-wq/LenspireCRM-Pro.git#codex/deploy-django:frontend
       args:
         NEXT_PUBLIC_API_URL: /api
+        NEXT_PUBLIC_GOOGLE_SIGN_IN_CLIENT_ID: ${GOOGLE_SIGN_IN_CLIENT_ID:-}
     restart: unless-stopped
     depends_on:
       - api

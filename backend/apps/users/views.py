@@ -111,6 +111,53 @@ class LoginView(APIView):
         refresh = RefreshToken.for_user(user)
         return Response({"access": str(refresh.access_token), "refresh": str(refresh), "user": UserSerializer(user).data})
 
+
+class GoogleLoginView(APIView):
+    """Exchange a verified Google ID token for an existing CRM user's JWTs."""
+
+    permission_classes = [AllowAny]
+    throttle_classes = [LoginThrottle]
+
+    def post(self, request):
+        client_id = settings.GOOGLE_SIGN_IN_CLIENT_ID
+        if not client_id:
+            return Response(
+                {"detail": "Google sign-in has not been configured yet."},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+        credential = str(request.data.get("credential") or "")
+        if not credential:
+            return Response({"detail": "Google sign-in token is required."}, status=400)
+        try:
+            from google.auth.transport import requests as google_requests
+            from google.oauth2 import id_token
+
+            claims = id_token.verify_oauth2_token(
+                credential, google_requests.Request(), client_id
+            )
+        except Exception:
+            return Response({"detail": "Google could not verify this sign-in."}, status=401)
+
+        email = str(claims.get("email") or "").strip()
+        if not email or not claims.get("email_verified"):
+            return Response({"detail": "Use a verified Google email address."}, status=401)
+        users = list(User.objects.filter(email__iexact=email)[:2])
+        if len(users) != 1 or not users[0].is_active:
+            # Do not create accounts automatically: studio administrators
+            # retain control over access, roles, and department permissions.
+            return Response(
+                {"detail": "This Google email is not linked to an active CRM account."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        user = users[0]
+        try:
+            ensure_studio_is_active(user)
+        except AuthenticationFailed as error:
+            return Response({"detail": str(error.detail)}, status=status.HTTP_401_UNAUTHORIZED)
+        update_last_login(None, user)
+        refresh = RefreshToken.for_user(user)
+        return Response({"access": str(refresh.access_token), "refresh": str(refresh), "user": UserSerializer(user).data})
+
 class CurrentUserView(APIView):
     def get(self, request):
         return Response(UserSerializer(request.user).data)

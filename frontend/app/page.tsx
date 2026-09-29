@@ -28,6 +28,15 @@ const ProductionWorkspace = dynamic(() => import("@/components/ProductionWorkspa
 const OwnerPortal = dynamic(() => import("@/components/OwnerPortal"), { loading: workspaceLoading });
 const DashboardWorkspace = dynamic(() => import("@/components/DashboardWorkspace"), { loading: workspaceLoading });
 const ReportsWorkspace = dynamic(() => import("@/components/ReportsWorkspace"), { loading: workspaceLoading });
+
+declare global {
+  interface Window {
+    google?: { accounts: { id: {
+      initialize: (options: { client_id: string; callback: (response: { credential?: string }) => void }) => void;
+      renderButton: (parent: HTMLElement, options: Record<string, unknown>) => void;
+    } } };
+  }
+}
 const BillingWorkspace = dynamic(() => import("@/components/BillingWorkspace"), { loading: workspaceLoading });
 const LeadsKanban = dynamic(() => import("@/components/LeadsKanban"), { loading: workspaceLoading });
 const CalendarWorkspace = dynamic(() => import("@/components/CalendarWorkspace"), { loading: workspaceLoading });
@@ -135,6 +144,8 @@ function Login({
     [submitting, setSubmitting] = useState(false),
     [username, setUsername] = useState(""),
     [returningName, setReturningName] = useState("");
+  const googleButtonRef = useRef<HTMLDivElement>(null);
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_SIGN_IN_CLIENT_ID;
 
   useEffect(() => {
     setUsername(window.localStorage.getItem("lenspire-last-username") || "");
@@ -171,6 +182,53 @@ function Login({
       setSubmitting(false);
     }
   };
+  useEffect(() => {
+    if (!googleClientId || !googleButtonRef.current) return;
+    let cancelled = false;
+    const renderGoogleButton = () => {
+      if (cancelled || !window.google || !googleButtonRef.current) return;
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: async ({ credential }) => {
+          if (!credential) return setError("Google did not return a sign-in token. Please try again.");
+          setSubmitting(true);
+          setError("");
+          try {
+            const { data } = await api.post("/auth/google/", { credential });
+            if (ownerMode && !data.user?.is_platform_owner && !data.user?.is_superuser) {
+              setError("This account does not have LenspireAI Owner access.");
+              return;
+            }
+            queryClient.clear();
+            setSession(data.access, data.refresh, data.user);
+            document.title = documentTitleForStudio(data.user?.organization_name);
+            window.localStorage.setItem("lenspire-last-username", data.user?.username || "");
+            window.localStorage.setItem("lenspire-last-user-name", data.user?.display_name || data.user?.username || "");
+            authenticated(ownerMode);
+          } catch (err: unknown) {
+            setError(getSignInErrorMessage(err));
+          } finally {
+            setSubmitting(false);
+          }
+        },
+      });
+      googleButtonRef.current.replaceChildren();
+      window.google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: "outline", size: "large", text: "continue_with", shape: "rectangular", width: 360,
+      });
+    };
+    const existing = document.getElementById("google-identity-services");
+    if (existing) renderGoogleButton();
+    else {
+      const script = document.createElement("script");
+      script.id = "google-identity-services";
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.onload = renderGoogleButton;
+      document.head.appendChild(script);
+    }
+    return () => { cancelled = true; };
+  }, [authenticated, googleClientId, ownerMode, setSession]);
   return (
     <main className="login">
       <ThemeToggle className="loginThemeToggle" />
@@ -272,6 +330,14 @@ function Login({
                 : "Sign in"}{" "}
             <span>→</span>
           </button>
+          {googleClientId ? (
+            <>
+              <div className="loginDivider"><span>or</span></div>
+              <div className="googleSignIn" ref={googleButtonRef} aria-label="Continue with Google" />
+            </>
+          ) : (
+            <p className="googleSignInUnavailable">Google sign-in is not configured for this workspace yet.</p>
+          )}
           <button
             className="ownerPortalButton"
             type="button"
