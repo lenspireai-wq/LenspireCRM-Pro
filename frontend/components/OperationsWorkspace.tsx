@@ -68,6 +68,24 @@ const blankPhotographer = {
   work: "",
   status: "Available",
 };
+const clockParts = (value: unknown) => {
+  const [rawHour = "", rawMinute = ""] = String(value || "").split(":");
+  const hour24 = Number(rawHour);
+  const minute = Number(rawMinute);
+  if (!Number.isInteger(hour24) || hour24 < 0 || hour24 > 23) {
+    return { hour: "01", minute: "00", period: "AM" as const };
+  }
+  return {
+    hour: String(hour24 % 12 || 12).padStart(2, "0"),
+    minute: minute >= 30 ? "30" : "00",
+    period: (hour24 >= 12 ? "PM" : "AM") as "AM" | "PM",
+  };
+};
+const to24HourTime = (hour: string, minute: string, period: "AM" | "PM") => {
+  let hour24 = Number(hour) % 12;
+  if (period === "PM") hour24 += 12;
+  return `${String(hour24).padStart(2, "0")}:${minute}`;
+};
 const rows = (value: any): Row[] =>
   Array.isArray(value) ? value : value?.results || [];
 const dateLabel = (value?: string) => formatDate(value, "TBD");
@@ -1286,6 +1304,15 @@ function EventModal({ draft, photographers, close, save, error }: any) {
   const [dateStatus, setDateStatus] = useState(
     draft.date_status || "Confirmed",
   );
+  const initialStartTime = clockParts(draft.start_time);
+  const initialEndTime = clockParts(draft.end_time);
+  const [startHour, setStartHour] = useState(initialStartTime.hour);
+  const [startMinute, setStartMinute] = useState(initialStartTime.minute);
+  const [startPeriod, setStartPeriod] = useState<"AM" | "PM">(initialStartTime.period);
+  const [endHour, setEndHour] = useState(initialEndTime.hour);
+  const [endMinute, setEndMinute] = useState(initialEndTime.minute);
+  const [endPeriod, setEndPeriod] = useState<"AM" | "PM">(initialEndTime.period);
+  const hourOptions = Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0"));
   const crewFields = [
     ["photo", "Photo"],
     ["video", "Video"],
@@ -1515,17 +1542,33 @@ function EventModal({ draft, photographers, close, save, error }: any) {
                 Time
                 <input
                   name="start_time"
-                  type="time"
-                  defaultValue={(draft.start_time || "").slice(0, 5)}
+                  type="hidden"
+                  value={to24HourTime(startHour, startMinute, startPeriod)}
                 />
+                <div className="eventTimePicker" aria-label="Event start time">
+                  <select aria-label="Start hour" value={startHour} onChange={(event) => setStartHour(event.target.value)}>
+                    {hourOptions.map((hour) => <option key={hour}>{hour}</option>)}
+                  </select>
+                  <span aria-hidden="true">:</span>
+                  <select aria-label="Start minutes" value={startMinute} onChange={(event) => setStartMinute(event.target.value)}><option>00</option><option>30</option></select>
+                  <select aria-label="Start AM or PM" value={startPeriod} onChange={(event) => setStartPeriod(event.target.value as "AM" | "PM")}><option>AM</option><option>PM</option></select>
+                </div>
               </label>
               <label>
                 End Time
                 <input
                   name="end_time"
-                  type="time"
-                  defaultValue={(draft.end_time || "").slice(0, 5)}
+                  type="hidden"
+                  value={to24HourTime(endHour, endMinute, endPeriod)}
                 />
+                <div className="eventTimePicker" aria-label="Event end time">
+                  <select aria-label="End hour" value={endHour} onChange={(event) => setEndHour(event.target.value)}>
+                    {hourOptions.map((hour) => <option key={hour}>{hour}</option>)}
+                  </select>
+                  <span aria-hidden="true">:</span>
+                  <select aria-label="End minutes" value={endMinute} onChange={(event) => setEndMinute(event.target.value)}><option>00</option><option>30</option></select>
+                  <select aria-label="End AM or PM" value={endPeriod} onChange={(event) => setEndPeriod(event.target.value as "AM" | "PM")}><option>AM</option><option>PM</option></select>
+                </div>
               </label>
               <label>
                 Venue

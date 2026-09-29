@@ -7539,6 +7539,17 @@ table td { font-size: 13px; }
 .eventEditorModal .crewMultiField :is(input, select) {
   padding: var(--space-2);
 }
+.eventEditorModal .eventTimePicker {
+  display: grid;
+  grid-template-columns: minmax(48px, 1fr) auto minmax(48px, 1fr) minmax(58px, 1fr);
+  align-items: center;
+  gap: 4px;
+}
+.eventEditorModal .eventTimePicker > span {
+  color: var(--muted);
+  font-weight: 700;
+}
+.eventEditorModal .eventTimePicker select { min-width: 0; }
 @media (max-width: 900px), (max-height: 680px) {
   .eventEditorModal .operationForm {
     overflow-y: auto;
