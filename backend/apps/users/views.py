@@ -44,7 +44,7 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
     class Meta:
         model = User
-        fields = ("id", "username", "display_name", "mobile", "profile_photo_url", "role", "department_access", "is_active", "is_staff", "is_superuser", "is_platform_owner", "organization", "organization_name", "organization_logo_url", "date_joined", "last_login", "password")
+        fields = ("id", "username", "email", "display_name", "mobile", "profile_photo_url", "role", "department_access", "is_active", "is_staff", "is_superuser", "is_platform_owner", "organization", "organization_name", "organization_logo_url", "date_joined", "last_login", "password")
         read_only_fields = ("organization", "is_staff", "is_superuser", "is_platform_owner", "date_joined", "last_login")
 
     is_platform_owner = serializers.BooleanField(source="is_superuser", read_only=True)
@@ -77,6 +77,16 @@ class UserSerializer(serializers.ModelSerializer):
                 )
             normalized[department] = level
         return normalized
+    def validate_email(self, value):
+        email = str(value or "").strip().lower()
+        if not email:
+            return ""
+        existing = User.objects.filter(email__iexact=email)
+        if self.instance:
+            existing = existing.exclude(pk=self.instance.pk)
+        if existing.exists():
+            raise serializers.ValidationError("This email is already linked to another CRM user.")
+        return email
     def create(self, validated_data):
         password = validated_data.pop("password", None)
         if not password:

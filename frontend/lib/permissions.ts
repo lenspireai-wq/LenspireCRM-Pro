@@ -4,6 +4,7 @@ export type AccessLevel = "none" | "read" | "full";
 export type SessionUser = {
   id: number;
   username: string;
+  email?: string;
   display_name: string;
   mobile?: string;
   profile_photo_url?: string;

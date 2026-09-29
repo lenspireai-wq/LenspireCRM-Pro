@@ -138,6 +138,7 @@ export default function AdminWorkspace({
     setError("");
     setDraft({
       username: "",
+      email: "",
       display_name: "",
       mobile: "",
       role: "Viewer",
@@ -247,6 +248,7 @@ export default function AdminWorkspace({
     setError("");
     const payload = {
       username: draft.username,
+      email: draft.email,
       display_name: draft.display_name,
       mobile: draft.mobile,
       role: draft.role,
@@ -598,6 +600,18 @@ export default function AdminWorkspace({
                   onChange={(event) =>
                     setDraft({ ...draft, username: event.target.value })
                   }
+                />
+              </label>
+              <label>
+                Google Email
+                <input
+                  type="email"
+                  autoComplete="email"
+                  value={draft.email || ""}
+                  onChange={(event) =>
+                    setDraft({ ...draft, email: event.target.value })
+                  }
+                  placeholder="name@gmail.com"
                 />
               </label>
               <label>
