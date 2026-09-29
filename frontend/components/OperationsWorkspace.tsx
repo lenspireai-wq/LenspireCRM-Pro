@@ -341,7 +341,9 @@ export default function OperationsWorkspace({
       start_date:
         data.date_status === "TBD Month" ? null : data.start_date || null,
       start_time: data.start_time || null,
-      end_time: data.end_time || null,
+      // End time is no longer collected in the event form. Retain a legacy
+      // value when editing an existing event rather than clearing it.
+      end_time: eventDraft?.end_time || null,
     };
     try {
       await saveEventMutation.mutateAsync({
@@ -1305,13 +1307,9 @@ function EventModal({ draft, photographers, close, save, error }: any) {
     draft.date_status || "Confirmed",
   );
   const initialStartTime = clockParts(draft.start_time);
-  const initialEndTime = clockParts(draft.end_time);
   const [startHour, setStartHour] = useState(initialStartTime.hour);
   const [startMinute, setStartMinute] = useState(initialStartTime.minute);
   const [startPeriod, setStartPeriod] = useState<"AM" | "PM">(initialStartTime.period);
-  const [endHour, setEndHour] = useState(initialEndTime.hour);
-  const [endMinute, setEndMinute] = useState(initialEndTime.minute);
-  const [endPeriod, setEndPeriod] = useState<"AM" | "PM">(initialEndTime.period);
   const hourOptions = Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0"));
   const crewFields = [
     ["photo", "Photo"],
@@ -1552,22 +1550,6 @@ function EventModal({ draft, photographers, close, save, error }: any) {
                   <span aria-hidden="true">:</span>
                   <select aria-label="Start minutes" value={startMinute} onChange={(event) => setStartMinute(event.target.value)}><option>00</option><option>30</option></select>
                   <select aria-label="Start AM or PM" value={startPeriod} onChange={(event) => setStartPeriod(event.target.value as "AM" | "PM")}><option>AM</option><option>PM</option></select>
-                </div>
-              </label>
-              <label>
-                End Time
-                <input
-                  name="end_time"
-                  type="hidden"
-                  value={to24HourTime(endHour, endMinute, endPeriod)}
-                />
-                <div className="eventTimePicker" aria-label="Event end time">
-                  <select aria-label="End hour" value={endHour} onChange={(event) => setEndHour(event.target.value)}>
-                    {hourOptions.map((hour) => <option key={hour}>{hour}</option>)}
-                  </select>
-                  <span aria-hidden="true">:</span>
-                  <select aria-label="End minutes" value={endMinute} onChange={(event) => setEndMinute(event.target.value)}><option>00</option><option>30</option></select>
-                  <select aria-label="End AM or PM" value={endPeriod} onChange={(event) => setEndPeriod(event.target.value as "AM" | "PM")}><option>AM</option><option>PM</option></select>
                 </div>
               </label>
               <label>
