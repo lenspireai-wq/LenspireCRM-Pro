@@ -2,11 +2,12 @@
 const isDev = process.env.NODE_ENV !== "production";
 const csp = [
   "default-src 'self'",
-  `script-src 'self'${isDev ? " 'unsafe-eval' 'unsafe-inline'" : " 'unsafe-inline'"}`,
-  "style-src 'self' 'unsafe-inline'",
+  `script-src 'self' https://accounts.google.com/gsi/client${isDev ? " 'unsafe-eval' 'unsafe-inline'" : " 'unsafe-inline'"}`,
+  "style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style",
   `img-src 'self' data: blob: https:${isDev ? " http:" : ""}`,
   "font-src 'self' data:",
-  "connect-src 'self' http: https: ws: wss:",
+  "connect-src 'self' http: https: ws: wss: https://accounts.google.com/gsi/",
+  "frame-src https://accounts.google.com/gsi/",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
