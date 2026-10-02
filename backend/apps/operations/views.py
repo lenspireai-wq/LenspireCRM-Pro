@@ -56,16 +56,17 @@ def confirmed_bookings_for_organization(organization):
 
 
 def matching_confirmed_bookings(values, organization, bookings=None):
-    """Find unambiguous confirmed bookings from an event's client identity.
+    """Find an unambiguous confirmed booking using the complete client identity.
 
-    A couple-name match is sufficient only when it yields one confirmed booking.
-    Otherwise, both client name and phone must match. This deliberately avoids
-    linking an event based on a common client name alone.
+    An Operations event belongs to an existing booking only when its client
+    name, couple name, and mobile number all agree.  This makes duplicated
+    events reliably share the booking ID created by Sales, while preventing a
+    same-name client or a reused couple name from being linked incorrectly.
     """
     client_name = normalized_text(values.get("client_name"))
     couple_name = normalized_text(values.get("couple_name"))
     contact_no = normalized_phone(values.get("contact_no"))
-    if not couple_name and not (client_name and contact_no):
+    if not (client_name and couple_name and contact_no):
         return []
 
     matches = []
@@ -91,7 +92,7 @@ def matching_confirmed_bookings(values, organization, bookings=None):
                 normalized_phone(customer.phone),
             }
         )
-        if couple_match or (name_match and phone_match):
+        if name_match and couple_match and phone_match:
             matches.append(booking)
     return matches
 
@@ -102,6 +103,37 @@ def event_identity(event):
         "couple_name": event.couple_name,
         "contact_no": event.contact_no,
     }
+
+
+def link_unlinked_confirmed_events(organization):
+    """Link safely identifiable Operations events to their Sales booking.
+
+    The booking ID is never copied from a partial match: all three identity
+    fields must point to exactly one confirmed booking.  Returning the linked
+    bookings lets Post Production immediately reconcile any newly eligible
+    completed event into its Edit Queue job.
+    """
+    bookings = confirmed_bookings_for_organization(organization)
+    events = CalendarEvent.objects.filter(
+        organization=organization,
+        is_archived=False,
+        booking__isnull=True,
+        customer__isnull=True,
+    ).order_by("id")
+    linked_bookings = []
+    for event in events:
+        matches = matching_confirmed_bookings(event_identity(event), organization, bookings)
+        if len(matches) != 1:
+            continue
+        booking = matches[0]
+        if CalendarEvent.objects.filter(
+            pk=event.id,
+            organization=organization,
+            booking__isnull=True,
+            customer__isnull=True,
+        ).update(booking=booking, customer=booking.customer):
+            linked_bookings.append(booking)
+    return linked_bookings
 
 
 def normalize_excel_time(value):

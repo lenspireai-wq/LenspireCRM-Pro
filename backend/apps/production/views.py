@@ -339,7 +339,13 @@ class ProductionJobViewSet(OrganizationScopedViewSet):
         queryset = super().get_queryset()
         # Reconcile completed calendar events before returning production work.
         # This also catches events that became eligible after a payment update.
+        from apps.operations.views import link_unlinked_confirmed_events
         from .event_jobs import sync_event_production_jobs_for_booking
+
+        # Repair legacy/duplicated Operations events before checking production
+        # eligibility.  The linker only accepts an exact name + couple + mobile
+        # match against one confirmed Sales booking.
+        link_unlinked_confirmed_events(self.request.user.organization)
 
         completed_events = CalendarEvent.objects.filter(
             booking__isnull=False,

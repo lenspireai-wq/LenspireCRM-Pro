@@ -10,6 +10,7 @@ from apps.core.models import Organization
 from apps.sales.models import Booking, Customer, Lead
 from apps.users.models import User
 from .models import CalendarEvent, PhotographerDetail
+from .views import link_unlinked_confirmed_events
 from .google_sheets import CRM_ID_HEADER, _sheet_row_values, event_row, target_tab
 from .tasks import refresh_event_lifecycle
 
@@ -167,6 +168,45 @@ class OperationsApiTests(TestCase):
 
         self.assertEqual(response.status_code, 201, response.data)
         self.assertIsNone(response.data["booking"])
+
+    def test_manual_event_requires_client_couple_and_phone_to_match(self):
+        booking = self.confirmed_booking()
+
+        response = self.client.post(
+            "/api/events/",
+            {
+                "title": "Asha Patel · Engagement",
+                "client_name": "Asha Patel",
+                "couple_name": "Asha & Someone Else",
+                "contact_no": "9876543210",
+                "event_type": "Engagement",
+                "start_date": "2030-01-10",
+                "date_status": "Confirmed",
+            },
+        )
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertNotEqual(response.data["booking"], booking.id)
+        self.assertIsNone(response.data["booking"])
+
+    def test_reconciliation_links_only_complete_identity_matches(self):
+        booking = self.confirmed_booking()
+        event = CalendarEvent.objects.create(
+            organization=self.organization,
+            title="Asha Patel · Pre-Wedding",
+            client_name="Asha Patel",
+            couple_name="Asha & Rohan",
+            contact_no="98765 43210",
+            event_type="Pre-Wedding",
+            start_date=date(2030, 1, 10),
+        )
+
+        linked = link_unlinked_confirmed_events(self.organization)
+
+        self.assertEqual(linked, [booking])
+        event.refresh_from_db()
+        self.assertEqual(event.booking_id, booking.id)
+        self.assertEqual(event.customer_id, booking.customer_id)
 
     def test_duplicate_event_detects_phone_format_variations(self):
         payload = {
