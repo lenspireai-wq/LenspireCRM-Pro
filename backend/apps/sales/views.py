@@ -1,4 +1,4 @@
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.utils import timezone
 from datetime import datetime, time
 from django.http import HttpResponse
@@ -61,18 +61,35 @@ def sync_booking_advance_payment(lead, booking, customer):
     )
     if paid_advance >= advance:
         return None
-    return Payment.objects.create(
-        organization=lead.organization,
-        booking=booking,
-        customer=customer,
-        payment_type="Advance",
-        amount=advance - paid_advance,
-        status="Paid",
-        payment_mode=lead.payment_mode,
-        received_by=lead.received_by,
-        paid_at=paid_at,
-        notes=LEAD_ADVANCE_NOTE,
-    )
+    payment_values = {
+        "customer": customer,
+        "payment_type": "Advance",
+        "amount": advance - paid_advance,
+        "status": "Paid",
+        "payment_mode": lead.payment_mode,
+        "received_by": lead.received_by,
+        "paid_at": paid_at,
+    }
+    try:
+        with transaction.atomic():
+            return Payment.objects.create(
+                organization=lead.organization,
+                booking=booking,
+                notes=LEAD_ADVANCE_NOTE,
+                **payment_values,
+            )
+    except IntegrityError:
+        # Another request created the same Sales mirror concurrently.  It is
+        # safe to use that one because the database constraint makes it unique.
+        mirrored = Payment.objects.get(
+            organization=lead.organization,
+            booking=booking,
+            notes=LEAD_ADVANCE_NOTE,
+        )
+        for field, value in payment_values.items():
+            setattr(mirrored, field, value)
+        mirrored.save()
+        return mirrored
 
 
 class LeadSerializer(serializers.ModelSerializer):

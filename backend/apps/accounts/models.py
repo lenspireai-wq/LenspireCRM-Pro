@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from apps.core.models import OrganizationScopedModel
 from apps.sales.models import Booking, Customer
@@ -13,6 +14,18 @@ class Payment(OrganizationScopedModel):
     notes = models.TextField(blank=True)
     due_date = models.DateField(null=True, blank=True)
     paid_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            # A Sales booking advance is represented by one marked ledger
+            # receipt.  The condition leaves ordinary Accounts advances free
+            # to be recorded as needed.
+            models.UniqueConstraint(
+                fields=("organization", "booking", "notes"),
+                condition=Q(notes="Advance Booking amount recorded during lead confirmation."),
+                name="unique_sales_advance_payment_per_booking",
+            )
+        ]
 
 
 class PaymentReminder(OrganizationScopedModel):
