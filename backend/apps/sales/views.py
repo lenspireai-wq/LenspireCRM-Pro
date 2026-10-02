@@ -15,6 +15,66 @@ from .models import Booking, Customer, Lead, LeadActivity, SalesTarget
 LEAD_ADVANCE_NOTE = "Advance Booking amount recorded during lead confirmation."
 
 
+def sync_booking_advance_payment(lead, booking, customer):
+    """Mirror the Sales booking advance into Accounts exactly once.
+
+    Older confirmed leads can contain the booking advance only on the lead.
+    The Accounts Collections screen displays that value, but downstream
+    financial gates correctly rely on the payment ledger.  Keep both sources
+    aligned without adding a second receipt where Accounts already has one.
+    """
+    from apps.accounts.models import Payment
+
+    advance = lead.advance_received or 0
+    if advance <= 0:
+        return None
+    paid_at = (
+        timezone.make_aware(datetime.combine(lead.payment_received_date, time.min))
+        if lead.payment_received_date
+        else timezone.now()
+    )
+    mirrored = Payment.objects.filter(
+        organization=lead.organization,
+        booking=booking,
+        notes=LEAD_ADVANCE_NOTE,
+    ).first()
+    if mirrored:
+        mirrored.customer = customer
+        mirrored.payment_type = "Advance"
+        mirrored.amount = advance
+        mirrored.status = "Paid"
+        mirrored.payment_mode = lead.payment_mode
+        mirrored.received_by = lead.received_by
+        mirrored.paid_at = paid_at
+        mirrored.save()
+        return mirrored
+
+    # A legacy booking may already have a manually-entered Advance receipt.
+    # Treat that as the same Sales advance if it covers the recorded amount.
+    paid_advance = sum(
+        Payment.objects.filter(
+            organization=lead.organization,
+            booking=booking,
+            payment_type__iexact="Advance",
+            status__iexact="Paid",
+        ).values_list("amount", flat=True)
+    )
+    if paid_advance >= advance:
+        return None
+    return Payment.objects.create(
+        organization=lead.organization,
+        booking=booking,
+        customer=customer,
+        payment_type="Advance",
+        amount=advance - paid_advance,
+        status="Paid",
+        payment_mode=lead.payment_mode,
+        received_by=lead.received_by,
+        paid_at=paid_at,
+        notes=LEAD_ADVANCE_NOTE,
+    )
+
+
 class LeadSerializer(serializers.ModelSerializer):
     activities = serializers.SerializerMethodField()
     attachments = serializers.SerializerMethodField()
@@ -133,27 +193,10 @@ class LeadViewSet(OrganizationScopedViewSet):
             raise serializers.ValidationError("Converted leads cannot be deleted because they are linked to customer and booking records.")
         instance.delete()
     def _convert(self, lead):
-        from apps.accounts.models import Payment
-
         org = lead.organization
         customer, _ = Customer.objects.get_or_create(organization=org, lead=lead, defaults={"customer_code":f"CUS-{lead.id:05d}","name":lead.name,"phone":lead.mobile,"city":lead.city,"source":lead.source})
         booking, _ = Booking.objects.get_or_create(organization=org, lead=lead, defaults={"booking_code":f"BKG-{lead.id:05d}","customer":customer,"event_type":lead.event_type,"event_date":lead.event_date,"city":lead.city,"quoted_amount":lead.total_closing or lead.budget or 0})
-        if lead.advance_received and lead.advance_received > 0:
-            paid_at = timezone.make_aware(datetime.combine(lead.payment_received_date, time.min)) if lead.payment_received_date else timezone.now()
-            Payment.objects.update_or_create(
-                organization=org,
-                booking=booking,
-                notes=LEAD_ADVANCE_NOTE,
-                defaults={
-                    "customer": customer,
-                    "payment_type": "Advance",
-                    "amount": lead.advance_received,
-                    "status": "Paid",
-                    "payment_mode": lead.payment_mode,
-                    "received_by": lead.received_by,
-                    "paid_at": paid_at,
-                },
-            )
+        sync_booking_advance_payment(lead, booking, customer)
         # Production jobs are now created per completed calendar event after
         # its payment gate is met, rather than as one booking-level job.
         if lead.event_date:
@@ -193,6 +236,7 @@ class LeadViewSet(OrganizationScopedViewSet):
         booking = Booking.objects.filter(lead=lead).first()
         if booking:
             booking.event_type=lead.event_type; booking.event_date=lead.event_date; booking.city=lead.city; booking.quoted_amount=lead.total_closing or lead.budget or 0; booking.save()
+            sync_booking_advance_payment(lead, booking, customer)
             # Only synchronize the event represented by this lead.  Other
             # events on the same booking are independently scheduled and must
             # retain their own dates, assignments and details.
