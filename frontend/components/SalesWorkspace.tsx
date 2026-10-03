@@ -1479,7 +1479,12 @@ function LeadDetail({
   const [removingAttachmentId, setRemovingAttachmentId] = useState<number | null>(null);
   const attachMutation = useApiMutation<FormData, any, Error>({
     mutationFn: async (payload) =>
-      (await api.post("/attachments/", payload)).data,
+      // Send the browser FormData as multipart. Without this explicit request
+      // configuration, some production clients submit the text fields but omit
+      // the selected quotation file.
+      (await api.post("/attachments/", payload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })).data,
   });
   const logActivityMutation = useApiMutation<
     { type: string; description: string },
@@ -1520,7 +1525,7 @@ function LeadDetail({
       const response = problem.response;
       const details = response?.data;
       const validationMessage = details && typeof details === "object"
-        ? Object.values(details).flat().filter((value) => typeof value === "string").join(" ")
+        ? Object.values(details).flat(Infinity).filter((value) => typeof value === "string").join(" ")
         : "";
       setError(validationMessage || (response?.status === 413
         ? "The server rejected this file as too large. Quotation files up to 25 MB are supported."
