@@ -730,7 +730,10 @@ export default function Home() {
       />
       <main
         className={section === "Dashboard" ? "mainDashboard" : section === "Sales" ? "mainSalesDashboard" : section === "Calendar" ? "mainCalendar" : section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details") ? "mainOperationsDashboard" : section === "Operations" && operationsView === "Calendar" ? "mainOperationsCalendar" : section === "Operations" && (operationsView === "Upcoming Events" || operationsView === "Completed Events") ? "mainOperationsEvents" : section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics") ? "mainAccountsSticky" : undefined}
-        style={section === "Dashboard" || section === "Sales" || section === "Calendar" || (section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details" || operationsView === "Calendar")) || (section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Collections" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics")) ? { "--workspace-chrome-height": `${workspaceChromeHeight}px` } as CSSProperties : undefined}
+        style={{
+          ...((section === "Dashboard" || section === "Sales" || section === "Calendar" || (section === "Operations" && (operationsView === "Dashboard" || operationsView === "Photographers Details" || operationsView === "Calendar")) || (section === "Accounts" && (accountsView === "Payment Dashboard" || accountsView === "Collections" || accountsView === "Receivables" || accountsView === "Client Ledger" || accountsView === "Reports & Analytics")) ? { "--workspace-chrome-height": `${workspaceChromeHeight}px` } : {})),
+          ...(sidebarHidden ? { marginLeft: 0, width: "100%", maxWidth: "none" } : {}),
+        } as CSSProperties}
       >
         <button
           type="button"
