@@ -68,6 +68,25 @@
   --theme-icon: "☀";
 }
 
+/* Desktop sidebar collapse must reclaim the sidebar's fixed-position gutter.
+   Keep a small left inset only for the restored navigation button. */
+@media (min-width: 901px) {
+  .shell.sidebarHidden {
+    display: block !important;
+    grid-template-columns: none !important;
+  }
+
+  .shell.sidebarHidden > main {
+    grid-column: auto !important;
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-left: 64px !important;
+  }
+}
+
 /* Per-studio branding: no studio inherits another studio's logo. */
 .shell aside .brand.studioSidebarBrand { position: relative; display: grid; flex: 0 0 112px; min-height: 112px; place-items: start center; padding: 14px 18px; }
 .studioLogoInput { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
