@@ -1,4 +1,5 @@
 from django.db import IntegrityError, transaction
+from django.db.models import Prefetch
 from django.utils import timezone
 from datetime import datetime, time
 from django.http import HttpResponse
@@ -10,6 +11,7 @@ from apps.core.api import OrganizationScopedViewSet
 from apps.core.permissions import SalesAccessPermission, SharedBookingAccessPermission
 from apps.operations.models import CalendarEvent
 from apps.production.models import ProductionJob
+from apps.storage.models import Attachment
 from .models import Booking, Customer, Lead, LeadActivity, SalesTarget
 
 LEAD_ADVANCE_NOTE = "Advance Booking amount recorded during lead confirmation."
@@ -107,9 +109,9 @@ class LeadSerializer(serializers.ModelSerializer):
                     data[field] = ""
         return super().to_internal_value(data)
     def get_activities(self, obj):
-        return LeadActivitySerializer(obj.activities.order_by("-created_at", "-id"), many=True).data
+        return LeadActivitySerializer(obj.activities.all(), many=True).data
     def get_attachments(self, obj):
-        return [{"id": item.id, "name": item.name, "file": f"/api/attachments/{item.id}/download/", "created_at": item.created_at} for item in obj.attachments.order_by("-created_at")]
+        return [{"id": item.id, "name": item.name, "file": f"/api/attachments/{item.id}/download/", "created_at": item.created_at} for item in obj.attachments.all()]
     def validate(self, attrs):
         status_value = attrs.get("status", getattr(self.instance, "status", "New"))
         lost_reason = attrs.get("lost_reason", getattr(self.instance, "lost_reason", ""))
@@ -164,7 +166,10 @@ class SalesTargetSerializer(serializers.ModelSerializer):
     class Meta: model = SalesTarget; fields = "__all__"; read_only_fields = ("organization",)
 
 class LeadViewSet(OrganizationScopedViewSet):
-    queryset = Lead.objects.all().order_by("-created_at")
+    queryset = Lead.objects.prefetch_related(
+        Prefetch("activities", queryset=LeadActivity.objects.order_by("-created_at", "-id")),
+        Prefetch("attachments", queryset=Attachment.objects.order_by("-created_at")),
+    ).order_by("-created_at")
     serializer_class = LeadSerializer
     permission_classes = (SalesAccessPermission,)
     filterset_fields = {"status": ["exact", "in"], "priority": ["exact", "in"], "event_type": ["exact", "in"], "source": ["exact", "in"], "city": ["exact", "icontains"], "assigned_to": ["exact", "icontains"], "event_date": ["exact", "gte", "lte"], "next_followup_at": ["gte", "lte"], "created_at": ["gte", "lte"]}
