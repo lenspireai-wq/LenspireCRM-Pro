@@ -1,6 +1,14 @@
 /* This file is loaded last so sidebar-hidden layout wins over the desktop
    breakpoint that reserves a 298px navigation gutter. */
 @media (min-width: 901px) {
+  /* A wide data table must scroll inside its own table wrapper, never widen
+     the full browser page after the navigation column is removed. */
+  .shell.sidebarHidden {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: clip;
+  }
+
   .shell.sidebarHidden > main,
   .shell.sidebarHidden > main.mainOperationsDashboard,
   .shell.sidebarHidden > main.mainOperationsEvents,
@@ -11,6 +19,7 @@
     min-width: 0;
     box-sizing: border-box;
     padding-left: 64px !important;
+    overflow-x: clip;
   }
 
   /* The toggle is rendered inside the workspace. Keep the restore control
