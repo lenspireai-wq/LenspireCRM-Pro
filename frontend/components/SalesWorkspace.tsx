@@ -183,7 +183,8 @@ export default function SalesWorkspace({
     [visibleLeadCount, setVisibleLeadCount] = useState(25),
     [editing, setEditing] = useState<Lead | null | undefined>(undefined),
     [detail, setDetail] = useState<Lead | null>(null),
-    [notice, setNotice] = useState("");
+    [notice, setNotice] = useState(""),
+    [confirmedLead, setConfirmedLead] = useState<Lead | null>(null);
   useEffect(() => {
     if (startNewLead && canEdit) setEditing(null);
   }, [startNewLead, canEdit]);
@@ -578,9 +579,10 @@ export default function SalesWorkspace({
           <LeadModal
             lead={editing}
             onClose={() => setEditing(undefined)}
-            onSaved={async () => {
+            onSaved={async (savedLead, wasJustConfirmed) => {
               setEditing(undefined);
               await refresh();
+              if (wasJustConfirmed) setConfirmedLead(savedLead);
               notify(
                 editing
                   ? "Lead updated successfully"
@@ -603,6 +605,7 @@ export default function SalesWorkspace({
           />
         )}
         {notice && <div className="toast">{notice}</div>}
+        {confirmedLead && <LeadConfirmationModal lead={confirmedLead} onClose={() => setConfirmedLead(null)} />}
       </div>
     );
   return (
@@ -720,15 +723,17 @@ export default function SalesWorkspace({
         <LeadModal
           lead={editing}
           onClose={() => setEditing(undefined)}
-          onSaved={async () => {
+          onSaved={async (savedLead, wasJustConfirmed) => {
             setEditing(undefined);
             await refresh();
+            if (wasJustConfirmed) setConfirmedLead(savedLead);
             notify(
               editing ? "Lead updated successfully" : "Lead added successfully",
             );
           }}
         />
       )}
+      {confirmedLead && <LeadConfirmationModal lead={confirmedLead} onClose={() => setConfirmedLead(null)} />}
       {detail && (
         <LeadDetail
           lead={detail}
@@ -1088,7 +1093,7 @@ function LeadModal({
 }: {
   lead: Lead | null;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: (savedLead: Lead, wasJustConfirmed: boolean) => void;
 }) {
   const [form, setForm] = useState<any>(
       lead
@@ -1106,7 +1111,7 @@ function LeadModal({
     [saving, setSaving] = useState(false);
   const saveLeadMutation = useApiMutation<
     { url: string; payload: any },
-    unknown,
+    Lead,
     Error
   >({
     mutationFn: async ({ url, payload }) =>
@@ -1136,11 +1141,11 @@ function LeadModal({
       payment_received_date: form.payment_received_date || null,
     };
     try {
-      await saveLeadMutation.mutateAsync({
+      const savedLead = await saveLeadMutation.mutateAsync({
         url: lead ? `/leads/${lead.id}/` : "",
         payload,
       });
-      onSaved();
+      onSaved(savedLead, form.status === "Confirmed" && lead?.status !== "Confirmed");
     } catch (e: any) {
       const data = e.response?.data;
       setError(
@@ -1419,6 +1424,31 @@ function LeadModal({
           </button>
         </div>
       </form>
+    </div>
+  );
+}
+
+function LeadConfirmationModal({ lead, onClose }: { lead: Lead; onClose: () => void }) {
+  const weddingDates = lead.wedding_dates?.length
+    ? lead.wedding_dates
+    : lead.event_date
+      ? [lead.event_date]
+      : [];
+  return (
+    <div className="modalBackdrop" role="presentation" onMouseDown={onClose}>
+      <section className="modalCard" role="dialog" aria-modal="true" aria-labelledby="lead-confirmed-title" onMouseDown={(event) => event.stopPropagation()} style={{ maxWidth: 440, textAlign: "center" }}>
+        <div aria-hidden="true" style={{ fontSize: 48, lineHeight: 1 }}>🎉</div>
+        <small>BOOKING CONFIRMED</small>
+        <h2 id="lead-confirmed-title">Congratulations!</h2>
+        <p>The booking for <strong>{lead.couple_name || lead.name}</strong> has been confirmed.</p>
+        <div style={{ margin: "20px 0", padding: "14px 18px", borderRadius: 12, background: "var(--soft)", textAlign: "left" }}>
+          <small>COUPLE NAME</small>
+          <b style={{ display: "block", marginTop: 4 }}>{lead.couple_name || lead.name}</b>
+          <small style={{ display: "block", marginTop: 14 }}>WEDDING DATE{weddingDates.length > 1 ? "S" : ""}</small>
+          <b style={{ display: "block", marginTop: 4 }}>{weddingDates.length ? weddingDates.map((value) => date(value)).join(", ") : "To be decided"}</b>
+        </div>
+        <button type="button" className="primary" onClick={onClose}>Done</button>
+      </section>
     </div>
   );
 }
