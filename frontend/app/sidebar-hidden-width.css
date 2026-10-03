@@ -4,9 +4,14 @@
   /* A wide data table must scroll inside its own table wrapper, never widen
      the full browser page after the navigation column is removed. */
   .shell.sidebarHidden {
+    grid-template-columns: minmax(0, 1fr) !important;
     width: 100% !important;
     max-width: 100% !important;
     overflow-x: clip;
+  }
+
+  .shell.sidebarHidden > main {
+    grid-column: 1 / -1 !important;
   }
 
   .shell.sidebarHidden > main,
