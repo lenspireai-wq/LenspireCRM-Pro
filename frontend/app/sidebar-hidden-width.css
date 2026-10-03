@@ -1,0 +1,15 @@
+/* This file is loaded last so sidebar-hidden layout wins over the desktop
+   breakpoint that reserves a 298px navigation gutter. */
+@media (min-width: 901px) {
+  .shell.sidebarHidden > main,
+  .shell.sidebarHidden > main.mainOperationsDashboard,
+  .shell.sidebarHidden > main.mainOperationsEvents,
+  .shell.sidebarHidden > main.mainOperationsCalendar {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-left: 64px !important;
+  }
+}
