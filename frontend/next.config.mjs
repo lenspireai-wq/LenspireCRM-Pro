@@ -29,6 +29,12 @@ if (!isDev) {
 
 const nextConfig = {
   reactStrictMode: true,
+  // Quotation uploads are permitted up to 25 MB. API rewrites proxy those
+  // requests through Next.js, whose default 10 MB body buffer would truncate
+  // larger multipart uploads before Django can validate and store them.
+  experimental: {
+    proxyClientMaxBodySize: "26mb",
+  },
   skipTrailingSlashRedirect: true,
   output: "standalone",
   outputFileTracingRoot: process.cwd(),
