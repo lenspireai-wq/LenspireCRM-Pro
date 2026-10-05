@@ -1479,12 +1479,10 @@ function LeadDetail({
   const [removingAttachmentId, setRemovingAttachmentId] = useState<number | null>(null);
   const attachMutation = useApiMutation<FormData, any, Error>({
     mutationFn: async (payload) =>
-      // Send the browser FormData as multipart. Without this explicit request
-      // configuration, some production clients submit the text fields but omit
-      // the selected quotation file.
-      (await api.post("/attachments/", payload, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })).data,
+      // Let the browser add the multipart boundary. Supplying Content-Type
+      // ourselves produces a boundary-less request in some browsers, which
+      // Django cannot parse as an uploaded file.
+      (await api.post("/attachments/", payload)).data,
   });
   const logActivityMutation = useApiMutation<
     { type: string; description: string },
