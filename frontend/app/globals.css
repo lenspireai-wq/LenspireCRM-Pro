@@ -13085,3 +13085,34 @@ table > tbody > tr:has(td[colspan])::before {
     line-height: 1.2;
   }
 }
+
+/* Keep the booking confirmation separate from the translucent page overlay.
+   This comes last because older workspace rules also style generic modal cards. */
+.modalBackdrop:has(.bookingConfirmationModal) {
+  background: rgb(15 23 42 / 72%) !important;
+  backdrop-filter: blur(7px) !important;
+}
+.modalBackdrop .bookingConfirmationModal {
+  opacity: 1 !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  background: #ffffff !important;
+  color: #172033 !important;
+  border: 1px solid #d8d0ff !important;
+  box-shadow: 0 30px 80px rgb(15 23 42 / 45%) !important;
+}
+.modalBackdrop .bookingConfirmationModal h2,
+.modalBackdrop .bookingConfirmationModal .confirmationMessage strong,
+.modalBackdrop .bookingConfirmationModal .confirmationDetails b {
+  color: #111827 !important;
+}
+.modalBackdrop .bookingConfirmationModal .confirmationMessage {
+  color: #475569 !important;
+}
+.modalBackdrop .bookingConfirmationModal .confirmationDetails {
+  background: #f6f7fb !important;
+  border-color: #dbe1ec !important;
+}
+.modalBackdrop .bookingConfirmationModal .confirmationDetails small {
+  color: #64748b !important;
+}
