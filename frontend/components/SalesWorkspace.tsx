@@ -1197,6 +1197,7 @@ function LeadModal({
                 "Wedding",
                 "Night Wedding",
                 "Pre-Wedding",
+                "Engagement",
                 "Birthday",
                 "Maternity",
                 "Corporate",
@@ -1266,7 +1267,7 @@ function LeadModal({
             <LightFormSelect
               value={form.status}
               onChange={(value) => set("status", value)}
-              options={["New", "Follow-up", "Confirmed", "Lost"]}
+              options={["New", "Phone Ringing", "Follow-up", "Confirmed", "Lost"]}
             />
           </label>
           <label>
