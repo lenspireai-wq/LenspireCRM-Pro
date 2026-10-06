@@ -14,7 +14,14 @@ SECRET_KEY = os.getenv("SECRET_KEY", "lenspire-development-key-change-before-pro
 if not DEBUG and SECRET_KEY == "lenspire-development-key-change-before-production":
     raise RuntimeError("Set a strong SECRET_KEY when DEBUG is false.")
 
-ALLOWED_HOSTS = [value.strip() for value in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if value.strip()]
+# The Cloudflare gateway normally forwards requests to Next.js, but file
+# attachments are sent straight to Django so large multipart bodies do not
+# pass through Next's proxy buffer.  Keep the private origin hostname valid
+# even when ALLOWED_HOSTS is supplied by the production environment.
+ALLOWED_HOSTS = list(dict.fromkeys([
+    *[value.strip() for value in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if value.strip()],
+    "crm-origin.lenspireai.com",
+]))
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
     "django.contrib.sessions", "django.contrib.messages", "django.contrib.staticfiles",
