@@ -107,6 +107,12 @@ const money = (value: any) =>
 const date = (value: any) => formatDate(value);
 const eventDate = (value: any) => formatDate(value, "TBD");
 const dateTime = (value: any) => formatDateTime(value, "Not scheduled");
+const confirmationConfetti = Array.from({ length: 28 }, (_, index) => ({
+  color: ["#7657ff", "#246bfd", "#ec4899", "#f59e0b", "#22c55e"][index % 5],
+  x: `${(index * 37) % 360 - 180}px`,
+  delay: `${(index % 7) * 55}ms`,
+  turn: `${(index * 53) % 360}deg`,
+}));
 
 export default function SalesWorkspace({
   startNewLead = false,
@@ -1437,18 +1443,31 @@ function LeadConfirmationModal({ lead, onClose }: { lead: Lead; onClose: () => v
       : [];
   return (
     <div className="modalBackdrop" role="presentation" onMouseDown={onClose}>
-      <section className="modalCard" role="dialog" aria-modal="true" aria-labelledby="lead-confirmed-title" onMouseDown={(event) => event.stopPropagation()} style={{ maxWidth: 440, textAlign: "center" }}>
-        <div aria-hidden="true" style={{ fontSize: 48, lineHeight: 1 }}>🎉</div>
-        <small>BOOKING CONFIRMED</small>
-        <h2 id="lead-confirmed-title">Congratulations!</h2>
-        <p>The booking for <strong>{lead.couple_name || lead.name}</strong> has been confirmed.</p>
-        <div style={{ margin: "20px 0", padding: "14px 18px", borderRadius: 12, background: "var(--soft)", textAlign: "left" }}>
-          <small>COUPLE NAME</small>
-          <b style={{ display: "block", marginTop: 4 }}>{lead.couple_name || lead.name}</b>
-          <small style={{ display: "block", marginTop: 14 }}>WEDDING DATE{weddingDates.length > 1 ? "S" : ""}</small>
-          <b style={{ display: "block", marginTop: 4 }}>{weddingDates.length ? weddingDates.map((value) => date(value)).join(", ") : "To be decided"}</b>
+      <section className="modalCard bookingConfirmationModal" role="dialog" aria-modal="true" aria-labelledby="lead-confirmed-title" onMouseDown={(event) => event.stopPropagation()}>
+        <div className="confirmationConfetti" aria-hidden="true">
+          {confirmationConfetti.map((piece, index) => (
+            <i
+              key={index}
+              style={{
+                "--confetti-color": piece.color,
+                "--confetti-x": piece.x,
+                "--confetti-delay": piece.delay,
+                "--confetti-turn": piece.turn,
+              } as CSSProperties}
+            />
+          ))}
         </div>
-        <button type="button" className="primary" onClick={onClose}>Done</button>
+        <div className="confirmationBurst" aria-hidden="true">🎉</div>
+        <small className="confirmationEyebrow">Booking confirmed</small>
+        <h2 id="lead-confirmed-title">Congratulations!</h2>
+        <p className="confirmationMessage">The booking for <strong>{lead.couple_name || lead.name}</strong> has been confirmed.</p>
+        <div className="confirmationDetails">
+          <small>COUPLE NAME</small>
+          <b>{lead.couple_name || lead.name}</b>
+          <small>WEDDING DATE{weddingDates.length > 1 ? "S" : ""}</small>
+          <b>{weddingDates.length ? weddingDates.map((value) => date(value)).join(", ") : "To be decided"}</b>
+        </div>
+        <button type="button" className="primary confirmationDone" onClick={onClose}>Done</button>
       </section>
     </div>
   );
