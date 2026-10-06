@@ -2,8 +2,12 @@ const WEB_ORIGIN = "http://crm-origin.lenspireai.com:8080";
 // Cloudflare Workers can reliably reach the public CRM proxy on port 8080.
 // The Next.js proxy forwards /api requests privately to Django on port 8000.
 const API_ORIGIN = WEB_ORIGIN;
+// Large quotation multipart bodies must bypass Next.js: its rewrite proxy
+// buffers request bodies and truncates uploads beyond its body limit.
+const ATTACHMENTS_ORIGIN = "http://crm-origin.lenspireai.com:8000";
 
 function originFor(pathname) {
+  if (pathname.startsWith("/api/attachments/")) return ATTACHMENTS_ORIGIN;
   return pathname.startsWith("/api/") ? API_ORIGIN : WEB_ORIGIN;
 }
 
