@@ -141,7 +141,10 @@ jobs:
                 sleep $((pull_attempt * 15))
               done
               [ "$pulled" = true ] || exit 1
-              compose up -d --remove-orphans
+              # This compose file builds directly from the deployment branch.
+              # `up` without `--build` silently reuses the prior local image,
+              # even after a successful GitHub container publish.
+              compose up -d --build --remove-orphans
               current_api="$(compose ps -q api)"
               if [ -d "$media_snapshot" ] && [ -n "$(find "$media_snapshot" -mindepth 1 -print -quit)" ]; then
                 docker cp "$media_snapshot/." "$current_api:/app/media"
