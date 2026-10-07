@@ -186,6 +186,7 @@ export default function ProductionWorkspace({
   const [exporting, setExporting] = useState(false);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [driveLinks, setDriveLinks] = useState<Record<number, string>>({});
   const [thumbnailLinks, setThumbnailLinks] = useState<Record<number, string>>({});
   const today = new Date().toISOString().slice(0, 10);
@@ -232,6 +233,10 @@ export default function ProductionWorkspace({
     Error
   >({
     mutationFn: async ({ url, payload }) => (await api.patch(url, payload)).data,
+  });
+
+  const deleteJobMutation = useApiMutation<number, unknown, Error>({
+    mutationFn: async (id) => api.delete(`/production/${id}/`),
   });
 
   useEffect(() => {
@@ -482,6 +487,31 @@ export default function ProductionWorkspace({
       setSaving(false);
     }
   };
+  const deleteEmptyWorkflow = async () => {
+    if (!draft) return;
+    const description = `${draft.booking_code || "this booking"} — ${draft.event_type || "production workflow"}`;
+    if (!window.confirm(`Delete this empty workflow for ${description}? This cannot be undone.`)) {
+      return;
+    }
+    setDeleting(true);
+    setError("");
+    try {
+      await deleteJobMutation.mutateAsync(Number(draft.id));
+      setDraft(null);
+      await invalidateProductionQueries();
+    } catch {
+      setError("Could not delete the production workflow.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+  const canDeleteDraft = Boolean(
+    draft &&
+      !(draft.activities || []).length &&
+      (draft.deliverables || []).every(
+        (item: Row) => !item.editor && item.status === "Unassigned",
+      ),
+  );
   const openWorkflow = (job: Row) =>
     setDraft({ ...job, deliverables: workflowDeliverables(job) });
   const updateDeliverable = (index: number, updates: Row) =>
@@ -1144,6 +1174,16 @@ export default function ProductionWorkspace({
             </section>
             {error && <p className="formError">{error}</p>}
             <div className="modalFooter">
+              {canDeleteDraft && (
+                <button
+                  type="button"
+                  className="dangerButton"
+                  disabled={deleting || saving}
+                  onClick={() => void deleteEmptyWorkflow()}
+                >
+                  {deleting ? "Deleting…" : "Delete Empty Workflow"}
+                </button>
+              )}
               <button
                 type="button"
                 className="workflowCancelButton"
