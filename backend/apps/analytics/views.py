@@ -25,10 +25,15 @@ def _parse_date(value, default):
 
 
 def _scoped_qs(model, user):
-    qs = model.objects.all()
-    if not user.is_superuser:
-        qs = qs.filter(organization=user.organization)
-    return qs
+    """Return records for the signed-in studio, including studio superusers.
+
+    A superuser account can still administer the platform, but its dashboard is
+    a studio workspace rather than a cross-studio reporting surface.  Letting
+    ``is_superuser`` bypass this filter mixed every studio's KPIs together.
+    """
+    if not user.organization_id:
+        return model.objects.none()
+    return model.objects.filter(organization_id=user.organization_id)
 
 
 def _money(value):
@@ -133,17 +138,23 @@ class DashboardView(APIView):
             for job in overdue_jobs.order_by("due_date")[:10]
         ]
 
-        outstanding = bookings.filter(status__iexact="Confirmed").aggregate(
-            quoted=Coalesce(Sum("quoted_amount"), Value(Decimal("0"))),
-            collected=Coalesce(
-                Sum(
-                    "payments__amount",
-                    filter=Q(payments__status__iexact="Paid")
-                    & ~Q(payments__payment_type__iexact="Refund"),
-                ),
-                Value(Decimal("0")),
-            ),
-        )
+        # Aggregate bookings and receipts independently.  Combining both sums
+        # through the payment join repeats a booking's quoted amount once for
+        # every receipt recorded against it.
+        confirmed_bookings = bookings.filter(status__iexact="Confirmed")
+        outstanding = {
+            "quoted": confirmed_bookings.aggregate(
+                total=Coalesce(Sum("quoted_amount"), Value(Decimal("0")))
+            )["total"],
+            "collected": payments.filter(
+                booking__in=confirmed_bookings,
+                status__iexact="Paid",
+            ).exclude(
+                payment_type__iexact="Refund"
+            ).aggregate(
+                total=Coalesce(Sum("amount"), Value(Decimal("0")))
+            )["total"],
+        }
         outstanding_amount = Decimal(outstanding["quoted"] or 0) - Decimal(outstanding["collected"] or 0)
         if outstanding_amount < 0:
             outstanding_amount = Decimal("0")

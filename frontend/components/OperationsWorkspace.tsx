@@ -1504,10 +1504,6 @@ function EventModal({ draft, photographers, close, save, error }: any) {
                             <option
                               key={option.value}
                               value={option.value}
-                              disabled={
-                                option.value !== value &&
-                                selected.includes(option.value)
-                              }
                             >
                               {option.label}
                             </option>
