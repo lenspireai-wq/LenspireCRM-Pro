@@ -186,6 +186,8 @@ export default function SalesWorkspace({
     [priority, setPriority] = useState("All"),
     [source, setSource] = useState("All"),
     [reminder, setReminder] = useState("All"),
+    [fromDate, setFromDate] = useState(""),
+    [toDate, setToDate] = useState(""),
     [visibleLeadCount, setVisibleLeadCount] = useState(25),
     [editing, setEditing] = useState<Lead | null | undefined>(undefined),
     [detail, setDetail] = useState<Lead | null>(null),
@@ -196,6 +198,14 @@ export default function SalesWorkspace({
   }, [startNewLead, canEdit]);
   const now = new Date(),
     today = now.toISOString().slice(0, 10);
+  const isInSelectedDateRange = (lead: Lead) => {
+    const createdDate = String(lead.created_at || "").slice(0, 10);
+    return (
+      Boolean(createdDate) &&
+      (!fromDate || createdDate >= fromDate) &&
+      (!toDate || createdDate <= toDate)
+    );
+  };
   const buckets = useMemo(() => {
     const active = leads.filter(
       (l) => l.next_followup_at && !["Confirmed", "Lost"].includes(l.status),
@@ -231,6 +241,7 @@ export default function SalesWorkspace({
             ).some((x) => x.id === l.id);
           return (
             search &&
+            isInSelectedDateRange(l) &&
             (status === "All" || l.status === status) &&
             (priority === "All" || l.priority === priority) &&
             (source === "All" || l.source === source) &&
@@ -241,8 +252,15 @@ export default function SalesWorkspace({
           (a, b) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
         ),
-    [leads, query, status, priority, source, reminder, buckets],
+    [leads, query, status, priority, source, reminder, fromDate, toDate, buckets],
   );
+  const dateRangeLeads = useMemo(
+    () => leads.filter(isInSelectedDateRange),
+    [leads, fromDate, toDate],
+  );
+  const dateRangeLabel = fromDate || toDate
+    ? `${fromDate || "Start"} to ${toDate || "Today"}`
+    : "All time";
   const leadRenderBatchSize = 25;
   const visibleLeads = useMemo(
     () => filtered.slice(0, visibleLeadCount),
@@ -250,7 +268,7 @@ export default function SalesWorkspace({
   );
   useEffect(() => {
     setVisibleLeadCount(leadRenderBatchSize);
-  }, [query, status, priority, source, reminder]);
+  }, [query, status, priority, source, reminder, fromDate, toDate]);
   const activeValue = leads
     .filter((lead) => ["New", "Follow-up"].includes(lead.status))
     .reduce((sum, lead) => sum + Number(lead.budget || 0), 0);
@@ -626,6 +644,46 @@ export default function SalesWorkspace({
             ◎ Target
           </button>
         </nav>
+        <div className="leadDateRange" aria-label="Lead creation date range">
+          <div>
+            <b>Lead period</b>
+            <small>Filter by lead creation date</small>
+          </div>
+          <label>
+            From
+            <input
+              type="date"
+              value={fromDate}
+              max={toDate || undefined}
+              onChange={(event) => setFromDate(event.target.value)}
+            />
+          </label>
+          <label>
+            To
+            <input
+              type="date"
+              value={toDate}
+              min={fromDate || undefined}
+              onChange={(event) => setToDate(event.target.value)}
+            />
+          </label>
+          <button
+            type="button"
+            className="leadDateRangeClear"
+            onClick={() => {
+              setFromDate("");
+              setToDate("");
+            }}
+            disabled={!fromDate && !toDate}
+          >
+            Clear dates
+          </button>
+          <div className="leadDateRangeCounts" aria-live="polite">
+            <span><b>{dateRangeLeads.filter((lead) => lead.status === "New").length}</b> New</span>
+            <span><b>{dateRangeLeads.filter((lead) => lead.status === "Confirmed").length}</b> Confirmed</span>
+            <small>{dateRangeLabel}</small>
+          </div>
+        </div>
         <div className="reminderGrid">
         {card(
           "Overdue",
