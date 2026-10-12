@@ -138,26 +138,31 @@ class DashboardView(APIView):
             for job in overdue_jobs.order_by("due_date")[:10]
         ]
 
-        # Aggregate bookings and receipts independently.  Combining both sums
-        # through the payment join repeats a booking's quoted amount once for
-        # every receipt recorded against it.
+        # Calculate each confirmed booking independently.  An overpayment is
+        # client credit for that booking; it must not reduce the outstanding
+        # amount owed by other clients.
         confirmed_bookings = bookings.filter(status__iexact="Confirmed")
-        outstanding = {
-            "quoted": confirmed_bookings.aggregate(
-                total=Coalesce(Sum("quoted_amount"), Value(Decimal("0")))
-            )["total"],
-            "collected": payments.filter(
-                booking__in=confirmed_bookings,
-                status__iexact="Paid",
-            ).exclude(
-                payment_type__iexact="Refund"
-            ).aggregate(
-                total=Coalesce(Sum("amount"), Value(Decimal("0")))
-            )["total"],
-        }
-        outstanding_amount = Decimal(outstanding["quoted"] or 0) - Decimal(outstanding["collected"] or 0)
-        if outstanding_amount < 0:
-            outstanding_amount = Decimal("0")
+        outstanding_amount = Decimal("0")
+        for booking in confirmed_bookings.annotate(
+            collected=Coalesce(
+                Sum(
+                    "payments__amount",
+                    filter=Q(payments__status__iexact="Paid")
+                    & ~Q(payments__payment_type__iexact="Refund"),
+                ),
+                Value(Decimal("0")),
+            ),
+            refunds=Coalesce(
+                Sum(
+                    "payments__amount",
+                    filter=Q(payments__status__iexact="Paid")
+                    & Q(payments__payment_type__iexact="Refund"),
+                ),
+                Value(Decimal("0")),
+            ),
+        ):
+            balance = Decimal(booking.quoted_amount or 0) - Decimal(booking.collected or 0) + Decimal(booking.refunds or 0)
+            outstanding_amount += max(balance, Decimal("0"))
 
         recent_leads = list(
             leads.order_by("-created_at").values(

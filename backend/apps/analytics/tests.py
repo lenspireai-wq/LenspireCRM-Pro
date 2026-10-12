@@ -32,6 +32,18 @@ class DashboardTenantIsolationTests(TestCase):
             amount=Decimal("40000"), status="Paid", payment_type="Balance",
             paid_at=timezone.make_aware(datetime(2026, 10, 3, 10, 0)),
         )
+        credited_customer = Customer.objects.create(
+            organization=self.ankit, customer_code="ANKIT-C2", name="Credit client",
+        )
+        credited_booking = Booking.objects.create(
+            organization=self.ankit, booking_code="ANKIT-B2", customer=credited_customer,
+            event_type="Wedding", quoted_amount=Decimal("100"), status="Confirmed",
+        )
+        Payment.objects.create(
+            organization=self.ankit, booking=credited_booking, customer=credited_customer,
+            amount=Decimal("145"), status="Paid", payment_type="Advance",
+            paid_at=timezone.make_aware(datetime(2026, 10, 3, 10, 0)),
+        )
         self._create_studio_data(self.lenspire, "LENSPIRE", "Lenspire lead", Decimal("476816"))
 
     def _create_studio_data(self, organization, code, lead_name, paid_amount):
@@ -60,6 +72,6 @@ class DashboardTenantIsolationTests(TestCase):
         self.assertEqual(response.status_code, 200)
         payload = response.json()
         self.assertEqual(payload["funnel"]["total"], 1)
-        self.assertEqual(payload["month"]["revenue_net"], "100000.00")
-        self.assertEqual(payload["month"]["revenue_gross"], "100000.00")
+        self.assertEqual(payload["month"]["revenue_net"], "100145.00")
+        self.assertEqual(payload["month"]["revenue_gross"], "100145.00")
         self.assertEqual(payload["outstanding"]["amount"], "132000.00")

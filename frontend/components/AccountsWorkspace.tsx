@@ -252,7 +252,10 @@ export default function AccountsWorkspace({
         sum + Number(p.amount) * (p.payment_type === "Refund" ? -1 : 1),
       advance,
     );
-    const total = Number(lead?.total_closing ?? booking.quoted_amount ?? 0);
+    // A confirmed booking is the financial commitment.  A lead's Total
+    // Closing field remains sales context and can be edited after booking, so
+    // it must not silently alter the Accounts receivable balance.
+    const total = Number(booking.quoted_amount ?? lead?.total_closing ?? 0);
     const scheduledEvents = eventRows
       .filter((event) => Number(event.booking) === Number(booking.id) && event.start_date)
       .sort((first, second) => String(first.start_date).localeCompare(String(second.start_date)));

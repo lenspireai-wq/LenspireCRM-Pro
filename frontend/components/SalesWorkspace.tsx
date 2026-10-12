@@ -53,6 +53,31 @@ type SalesTarget = {
   target_amount: string;
   target_bookings: number;
 };
+type LeadSortKey =
+  | "created_at"
+  | "client"
+  | "assigned_to"
+  | "couple_name"
+  | "mobile"
+  | "event_type"
+  | "event_date"
+  | "source"
+  | "status"
+  | "total_closing";
+type SortDirection = "asc" | "desc";
+
+const leadSortValue = (lead: Lead, key: LeadSortKey): string | number => {
+  switch (key) {
+    case "client":
+      return lead.client_name || lead.name || "";
+    case "mobile":
+      return lead.client_mobile || lead.mobile || "";
+    case "total_closing":
+      return Number(lead.total_closing || lead.budget || 0);
+    default:
+      return lead[key] || "";
+  }
+};
 
 const SalesKpiIcon = ({ kind }: { kind: string }) => (
   <span className="dashMetricIcon" aria-hidden="true">
@@ -188,6 +213,10 @@ export default function SalesWorkspace({
     [reminder, setReminder] = useState("All"),
     [fromDate, setFromDate] = useState(""),
     [toDate, setToDate] = useState(""),
+    [leadSort, setLeadSort] = useState<{ key: LeadSortKey; direction: SortDirection }>({
+      key: "created_at",
+      direction: "desc",
+    }),
     [visibleLeadCount, setVisibleLeadCount] = useState(25),
     [editing, setEditing] = useState<Lead | null | undefined>(undefined),
     [detail, setDetail] = useState<Lead | null>(null),
@@ -248,11 +277,19 @@ export default function SalesWorkspace({
             rem
           );
         })
-        .sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-        ),
-    [leads, query, status, priority, source, reminder, fromDate, toDate, buckets],
+        .sort((a, b) => {
+          const first = leadSortValue(a, leadSort.key);
+          const second = leadSortValue(b, leadSort.key);
+          const comparison =
+            typeof first === "number" && typeof second === "number"
+              ? first - second
+              : String(first).localeCompare(String(second), undefined, {
+                  numeric: true,
+                  sensitivity: "base",
+                });
+          return leadSort.direction === "asc" ? comparison : -comparison;
+        }),
+    [leads, query, status, priority, source, reminder, fromDate, toDate, buckets, leadSort],
   );
   const dateRangeLeads = useMemo(
     () => leads.filter(isInSelectedDateRange),
@@ -268,7 +305,14 @@ export default function SalesWorkspace({
   );
   useEffect(() => {
     setVisibleLeadCount(leadRenderBatchSize);
-  }, [query, status, priority, source, reminder, fromDate, toDate]);
+  }, [query, status, priority, source, reminder, fromDate, toDate, leadSort]);
+  const sortLeads = (key: LeadSortKey) => {
+    setLeadSort((current) => ({
+      key,
+      direction:
+        current.key === key && current.direction === "asc" ? "desc" : "asc",
+    }));
+  };
   const activeValue = leads
     .filter((lead) => ["New", "Follow-up"].includes(lead.status))
     .reduce((sum, lead) => sum + Number(lead.budget || 0), 0);
@@ -429,6 +473,20 @@ export default function SalesWorkspace({
               "Needs attention",
               "amber",
               "Follow-up",
+            ],
+            [
+              "Phone Ringing",
+              leads.filter((l) => l.status === "Phone Ringing").length,
+              "Awaiting first contact",
+              "amber",
+              "Phone Ringing",
+            ],
+            [
+              "Quotation Sent",
+              leads.filter((l) => l.status === "Quotation Sent").length,
+              "Awaiting client response",
+              "purple",
+              "Quotation Sent",
             ],
             [
               "Lost",
@@ -775,6 +833,8 @@ export default function SalesWorkspace({
           onEdit={(lead) => setEditing(lead)}
           onDelete={remove}
           showActions
+          sort={leadSort}
+          onSort={sortLeads}
           hasMore={visibleLeads.length < filtered.length}
           onReachEnd={() =>
             setVisibleLeadCount((count) =>
@@ -957,6 +1017,8 @@ function LeadTable({
   onEdit,
   onDelete,
   showActions = false,
+  sort,
+  onSort,
   hasMore = false,
   onReachEnd,
 }: {
@@ -965,9 +1027,31 @@ function LeadTable({
   onEdit?: (lead: Lead) => void;
   onDelete?: (lead: Lead) => void;
   showActions?: boolean;
+  sort?: { key: LeadSortKey; direction: SortDirection };
+  onSort?: (key: LeadSortKey) => void;
   hasMore?: boolean;
   onReachEnd?: () => void;
 }) {
+  const sortableHeader = (label: string, key: LeadSortKey) => (
+    <th>
+      {onSort ? (
+        <button
+          type="button"
+          className={`leadSortButton${sort?.key === key ? " active" : ""}`}
+          onClick={() => onSort(key)}
+          aria-label={`Sort by ${label}${sort?.key === key ? `, ${sort.direction === "asc" ? "ascending" : "descending"}` : ""}`}
+          aria-pressed={sort?.key === key}
+        >
+          <span>{label}</span>
+          <i aria-hidden="true">
+            {sort?.key === key ? (sort.direction === "asc" ? "↑" : "↓") : "↕"}
+          </i>
+        </button>
+      ) : (
+        label
+      )}
+    </th>
+  );
   return (
     <div
       className="leadTableWrap"
@@ -982,16 +1066,16 @@ function LeadTable({
         <thead>
           <tr>
             <th className="srNo">Sr. No.</th>
-            <th>Date</th>
-            <th>Client Name</th>
-            <th>Sales Person</th>
-            <th>Couple Name</th>
-            <th>Mobile</th>
-            <th>Event</th>
-            <th>Event Date</th>
-            <th>Source</th>
-            <th>Status</th>
-            <th>Total Closing</th>
+            {sortableHeader("Date", "created_at")}
+            {sortableHeader("Client Name", "client")}
+            {sortableHeader("Sales Person", "assigned_to")}
+            {sortableHeader("Couple Name", "couple_name")}
+            {sortableHeader("Mobile", "mobile")}
+            {sortableHeader("Event", "event_type")}
+            {sortableHeader("Event Date", "event_date")}
+            {sortableHeader("Source", "source")}
+            {sortableHeader("Status", "status")}
+            {sortableHeader("Total Closing", "total_closing")}
             {showActions && <th>Action</th>}
           </tr>
         </thead>
@@ -1331,7 +1415,14 @@ function LeadModal({
             <LightFormSelect
               value={form.status}
               onChange={(value) => set("status", value)}
-              options={["New", "Phone Ringing", "Follow-up", "Confirmed", "Lost"]}
+              options={[
+                "New",
+                "Phone Ringing",
+                "Quotation Sent",
+                "Follow-up",
+                "Confirmed",
+                "Lost",
+              ]}
             />
           </label>
           <label>
