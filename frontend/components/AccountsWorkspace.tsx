@@ -454,7 +454,17 @@ export default function AccountsWorkspace({
   const displayedAccounts = shown.filter(
     (account) => view !== "Receivables" || account.balance > 0,
   );
-  if (view === "Receivables") {
+  if (view === "Client Ledger") {
+    // Keep the ledger in the natural event timeline: completed events first,
+    // then today's events, followed by upcoming events. Bookings without an
+    // event date stay at the end where they cannot interrupt that timeline.
+    displayedAccounts.sort((first, second) => {
+      const firstDate = String(first.event_date || "9999-12-31");
+      const secondDate = String(second.event_date || "9999-12-31");
+      if (firstDate !== secondDate) return firstDate.localeCompare(secondDate);
+      return String(first.client || "").localeCompare(String(second.client || ""));
+    });
+  } else if (view === "Receivables") {
     const today = new Date().toISOString().slice(0, 10);
     const nextDueDate = (account: Row) =>
       account.stages
